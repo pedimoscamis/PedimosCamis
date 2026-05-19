@@ -4,11 +4,10 @@
   "description": "KitZone — Tienda online de camisetas de fútbol y NBA",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "scrape": "node scraper.js",
     "categorize": "node categorize.js",
-    "build": "node scraper.js && node categorize.js",
-    "start": "node server.js",
-    "dev": "node server.js"
+    "build:catalog": "node scraper.js && node categorize.js"
   },
   "dependencies": {
     "express": "^4.18.2",
