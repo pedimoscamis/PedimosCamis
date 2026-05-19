@@ -141,6 +141,14 @@
       background: var(--accent); border-color: var(--accent);
       color: #fff; font-weight: 700;
     }
+    /* Nueva temporada — siempre destacada en rojo */
+    .cat-btn.cat-nuevatemporada {
+      border-color: var(--accent); color: var(--accent); font-weight: 700;
+    }
+    .cat-btn.cat-nuevatemporada:hover,
+    .cat-btn.cat-nuevatemporada.active {
+      background: var(--accent); border-color: var(--accent); color: #fff;
+    }
 
     /* ─── Hero ──────────────────────────────────────────────── */
     #hero {
@@ -823,7 +831,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 const WHATSAPP_NUMBER = '34648493470';
 const EUR_RATE = 0.90;
-const PATCH_CATS = new Set(['laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro']);
+const PATCH_CATS = new Set(['laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro','europa','nuevatemporada']);
 
 // Detectar base path (GitHub Pages vs local)
 const BASE_PATH = (() => {
@@ -884,19 +892,21 @@ const T = {
       return `${eur}€`;
     },
     cats: {
-      all: 'Todos', laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
+      all: 'Todos', nuevatemporada: '🆕 Nueva Temp. 26/27',
+      laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
       seriea: '🇮🇹 Serie A', bundesliga: '🇩🇪 Bundesliga', ligue1: '🇫🇷 Ligue 1',
       selecciones: '🌍 Selecciones', sudamerica: '🌎 Sudamérica',
-      retro: '⏪ Retro', nba: '🏀 NBA', nfl: '🏈 NFL',
+      europa: '🏆 Europa', retro: '⏪ Retro', nba: '🏀 NBA', nfl: '🏈 NFL',
       streetwear: '👕 Streetwear', windbreaker: '💨 Cortavientos',
       kids: '👶 Niños', women: '♀️ Mujer', otros: 'Otros',
     },
     cat_labels: {
+      nuevatemporada: 'Nueva Temporada 26/27',
       laliga: 'LaLiga', premier: 'Premier League', seriea: 'Serie A',
       bundesliga: 'Bundesliga', ligue1: 'Ligue 1', selecciones: 'Selecciones',
-      sudamerica: 'Sudamérica', retro: 'Retro', nba: 'NBA', nfl: 'NFL',
-      streetwear: 'Streetwear', windbreaker: 'Cortavientos', kids: 'Niños',
-      women: 'Mujer', otros: 'Otros',
+      sudamerica: 'Sudamérica', europa: 'Europa', retro: 'Retro',
+      nba: 'NBA', nfl: 'NFL', streetwear: 'Streetwear',
+      windbreaker: 'Cortavientos', kids: 'Niños', women: 'Mujer', otros: 'Otros',
     },
   },
   en: {
@@ -940,19 +950,21 @@ const T = {
     },
     cart_item_price: (usd) => `$${usd.toFixed(2)}`,
     cats: {
-      all: 'All', laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
+      all: 'All', nuevatemporada: '🆕 New Season 26/27',
+      laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
       seriea: '🇮🇹 Serie A', bundesliga: '🇩🇪 Bundesliga', ligue1: '🇫🇷 Ligue 1',
       selecciones: '🌍 National Teams', sudamerica: '🌎 South America',
-      retro: '⏪ Retro', nba: '🏀 NBA', nfl: '🏈 NFL',
+      europa: '🏆 Europe', retro: '⏪ Retro', nba: '🏀 NBA', nfl: '🏈 NFL',
       streetwear: '👕 Streetwear', windbreaker: '💨 Windbreaker',
       kids: '👶 Kids', women: '♀️ Women', otros: 'Others',
     },
     cat_labels: {
+      nuevatemporada: 'New Season 26/27',
       laliga: 'LaLiga', premier: 'Premier League', seriea: 'Serie A',
       bundesliga: 'Bundesliga', ligue1: 'Ligue 1', selecciones: 'National Teams',
-      sudamerica: 'South America', retro: 'Retro', nba: 'NBA', nfl: 'NFL',
-      streetwear: 'Streetwear', windbreaker: 'Windbreaker', kids: 'Kids',
-      women: 'Women', otros: 'Others',
+      sudamerica: 'South America', europa: 'Europe', retro: 'Retro',
+      nba: 'NBA', nfl: 'NFL', streetwear: 'Streetwear',
+      windbreaker: 'Windbreaker', kids: 'Kids', women: 'Women', otros: 'Others',
     },
   },
 };
@@ -1000,14 +1012,16 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro','nba','nfl','streetwear','windbreaker','kids','women','otros'];
+const CAT_ORDER = ['all','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','europa','retro','nba','nfl','streetwear','windbreaker','kids','women','otros'];
 
 function buildCatBar() {
   const bar = document.getElementById('cat-bar');
   bar.innerHTML = '';
   for (const cat of CAT_ORDER) {
     const btn = document.createElement('button');
-    btn.className = 'cat-btn' + (cat === activeCat ? ' active' : '');
+    btn.className = 'cat-btn'
+      + (cat === 'nuevatemporada' ? ' cat-nuevatemporada' : '')
+      + (cat === activeCat ? ' active' : '');
     btn.textContent = t().cats[cat];
     btn.dataset.cat = cat;
     btn.onclick = () => setCategory(cat);

@@ -20,7 +20,7 @@ const CATEGORY_RULES = [
       'betis', 'sevilla', 'bilbao', 'athletic bilbao', 'valencia', 'villarreal',
       'celta', 'osasuna', 'espanyol', 'malaga', 'zaragoza', 'valladolid',
       'oviedo', 'real sociedad', 'sociedad', 'santander', 'racing santander',
-      'girona', 'la coruna', 'deportivo',
+      'girona', 'la coruna', 'deportivo', 'cadiz', 'cordoba',
     ],
   },
   {
@@ -31,6 +31,7 @@ const CATEGORY_RULES = [
       'newcastle', 'west ham', 'wolves', 'wolverhampton', 'leicester',
       'fulham', 'aston villa', 'leeds', 'everton', 'brighton',
       'crystal palace', 'bournemouth', 'nottingham', 'celtic', 'rangers',
+      'sunderland',
     ],
   },
   {
@@ -44,13 +45,16 @@ const CATEGORY_RULES = [
     cat: 'bundesliga',
     keywords: [
       'bayern', 'dortmund', 'bvb', 'leverkusen', 'leipzig', 'rb leipzig',
-      'frankfurt', 'eintracht', 'schalke', 'hamburg', 'werder', 'bremen',
-      'union berlin', 'koln',
+      'frankfurt', 'eintracht', 'schalke', 'hamburg', 'hamburger', 'werder', 'bremen',
+      'union berlin', 'koln', 'augsburg', 'hoffenheim', 'freiburg', 'mainz',
     ],
   },
   {
     cat: 'ligue1',
-    keywords: ['psg', 'paris saint', 'marseille', 'lyon', 'lens', 'monaco', 'rennes'],
+    keywords: [
+      'psg', 'paris saint', 'marseille', 'lyon', 'lens', 'monaco', 'rennes',
+      'rennais', 'metz', 'strasbourg',
+    ],
   },
   {
     cat: 'selecciones',
@@ -62,17 +66,34 @@ const CATEGORY_RULES = [
       'ireland', 'colombia', 'croatia', 'chile', 'norway', 'turkey',
       'jamaica', 'morocco', 'ukraine', 'australia', 'haiti', 'paraguay',
       'ecuador', 'peru', 'greece', 'albania',
+      'hungary', 'canada', 'sweden', 'congo',
+    ],
+  },
+  {
+    // Clubes europeos sin liga propia — va ANTES de sudamerica para tener prioridad
+    cat: 'europa',
+    keywords: [
+      'aik', 'rosenborg', 'bodøglimt', 'bodo/glimt', 'bodo glimt',
+      'red star belgrade', 'red star', 'crvena zvezda',
+      'olympiacos', 'galatasaray', 'besiktas', 'fenerbahce',
+      'porto', 'benfica', 'sporting cp', 'sporting lisbon',
+      'ajax', 'psv', 'anderlecht', 'bruges', 'club brugge',
     ],
   },
   {
     cat: 'sudamerica',
     keywords: [
       'flamengo', 'palmeiras', 'corinthians', 'sao paulo', 'fluminense',
-      'atletico mineiro', 'botafogo', 'vasco', 'santos', 'cruzeiro',
-      'gremio', 'internacional', 'river plate', 'boca juniors', 'boca',
-      'racing club', 'independiente', 'san lorenzo', 'colo colo',
-      'club america', 'america', 'chivas', 'guadalajara', 'cruz azul',
-      'monterrey', 'atletico nacional', 'millonarios', 'olimpo',
+      'atletico mineiro', 'atletico paranaense', 'botafogo', 'vasco', 'santos',
+      'cruzeiro', 'gremio', 'grêmio', 'internacional', 'river plate',
+      'boca juniors', 'boca', 'racing club', 'independiente', 'estudiantes',
+      'san lorenzo', 'colo colo', 'club america', 'chivas',
+      'guadalajara', 'cruz azul', 'monterrey', 'atletico nacional', 'millonarios',
+      'olimpo', 'olimpia', 'victoria', 'penarol',
+      'new york city', 'nycfc', 'los angeles fc', 'lafc',
+      'vancouver', 'whitecaps',
+      // Selecciones CONCACAF/Centroamérica
+      'guatemala', 'honduras', 'costa rica',
     ],
   },
   {
@@ -113,19 +134,21 @@ const CATEGORY_RULES = [
   },
 ];
 
-// Retro: si contiene la palabra "Retro" o un año antes de 2020
-const RETRO_YEAR_RE = /\b(19\d{2}|200[0-9]|201[0-9])\b/;
-const RETRO_SLASH_RE = /\b\d{2}\/\d{2}\b/; // ej: 98/99, 00/01, 84/85
+// Retro: palabra "Retro" explícita, año largo anterior a 2020,
+// o temporada corta XX/YY donde ambos números NO estén en la década 2020-2029.
+// Ejemplos retro:  98/99, 00/01, 84/85, 19/20
+// Ejemplos NO retro: 20/21, 24/25, 25/26, 26/27
+const RETRO_YEAR_RE  = /\b(19\d{2}|200[0-9]|201[0-9])\b/;
+const SLASH_SEASON_RE = /\b(\d{2})\/(\d{2})\b/;
+const MODERN_DECADE_RE = /\b(2[0-9])\/(2[0-9])\b/; // ambos en los 20 → temporada actual
 
 function isRetro(name) {
   const n = name.toLowerCase();
   if (n.includes('retro')) return true;
-  if (RETRO_YEAR_RE.test(name)) {
-    // confirmar que es año futbolero (antes de 2020)
-    const years = name.match(/\b(19\d{2}|200[0-9]|201[0-9])\b/g) || [];
-    if (years.some(y => parseInt(y) < 2020)) return true;
-  }
-  if (RETRO_SLASH_RE.test(name)) return true;
+  // Año largo (4 dígitos) anterior a 2020
+  if (RETRO_YEAR_RE.test(name)) return true;
+  // Temporada corta XX/YY: retro solo si alguno de los dos no pertenece a la década 2020s
+  if (SLASH_SEASON_RE.test(name) && !MODERN_DECADE_RE.test(name)) return true;
   return false;
 }
 
@@ -151,12 +174,18 @@ function detectSizes(name) {
 
 // ─── Categorización ───────────────────────────────────────────────────────────
 
-const FOOTBALL_CATS = new Set(['laliga', 'premier', 'seriea', 'bundesliga', 'ligue1', 'selecciones', 'sudamerica', 'retro']);
+const FOOTBALL_CATS = new Set(['laliga', 'premier', 'seriea', 'bundesliga', 'ligue1', 'selecciones', 'sudamerica', 'retro', 'europa', 'nuevatemporada']);
+
+// Detecta la temporada 26/27 en cualquiera de sus formas escritas
+const NEW_SEASON_RE = /26\/27|2026\/27|2026-27/;
 
 function categorize(name) {
   const lower = name.toLowerCase();
 
-  // Retro tiene prioridad
+  // ① Máxima prioridad: nueva temporada 26/27
+  if (NEW_SEASON_RE.test(name)) return 'nuevatemporada';
+
+  // ② Retro
   if (isRetro(name)) return 'retro';
 
   for (const { cat, keywords } of CATEGORY_RULES) {
