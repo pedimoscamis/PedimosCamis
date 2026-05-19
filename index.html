@@ -1091,7 +1091,7 @@ function createCard(p) {
   card.innerHTML = `
     <div class="card-img-wrap">
       ${p.img
-        ? `<img class="card-img" src="${escHtml(proxyImg(p.img))}" alt="${escHtml(p.nameEn)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        ? `<img class="card-img" src="${escHtml(proxyImg(p.img))}" alt="${escHtml(p.nameEn)}" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
         : ''}
       <div class="card-placeholder" style="${p.img ? 'display:none' : ''}">
         ${jerseyIcon()}
@@ -1319,7 +1319,7 @@ function renderCartItems() {
     el.className = 'cart-item';
     const customMeta = buildCustomMeta(item.customizations);
     el.innerHTML = `
-      ${item.img ? `<img class="cart-item-img" src="${escHtml(proxyImg(item.img))}" alt="${escHtml(item.name)}" loading="lazy">` : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;">${jerseyIcon(28)}</div>`}
+      ${item.img ? `<img class="cart-item-img" src="${escHtml(proxyImg(item.img))}" alt="${escHtml(item.name)}" loading="eager">` : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;">${jerseyIcon(28)}</div>`}
       <div class="cart-item-info">
         <div class="cart-item-name">${escHtml(item.name)}</div>
         <div class="cart-item-meta">
