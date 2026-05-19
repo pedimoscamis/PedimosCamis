@@ -9,7 +9,8 @@
     "categorize": "node categorize.js",
     "build:catalog": "node scraper.js && node categorize.js",
     "download-images": "node download-images.js",
-    "upload-cloudinary": "node upload-cloudinary.js"
+    "upload-cloudinary": "node upload-cloudinary.js",
+    "apply-cloudinary": "node apply-cloudinary.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
