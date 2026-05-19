@@ -1091,7 +1091,7 @@ function createCard(p) {
   card.innerHTML = `
     <div class="card-img-wrap">
       ${p.img
-        ? `<img class="card-img" src="${escHtml(p.img)}" alt="${escHtml(p.nameEn)}" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        ? `<img class="card-img" src="${escHtml(proxyImg(p.img))}" alt="${escHtml(p.nameEn)}" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
         : ''}
       <div class="card-placeholder" style="${p.img ? 'display:none' : ''}">
         ${jerseyIcon()}
@@ -1127,7 +1127,7 @@ function openModal(p) {
 
   if (p.img) {
     const img = document.createElement('img');
-    img.src = p.img;
+    img.src = proxyImg(p.img);
     img.alt = p.nameEn;
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0';
     imgCol.insertBefore(img, imgCol.firstChild);
@@ -1319,7 +1319,7 @@ function renderCartItems() {
     el.className = 'cart-item';
     const customMeta = buildCustomMeta(item.customizations);
     el.innerHTML = `
-      ${item.img ? `<img class="cart-item-img" src="${escHtml(item.img)}" alt="${escHtml(item.name)}" loading="eager">` : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;">${jerseyIcon(28)}</div>`}
+      ${item.img ? `<img class="cart-item-img" src="${escHtml(proxyImg(item.img))}" alt="${escHtml(item.name)}" loading="eager">` : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;">${jerseyIcon(28)}</div>`}
       <div class="cart-item-info">
         <div class="cart-item-name">${escHtml(item.name)}</div>
         <div class="cart-item-meta">
@@ -1450,6 +1450,14 @@ function updateLangUI() {
 // ═══════════════════════════════════════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════════════════════════════════════
+
+function proxyImg(url) {
+  if (!url) return null;
+  // Enruta la imagen a través del servidor para evitar hotlink protection de Yupoo.
+  // El parámetro url lleva la URL sin protocolo: photo.yupoo.com/…
+  const bare = url.replace(/^https?:\/\//, '');
+  return `/proxy?url=${encodeURIComponent(bare)}`;
+}
 
 function escHtml(s) {
   return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
