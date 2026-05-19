@@ -142,11 +142,11 @@ async function fetchAlbumImage(albumUrl) {
     });
   }
 
-  // Limpiar URL (quitar parámetros de tamaño y forzar medium)
+  // Limpiar URL (quitar parámetros de tamaño y forzar small.jpg)
   if (imgUrl) {
     imgUrl = imgUrl.split('?')[0];
-    // Normalizar a medium si tiene sufijo de tamaño conocido
-    imgUrl = imgUrl.replace(/\/(small|large|huge|square|thumb)\.(jpg|jpeg|png|webp)$/i, '/medium.$2');
+    // Normalizar a small.jpg — Yupoo bloquea menos este formato
+    imgUrl = imgUrl.replace(/\/(small|medium|large|huge|square|thumb)\.(jpg|jpeg|png|webp)$/i, '/small.jpg');
   }
 
   return { img: imgUrl, photos };
