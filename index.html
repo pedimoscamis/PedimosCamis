@@ -198,6 +198,28 @@
     }
     #filter-clear-btn:hover { color: var(--text); }
 
+    .filter-select {
+      background: var(--card);
+      border: 1px solid #2a2a2a;
+      color: var(--text);
+      padding: 4px 26px 4px 11px;
+      border-radius: 20px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 12px; font-weight: 500;
+      cursor: pointer; outline: none;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 9px center;
+      transition: border-color .15s;
+      max-width: 200px;
+    }
+    .filter-select:hover { border-color: var(--accent); }
+    .filter-select.active {
+      border-color: var(--accent); color: var(--accent); font-weight: 700;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23e8173c'/%3E%3C/svg%3E");
+    }
+
     /* ─── Hero ──────────────────────────────────────────────── */
     #hero {
       background: linear-gradient(135deg, #0d0000 0%, #1a0008 30%, #0a0a0a 70%, #000 100%);
@@ -251,6 +273,7 @@
     #main {
       max-width: 1440px; margin: 0 auto;
       padding: 28px 24px 60px;
+      scroll-margin-top: 230px;
     }
 
     #results-info {
@@ -599,13 +622,35 @@
     }
 
     .checkout-item-row {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      padding: 8px 0; border-bottom: 1px solid #1a1a1a;
-      font-size: 13px;
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px 0; border-bottom: 1px solid #1a1a1a;
     }
     .checkout-item-row:last-child { border-bottom: none; }
-    .checkout-item-name { flex: 1; margin-right: 12px; line-height: 1.3; }
-    .checkout-item-price { color: var(--accent); font-weight: 600; white-space: nowrap; }
+    .checkout-item-img {
+      width: 60px; height: 80px; border-radius: 6px;
+      object-fit: cover; background: #1a1a1a; flex-shrink: 0;
+    }
+    .checkout-item-img-placeholder {
+      width: 60px; height: 80px; border-radius: 6px;
+      background: #1a1a1a; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; color: #333;
+    }
+    .checkout-item-body { flex: 1; min-width: 0; }
+    .checkout-item-name {
+      font-size: 13px; font-weight: 600; line-height: 1.3;
+      margin-bottom: 2px; color: var(--text);
+    }
+    .checkout-item-size { font-size: 12px; color: var(--muted); margin-bottom: 7px; }
+    .checkout-item-breakdown {
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 2px 10px; font-size: 11px; color: var(--muted);
+    }
+    .checkout-item-breakdown .extra { color: var(--text); }
+    .checkout-item-total {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; color: var(--accent);
+      white-space: nowrap; padding-top: 2px; flex-shrink: 0;
+    }
 
     .checkout-total-block {
       margin: 20px 0;
@@ -906,6 +951,8 @@
 // ═══════════════════════════════════════════════════════════════════════════
 const WHATSAPP_NUMBER = '34648493470';
 const EUR_RATE = 0.90;
+// Detecta "Player Version", "player version", o "player" como palabra independiente
+const PLAYER_RE = /\bplayer\b/i;
 const PATCH_CATS = new Set(['laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro','europa','nuevatemporada']);
 
 // Detectar base path (GitHub Pages vs local)
@@ -1350,8 +1397,8 @@ function detectTeam(name) {
 
 function matchesTipo(p, tipo) {
   const cats = p.cats || [];
-  if (tipo === 'Player Version') return /player version/i.test(p.nameEn);
-  if (tipo === 'Fan Version')    return !/player version/i.test(p.nameEn) && !cats.includes('women') && !cats.includes('kids') && !cats.includes('windbreaker');
+  if (tipo === 'Player Version') return PLAYER_RE.test(p.nameEn);
+  if (tipo === 'Fan Version')    return !PLAYER_RE.test(p.nameEn) && !cats.includes('women') && !cats.includes('kids') && !cats.includes('windbreaker');
   if (tipo === 'Mujer')          return cats.includes('women') || /\bwomen\b|\bmujer\b|\bfemeni/i.test(p.nameEn);
   if (tipo === 'Niños')          return cats.includes('kids')  || /\bkids\b|\bniños\b|\bchild\b|\bjunior\b/i.test(p.nameEn);
   if (tipo === 'Cortavientos')   return cats.includes('windbreaker');
@@ -1434,6 +1481,44 @@ function makeFilterRow(label, group, items) {
   return row;
 }
 
+// items can be strings or {value, label} objects
+function makeSelectRow(label, group, items, placeholder) {
+  const rowEl = document.createElement('div');
+  rowEl.className = 'filter-row';
+  const lbl = document.createElement('span');
+  lbl.className = 'filter-label';
+  lbl.textContent = label;
+  rowEl.appendChild(lbl);
+
+  const currentVal = activeFilters[group].size > 0 ? [...activeFilters[group]][0] : '';
+  const sel = document.createElement('select');
+  sel.className = 'filter-select' + (currentVal ? ' active' : '');
+
+  const opt0 = document.createElement('option');
+  opt0.value = '';
+  opt0.textContent = placeholder;
+  sel.appendChild(opt0);
+
+  for (const item of items) {
+    const val  = (typeof item === 'object') ? item.value : item;
+    const txt  = (typeof item === 'object') ? item.label : item;
+    const opt  = document.createElement('option');
+    opt.value  = val;
+    opt.textContent = txt;
+    if (currentVal === val) opt.selected = true;
+    sel.appendChild(opt);
+  }
+
+  sel.onchange = () => {
+    activeFilters[group].clear();
+    if (sel.value) activeFilters[group].add(sel.value);
+    buildFilterBar();
+    renderAll();
+  };
+  rowEl.appendChild(sel);
+  return rowEl;
+}
+
 function buildFilterBar() {
   const bar  = document.getElementById('filter-bar');
   const rows = document.getElementById('filter-rows');
@@ -1449,7 +1534,7 @@ function buildFilterBar() {
 
   const isEs = lang === 'es';
 
-  // ── 1. Equipo ──
+  // ── 1. Equipo — select dropdown ─────────────────────────────────────────
   const NO_TEAM_CATS = new Set(['streetwear','windbreaker','otros','nfl']);
   if (!NO_TEAM_CATS.has(activeCat)) {
     const teamCount = new Map();
@@ -1461,33 +1546,34 @@ function buildFilterBar() {
       const sorted = [...teamCount.entries()]
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([name]) => name);
-      rows.appendChild(makeFilterRow(isEs ? 'Equipo' : 'Team', 'teams', sorted));
+      rows.appendChild(makeSelectRow(
+        isEs ? 'Equipo' : 'Team',
+        'teams',
+        sorted,
+        isEs ? 'Todos los equipos' : 'All teams'
+      ));
     }
   }
 
-  // ── 2. Tipo ──
+  // ── 2. Tipo — pills ──────────────────────────────────────────────────────
   const TIPOS = ['Fan Version','Player Version','Mujer','Niños','Cortavientos'];
   const tiposPresent = TIPOS.filter(ti => catProducts.some(p => matchesTipo(p, ti)));
   if (tiposPresent.length > 1) {
     rows.appendChild(makeFilterRow(isEs ? 'Tipo' : 'Type', 'tipos', tiposPresent));
   }
 
-  // ── 3. Equipación ──
+  // ── 3. Equipación — pills ────────────────────────────────────────────────
   const EQUIPS_ES = ['Local','Visitante','Tercera','Portero','Retro','Entrenamiento'];
-  const EQUIPS_EN = ['Home',  'Away',      'Third',   'Goalkeeper','Retro','Training'];
+  const EQUIPS_EN = ['Home','Away','Third','Goalkeeper','Retro','Training'];
   const equipsPresent = EQUIPS_ES.filter(eq => catProducts.some(p => matchesEquipacion(p, eq)));
   if (equipsPresent.length > 1) {
-    // Display labels in current lang, but filter values are always the Spanish key
-    const displayItems = isEs ? equipsPresent : equipsPresent.map(eq => EQUIPS_EN[EQUIPS_ES.indexOf(eq)]);
-    // We need the pill value to match the internal key for matchesEquipacion
-    // So we render pills with displayed text but pass the ES key to toggleFilter
     const rowEl = document.createElement('div');
     rowEl.className = 'filter-row';
     const lbl = document.createElement('span');
     lbl.className = 'filter-label';
     lbl.textContent = isEs ? 'Equipación' : 'Kit';
     rowEl.appendChild(lbl);
-    equipsPresent.forEach((esKey, i) => {
+    equipsPresent.forEach(esKey => {
       const pill = document.createElement('button');
       pill.className = 'filter-pill' + (activeFilters.equipacion.has(esKey) ? ' active' : '');
       pill.textContent = isEs ? esKey : EQUIPS_EN[EQUIPS_ES.indexOf(esKey)];
@@ -1497,30 +1583,23 @@ function buildFilterBar() {
     rows.appendChild(rowEl);
   }
 
-  // ── 4. Temporada ──
+  // ── 4. Temporada — select dropdown ──────────────────────────────────────
   const SEASONS = ['26/27','25/26','24/25','Anteriores'];
   const seasonsPresent = SEASONS.filter(s => catProducts.some(p => matchesSeason(p.nameEn, s)));
   if (seasonsPresent.length > 0) {
-    const seasonLabels = isEs
-      ? { 'Anteriores': 'Anteriores' }
-      : { '26/27':'26/27', '25/26':'25/26', '24/25':'24/25', 'Anteriores':'Older' };
-    const rowEl = document.createElement('div');
-    rowEl.className = 'filter-row';
-    const lbl = document.createElement('span');
-    lbl.className = 'filter-label';
-    lbl.textContent = isEs ? 'Temporada' : 'Season';
-    rowEl.appendChild(lbl);
-    for (const s of seasonsPresent) {
-      const pill = document.createElement('button');
-      pill.className = 'filter-pill' + (activeFilters.temporada.has(s) ? ' active' : '');
-      pill.textContent = (!isEs && s === 'Anteriores') ? 'Older' : s;
-      pill.onclick = () => toggleFilter('temporada', s);
-      rowEl.appendChild(pill);
-    }
-    rows.appendChild(rowEl);
+    const seasonItems = seasonsPresent.map(s => ({
+      value: s,
+      label: (!isEs && s === 'Anteriores') ? 'Older' : s,
+    }));
+    rows.appendChild(makeSelectRow(
+      isEs ? 'Temporada' : 'Season',
+      'temporada',
+      seasonItems,
+      isEs ? 'Todas las temporadas' : 'All seasons'
+    ));
   }
 
-  // ── Clear button (only when filters active) ──
+  // ── Clear button (only when filters active) ──────────────────────────────
   if (hasActiveFilters()) {
     const clearBtn = document.createElement('button');
     clearBtn.id = 'filter-clear-btn';
@@ -1599,12 +1678,12 @@ function primaryCat(p) {
 function getBasePrice(p) {
   const pc = primaryCat(p);
   if (CAT_PRICES[pc] !== undefined) return CAT_PRICES[pc];
-  if (/player version/i.test(p.nameEn)) return 11;
+  if (PLAYER_RE.test(p.nameEn)) return 11;
   return p.priceUsd; // 8 (normal) o 13 (retro) — calculado por categorize.js
 }
 
 function isPlayerVersion(p) {
-  return /player version/i.test(p.nameEn);
+  return PLAYER_RE.test(p.nameEn);
 }
 
 // Extrae la temporada del nombre del producto.
@@ -1814,7 +1893,7 @@ function addToCart() {
     id: Date.now(),
     productId: currentProduct.id,
     name: currentProduct.nameEn,
-    cat: currentProduct.cat,
+    cats: currentProduct.cats,
     img: currentProduct.img,
     yupooUrl: currentProduct.yupooUrl,
     size: selectedSize,
@@ -1907,7 +1986,7 @@ function buildCustomMeta(customizations) {
 
 // Devuelve "Player" o "Fan" según el nombre del producto
 function getVersion(name) {
-  return /player version/i.test(name) ? 'Player' : 'Fan';
+  return PLAYER_RE.test(name) ? 'Player' : 'Fan';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1919,17 +1998,40 @@ function openCheckout() {
 
   const totalUsd = cartTotalUsd();
   const totalEur = (totalUsd * EUR_RATE).toFixed(2);
+  const isEs = lang === 'es';
 
-  // Items list
+  // Items list — image + name + price breakdown
   const itemsEl = document.getElementById('checkout-items-list');
   itemsEl.innerHTML = '';
   for (const item of cart) {
-    const customMeta = buildCustomMeta(item.customizations);
+    const extrasUsd = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
+    const baseUsd   = item.priceUsd - extrasUsd;
     const row = document.createElement('div');
     row.className = 'checkout-item-row';
+
+    // Price breakdown grid rows
+    let bdHtml = `<div class="checkout-item-breakdown">`;
+    bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>$${baseUsd}</span>`;
+    for (const c of item.customizations) {
+      let lbl;
+      if (c.type === 'dorsal') lbl = isEs ? 'Nombre + dorsal' : 'Name + number';
+      else if (c.type === 'patch') lbl = `Parche: ${c.label}`;
+      else lbl = c.type;
+      bdHtml += `<span class="extra">${escHtml(lbl)}</span><span class="extra">+$${c.extraUsd}</span>`;
+    }
+    bdHtml += `</div>`;
+
     row.innerHTML = `
-      <span class="checkout-item-name">${escHtml(item.name)} — ${escHtml(item.size)}${customMeta ? ` (${customMeta})` : ''}</span>
-      <span class="checkout-item-price">${t().cart_item_price(item.priceUsd)}</span>`;
+      ${item.img
+        ? `<img class="checkout-item-img" src="${escHtml(proxyImg(item.img))}" alt="" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        : ''}
+      <div class="checkout-item-img-placeholder"${item.img ? ' style="display:none"' : ''}>${jerseyIcon(28)}</div>
+      <div class="checkout-item-body">
+        <div class="checkout-item-name">${escHtml(item.name)}</div>
+        <div class="checkout-item-size">${isEs ? 'Talla' : 'Size'}: ${escHtml(item.size)}</div>
+        ${bdHtml}
+      </div>
+      <div class="checkout-item-total">${t().cart_item_price(item.priceUsd)}</div>`;
     itemsEl.appendChild(row);
   }
 
