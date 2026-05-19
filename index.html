@@ -150,6 +150,54 @@
       background: var(--accent); border-color: var(--accent); color: #fff;
     }
 
+    /* ─── Filter Bar ───────────────────────────────────────── */
+    #filter-bar {
+      position: sticky; top: 109px; z-index: 98;
+      background: rgba(8,8,8,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #1e1e1e;
+      padding: 6px 24px 8px;
+    }
+    .filter-row {
+      display: flex; align-items: center; gap: 6px;
+      padding: 3px 0;
+      overflow-x: auto; flex-wrap: nowrap;
+      scrollbar-width: none;
+    }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-label {
+      flex-shrink: 0;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      color: var(--muted); letter-spacing: 0.09em;
+      min-width: 78px;
+      font-family: 'Barlow', sans-serif;
+    }
+    .filter-pill {
+      flex-shrink: 0;
+      background: none; border: 1px solid #2a2a2a;
+      color: var(--muted); padding: 3px 11px;
+      border-radius: 20px; cursor: pointer;
+      font-family: 'Barlow', sans-serif;
+      font-size: 12px; font-weight: 500;
+      white-space: nowrap;
+      transition: all .15s;
+    }
+    .filter-pill:hover { border-color: var(--accent); color: var(--text); }
+    .filter-pill.active {
+      background: var(--accent); border-color: var(--accent);
+      color: #fff; font-weight: 700;
+    }
+    #filter-clear-btn {
+      display: block; margin: 4px 0 2px;
+      background: none; border: none;
+      color: var(--muted); font-size: 11px;
+      cursor: pointer; padding: 2px 0;
+      font-family: 'Barlow', sans-serif;
+      text-decoration: underline;
+      transition: color .15s;
+    }
+    #filter-clear-btn:hover { color: var(--text); }
+
     /* ─── Hero ──────────────────────────────────────────────── */
     #hero {
       background: linear-gradient(135deg, #0d0000 0%, #1a0008 30%, #0a0a0a 70%, #000 100%);
@@ -255,6 +303,14 @@
       color: #fff; font-size: 10px; font-weight: 700;
       letter-spacing: .8px; padding: 3px 8px;
       border-radius: 4px;
+    }
+    .badge-player {
+      display: inline-block;
+      background: #e8a817; color: #000;
+      font-size: 10px; font-weight: 800;
+      letter-spacing: .8px; padding: 2px 6px;
+      border-radius: 4px; margin-left: 6px;
+      vertical-align: middle;
     }
 
     .card-body {
@@ -597,6 +653,19 @@
       font-size: 13px; color: var(--muted);
       margin-bottom: 18px; line-height: 1.6;
     }
+    #photo-reminder {
+      background: #3d3000; border: 1px solid #f5c400;
+      color: #f5c400; border-radius: 8px;
+      padding: 12px 16px; font-size: 13px; font-weight: 600;
+      margin-bottom: 12px; line-height: 1.5;
+    }
+    .custom-select {
+      width: 100%; background: var(--card); border: 1px solid var(--border);
+      color: var(--text); padding: 8px 12px; border-radius: 6px;
+      font-family: 'Barlow', sans-serif; font-size: 13px; outline: none;
+      cursor: pointer; transition: border-color .2s;
+    }
+    .custom-select:focus { border-color: var(--accent); }
 
     #whatsapp-btn {
       width: 100%; background: #25D366; color: #fff;
@@ -682,6 +751,11 @@
 <!-- ─── Category Bar ───────────────────────────────────────────────────── -->
 <nav id="cat-bar"></nav>
 
+<!-- ─── Filter Bar ────────────────────────────────────────────────────── -->
+<div id="filter-bar" style="display:none">
+  <div id="filter-rows"></div>
+</div>
+
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
   <h1 id="hero-title">NUEVA<span>TEMPORADA</span></h1>
@@ -734,21 +808,21 @@
           <input class="custom-input" id="input-name" type="text" data-i18n-placeholder="player_name" placeholder="Nombre del jugador" maxlength="20" />
           <input class="custom-input" id="input-number" type="number" min="1" max="99" placeholder="Nº" style="max-width:72px" />
         </div>
-        <label class="custom-option" id="opt-ucl-wrap">
-          <input type="checkbox" id="opt-ucl" />
-          <span class="custom-option-label" data-i18n="ucl_patch">Parche UCL</span>
+        <label class="custom-option" id="opt-patch-wrap">
+          <input type="checkbox" id="opt-patch" />
+          <span class="custom-option-label" data-i18n="patch">Parche</span>
           <span class="custom-option-price">+1$ / +0,90€</span>
         </label>
-        <label class="custom-option" id="opt-wc-wrap">
-          <input type="checkbox" id="opt-wc" />
-          <span class="custom-option-label" data-i18n="wc_patch">Parche Mundial 2026</span>
-          <span class="custom-option-price">+1$ / +0,90€</span>
-        </label>
-        <label class="custom-option" id="opt-cap-wrap">
-          <input type="checkbox" id="opt-cap" />
-          <span class="custom-option-label" data-i18n="captain">Brazalete Capitán</span>
-          <span class="custom-option-price">+1$ / +0,90€</span>
-        </label>
+        <div class="custom-inputs" id="patch-inputs">
+          <select class="custom-select" id="patch-type">
+            <option value="">Seleccionar parche…</option>
+            <option value="Liga">Liga</option>
+            <option value="Champions">Champions</option>
+            <option value="Mundial">Mundial</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <input class="custom-input" id="patch-other" type="text" placeholder="Especificar…" maxlength="30" style="display:none" />
+        </div>
       </div>
       <button id="add-to-cart-btn" onclick="addToCart()"></button>
     </div>
@@ -801,6 +875,7 @@
       </div>
     </div>
     <p class="checkout-note" data-i18n="payment_note">Una vez realizado el pago, envíanos el comprobante por WhatsApp con el detalle de tu pedido.</p>
+    <div id="photo-reminder">📸 Antes de enviar, copia la foto de tu equipación/es y pégala en el mensaje de WhatsApp</div>
     <button id="whatsapp-btn" onclick="confirmWhatsapp()">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       <span data-i18n="confirm_whatsapp">CONFIRMAR POR WHATSAPP</span>
@@ -856,9 +931,7 @@ const T = {
     personalization: 'Personalización',
     name_number: 'Añadir nombre y dorsal',
     player_name: 'Nombre del jugador',
-    ucl_patch: 'Parche UCL',
-    wc_patch: 'Parche Mundial 2026',
-    captain: 'Brazalete Capitán',
+    patch: 'Parche',
     add_cart: (p) => `AÑADIR AL CARRITO — ${p}`,
     cart: 'Carrito',
     total: 'Total',
@@ -918,9 +991,7 @@ const T = {
     personalization: 'Customization',
     name_number: 'Add name & number',
     player_name: 'Player name',
-    ucl_patch: 'UCL Patch',
-    wc_patch: 'World Cup 2026 Patch',
-    captain: 'Captain Armband',
+    patch: 'Patch',
     add_cart: (p) => `ADD TO CART — ${p}`,
     cart: 'Cart',
     total: 'Total',
@@ -979,6 +1050,7 @@ let searchQuery = '';
 let currentProduct = null;
 let selectedSize = null;
 let cart = JSON.parse(localStorage.getItem('kz-cart') || '[]');
+let activeFilters = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set() };
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INIT
@@ -996,6 +1068,7 @@ async function init() {
     const res = await fetch(PRODUCTS_URL);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     allProducts = await res.json();
+    buildFilterBar();
     renderAll();
   } catch (e) {
     document.getElementById('results-info').textContent = t().error_load;
@@ -1032,8 +1105,10 @@ function buildCatBar() {
 function setCategory(cat) {
   activeCat = cat;
   searchQuery = '';
+  clearActiveFilters();
   document.getElementById('search').value = '';
   buildCatBar();
+  buildFilterBar();
   renderAll();
   document.getElementById('main').scrollIntoView({ behavior: 'smooth' });
 }
@@ -1041,14 +1116,418 @@ function setCategory(cat) {
 function goHome() {
   activeCat = 'all';
   searchQuery = '';
+  clearActiveFilters();
   document.getElementById('search').value = '';
   buildCatBar();
+  buildFilterBar();
   renderAll();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function scrollToGrid() {
   document.getElementById('main').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FILTER SYSTEM
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Teams: { d: displayName, k: [keywords in lowercase] }
+const KNOWN_TEAMS = [
+  // ── LaLiga ──
+  { d: 'Real Madrid',      k: ['real madrid'] },
+  { d: 'Barcelona',        k: ['barcelona', ' barca '] },
+  { d: 'Atlético Madrid',  k: ['atletico madrid', 'atlético madrid', 'atletico de madrid'] },
+  { d: 'Sevilla',          k: ['sevilla'] },
+  { d: 'Valencia',         k: ['valencia'] },
+  { d: 'Real Betis',       k: ['real betis', 'betis'] },
+  { d: 'Athletic Bilbao',  k: ['athletic bilbao', 'athletic club'] },
+  { d: 'Villarreal',       k: ['villarreal'] },
+  { d: 'Real Sociedad',    k: ['real sociedad'] },
+  { d: 'Celta Vigo',       k: ['celta vigo', 'celta de vigo'] },
+  { d: 'Osasuna',          k: ['osasuna'] },
+  { d: 'Getafe',           k: ['getafe'] },
+  { d: 'Girona',           k: ['girona'] },
+  { d: 'Rayo Vallecano',   k: ['rayo vallecano', 'rayo'] },
+  { d: 'Mallorca',         k: ['mallorca'] },
+  { d: 'Alavés',           k: ['alaves', 'alavés'] },
+  { d: 'Espanyol',         k: ['espanyol'] },
+  { d: 'Las Palmas',       k: ['las palmas'] },
+  { d: 'Leganés',          k: ['leganes', 'leganés'] },
+  { d: 'Valladolid',       k: ['valladolid'] },
+  { d: 'Cádiz',            k: ['cadiz', 'cádiz'] },
+  { d: 'Córdoba',          k: ['cordoba', 'córdoba'] },
+  // ── Premier League ──
+  { d: 'Manchester United',k: ['manchester united', 'man united', 'man utd', 'man. united'] },
+  { d: 'Manchester City',  k: ['manchester city', 'man city', 'man. city'] },
+  { d: 'Liverpool',        k: ['liverpool'] },
+  { d: 'Arsenal',          k: ['arsenal'] },
+  { d: 'Chelsea',          k: ['chelsea'] },
+  { d: 'Tottenham',        k: ['tottenham', 'spurs'] },
+  { d: 'Newcastle',        k: ['newcastle'] },
+  { d: 'West Ham',         k: ['west ham'] },
+  { d: 'Aston Villa',      k: ['aston villa'] },
+  { d: 'Everton',          k: ['everton'] },
+  { d: 'Brighton',         k: ['brighton'] },
+  { d: 'Wolves',           k: ['wolves', 'wolverhampton'] },
+  { d: 'Leicester',        k: ['leicester'] },
+  { d: 'Leeds',            k: ['leeds'] },
+  { d: 'Sunderland',       k: ['sunderland'] },
+  { d: 'Crystal Palace',   k: ['crystal palace'] },
+  { d: 'Brentford',        k: ['brentford'] },
+  { d: 'Nottm Forest',     k: ['nottingham', 'nottm forest'] },
+  { d: 'Fulham',           k: ['fulham'] },
+  { d: 'Southampton',      k: ['southampton'] },
+  { d: 'Bournemouth',      k: ['bournemouth'] },
+  { d: 'Burnley',          k: ['burnley'] },
+  // ── Serie A ──
+  { d: 'Juventus',         k: ['juventus', 'juve'] },
+  { d: 'Inter Milan',      k: ['inter milan', 'inter '] },
+  { d: 'AC Milan',         k: ['ac milan', ' milan '] },
+  { d: 'Roma',             k: ['as roma', ' roma '] },
+  { d: 'Napoli',           k: ['napoli'] },
+  { d: 'Lazio',            k: ['lazio'] },
+  { d: 'Atalanta',         k: ['atalanta'] },
+  { d: 'Fiorentina',       k: ['fiorentina'] },
+  { d: 'Torino',           k: ['torino'] },
+  { d: 'Bologna',          k: ['bologna'] },
+  { d: 'Sampdoria',        k: ['sampdoria'] },
+  { d: 'Genoa',            k: ['genoa'] },
+  { d: 'Udinese',          k: ['udinese'] },
+  { d: 'Parma',            k: ['parma'] },
+  { d: 'Cagliari',         k: ['cagliari'] },
+  { d: 'Monza',            k: ['monza'] },
+  { d: 'Como',             k: [' como '] },
+  { d: 'Venezia',          k: ['venezia'] },
+  // ── Bundesliga ──
+  { d: 'Bayern Munich',    k: ['bayern munich', 'bayern'] },
+  { d: 'Borussia Dortmund',k: ['borussia dortmund', 'dortmund', 'bvb'] },
+  { d: 'Bayer Leverkusen', k: ['leverkusen'] },
+  { d: 'RB Leipzig',       k: ['rb leipzig', 'leipzig'] },
+  { d: 'Eintracht Frankfurt',k:['eintracht frankfurt', 'frankfurt'] },
+  { d: 'Wolfsburg',        k: ['wolfsburg'] },
+  { d: 'Schalke',          k: ['schalke'] },
+  { d: 'Gladbach',         k: ['gladbach', 'monchengladbach', 'mönchengladbach'] },
+  { d: 'Stuttgart',        k: ['stuttgart'] },
+  { d: 'Union Berlin',     k: ['union berlin'] },
+  { d: 'Werder Bremen',    k: ['werder bremen', 'werder'] },
+  { d: 'Hoffenheim',       k: ['hoffenheim'] },
+  { d: 'Freiburg',         k: ['freiburg'] },
+  { d: 'Augsburg',         k: ['augsburg'] },
+  { d: 'Mainz',            k: ['mainz'] },
+  // ── Ligue 1 ──
+  { d: 'PSG',              k: ['psg', 'paris saint', 'paris sg'] },
+  { d: 'Marseille',        k: ['marseille', 'om '] },
+  { d: 'Lyon',             k: ['lyon', 'olympique lyon'] },
+  { d: 'Monaco',           k: ['monaco', 'as monaco'] },
+  { d: 'Lille',            k: ['lille', 'losc'] },
+  { d: 'Nice',             k: ['nice', 'ogc nice'] },
+  { d: 'Rennes',           k: ['rennes'] },
+  { d: 'Lens',             k: ['lens', 'rc lens'] },
+  { d: 'Nantes',           k: ['nantes'] },
+  { d: 'Saint-Étienne',    k: ['saint-etienne', 'st etienne', 'saint etienne'] },
+  { d: 'Strasbourg',       k: ['strasbourg'] },
+  // ── Europa ──
+  { d: 'Benfica',          k: ['benfica'] },
+  { d: 'Porto',            k: ['porto', ' fc porto'] },
+  { d: 'Sporting CP',      k: ['sporting cp', 'sporting lisbon', 'sporting portugal'] },
+  { d: 'Ajax',             k: ['ajax'] },
+  { d: 'PSV',              k: ['psv'] },
+  { d: 'Feyenoord',        k: ['feyenoord'] },
+  { d: 'Celtic',           k: ['celtic'] },
+  { d: 'Rangers',          k: ['rangers'] },
+  { d: 'Red Star Belgrade',k: ['red star', 'red star belgrade', 'crvena zvezda'] },
+  { d: 'Galatasaray',      k: ['galatasaray'] },
+  { d: 'Fenerbahçe',       k: ['fenerbahce', 'fenerbahçe'] },
+  { d: 'Besiktas',         k: ['besiktas', 'beşiktaş'] },
+  // ── Sudamérica ──
+  { d: 'Flamengo',         k: ['flamengo'] },
+  { d: 'Corinthians',      k: ['corinthians'] },
+  { d: 'Palmeiras',        k: ['palmeiras'] },
+  { d: 'São Paulo',        k: ['sao paulo', 'são paulo'] },
+  { d: 'Santos',           k: ['santos'] },
+  { d: 'Grêmio',           k: ['gremio', 'grêmio'] },
+  { d: 'Internacional',    k: ['internacional sc', 'sc internacional'] },
+  { d: 'Fluminense',       k: ['fluminense'] },
+  { d: 'Vasco',            k: ['vasco da gama', 'vasco'] },
+  { d: 'Atlético Mineiro', k: ['atletico mineiro', 'atlético mineiro'] },
+  { d: 'River Plate',      k: ['river plate'] },
+  { d: 'Boca Juniors',     k: ['boca juniors', 'boca'] },
+  { d: 'Racing Club',      k: ['racing club'] },
+  { d: 'Independiente',    k: ['independiente'] },
+  { d: 'San Lorenzo',      k: ['san lorenzo'] },
+  { d: 'Club América',     k: ['club america', 'club américa', 'america fc'] },
+  { d: 'Cruz Azul',        k: ['cruz azul'] },
+  { d: 'Chivas',           k: ['chivas', 'guadalajara'] },
+  { d: 'Tigres',           k: ['tigres uanl', 'tigres'] },
+  { d: 'Monterrey',        k: ['monterrey', 'rayados'] },
+  { d: 'Colo-Colo',        k: ['colo colo', 'colo-colo'] },
+  // ── Selecciones ──
+  { d: 'España',           k: ['spain', 'españa'] },
+  { d: 'Francia',          k: ['france', 'francia'] },
+  { d: 'Alemania',         k: ['germany', 'alemania', 'deutschland'] },
+  { d: 'Inglaterra',       k: ['england', 'inglaterra'] },
+  { d: 'Italia',           k: ['italy', 'italia'] },
+  { d: 'Brasil',           k: ['brazil', 'brasil'] },
+  { d: 'Argentina',        k: ['argentina'] },
+  { d: 'Portugal',         k: ['portugal'] },
+  { d: 'Países Bajos',     k: ['netherlands', 'holland', 'países bajos', 'paises bajos'] },
+  { d: 'Bélgica',          k: ['belgium', 'bélgica', 'belgica'] },
+  { d: 'Uruguay',          k: ['uruguay'] },
+  { d: 'Colombia',         k: ['colombia'] },
+  { d: 'México',           k: ['mexico', 'méxico'] },
+  { d: 'USA',              k: ['usa', 'united states', 'usmnt'] },
+  { d: 'Japón',            k: ['japan', 'japón', 'japon'] },
+  { d: 'Corea del Sur',    k: ['south korea', 'corea del sur', 'korea'] },
+  { d: 'Australia',        k: ['australia'] },
+  { d: 'Marruecos',        k: ['morocco', 'marruecos'] },
+  { d: 'Senegal',          k: ['senegal'] },
+  { d: 'Costa de Marfil',  k: ['ivory coast', 'cote d\'ivoire', 'costa de marfil'] },
+  { d: 'Ghana',            k: ['ghana'] },
+  { d: 'Nigeria',          k: ['nigeria'] },
+  { d: 'Egipto',           k: ['egypt', 'egipto'] },
+  { d: 'Croacia',          k: ['croatia', 'croacia'] },
+  { d: 'Serbia',           k: ['serbia'] },
+  { d: 'Suiza',            k: ['switzerland', 'suiza'] },
+  { d: 'Escocia',          k: ['scotland', 'escocia'] },
+  { d: 'Gales',            k: ['wales', 'gales'] },
+  { d: 'Polonia',          k: ['poland', 'polonia'] },
+  { d: 'Suecia',           k: ['sweden', 'suecia'] },
+  { d: 'Dinamarca',        k: ['denmark', 'dinamarca'] },
+  { d: 'Austria',          k: ['austria'] },
+  { d: 'Turquía',          k: ['turkey', 'turquía', 'turquia'] },
+  { d: 'Hungría',          k: ['hungary', 'hungría', 'hungria'] },
+  { d: 'Rumanía',          k: ['romania', 'rumania', 'rumanía'] },
+  { d: 'Rep. Checa',       k: ['czech republic', 'czechia', 'czech'] },
+  { d: 'Canadá',           k: ['canada', 'canadá'] },
+  { d: 'Congo',            k: ['congo', 'rdc'] },
+  { d: 'Argelia',          k: ['algeria', 'argelia'] },
+  { d: 'Túnez',            k: ['tunisia', 'tunez', 'túnez'] },
+  { d: 'Camerún',          k: ['cameroon', 'camerún', 'camerun'] },
+  { d: 'Arabia Saudí',     k: ['saudi arabia', 'arabia saudi', 'arabia saudí'] },
+  // ── NBA ──
+  { d: 'LA Lakers',        k: ['lakers', 'los angeles lakers', 'la lakers'] },
+  { d: 'Chicago Bulls',    k: ['bulls', 'chicago bulls'] },
+  { d: 'Golden State Warriors', k: ['warriors', 'golden state'] },
+  { d: 'Boston Celtics',   k: ['celtics', 'boston celtics'] },
+  { d: 'New York Knicks',  k: ['knicks', 'new york knicks', 'ny knicks'] },
+  { d: 'Miami Heat',       k: ['heat', 'miami heat'] },
+  { d: 'Brooklyn Nets',    k: ['nets', 'brooklyn nets'] },
+  { d: 'LA Clippers',      k: ['clippers', 'la clippers'] },
+  { d: 'San Antonio Spurs',k: ['spurs', 'san antonio spurs'] },
+  { d: 'Houston Rockets',  k: ['rockets', 'houston rockets'] },
+  { d: 'Detroit Pistons',  k: ['pistons', 'detroit pistons'] },
+  { d: 'Philadelphia 76ers',k:['76ers', 'sixers', 'philadelphia 76'] },
+  { d: 'Toronto Raptors',  k: ['raptors', 'toronto raptors'] },
+  { d: 'Milwaukee Bucks',  k: ['bucks', 'milwaukee bucks'] },
+  { d: 'Dallas Mavericks', k: ['mavericks', 'mavs', 'dallas mavericks'] },
+  { d: 'Phoenix Suns',     k: ['suns', 'phoenix suns'] },
+  { d: 'Denver Nuggets',   k: ['nuggets', 'denver nuggets'] },
+  { d: 'Utah Jazz',        k: ['jazz', 'utah jazz'] },
+  { d: 'OKC Thunder',      k: ['thunder', 'oklahoma city', 'okc'] },
+  { d: 'Portland Trail Blazers', k: ['blazers', 'trail blazers', 'portland'] },
+  { d: 'Sacramento Kings', k: ['kings', 'sacramento kings'] },
+  { d: 'Charlotte Hornets',k: ['hornets', 'charlotte hornets'] },
+  { d: 'Indiana Pacers',   k: ['pacers', 'indiana pacers'] },
+  { d: 'Atlanta Hawks',    k: ['hawks', 'atlanta hawks'] },
+  { d: 'Memphis Grizzlies',k: ['grizzlies', 'memphis grizzlies'] },
+  { d: 'New Orleans Pelicans',k:['pelicans', 'new orleans pelicans'] },
+  { d: 'Orlando Magic',    k: ['magic', 'orlando magic'] },
+  { d: 'Washington Wizards',k:['wizards', 'washington wizards'] },
+  { d: 'Cleveland Cavaliers',k:['cavaliers', 'cavs', 'cleveland cavaliers'] },
+  { d: 'Minnesota Timberwolves',k:['timberwolves', 'minnesota timberwolves'] },
+];
+
+function detectTeam(name) {
+  const n = name.toLowerCase();
+  for (const tm of KNOWN_TEAMS) {
+    for (const kw of tm.k) {
+      if (n.includes(kw)) return tm.d;
+    }
+  }
+  return null;
+}
+
+function matchesTipo(p, tipo) {
+  const n = p.nameEn.toLowerCase();
+  if (tipo === 'Player Version') return /player version/i.test(p.nameEn);
+  if (tipo === 'Fan Version')    return !/player version/i.test(p.nameEn) && p.cat !== 'women' && p.cat !== 'kids' && p.cat !== 'windbreaker';
+  if (tipo === 'Mujer')          return p.cat === 'women' || /\bwomen\b|\bmujer\b|\bfemeni/i.test(p.nameEn);
+  if (tipo === 'Niños')          return p.cat === 'kids'  || /\bkids\b|\bniños\b|\bchild\b|\bjunior\b/i.test(p.nameEn);
+  if (tipo === 'Cortavientos')   return p.cat === 'windbreaker';
+  return false;
+}
+
+function matchesEquipacion(p, equip) {
+  if (equip === 'Local')         return /\bhome\b|\blocal\b/i.test(p.nameEn);
+  if (equip === 'Visitante')     return /\baway\b|\bvisitante\b/i.test(p.nameEn);
+  if (equip === 'Tercera')       return /\bthird\b|\btercera\b|\b3rd\b/i.test(p.nameEn);
+  if (equip === 'Portero')       return /\bgoalkeeper\b|\bportero\b|\bkeeper\b|\bgk\b/i.test(p.nameEn);
+  if (equip === 'Retro')         return p.cat === 'retro' || /\bretro\b/i.test(p.nameEn);
+  if (equip === 'Entrenamiento') return /training|entrenamiento|pre.match|prematch/i.test(p.nameEn);
+  return false;
+}
+
+function matchesSeason(name, value) {
+  if (value === '26/27')       return /\b(26\/27|2026\/27)\b/.test(name);
+  if (value === '25/26')       return /\b(25\/26|2025\/26)\b/.test(name);
+  if (value === '24/25')       return /\b(24\/25|2024\/25)\b/.test(name);
+  if (value === 'Anteriores')  {
+    // Has a season but it's not one of the three above, or is retro without season
+    if (/\b(26\/27|2026\/27|25\/26|2025\/26|24\/25|2024\/25)\b/.test(name)) return false;
+    return extractSeason(name) !== null;
+  }
+  return false;
+}
+
+function matchesFilter(p) {
+  const f = activeFilters;
+  if (f.teams.size > 0) {
+    const team = detectTeam(p.nameEn);
+    if (!team || !f.teams.has(team)) return false;
+  }
+  if (f.tipos.size > 0) {
+    if (![...f.tipos].some(tipo => matchesTipo(p, tipo))) return false;
+  }
+  if (f.equipacion.size > 0) {
+    if (![...f.equipacion].some(eq => matchesEquipacion(p, eq))) return false;
+  }
+  if (f.temporada.size > 0) {
+    if (![...f.temporada].some(s => matchesSeason(p.nameEn, s))) return false;
+  }
+  return true;
+}
+
+function hasActiveFilters() {
+  return activeFilters.teams.size > 0 || activeFilters.tipos.size > 0 ||
+         activeFilters.equipacion.size > 0 || activeFilters.temporada.size > 0;
+}
+
+function clearActiveFilters() {
+  activeFilters = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set() };
+}
+
+function toggleFilter(group, value) {
+  if (activeFilters[group].has(value)) {
+    activeFilters[group].delete(value);
+  } else {
+    activeFilters[group].add(value);
+  }
+  buildFilterBar();
+  renderAll();
+}
+
+function makeFilterRow(label, group, items) {
+  const row = document.createElement('div');
+  row.className = 'filter-row';
+  const lbl = document.createElement('span');
+  lbl.className = 'filter-label';
+  lbl.textContent = label;
+  row.appendChild(lbl);
+  for (const item of items) {
+    const pill = document.createElement('button');
+    pill.className = 'filter-pill' + (activeFilters[group].has(item) ? ' active' : '');
+    pill.textContent = item;
+    pill.onclick = () => toggleFilter(group, item);
+    row.appendChild(pill);
+  }
+  return row;
+}
+
+function buildFilterBar() {
+  const bar  = document.getElementById('filter-bar');
+  const rows = document.getElementById('filter-rows');
+  if (activeCat === 'all' || allProducts.length === 0) {
+    bar.style.display = 'none';
+    return;
+  }
+  const catProducts = allProducts.filter(p => p.cat === activeCat);
+  if (catProducts.length === 0) { bar.style.display = 'none'; return; }
+
+  bar.style.display = '';
+  rows.innerHTML = '';
+
+  const isEs = lang === 'es';
+
+  // ── 1. Equipo ──
+  const NO_TEAM_CATS = new Set(['streetwear','windbreaker','otros','nfl']);
+  if (!NO_TEAM_CATS.has(activeCat)) {
+    const teamCount = new Map();
+    for (const p of catProducts) {
+      const tm = detectTeam(p.nameEn);
+      if (tm) teamCount.set(tm, (teamCount.get(tm) || 0) + 1);
+    }
+    if (teamCount.size > 0) {
+      const sorted = [...teamCount.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([name]) => name);
+      rows.appendChild(makeFilterRow(isEs ? 'Equipo' : 'Team', 'teams', sorted));
+    }
+  }
+
+  // ── 2. Tipo ──
+  const TIPOS = ['Fan Version','Player Version','Mujer','Niños','Cortavientos'];
+  const tiposPresent = TIPOS.filter(ti => catProducts.some(p => matchesTipo(p, ti)));
+  if (tiposPresent.length > 1) {
+    rows.appendChild(makeFilterRow(isEs ? 'Tipo' : 'Type', 'tipos', tiposPresent));
+  }
+
+  // ── 3. Equipación ──
+  const EQUIPS_ES = ['Local','Visitante','Tercera','Portero','Retro','Entrenamiento'];
+  const EQUIPS_EN = ['Home',  'Away',      'Third',   'Goalkeeper','Retro','Training'];
+  const equipsPresent = EQUIPS_ES.filter(eq => catProducts.some(p => matchesEquipacion(p, eq)));
+  if (equipsPresent.length > 1) {
+    // Display labels in current lang, but filter values are always the Spanish key
+    const displayItems = isEs ? equipsPresent : equipsPresent.map(eq => EQUIPS_EN[EQUIPS_ES.indexOf(eq)]);
+    // We need the pill value to match the internal key for matchesEquipacion
+    // So we render pills with displayed text but pass the ES key to toggleFilter
+    const rowEl = document.createElement('div');
+    rowEl.className = 'filter-row';
+    const lbl = document.createElement('span');
+    lbl.className = 'filter-label';
+    lbl.textContent = isEs ? 'Equipación' : 'Kit';
+    rowEl.appendChild(lbl);
+    equipsPresent.forEach((esKey, i) => {
+      const pill = document.createElement('button');
+      pill.className = 'filter-pill' + (activeFilters.equipacion.has(esKey) ? ' active' : '');
+      pill.textContent = isEs ? esKey : EQUIPS_EN[EQUIPS_ES.indexOf(esKey)];
+      pill.onclick = () => toggleFilter('equipacion', esKey);
+      rowEl.appendChild(pill);
+    });
+    rows.appendChild(rowEl);
+  }
+
+  // ── 4. Temporada ──
+  const SEASONS = ['26/27','25/26','24/25','Anteriores'];
+  const seasonsPresent = SEASONS.filter(s => catProducts.some(p => matchesSeason(p.nameEn, s)));
+  if (seasonsPresent.length > 0) {
+    const seasonLabels = isEs
+      ? { 'Anteriores': 'Anteriores' }
+      : { '26/27':'26/27', '25/26':'25/26', '24/25':'24/25', 'Anteriores':'Older' };
+    const rowEl = document.createElement('div');
+    rowEl.className = 'filter-row';
+    const lbl = document.createElement('span');
+    lbl.className = 'filter-label';
+    lbl.textContent = isEs ? 'Temporada' : 'Season';
+    rowEl.appendChild(lbl);
+    for (const s of seasonsPresent) {
+      const pill = document.createElement('button');
+      pill.className = 'filter-pill' + (activeFilters.temporada.has(s) ? ' active' : '');
+      pill.textContent = (!isEs && s === 'Anteriores') ? 'Older' : s;
+      pill.onclick = () => toggleFilter('temporada', s);
+      rowEl.appendChild(pill);
+    }
+    rows.appendChild(rowEl);
+  }
+
+  // ── Clear button (only when filters active) ──
+  if (hasActiveFilters()) {
+    const clearBtn = document.createElement('button');
+    clearBtn.id = 'filter-clear-btn';
+    clearBtn.textContent = isEs ? '✕ Limpiar filtros' : '✕ Clear filters';
+    clearBtn.onclick = () => { clearActiveFilters(); buildFilterBar(); renderAll(); };
+    rows.appendChild(clearBtn);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1059,8 +1538,9 @@ function getFiltered() {
     if (activeCat !== 'all' && p.cat !== activeCat) return false;
     if (searchQuery) {
       const haystack = (p.nameEn + ' ' + p.nameEs + ' ' + (t().cat_labels[p.cat] || '')).toLowerCase();
-      return haystack.includes(searchQuery);
+      if (!haystack.includes(searchQuery)) return false;
     }
+    if (activeCat !== 'all' && hasActiveFilters() && !matchesFilter(p)) return false;
     return true;
   });
 }
@@ -1094,10 +1574,49 @@ function renderGrid(products) {
   }
 }
 
+// Devuelve el precio base real del producto:
+// Player Version → $11, retro → $13, resto → $8
+// Tabla de precios base por categoría
+const CAT_PRICES = {
+  windbreaker: 30,
+  streetwear:  15,
+  kids:         7,
+  // resto usa el precio del producto (8 normal, 13 retro)
+};
+
+function getBasePrice(p) {
+  if (CAT_PRICES[p.cat] !== undefined) return CAT_PRICES[p.cat];
+  if (/player version/i.test(p.nameEn)) return 11;
+  return p.priceUsd; // 8 (normal) o 13 (retro) — calculado por categorize.js
+}
+
+function isPlayerVersion(p) {
+  return /player version/i.test(p.nameEn);
+}
+
+// Extrae la temporada del nombre del producto.
+// Reconoce: 26/27, 2026/27, 25/26, 2025/26, 2026, 2025, etc.
+// Devuelve la cadena tal como aparece, o null si no hay.
+function extractSeason(name) {
+  // Formato largo con barra: 2026/27, 2025/26
+  let m = name.match(/\b(20\d{2}\/\d{2})\b/);
+  if (m) return m[1];
+  // Formato corto con barra: 26/27, 25/26 (solo años modernos)
+  m = name.match(/\b(2[0-9]\/2[0-9])\b/);
+  if (m) return m[1];
+  // Año solo: 2026, 2025
+  m = name.match(/\b(20[2-9]\d)\b/);
+  if (m) return m[1];
+  return null;
+}
+
 function createCard(p) {
-  const { main: priceMain, sub: priceSub } = t().price_fmt(p.priceUsd);
-  const catLabel = t().cat_labels[p.cat] || p.cat;
+  const base = getBasePrice(p);
+  const { main: priceMain, sub: priceSub } = t().price_fmt(base);
+  const season   = extractSeason(p.nameEn);
+  const catLabel = season || t().cat_labels[p.cat] || p.cat;
   const sizesStr = p.sizes ? p.sizes.join(' · ') : '';
+  const player = isPlayerVersion(p);
 
   const card = document.createElement('div');
   card.className = 'card';
@@ -1116,7 +1635,7 @@ function createCard(p) {
       <span class="card-cat">${escHtml(catLabel)}</span>
       <span class="card-name">${escHtml(p.nameEn)}</span>
       <div class="card-price-row">
-        <div class="price-main">${priceMain}</div>
+        <div class="price-main">${priceMain}${player ? '<span class="badge-player">PLAYER</span>' : ''}</div>
         <div class="price-sub">${priceSub}</div>
       </div>
       ${sizesStr ? `<div class="card-sizes">${escHtml(sizesStr)}</div>` : ''}
@@ -1157,22 +1676,23 @@ function openModal(p) {
   yupooBtn.href = p.yupooUrl;
   yupooBtn.textContent = t().see_photos;
 
-  document.getElementById('modal-cat').textContent = t().cat_labels[p.cat] || p.cat;
+  document.getElementById('modal-cat').textContent = extractSeason(p.nameEn) || t().cat_labels[p.cat] || p.cat;
   document.getElementById('modal-name').textContent = p.nameEn;
 
   // Patches
   const showPatches = PATCH_CATS.has(p.cat);
-  ['opt-ucl-wrap','opt-wc-wrap','opt-cap-wrap'].forEach(id => {
-    document.getElementById(id).style.display = showPatches ? '' : 'none';
-  });
+  document.getElementById('opt-patch-wrap').style.display = showPatches ? '' : 'none';
 
-  // Reset checkboxes
-  ['opt-dorsal','opt-ucl','opt-wc','opt-cap'].forEach(id => {
-    document.getElementById(id).checked = false;
-  });
+  // Reset checkboxes y patch
+  document.getElementById('opt-dorsal').checked = false;
+  document.getElementById('opt-patch').checked  = false;
   document.getElementById('dorsal-inputs').classList.remove('visible');
-  document.getElementById('input-name').value = '';
+  document.getElementById('patch-inputs').classList.remove('visible');
+  document.getElementById('input-name').value   = '';
   document.getElementById('input-number').value = '';
+  document.getElementById('patch-type').value   = '';
+  document.getElementById('patch-other').value  = '';
+  document.getElementById('patch-other').style.display = 'none';
 
   // Sizes
   buildSizeGrid(p.sizes || []);
@@ -1202,11 +1722,9 @@ function buildSizeGrid(sizes) {
 
 function getModalPriceUsd() {
   if (!currentProduct) return 0;
-  let usd = currentProduct.priceUsd;
+  let usd = getBasePrice(currentProduct);
   if (document.getElementById('opt-dorsal').checked) usd += 3;
-  if (document.getElementById('opt-ucl').checked) usd += 1;
-  if (document.getElementById('opt-wc').checked) usd += 1;
-  if (document.getElementById('opt-cap').checked) usd += 1;
+  if (document.getElementById('opt-patch').checked)  usd += 1;
   return usd;
 }
 
@@ -1227,8 +1745,21 @@ document.getElementById('opt-dorsal').addEventListener('change', function() {
   document.getElementById('dorsal-inputs').classList.toggle('visible', this.checked);
   updateModalPrice();
 });
-['opt-ucl','opt-wc','opt-cap'].forEach(id => {
-  document.getElementById(id).addEventListener('change', updateModalPrice);
+
+// Patch toggle
+document.getElementById('opt-patch').addEventListener('change', function() {
+  document.getElementById('patch-inputs').classList.toggle('visible', this.checked);
+  if (!this.checked) {
+    document.getElementById('patch-type').value = '';
+    document.getElementById('patch-other').value = '';
+    document.getElementById('patch-other').style.display = 'none';
+  }
+  updateModalPrice();
+});
+
+// Patch "Otro" → mostrar campo libre
+document.getElementById('patch-type').addEventListener('change', function() {
+  document.getElementById('patch-other').style.display = this.value === 'Otro' ? '' : 'none';
 });
 
 function closeModal() {
@@ -1257,9 +1788,12 @@ function addToCart() {
     const number = document.getElementById('input-number').value.trim();
     customizations.push({ type: 'dorsal', name, number, extraUsd: 3 });
   }
-  if (document.getElementById('opt-ucl').checked) customizations.push({ type: 'ucl', extraUsd: 1 });
-  if (document.getElementById('opt-wc').checked) customizations.push({ type: 'wc', extraUsd: 1 });
-  if (document.getElementById('opt-cap').checked) customizations.push({ type: 'cap', extraUsd: 1 });
+  if (document.getElementById('opt-patch').checked) {
+    const patchType = document.getElementById('patch-type').value;
+    const patchOther = document.getElementById('patch-other').value.trim();
+    const patchLabel = patchType === 'Otro' ? (patchOther || 'Otro') : patchType;
+    customizations.push({ type: 'patch', label: patchLabel, extraUsd: 1 });
+  }
 
   cart.push({
     id: Date.now(),
@@ -1351,11 +1885,14 @@ function renderCartItems() {
 function buildCustomMeta(customizations) {
   return customizations.map(c => {
     if (c.type === 'dorsal') return `${c.name || '?'} #${c.number || '?'}`;
-    if (c.type === 'ucl') return 'Parche UCL';
-    if (c.type === 'wc') return 'Parche Mundial 2026';
-    if (c.type === 'cap') return 'Brazalete Capitán';
+    if (c.type === 'patch')  return `Parche ${c.label}`;
     return '';
   }).filter(Boolean).join(', ');
+}
+
+// Devuelve "Player" o "Fan" según el nombre del producto
+function getVersion(name) {
+  return /player version/i.test(name) ? 'Player' : 'Fan';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1405,16 +1942,16 @@ function confirmWhatsapp() {
 
   let msg = `🛒 *PEDIDO KITZONE*\n\n`;
   for (const item of cart) {
-    msg += `• ${item.name}\n`;
-    msg += `  Talla: ${item.size}\n`;
-    const custom = buildCustomMeta(item.customizations);
-    if (custom) msg += `  Personalizaciones: ${custom}\n`;
-    msg += `  Precio: ${t().cart_item_price(item.priceUsd)}\n\n`;
+    const dorsal = item.customizations.find(c => c.type === 'dorsal');
+    const patch  = item.customizations.find(c => c.type === 'patch');
+    msg += ` ${item.name}\n`;
+    msg += `  SIZE: ${item.size}\n`;
+    msg += `  Name and Number: ${dorsal ? `${dorsal.name} ${dorsal.number}` : ''}\n`;
+    msg += `  Version: ${getVersion(item.name)}\n`;
+    msg += `  Patch: ${patch ? patch.label : ''}\n`;
+    msg += `\n`;
   }
-  msg += `─────────────────\n`;
-  msg += `💵 Total USD: $${totalUsd.toFixed(2)}\n`;
-  msg += `💶 Total EUR: ${totalEur}€\n\n`;
-  msg += `✅ He enviado ${totalEur}€ por Bizum al +34 648 49 34 70`;
+  msg += `💶 TOTAL: ${totalEur}€ (${totalUsd.toFixed(2)}$)`;
 
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank', 'noopener');
@@ -1428,6 +1965,7 @@ function toggleLang() {
   localStorage.setItem('kz-lang', lang);
   updateLangUI();
   buildCatBar();
+  buildFilterBar();
   renderAll();
   if (currentProduct) updateModalPrice();
   renderCartItems();
@@ -1448,9 +1986,7 @@ function updateLangUI() {
   document.querySelector('[data-i18n="personalization"]').textContent = t().personalization;
   document.querySelector('[data-i18n="name_number"]').textContent = t().name_number;
   document.getElementById('input-name').placeholder = t().player_name;
-  document.querySelector('[data-i18n="ucl_patch"]').textContent = t().ucl_patch;
-  document.querySelector('[data-i18n="wc_patch"]').textContent = t().wc_patch;
-  document.querySelector('[data-i18n="captain"]').textContent = t().captain;
+  document.querySelector('[data-i18n="patch"]').textContent = t().patch;
   document.querySelector('[data-i18n="total_usd"]').textContent = t().total_usd;
   document.querySelector('[data-i18n="total_eur"]').textContent = t().total_eur;
   document.querySelector('[data-i18n="send_exactly"]').textContent = t().send_exactly;

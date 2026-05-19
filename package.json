@@ -7,12 +7,16 @@
     "start": "node server.js",
     "scrape": "node scraper.js",
     "categorize": "node categorize.js",
-    "build:catalog": "node scraper.js && node categorize.js"
+    "build:catalog": "node scraper.js && node categorize.js",
+    "download-images": "node download-images.js",
+    "upload-cloudinary": "node upload-cloudinary.js"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "cloudinary": "^2.10.0",
+    "dotenv": "^17.4.2",
     "express": "^4.18.2",
-    "node-fetch": "^2.7.0",
-    "cheerio": "^1.0.0-rc.12"
+    "node-fetch": "^2.7.0"
   },
   "engines": {
     "node": ">=18.0.0"

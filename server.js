@@ -25,33 +25,13 @@ app.use(express.static(path.join(__dirname), {
   },
 }));
 
-// ─── Caché en memoria para el proxy ──────────────────────────────────────
-// Clave: URL normalizada sin protocolo. Valor: { contentType, buffer }.
-// Las imágenes se retienen mientras el proceso esté vivo (sin límite de tamaño
-// intencionado: en Railway el contenedor se reinicia periódicamente).
-const imageCache = new Map();
-
 // ─── Proxy de imágenes ────────────────────────────────────────────────────
 // GET /proxy?url=photo.yupoo.com/ggjersey/ID/small.jpg
-// 1ª petición → descarga de Yupoo, guarda en imageCache y responde.
-// Siguientes peticiones → sirve desde imageCache sin tocar Yupoo.
-// El navegador también cachea 24 h gracias al header Cache-Control.
+// Descarga la imagen de Yupoo en el servidor y la reenvía al cliente.
+// El navegador cachea 24 h gracias al header Cache-Control.
 app.get('/proxy', (req, res) => {
   const raw = req.query.url;
   if (!raw) return res.status(400).send('Falta parámetro url');
-
-  // Normalizar clave: siempre sin protocolo
-  const cacheKey = raw.replace(/^https?:\/\//, '');
-
-  // ── Servir desde caché si existe ────────────────────────────────────────
-  if (imageCache.has(cacheKey)) {
-    const { contentType, buffer } = imageCache.get(cacheKey);
-    res.setHeader('Content-Type', contentType);
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('X-Cache', 'HIT');
-    return res.end(buffer);
-  }
 
   // ── Reconstruir URL completa ─────────────────────────────────────────────
   const imageUrl = raw.startsWith('http') ? raw : `https://${raw}`;
@@ -97,20 +77,10 @@ app.get('/proxy', (req, res) => {
     }
 
     const contentType = upstreamRes.headers['content-type'] || 'image/jpeg';
-
-    // Acumular chunks para guardar en caché
-    const chunks = [];
-    upstreamRes.on('data', chunk => chunks.push(chunk));
-    upstreamRes.on('end', () => {
-      const buffer = Buffer.concat(chunks);
-      imageCache.set(cacheKey, { contentType, buffer });
-
-      res.setHeader('Content-Type', contentType);
-      res.setHeader('Cache-Control', 'public, max-age=86400');
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('X-Cache', 'MISS');
-      res.end(buffer);
-    });
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    upstreamRes.pipe(res);
   });
 
   upstream.on('error', (err) => {

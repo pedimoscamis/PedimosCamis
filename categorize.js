@@ -176,18 +176,42 @@ function detectSizes(name) {
 
 const FOOTBALL_CATS = new Set(['laliga', 'premier', 'seriea', 'bundesliga', 'ligue1', 'selecciones', 'sudamerica', 'retro', 'europa', 'nuevatemporada']);
 
+// Categorías válidas que el scraper puede enviar en yupooCategory
+const VALID_CATS = new Set([
+  'laliga', 'premier', 'seriea', 'bundesliga', 'ligue1', 'selecciones',
+  'sudamerica', 'europa', 'retro', 'nba', 'nfl', 'streetwear',
+  'windbreaker', 'kids', 'women', 'nuevatemporada',
+]);
+
 // Detecta la temporada 26/27 en cualquiera de sus formas escritas
 const NEW_SEASON_RE = /26\/27|2026\/27|2026-27/;
 
-function categorize(name) {
+/**
+ * Determina la categoría de un producto.
+ * Orden de prioridad:
+ *   ① Nueva temporada 26/27 (por nombre — siempre prioritario)
+ *   ② yupooCategory del scraper (fuente directa de Yupoo)
+ *   ③ Retro (por nombre)
+ *   ④ Reglas de keywords por nombre
+ *   ⑤ 'otros' como fallback
+ */
+function categorize(name, yupooCategory) {
   const lower = name.toLowerCase();
 
-  // ① Máxima prioridad: nueva temporada 26/27
+  // ① Nueva temporada — máxima prioridad independientemente del origen
   if (NEW_SEASON_RE.test(name)) return 'nuevatemporada';
 
-  // ② Retro
+  // ② Categoría directa del scraper (solo si es un valor reconocido)
+  if (yupooCategory && VALID_CATS.has(yupooCategory)) {
+    // Dentro de la categoría del scraper, retro por nombre sigue aplicándose
+    if (isRetro(name)) return 'retro';
+    return yupooCategory;
+  }
+
+  // ③ Retro por nombre (cuando no hay categoría del scraper)
   if (isRetro(name)) return 'retro';
 
+  // ④ Reglas de keywords
   for (const { cat, keywords } of CATEGORY_RULES) {
     for (const kw of keywords) {
       if (lower.includes(kw)) return cat;
@@ -218,8 +242,12 @@ function main() {
   const raw = JSON.parse(fs.readFileSync(RAW_FILE, 'utf-8'));
   console.log(`Productos a procesar: ${raw.length}`);
 
+  // Estadísticas de cobertura de yupooCategory
+  const withYupooCategory = raw.filter(p => p.yupooCategory).length;
+  console.log(`Con yupooCategory del scraper: ${withYupooCategory} (${Math.round(withYupooCategory / raw.length * 100)}%)`);
+
   const products = raw.map(p => {
-    const cat = categorize(p.name);
+    const cat = categorize(p.name, p.yupooCategory);
     const sizes = detectSizes(p.name);
     const priceUsd = getPrice(cat, p.name);
     const type = (cat === 'retro' || p.name.toLowerCase().includes('retro')) ? 'retro' : 'normal';
@@ -231,6 +259,7 @@ function main() {
       cat,
       type,
       priceUsd,
+      yupooCategory: p.yupooCategory || null,   // conservar para trazabilidad
       yupooUrl: p.yupooUrl,
       img: p.img || null,
       photos: p.photos || 0,
