@@ -174,8 +174,6 @@ function detectSizes(name) {
 
 // ─── Categorización ───────────────────────────────────────────────────────────
 
-const FOOTBALL_CATS = new Set(['laliga', 'premier', 'seriea', 'bundesliga', 'ligue1', 'selecciones', 'sudamerica', 'retro', 'europa', 'nuevatemporada']);
-
 // Categorías válidas que el scraper puede enviar en yupooCategory
 const VALID_CATS = new Set([
   'laliga', 'premier', 'seriea', 'bundesliga', 'ligue1', 'selecciones',
@@ -187,44 +185,60 @@ const VALID_CATS = new Set([
 const NEW_SEASON_RE = /26\/27|2026\/27|2026-27/;
 
 /**
- * Determina la categoría de un producto.
- * Orden de prioridad:
- *   ① Nueva temporada 26/27 (por nombre — siempre prioritario)
- *   ② yupooCategory del scraper (fuente directa de Yupoo)
- *   ③ Retro (por nombre)
- *   ④ Reglas de keywords por nombre
- *   ⑤ 'otros' como fallback
+ * Determina el array de categorías de un producto.
+ *
+ * Reglas:
+ *  1. Se determina la categoría "base" (liga/deporte) desde yupooCategory o keywords.
+ *  2. Si el producto es retro → se añade 'retro' Y también la liga si se detecta.
+ *     Ej: 'Retro 98/99 Barcelona' → ['retro', 'laliga']
+ *  3. Si el nombre contiene 26/27 → se añade 'nuevatemporada' ADEMÁS de la base.
+ *     Ej: '26/27 Real Madrid Home' → ['laliga', 'nuevatemporada']
+ *  4. Un producto puede pertenecer a múltiples categorías simultáneamente.
  */
-function categorize(name, yupooCategory) {
+function categorizeCats(name, yupooCategory) {
   const lower = name.toLowerCase();
+  const result = new Set();
 
-  // ① Nueva temporada — máxima prioridad independientemente del origen
-  if (NEW_SEASON_RE.test(name)) return 'nuevatemporada';
-
-  // ② Categoría directa del scraper (solo si es un valor reconocido)
-  if (yupooCategory && VALID_CATS.has(yupooCategory)) {
-    // Dentro de la categoría del scraper, retro por nombre sigue aplicándose
-    if (isRetro(name)) return 'retro';
-    return yupooCategory;
+  // ── Paso 1: Determinar categoría liga/deporte base ──────────────────────────
+  // Usar yupooCategory si es un valor concreto de liga (no 'retro' ni 'nuevatemporada',
+  // ya que estos se aplican como overlays encima de la liga real).
+  let leagueCat = null;
+  if (yupooCategory && VALID_CATS.has(yupooCategory) &&
+      yupooCategory !== 'retro' && yupooCategory !== 'nuevatemporada') {
+    leagueCat = yupooCategory;
   }
-
-  // ③ Retro por nombre (cuando no hay categoría del scraper)
-  if (isRetro(name)) return 'retro';
-
-  // ④ Reglas de keywords
-  for (const { cat, keywords } of CATEGORY_RULES) {
-    for (const kw of keywords) {
-      if (lower.includes(kw)) return cat;
+  // Siempre intentar detección por keywords como fallback o para añadir liga a retros
+  if (!leagueCat) {
+    for (const { cat, keywords } of CATEGORY_RULES) {
+      for (const kw of keywords) {
+        if (lower.includes(kw)) { leagueCat = cat; break; }
+      }
+      if (leagueCat) break;
     }
   }
+  if (!leagueCat) leagueCat = 'otros';
 
-  return 'otros';
+  // ── Paso 2: Retro ───────────────────────────────────────────────────────────
+  if (isRetro(name)) {
+    result.add('retro');
+    // Conservar la liga/deporte de origen si se detectó (no 'otros')
+    if (leagueCat !== 'otros') result.add(leagueCat);
+  } else {
+    result.add(leagueCat);
+  }
+
+  // ── Paso 3: Nueva temporada 26/27 (overlay aditivo) ─────────────────────────
+  if (NEW_SEASON_RE.test(name)) {
+    result.add('nuevatemporada');
+  }
+
+  return [...result];
 }
 
 // ─── Precios base ─────────────────────────────────────────────────────────────
 
-function getPrice(cat, name) {
-  if (cat === 'retro' || name.toLowerCase().includes('retro')) return 13;
+function getPrice(cats, name) {
+  if (cats.includes('retro') || name.toLowerCase().includes('retro')) return 13;
   return 8;
 }
 
@@ -247,16 +261,16 @@ function main() {
   console.log(`Con yupooCategory del scraper: ${withYupooCategory} (${Math.round(withYupooCategory / raw.length * 100)}%)`);
 
   const products = raw.map(p => {
-    const cat = categorize(p.name, p.yupooCategory);
+    const cats = categorizeCats(p.name, p.yupooCategory);
     const sizes = detectSizes(p.name);
-    const priceUsd = getPrice(cat, p.name);
-    const type = (cat === 'retro' || p.name.toLowerCase().includes('retro')) ? 'retro' : 'normal';
+    const priceUsd = getPrice(cats, p.name);
+    const type = cats.includes('retro') ? 'retro' : 'normal';
 
     return {
       id: p.id,
       nameEs: p.name,
       nameEn: p.name,
-      cat,
+      cats,
       type,
       priceUsd,
       yupooCategory: p.yupooCategory || null,   // conservar para trazabilidad
@@ -267,15 +281,22 @@ function main() {
     };
   });
 
-  // Estadísticas
+  // Estadísticas — un producto puede contar en varias categorías
   const stats = {};
   for (const p of products) {
-    stats[p.cat] = (stats[p.cat] || 0) + 1;
+    for (const c of p.cats) {
+      stats[c] = (stats[c] || 0) + 1;
+    }
   }
-  console.log('\nDistribución por categoría:');
+  console.log('\nDistribución por categoría (productos que incluyen cada cat):');
   for (const [cat, count] of Object.entries(stats).sort((a, b) => b[1] - a[1])) {
     console.log(`  ${cat.padEnd(14)}: ${count}`);
   }
+
+  // Muestra algunos ejemplos de multi-categoría
+  const multi = products.filter(p => p.cats.length > 1);
+  console.log(`\nProductos con múltiples categorías: ${multi.length}`);
+  multi.slice(0, 5).forEach(p => console.log(`  [${p.cats.join(', ')}] ${p.nameEn.substring(0, 60)}...`));
 
   fs.writeFileSync(OUT_FILE, JSON.stringify(products, null, 2), 'utf-8');
   console.log(`\nGuardado: ${OUT_FILE} (${products.length} productos)`);

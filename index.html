@@ -1349,12 +1349,12 @@ function detectTeam(name) {
 }
 
 function matchesTipo(p, tipo) {
-  const n = p.nameEn.toLowerCase();
+  const cats = p.cats || [];
   if (tipo === 'Player Version') return /player version/i.test(p.nameEn);
-  if (tipo === 'Fan Version')    return !/player version/i.test(p.nameEn) && p.cat !== 'women' && p.cat !== 'kids' && p.cat !== 'windbreaker';
-  if (tipo === 'Mujer')          return p.cat === 'women' || /\bwomen\b|\bmujer\b|\bfemeni/i.test(p.nameEn);
-  if (tipo === 'Niños')          return p.cat === 'kids'  || /\bkids\b|\bniños\b|\bchild\b|\bjunior\b/i.test(p.nameEn);
-  if (tipo === 'Cortavientos')   return p.cat === 'windbreaker';
+  if (tipo === 'Fan Version')    return !/player version/i.test(p.nameEn) && !cats.includes('women') && !cats.includes('kids') && !cats.includes('windbreaker');
+  if (tipo === 'Mujer')          return cats.includes('women') || /\bwomen\b|\bmujer\b|\bfemeni/i.test(p.nameEn);
+  if (tipo === 'Niños')          return cats.includes('kids')  || /\bkids\b|\bniños\b|\bchild\b|\bjunior\b/i.test(p.nameEn);
+  if (tipo === 'Cortavientos')   return cats.includes('windbreaker');
   return false;
 }
 
@@ -1363,7 +1363,7 @@ function matchesEquipacion(p, equip) {
   if (equip === 'Visitante')     return /\baway\b|\bvisitante\b/i.test(p.nameEn);
   if (equip === 'Tercera')       return /\bthird\b|\btercera\b|\b3rd\b/i.test(p.nameEn);
   if (equip === 'Portero')       return /\bgoalkeeper\b|\bportero\b|\bkeeper\b|\bgk\b/i.test(p.nameEn);
-  if (equip === 'Retro')         return p.cat === 'retro' || /\bretro\b/i.test(p.nameEn);
+  if (equip === 'Retro')         return (p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn);
   if (equip === 'Entrenamiento') return /training|entrenamiento|pre.match|prematch/i.test(p.nameEn);
   return false;
 }
@@ -1441,7 +1441,7 @@ function buildFilterBar() {
     bar.style.display = 'none';
     return;
   }
-  const catProducts = allProducts.filter(p => p.cat === activeCat);
+  const catProducts = allProducts.filter(p => (p.cats || []).includes(activeCat));
   if (catProducts.length === 0) { bar.style.display = 'none'; return; }
 
   bar.style.display = '';
@@ -1535,9 +1535,10 @@ function buildFilterBar() {
 // ═══════════════════════════════════════════════════════════════════════════
 function getFiltered() {
   return allProducts.filter(p => {
-    if (activeCat !== 'all' && p.cat !== activeCat) return false;
+    if (activeCat !== 'all' && !(p.cats || []).includes(activeCat)) return false;
     if (searchQuery) {
-      const haystack = (p.nameEn + ' ' + p.nameEs + ' ' + (t().cat_labels[p.cat] || '')).toLowerCase();
+      const pc = primaryCat(p);
+      const haystack = (p.nameEn + ' ' + p.nameEs + ' ' + (t().cat_labels[pc] || '')).toLowerCase();
       if (!haystack.includes(searchQuery)) return false;
     }
     if (activeCat !== 'all' && hasActiveFilters() && !matchesFilter(p)) return false;
@@ -1584,8 +1585,20 @@ const CAT_PRICES = {
   // resto usa el precio del producto (8 normal, 13 retro)
 };
 
+/**
+ * Devuelve la categoría "principal" del producto para efectos de display y precio.
+ * Ignora 'nuevatemporada' (que es aditiva) y devuelve la liga/deporte real.
+ * Ej: cats=['laliga','nuevatemporada'] → 'laliga'
+ *     cats=['retro','laliga']          → 'retro'
+ */
+function primaryCat(p) {
+  const cats = p.cats || [];
+  return cats.find(c => c !== 'nuevatemporada') || cats[0] || 'otros';
+}
+
 function getBasePrice(p) {
-  if (CAT_PRICES[p.cat] !== undefined) return CAT_PRICES[p.cat];
+  const pc = primaryCat(p);
+  if (CAT_PRICES[pc] !== undefined) return CAT_PRICES[pc];
   if (/player version/i.test(p.nameEn)) return 11;
   return p.priceUsd; // 8 (normal) o 13 (retro) — calculado por categorize.js
 }
@@ -1614,7 +1627,8 @@ function createCard(p) {
   const base = getBasePrice(p);
   const { main: priceMain, sub: priceSub } = t().price_fmt(base);
   const season   = extractSeason(p.nameEn);
-  const catLabel = season || t().cat_labels[p.cat] || p.cat;
+  const pc       = primaryCat(p);
+  const catLabel = season || t().cat_labels[pc] || pc;
   const sizesStr = p.sizes ? p.sizes.join(' · ') : '';
   const player = isPlayerVersion(p);
 
@@ -1676,11 +1690,12 @@ function openModal(p) {
   yupooBtn.href = p.yupooUrl;
   yupooBtn.textContent = t().see_photos;
 
-  document.getElementById('modal-cat').textContent = extractSeason(p.nameEn) || t().cat_labels[p.cat] || p.cat;
+  const mpc = primaryCat(p);
+  document.getElementById('modal-cat').textContent = extractSeason(p.nameEn) || t().cat_labels[mpc] || mpc;
   document.getElementById('modal-name').textContent = p.nameEn;
 
   // Patches
-  const showPatches = PATCH_CATS.has(p.cat);
+  const showPatches = (p.cats || []).some(c => PATCH_CATS.has(c));
   document.getElementById('opt-patch-wrap').style.display = showPatches ? '' : 'none';
 
   // Reset checkboxes y patch
