@@ -1,0 +1,22 @@
+{
+  "name": "kitzone",
+  "version": "1.0.0",
+  "description": "KitZone — Tienda online de camisetas de fútbol y NBA",
+  "main": "server.js",
+  "scripts": {
+    "scrape": "node scraper.js",
+    "categorize": "node categorize.js",
+    "build": "node scraper.js && node categorize.js",
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0",
+    "cheerio": "^1.0.0-rc.12"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}

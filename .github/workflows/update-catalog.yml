@@ -1,0 +1,66 @@
+name: Actualizar catálogo
+
+on:
+  schedule:
+    # Cada día a las 4:00 AM UTC
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+    inputs:
+      force_full:
+        description: 'Forzar scraping completo (ignorar caché)'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Limpiar caché (si force_full)
+        if: ${{ github.event.inputs.force_full == 'true' }}
+        run: |
+          echo "Modo scraping completo activado — eliminando caché"
+          rm -f data/products-raw.json
+
+      - name: Ejecutar scraper
+        run: node scraper.js
+        timeout-minutes: 180
+
+      - name: Ejecutar categorizador
+        run: node categorize.js
+
+      - name: Verificar cambios
+        id: changes
+        run: |
+          git diff --quiet data/products.json && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit y push si hay cambios
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/products-raw.json data/products.json
+          DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
+          git commit -m "chore: actualizar catálogo [$DATE]"
+          git push
+
+      - name: Sin cambios
+        if: steps.changes.outputs.changed == 'false'
+        run: echo "✅ Catálogo ya actualizado — sin cambios nuevos"
