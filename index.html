@@ -63,9 +63,10 @@
       display: flex;
       flex-direction: column;
     }
-    /* Móvil: flujo natural pero con contexto de apilamiento para que los filtros no queden tapados */
+    /* Móvil: flujo natural con contexto de apilamiento; overflow visible para que el <select> no quede recortado */
     @media (max-width: 767px) {
       #sticky-wrapper { position: relative !important; z-index: 1000 !important; transform: none !important; }
+      #filter-bar, #sticky-wrapper { overflow: visible !important; }
     }
 
     /* ─── Header ───────────────────────────────────────────── */
