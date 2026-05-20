@@ -43,7 +43,7 @@
       font-size: 15px;
       line-height: 1.5;
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow-x: clip;
       width: 100%;
     }
 
@@ -53,16 +53,26 @@
     ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #555; }
 
+    /* ─── Sticky Wrapper ───────────────────────────────────── */
+    #sticky-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #080808;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+
     /* ─── Header ───────────────────────────────────────────── */
     #header {
-      position: sticky; top: 0; z-index: 1000;
       background: rgba(8,8,8,0.95);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       padding: 0 24px;
       height: 64px;
       display: flex; align-items: center; gap: 20px;
-      transition: transform .25s ease;
     }
 
     #logo {
@@ -205,16 +215,13 @@
 
     /* ─── Category Bar ─────────────────────────────────────── */
     #cat-bar {
-      position: sticky; top: 64px; z-index: 990;
       background: rgba(8,8,8,0.95);
-      margin-top: -1px;
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center;
       overflow-x: auto; gap: 4px;
       padding: 10px 24px;
       scrollbar-width: none;
-      transition: transform .25s ease;
     }
     #cat-bar::-webkit-scrollbar { display: none; }
 
@@ -244,21 +251,24 @@
 
     /* ─── Filter Bar ───────────────────────────────────────── */
     #filter-bar {
-      position: sticky; top: 109px; z-index: 98;
       background: rgba(8,8,8,0.97);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid #1e1e1e;
       padding: 6px 24px 8px;
-      transition: opacity .3s ease, transform .3s ease;
+      overflow: hidden;
+      max-height: 200px;   /* suficiente para el contenido de filtros */
+      transition: max-height .35s ease, opacity .25s ease, padding .25s ease;
     }
     #filter-bar.filters-hidden {
+      max-height: 0;
       opacity: 0;
-      transform: translateY(-115%);
+      padding-top: 0;
+      padding-bottom: 0;
       pointer-events: none;
     }
 
     /* ─── Smart Header (mobile) ──────────────────────────────── */
-    #header.smart-hidden { transform: translateY(-100%); }
+    #sticky-wrapper.smart-hidden { transform: translateY(-100%); }
 
     /* ─── FAB "Volver arriba" ────────────────────────────────── */
     #fab-top {
@@ -1054,9 +1064,8 @@
     /* ── Bug 2: header 2 filas + Bug 3: filtros wrapping (≤768 px) ── */
     @media (max-width: 768px) {
 
-      /* ─── Header: 2 filas + fixed para smart-header ────────── */
+      /* ─── Header: 2 filas ───────────────────────────────────── */
       #header {
-        position: fixed; left: 0; right: 0;   /* fixed = smart-hide via JS */
         height: auto;
         flex-wrap: wrap;
         align-items: center;
@@ -1071,12 +1080,7 @@
       /* Fila 2: buscador a ancho completo */
       #search-wrap { order: 3; flex: 0 0 100%; max-width: 100%; }
 
-      /* Cat-bar también fixed para deslizarse junto al header */
-      #cat-bar    { position: sticky; left: 0; right: 0; top: 100px; }
-      #filter-bar { top: 148px; } /* 100 header + 48 cat-bar */
-
-      /* ─── Bug 3: filtros + ordenar ───────────────────────── */
-      /* Los filtros ocupan el 100 % */
+      /* ─── Filtros: wrapping ──────────────────────────────────── */
       #filter-bar-inner { flex-wrap: wrap; gap: 4px 0; }
       #filter-rows      { flex: 0 0 100%; }
 
@@ -1136,6 +1140,9 @@
 </head>
 <body>
 
+<!-- ─── Sticky Wrapper ──────────────────────────────────────────────────── -->
+<div id="sticky-wrapper">
+
 <!-- ─── Header ─────────────────────────────────────────────────────────── -->
 <header id="header">
   <div id="logo" onclick="goHome()">PEDIDO<span>CAMIS</span></div>
@@ -1184,6 +1191,8 @@
     <div id="sort-wrap"></div>
   </div>
 </div>
+
+</div><!-- /#sticky-wrapper -->
 
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
@@ -3333,39 +3342,31 @@ const filterBarScroll = (function () {
 
 // ─── Smart Header (móvil) + FAB "Volver arriba" ──────────────────────────────
 const smartHeader = (function () {
-  const MOBILE_BP  = 768;   // px — breakpoint móvil
-  const DOWN_THR   = 50;    // px acumulados hacia abajo para ocultar header
-  const FAB_THR    = 500;   // px de scroll para mostrar FAB
+  const MOBILE_BP = 768;  // px — breakpoint móvil
+  const DOWN_THR  = 50;   // px acumulados hacia abajo para ocultar wrapper
+  const FAB_THR   = 500;  // px de scroll para mostrar FAB
 
   let lastY     = window.scrollY;
   let downAccum = 0;
   let isHidden  = false;
 
-  function isMobile () { return window.innerWidth <= MOBILE_BP; }
-
-  function hdr () { return document.getElementById('header'); }
-  function cat () { return document.getElementById('cat-bar'); }
-  function fab () { return document.getElementById('fab-top'); }
+  function isMobile ()  { return window.innerWidth <= MOBILE_BP; }
+  function wrapper ()   { return document.getElementById('sticky-wrapper'); }
+  function fab ()       { return document.getElementById('fab-top'); }
 
   function hideNav () {
     if (isHidden) return;
-    isHidden  = true;
-    const h = hdr(), c = cat();
-    if (h) h.classList.add('smart-hidden');
-    if (c) {
-      // Mueve la cat-bar hacia arriba su propia altura + la del header oculto
-      const hdrH = h ? h.offsetHeight : 100;
-      c.style.transform = 'translateY(-' + (hdrH + c.offsetHeight) + 'px)';
-    }
+    isHidden = true;
+    const w = wrapper();
+    if (w) w.classList.add('smart-hidden');
   }
 
   function showNav () {
     if (!isHidden) return;
     isHidden  = false;
     downAccum = 0;
-    const h = hdr(), c = cat();
-    if (h) h.classList.remove('smart-hidden');
-    if (c) c.style.transform = '';
+    const w = wrapper();
+    if (w) w.classList.remove('smart-hidden');
   }
 
   window.addEventListener('scroll', () => {
@@ -3381,14 +3382,14 @@ const smartHeader = (function () {
     if (!isMobile()) { if (isHidden) showNav(); return; }
 
     if (y <= 10 || delta < 0) {
-      showNav();                          // Top de página o scroll arriba → mostrar
+      showNav();                           // Top de página o scroll arriba → mostrar
     } else if (delta > 0) {
       downAccum += delta;
       if (downAccum > DOWN_THR) hideNav(); // Scroll abajo acumulado → ocultar
     }
   }, { passive: true });
 
-  // Al cambiar tamaño de ventana (orientación, resize), restaurar si pasamos a escritorio
+  // Al cambiar tamaño de ventana (orientación/resize), restaurar si pasamos a escritorio
   window.addEventListener('resize', () => {
     if (!isMobile() && isHidden) showNav();
   });
