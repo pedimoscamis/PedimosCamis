@@ -3297,9 +3297,13 @@ function showToast(msg) {
 
 // ─── Nav Scroll: smart-header (móvil) + filter-bar (PC) + FAB ────────────────
 const navScroll = (function () {
-  const THRESHOLD = 100;  // px — umbral para ocultar (100 evita salto en el borde)
-  const MOBILE_BP = 768;  // px — breakpoint móvil
-  const FAB_THR   = 500;  // px — umbral para mostrar el FAB
+  const MOBILE_BP  = 768;  // px — breakpoint móvil
+  const FAB_THR    = 500;  // px — umbral para mostrar el FAB
+  const MOB_THR    = 50;   // px — umbral ocultar wrapper en móvil
+  const PC_HIDE    = 150;  // px — debe haber bajado más de esto para ocultar filtros en PC
+  const PC_SHOW    = 50;   // px — si sube hasta aquí, mostrar filtros en PC
+
+  let lastScrollY = window.scrollY;   // rastrea posición anterior para detectar dirección
 
   function isMobile()  { return window.innerWidth < MOBILE_BP; }
   function wrapper()   { return document.getElementById('sticky-wrapper'); }
@@ -3316,22 +3320,31 @@ const navScroll = (function () {
     if (f) f.classList.toggle('visible', y > FAB_THR);
 
     if (isMobile()) {
-      // MÓVIL: ocultar wrapper entero si scrollY > 50; mostrar solo al volver arriba del todo
-      if (w) w.style.transform = y > THRESHOLD ? 'translateY(-100%)' : '';
+      // MÓVIL: ocultar wrapper entero si scrollY > umbral; solo reaparece al volver al top
+      if (w) w.style.transform = y > MOB_THR ? 'translateY(-100%)' : '';
     } else {
-      // PC: wrapper siempre visible; colapsar solo #filter-bar al bajar
+      // PC: wrapper siempre visible; histéresis por DIRECCIÓN en el filter-bar
       if (w) w.style.transform = '';
       if (fb && fb.style.display !== 'none') {
-        fb.classList.toggle('filters-hidden', y > THRESHOLD);
+        if (y > lastScrollY && y > PC_HIDE) {
+          // Bajando y ya pasó la cabecera → ocultar filtros
+          fb.classList.add('filters-hidden');
+        } else if (y < lastScrollY || y <= PC_SHOW) {
+          // Subiendo (aunque sea 1 px) o cerca del top → mostrar filtros
+          fb.classList.remove('filters-hidden');
+        }
+        // Si ni sube ni baja (resize, etc.) no hacemos nada → sin yoyó
       }
     }
+
+    lastScrollY = y;
   }
 
   function reset() {
     // Llamado desde buildFilterBar al entrar en categoría — fuerza visibilidad
     const fb = filterBar();
     if (fb) fb.classList.remove('filters-hidden');
-    // El wrapper se mostrará automáticamente cuando scrollTo(0) lleve la página arriba
+    lastScrollY = window.scrollY;
   }
 
   window.addEventListener('scroll', update, { passive: true });
