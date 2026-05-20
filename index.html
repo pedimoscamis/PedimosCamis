@@ -813,10 +813,8 @@
     .form-group input::placeholder,
     .form-group textarea::placeholder { color: #444; }
 
-    #photo-notice {
-      background: rgba(232,23,60,.08); border: 1px solid rgba(232,23,60,.25);
-      border-radius: 8px; padding: 11px 14px;
-      font-size: 13px; color: #ccc; line-height: 1.5; margin-bottom: 16px;
+    .form-field-error {
+      font-size: 12px; color: var(--accent); margin-top: 5px; display: none;
     }
 
     #order-submit-btn {
@@ -865,11 +863,17 @@
       font-size: 11px; color: #555; margin-top: 14px;
       max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.5;
     }
-    #price-disclaimer {
-      font-size: 12px; color: var(--muted);
-      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-      border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; line-height: 1.5;
+    /* ─── Fav button ─────────────────────────────────────────── */
+    .fav-btn {
+      position: absolute; top: 8px; right: 8px; z-index: 2;
+      background: rgba(0,0,0,0.55); border: none; border-radius: 50%;
+      width: 30px; height: 30px; font-size: 17px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.65); transition: background .2s, color .2s;
     }
+    .fav-btn:hover  { background: rgba(0,0,0,.85); color: var(--accent); }
+    .fav-btn.active { color: var(--accent); }
+
     .footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
 
     /* ─── Toast ─────────────────────────────────────────────── */
@@ -1180,8 +1184,6 @@
         <span id="co-total-eur"></span>
       </div>
     </div>
-    <p id="price-disclaimer">⚠️ El precio final puede estar sujeto a cambios por parte del proveedor.</p>
-
     <form id="order-form" onsubmit="submitOrderForm(event)">
       <input type="hidden" name="_subject" value="Nuevo pedido PedidoCamis" />
       <input type="hidden" name="pedido" id="form-pedido" />
@@ -1193,9 +1195,12 @@
                placeholder="Tu nombre completo" autocomplete="name" />
       </div>
       <div class="form-group">
-        <label for="form-contacto">Teléfono o contacto *</label>
+        <label for="form-contacto">Teléfono *</label>
         <input type="text" id="form-contacto" name="contacto" required
-               placeholder="Teléfono, Instagram, email…" autocomplete="tel" />
+               placeholder="Número de teléfono" autocomplete="tel" inputmode="numeric" />
+        <div class="form-field-error" id="form-contacto-error">
+          Introduce un número de teléfono válido (mínimo 9 dígitos)
+        </div>
       </div>
       <div class="form-group">
         <label for="form-notas">Notas adicionales</label>
@@ -1203,17 +1208,11 @@
                   placeholder="Dudas, preferencias de envío, talla alternativa…"></textarea>
       </div>
 
-      <div id="photo-notice">
-        📸 Adjunta la foto de tu equipación al responder el email de confirmación que recibirás
-      </div>
-
       <button type="submit" id="order-submit-btn">ENVIAR PEDIDO</button>
     </form>
 
     <div id="order-success" style="display:none">
       <strong>✅ Pedido enviado</strong>
-      Recibirás un email de confirmación en breve.<br>
-      Recuerda adjuntar la foto de tu equipación al responder.
     </div>
 
     <button id="back-shopping-btn" onclick="closeCheckout()">
@@ -1316,6 +1315,7 @@ const T = {
       europa: '🏆 Europa', retro: '⏪ Retro', nba: '🏀 NBA', nfl: '🏈 NFL',
       streetwear: '👕 Streetwear', windbreaker: '💨 Cortavientos',
       kids: '👶 Niños', women: '♀️ Mujer', otros: 'Otros',
+      favoritos: '❤️ Favoritos',
     },
     cat_labels: {
       nuevatemporada: 'Nueva Temporada 26/27',
@@ -1324,6 +1324,7 @@ const T = {
       sudamerica: 'Sudamérica', europa: 'Europa', retro: 'Retro',
       nba: 'NBA', nfl: 'NFL', streetwear: 'Streetwear',
       windbreaker: 'Cortavientos', kids: 'Niños', women: 'Mujer', otros: 'Otros',
+      favoritos: 'Favoritos',
     },
   },
   en: {
@@ -1380,6 +1381,7 @@ const T = {
       europa: '🏆 Europe', retro: '⏪ Retro', nba: '🏀 NBA', nfl: '🏈 NFL',
       streetwear: '👕 Streetwear', windbreaker: '💨 Windbreaker',
       kids: '👶 Kids', women: '♀️ Women', otros: 'Others',
+      favoritos: '❤️ Favourites',
     },
     cat_labels: {
       nuevatemporada: 'New Season 26/27',
@@ -1388,6 +1390,7 @@ const T = {
       sudamerica: 'South America', europa: 'Europe', retro: 'Retro',
       nba: 'NBA', nfl: 'NFL', streetwear: 'Streetwear',
       windbreaker: 'Windbreaker', kids: 'Kids', women: 'Women', otros: 'Others',
+      favoritos: 'Favourites',
     },
   },
 };
@@ -1404,6 +1407,33 @@ let selectedSize = null;
 let cart = JSON.parse(localStorage.getItem('kz-cart') || '[]');
 let activeFilters  = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set() };
 let seasonSortDir  = 'desc'; // 'desc' = más reciente primero, 'asc' = más antiguo
+let favorites      = new Set(JSON.parse(localStorage.getItem('kz-fav') || '[]'));
+
+function saveFavorites() {
+  localStorage.setItem('kz-fav', JSON.stringify([...favorites]));
+}
+
+function toggleFav(e, nameEn) {
+  e.stopPropagation();
+  if (favorites.has(nameEn)) { favorites.delete(nameEn); } else { favorites.add(nameEn); }
+  saveFavorites();
+  const btn = e.currentTarget;
+  const isFav = favorites.has(nameEn);
+  btn.classList.toggle('active', isFav);
+  btn.textContent = isFav ? '♥' : '♡';
+  if (activeCat === 'favoritos') renderAll();
+}
+
+// Devuelve la versión/tipo de equipación en inglés para el resumen del pedido
+function getKitVersion(name) {
+  if (PLAYER_RE.test(name)) return 'Player';
+  const key = extractKitType(name);
+  if (key) {
+    const MAP = { home: 'Home', away: 'Away', third: 'Third', goalkeeper: 'Goalkeeper', training: 'Training', retro: 'Retro' };
+    return MAP[key] || key;
+  }
+  return '-';
+}
 
 // ── Paginación ─────────────────────────────────────────────────────────────
 const PAGE_SIZE     = 48;
@@ -1466,7 +1496,7 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','retro','nba','nfl','streetwear','windbreaker','kids','europa','otros'];
+const CAT_ORDER = ['all','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','retro','nba','nfl','streetwear','windbreaker','kids','europa','otros','favoritos'];
 
 function buildCatBar() {
   const bar = document.getElementById('cat-bar');
@@ -1880,7 +1910,7 @@ function getProductsForSeasonFilter() {
 function buildFilterBar() {
   const bar  = document.getElementById('filter-bar');
   const rows = document.getElementById('filter-rows');
-  if (activeCat === 'all' || allProducts.length === 0) {
+  if (activeCat === 'all' || activeCat === 'favoritos' || allProducts.length === 0) {
     bar.style.display = 'none';
     return;
   }
@@ -2002,6 +2032,11 @@ function buildFilterBar() {
 // FILTERING
 // ═══════════════════════════════════════════════════════════════════════════
 function getFiltered() {
+  // Vista de favoritos: sólo los guardados en localStorage
+  if (activeCat === 'favoritos') {
+    return allProducts.filter(p => favorites.has(p.nameEn));
+  }
+
   let result = allProducts.filter(p => {
     if (activeCat !== 'all' && !(p.cats || []).includes(activeCat)) return false;
     if (searchQuery) {
@@ -2101,10 +2136,13 @@ function renderAll() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
 
-  if (currentFiltered.length === 0 && allProducts.length > 0) {
+  if (currentFiltered.length === 0) {
+    const msg = activeCat === 'favoritos'
+      ? (lang === 'es' ? 'Aún no tienes favoritos' : 'No favourites yet')
+      : t().no_results;
     grid.innerHTML = `<div id="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <p>${t().no_results}</p>
+      <p>${msg}</p>
     </div>`;
     setLoadMoreVisible(false);
     updateResultsInfo();
@@ -2321,6 +2359,7 @@ function createCard(p, idx = 0) {
   const card = document.createElement('div');
   card.className = 'card';
   card.onclick = () => openModal(p);
+  const isFav = favorites.has(p.nameEn);
   card.innerHTML = `
     <div class="card-img-wrap">
       ${p.img
@@ -2330,6 +2369,7 @@ function createCard(p, idx = 0) {
         ${jerseyIcon()}
       </div>
       ${p.type === 'retro' ? '<span class="badge-retro">RETRO</span>' : ''}
+      <button class="fav-btn${isFav ? ' active' : ''}" onclick="toggleFav(event,'${escHtml(p.nameEn)}')" title="${isFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${isFav ? '♥' : '♡'}</button>
     </div>
     <div class="card-body">
       <span class="card-cat">${escHtml(catLabel)}</span>
@@ -2690,25 +2730,27 @@ function openCheckout() {
   // Rellenar campos ocultos del formulario con el resumen del pedido
   let pedidoStr = '';
   for (const item of cart) {
-    const dorsal = item.customizations.find(c => c.type === 'dorsal');
-    const patch  = item.customizations.find(c => c.type === 'patch');
-    const priceStr = socioMode
-      ? `${fmtUsd(item.priceUsd)} → ${fmtEur(Math.round(item.priceUsd * EUR_RATE * 100) / 100)}`
-      : fmtEur(item.priceUsd);
-    pedidoStr += `${item.name} - Talla: ${item.size}`;
-    if (dorsal) pedidoStr += ` - Nombre: ${dorsal.name} #${dorsal.number}`;
-    if (patch)  pedidoStr += ` - Parche: ${patch.label}`;
-    pedidoStr += ` - Precio: ${priceStr}\n`;
+    const dorsal   = item.customizations.find(c => c.type === 'dorsal');
+    const patch    = item.customizations.find(c => c.type === 'patch');
+    const eurPrice = socioMode ? Math.round(item.priceUsd * EUR_RATE * 100) / 100 : item.priceUsd;
+    const nameNum  = dorsal ? `${dorsal.name} #${dorsal.number}` : 'N/A';
+    const version  = getKitVersion(item.name);
+    const patchStr = patch ? patch.label : 'None';
+    pedidoStr += `${item.name}\n`;
+    pedidoStr += `SIZE: ${item.size}\n`;
+    pedidoStr += `Name and Number: ${nameNum}\n`;
+    pedidoStr += `Version: ${version}\n`;
+    pedidoStr += `Patch: ${patchStr}\n`;
+    pedidoStr += `Precio: ${fmtEur(eurPrice)}\n\n`;
   }
-  document.getElementById('form-pedido').value = pedidoStr.trim();
-  document.getElementById('form-total').value  = fmtEur(cartTotalEur());
+  pedidoStr += `Total: ${fmtEur(cartTotalEur())}`;
 
   // Resetear formulario al abrir
   const orderForm = document.getElementById('order-form');
   orderForm.style.display  = 'block';
   orderForm.reset();
-  // Restaurar campos ocultos tras reset
-  document.getElementById('form-pedido').value = pedidoStr.trim();
+  // Restaurar campos ocultos tras reset (el reset los vacía)
+  document.getElementById('form-pedido').value = pedidoStr;
   document.getElementById('form-total').value  = fmtEur(cartTotalEur());
   document.getElementById('order-success').style.display   = 'none';
   const submitBtn = document.getElementById('order-submit-btn');
@@ -2730,7 +2772,19 @@ function closeCheckoutOnOverlay(e) {
 
 async function submitOrderForm(e) {
   e.preventDefault();
-  const btn = document.getElementById('order-submit-btn');
+  const btn      = document.getElementById('order-submit-btn');
+  const phoneErr = document.getElementById('form-contacto-error');
+
+  // Validar teléfono: al menos 9 dígitos
+  const contactoVal = document.getElementById('form-contacto').value;
+  const digits = contactoVal.replace(/\D/g, '');
+  if (digits.length < 9) {
+    phoneErr.style.display = 'block';
+    document.getElementById('form-contacto').focus();
+    return;
+  }
+  phoneErr.style.display = 'none';
+
   btn.disabled = true;
   btn.textContent = 'Enviando…';
 
