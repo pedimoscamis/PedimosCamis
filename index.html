@@ -116,6 +116,68 @@
       display: none;
     }
 
+    /* ─── User / Socio button ────────────────────────────────── */
+    #user-btn {
+      position: relative; background: none; border: none;
+      color: var(--muted); cursor: pointer; padding: 8px;
+      border-radius: 8px; font-size: 20px; line-height: 1;
+      transition: background .2s, color .2s;
+    }
+    #user-btn:hover { background: var(--surface); color: var(--text); }
+    #user-btn.active { color: var(--accent); }
+
+    #user-menu {
+      display: none; position: absolute;
+      top: calc(100% + 8px); right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      width: 230px;
+      z-index: 200;
+      box-shadow: 0 8px 32px rgba(0,0,0,.6);
+    }
+    #user-menu.open { display: block; }
+    #user-menu-title {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .8px;
+      color: var(--muted); margin-bottom: 12px;
+    }
+    #user-code-input {
+      width: 100%; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text); padding: 8px 10px;
+      font-family: 'Barlow', sans-serif; font-size: 13px;
+      outline: none; margin-bottom: 8px;
+    }
+    #user-code-input:focus { border-color: var(--accent); }
+    #user-code-submit {
+      width: 100%; background: var(--accent); color: #fff;
+      border: none; border-radius: 6px; padding: 8px;
+      font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+    }
+    #user-code-submit:hover { background: var(--accent-dk); }
+    #user-code-error {
+      font-size: 12px; color: var(--accent);
+      margin-top: 6px; display: none;
+    }
+    #user-menu-active { display: none; }
+    #socio-active-label {
+      font-size: 13px; font-weight: 600; color: #4caf50;
+      margin-bottom: 10px;
+    }
+    #user-logout-btn {
+      width: 100%; background: none;
+      border: 1px solid var(--border); color: var(--muted);
+      border-radius: 6px; padding: 8px;
+      font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+    }
+    #user-logout-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    /* ─── Checkout socio discount row ───────────────────────── */
+    .checkout-row.discount { color: #4caf50; font-weight: 600; }
+
     /* ─── Category Bar ─────────────────────────────────────── */
     #cat-bar {
       position: sticky; top: 64px; z-index: 99;
@@ -684,29 +746,6 @@
       border-top: 1px solid var(--border);
     }
 
-    /* Bizum block */
-    #bizum-block {
-      background: linear-gradient(135deg, #1a47c8 0%, #0d2b8c 60%, #060f3d 100%);
-      border-radius: 12px; padding: 24px;
-      text-align: center; margin: 20px 0;
-    }
-    #bizum-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 46px; letter-spacing: 4px;
-      color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    }
-    #bizum-number {
-      font-size: 26px; font-weight: 700; color: #fff;
-      margin: 6px 0; letter-spacing: 1px;
-    }
-    #bizum-instruction {
-      font-size: 14px; color: rgba(255,255,255,0.75);
-      margin-top: 8px;
-    }
-    #bizum-amount {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 34px; color: #ffdd44;
-    }
 
     .checkout-note {
       font-size: 13px; color: var(--muted);
@@ -762,6 +801,15 @@
       font-size: 22px; color: var(--text); margin-bottom: 8px;
     }
     #footer-logo span { color: var(--accent); }
+    #footer-disclaimer {
+      font-size: 11px; color: #555; margin-top: 14px;
+      max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.5;
+    }
+    #price-disclaimer {
+      font-size: 12px; color: var(--muted);
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; line-height: 1.5;
+    }
     .footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
 
     /* ─── Toast ─────────────────────────────────────────────── */
@@ -893,6 +941,21 @@
   </div>
   <div class="header-actions">
     <button id="lang-toggle" onclick="toggleLang()">EN</button>
+    <div style="position:relative">
+      <button id="user-btn" onclick="toggleUserMenu()" title="Acceso socio">👤</button>
+      <div id="user-menu">
+        <div id="user-menu-login">
+          <div id="user-menu-title">Código de acceso</div>
+          <input type="text" id="user-code-input" placeholder="Introduce tu código" autocomplete="off" />
+          <button id="user-code-submit" onclick="submitUserCode()">Entrar</button>
+          <div id="user-code-error">Código no válido</div>
+        </div>
+        <div id="user-menu-active">
+          <div id="socio-active-label">✓ Modo socio activo — 10% dto.</div>
+          <button id="user-logout-btn" onclick="deactivateSocio()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
     <button id="cart-btn" onclick="openCart()">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
@@ -975,7 +1038,7 @@
         <label class="custom-option" id="opt-dorsal-wrap">
           <input type="checkbox" id="opt-dorsal" />
           <span class="custom-option-label" data-i18n="name_number">Nombre + dorsal</span>
-          <span class="custom-option-price">+3$ / +2,70€</span>
+          <span class="custom-option-price">+3€</span>
         </label>
         <div class="custom-inputs" id="dorsal-inputs">
           <input class="custom-input" id="input-name" type="text" data-i18n-placeholder="player_name" placeholder="Nombre del jugador" maxlength="20" />
@@ -984,7 +1047,7 @@
         <label class="custom-option" id="opt-patch-wrap">
           <input type="checkbox" id="opt-patch" />
           <span class="custom-option-label" data-i18n="patch">Parche</span>
-          <span class="custom-option-price">+1$ / +0,90€</span>
+          <span class="custom-option-price">+1€</span>
         </label>
         <div class="custom-inputs" id="patch-inputs">
           <select class="custom-select" id="patch-type">
@@ -1025,30 +1088,20 @@
     <h2 id="checkout-title" data-i18n="order_summary">RESUMEN DEL PEDIDO</h2>
     <div id="checkout-items-list"></div>
     <div class="checkout-total-block">
-      <div class="checkout-row">
-        <span data-i18n="total_usd">Total USD</span>
-        <span id="co-total-usd"></span>
+      <div class="checkout-row" id="co-subtotal-row" style="display:none">
+        <span id="co-subtotal-label">Subtotal</span>
+        <span id="co-subtotal"></span>
       </div>
-      <div class="checkout-row">
-        <span>× 0.90</span>
-        <span id="co-conversion"></span>
+      <div class="checkout-row" id="co-conversion-row" style="display:none">
+        <span id="co-conversion-label">× 0.90 =</span>
+        <span id="co-conversion-val"></span>
       </div>
       <div class="checkout-row big">
-        <span data-i18n="total_eur">TOTAL EUR</span>
+        <span>TOTAL</span>
         <span id="co-total-eur"></span>
       </div>
     </div>
-    <div id="bizum-block">
-      <div id="bizum-logo">BIZUM</div>
-      <div id="bizum-number">+34 648 49 34 70</div>
-      <div id="bizum-instruction">
-        <span data-i18n="send_exactly">Envía exactamente</span>
-        <div id="bizum-amount"></div>
-        <span data-i18n="to_this_number">a este número</span>
-      </div>
-    </div>
-    <p class="checkout-note" data-i18n="payment_note">Una vez realizado el pago, envíanos el comprobante por WhatsApp con el detalle de tu pedido.</p>
-    <div id="photo-reminder">📸 Antes de enviar, copia la foto de tu equipación/es y pégala en el mensaje de WhatsApp</div>
+    <p id="price-disclaimer">⚠️ El precio final puede estar sujeto a cambios por parte del proveedor.</p>
     <button id="whatsapp-btn" onclick="confirmWhatsapp()">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       <span data-i18n="confirm_whatsapp">CONFIRMAR POR WHATSAPP</span>
@@ -1063,10 +1116,11 @@
 <footer id="footer">
   <div id="footer-logo">PEDIDO<span>CAMIS</span></div>
   <div class="footer-links">
-    <a href="https://wa.me/34648493470" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a>
     <span>Email: próximamente</span>
     <span>© <span id="footer-year"></span> PedidoCamis</span>
   </div>
+  <p id="footer-disclaimer">Este sitio es un proyecto personal sin fines comerciales. No representa ninguna marca, empresa u organización oficial. Los precios pueden estar sujetos a cambios.</p>
 </footer>
 
 <!-- ─── Toast ──────────────────────────────────────────────────────────── -->
@@ -1078,7 +1132,7 @@
 // CONFIG
 // ═══════════════════════════════════════════════════════════════════════════
 const WHATSAPP_NUMBER = '34648493470';
-const EUR_RATE = 0.90;
+let socioMode = false; // true cuando el código SOCIO10 está activo
 // Detecta "Player Version", "player version", o "player" como palabra independiente
 const PLAYER_RE = /\bplayer\b/i;
 const PATCH_CATS = new Set(['laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro','europa','nuevatemporada']);
@@ -1117,8 +1171,6 @@ const T = {
     finish_order: 'FINALIZAR PEDIDO',
     cart_empty: 'Tu carrito está vacío',
     order_summary: 'RESUMEN DEL PEDIDO',
-    total_usd: 'Total USD',
-    total_eur: 'TOTAL EUR',
     send_exactly: 'Envía exactamente',
     to_this_number: 'a este número',
     payment_note: 'Una vez realizado el pago, envíanos el comprobante por WhatsApp con el detalle de tu pedido.',
@@ -1131,16 +1183,25 @@ const T = {
     error_load: 'Error al cargar el catálogo.',
     no_results: 'Sin resultados para tu búsqueda.',
     size_required: 'Por favor selecciona una talla',
-    price_fmt: (usd) => {
-      const eur = (usd * EUR_RATE).toFixed(2).replace('.', ',');
-      return { main: `${eur}€`, sub: `${usd}$ (× ${EUR_RATE})` };
+    price_fmt: (price) => {
+      if (socioMode) {
+        // price = USD → mostrar EUR grande, USD chico
+        const eur = (price * EUR_RATE).toFixed(2).replace('.', ',');
+        return { main: `${eur}€`, sub: `${price}$ (× ${EUR_RATE})` };
+      }
+      // precio directo en €
+      const fmt = Number.isInteger(price) ? price : price.toFixed(2).replace('.', ',');
+      return { main: `${fmt}€`, sub: '' };
     },
-    total_fmt: (usd) => {
-      const eur = (usd * EUR_RATE).toFixed(2).replace('.', ',');
-      return `${eur}€`;
+    total_fmt: (eur) => {
+      // siempre en € (importe real de pago)
+      const fmt = Number.isInteger(eur) ? eur : eur.toFixed(2).replace('.', ',');
+      return `${fmt}€`;
     },
-    cart_item_price: (usd) => {
-      const eur = (usd * EUR_RATE).toFixed(2).replace('.', ',');
+    cart_item_price: (price) => {
+      const eur = socioMode
+        ? (price * EUR_RATE).toFixed(2).replace('.', ',')
+        : (Number.isInteger(price) ? price : price.toFixed(2).replace('.', ','));
       return `${eur}€`;
     },
     cats: {
@@ -1177,8 +1238,6 @@ const T = {
     finish_order: 'CHECKOUT',
     cart_empty: 'Your cart is empty',
     order_summary: 'ORDER SUMMARY',
-    total_usd: 'Total USD',
-    total_eur: 'TOTAL EUR',
     send_exactly: 'Send exactly',
     to_this_number: 'to this number',
     payment_note: 'Once payment is made, send us the receipt via WhatsApp with your order details.',
@@ -1191,14 +1250,28 @@ const T = {
     error_load: 'Failed to load catalog.',
     no_results: 'No results found.',
     size_required: 'Please select a size',
-    price_fmt: (usd) => {
-      const eur = (usd * EUR_RATE).toFixed(2);
-      return { main: `$${usd}`, sub: `(× ${EUR_RATE} = ${eur}€)` };
+    price_fmt: (price) => {
+      if (socioMode) {
+        // price = USD → show EUR big, USD×rate small
+        const eur = (price * EUR_RATE).toFixed(2);
+        return { main: `$${price}`, sub: `(× ${EUR_RATE} = ${eur}€)` };
+      }
+      // Normal EN: convert € → £ at 0.85
+      const gbp = (price * GBP_RATE).toFixed(2);
+      const fmt = Number.isInteger(price) ? price : price.toFixed(2);
+      return { main: `£${gbp}`, sub: `(${fmt}€)` };
     },
-    total_fmt: (usd) => {
-      return `$${usd.toFixed(2)}`;
+    total_fmt: (eur) => {
+      // always EUR (actual payment amount)
+      const fmt = Number.isInteger(eur) ? eur : eur.toFixed(2);
+      return `${fmt}€`;
     },
-    cart_item_price: (usd) => `$${usd.toFixed(2)}`,
+    cart_item_price: (price) => {
+      const eur = socioMode
+        ? (price * EUR_RATE).toFixed(2)
+        : (Number.isInteger(price) ? price : price.toFixed(2));
+      return `${eur}€`;
+    },
     cats: {
       all: 'All', nuevatemporada: '🆕 New Season 26/27',
       laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
@@ -1558,8 +1631,8 @@ function detectTeam(name) {
 function matchesTipo(p, tipo) {
   const cats = p.cats || [];
   if (tipo === 'Player Version') return PLAYER_RE.test(p.nameEn);
-  if (tipo === 'Fan Version')    return !PLAYER_RE.test(p.nameEn) && !cats.includes('women') && !cats.includes('kids') && !cats.includes('windbreaker');
-  if (tipo === 'Mujer')          return cats.includes('women') || /\bwomen\b|\bmujer\b|\bfemeni/i.test(p.nameEn);
+  if (tipo === 'Fan Version')    return !PLAYER_RE.test(p.nameEn) && !cats.includes('women') && !/\bwom[ae]n\b|\bmujer\b|\bfemeni/i.test(p.nameEn) && !cats.includes('kids') && !cats.includes('windbreaker');
+  if (tipo === 'Mujer')          return cats.includes('women') || /\bwom[ae]n\b|\bmujer\b|\bfemeni/i.test(p.nameEn);
   if (tipo === 'Niños')          return cats.includes('kids')  || /\bkids\b|\bniños\b|\bchild\b|\bjunior\b/i.test(p.nameEn);
   if (tipo === 'Cortavientos')   return cats.includes('windbreaker');
   return false;
@@ -1576,12 +1649,16 @@ function matchesEquipacion(p, equip) {
 }
 
 function matchesSeason(name, value) {
-  if (value === '26/27')       return /\b(26\/27|2026\/27)\b/.test(name);
-  if (value === '25/26')       return /\b(25\/26|2025\/26)\b/.test(name);
-  if (value === '24/25')       return /\b(24\/25|2024\/25)\b/.test(name);
-  if (value === 'Anteriores')  {
-    // Has a season but it's not one of the three above, or is retro without season
-    if (/\b(26\/27|2026\/27|25\/26|2025\/26|24\/25|2024\/25)\b/.test(name)) return false;
+  // 26/27 — formato barra corto/largo O solo el año 2026
+  if (value === '26/27') return /\b(26\/27|2026\/27|2026)\b/.test(name);
+  // 25/26 — formato barra corto/largo O solo el año 2025
+  if (value === '25/26') return /\b(25\/26|2025\/26|2025)\b/.test(name);
+  // 24/25 — formato barra corto/largo O solo el año 2024
+  if (value === '24/25') return /\b(24\/25|2024\/25|2024)\b/.test(name);
+  if (value === 'Anteriores') {
+    // excluir temporadas recientes (incluidos años sueltos recientes)
+    if (/\b(26\/27|2026\/27|2026|25\/26|2025\/26|2025|24\/25|2024\/25|2024)\b/.test(name)) return false;
+    // incluir cualquier otra temporada detectada (años anteriores, formato barra antiguo)
     return extractSeason(name) !== null;
   }
   return false;
@@ -1744,7 +1821,7 @@ function buildFilterBar() {
   }
 
   // ── 4. Temporada — select dropdown ──────────────────────────────────────
-  const SEASONS = ['26/27','25/26','24/25','Anteriores'];
+  const SEASONS = ['26/27', '25/26', '24/25', 'Anteriores'];
   const seasonsPresent = SEASONS.filter(s => catProducts.some(p => matchesSeason(p.nameEn, s)));
   if (seasonsPresent.length > 0) {
     const seasonItems = seasonsPresent.map(s => ({
@@ -1815,9 +1892,9 @@ function renderFeatured() {
 
   scroll.innerHTML = '';
   for (const p of items) {
-    const price    = getBasePrice(p);
-    const priceEur = (price * EUR_RATE).toFixed(0);
-    const card     = document.createElement('div');
+    const price = getBasePrice(p);
+    const { main: priceMain } = t().price_fmt(price);
+    const card  = document.createElement('div');
     card.className = 'featured-card';
     card.onclick   = () => openModal(p);
     card.innerHTML = `
@@ -1828,7 +1905,7 @@ function renderFeatured() {
       </div>
       <div class="featured-card-body">
         <div class="featured-card-name">${escHtml(p.nameEn)}</div>
-        <div class="featured-card-price">${priceEur}€</div>
+        <div class="featured-card-price">${priceMain}</div>
       </div>`;
     scroll.appendChild(card);
   }
@@ -1938,15 +2015,38 @@ function updateResultsInfo() {
 // Alias para compatibilidad con la llamada inicial en init()
 function renderGrid() { /* no-op: init usa renderAll tras cargar datos */ }
 
-// Devuelve el precio base real del producto:
-// Player Version → $11, retro → $13, resto → $8
-// Tabla de precios base por categoría
-const CAT_PRICES = {
-  windbreaker: 30,
-  streetwear:  15,
-  kids:         7,
-  // resto usa el precio del producto (8 normal, 13 retro)
+// Aplica el descuento socio 10% si el modo está activo
+// applyDiscount ya no aplica % adicional — cada modo tiene sus propios precios
+function applyDiscount(price) { return price; }
+
+const EUR_RATE = 0.90; // conversión USD → EUR en modo socio
+const GBP_RATE = 0.85; // conversión EUR → £  en modo normal EN
+
+// ── Precios modo NORMAL (en €) ─────────────────────────────────────────────
+const NORMAL_PRICES = {
+  windbreaker: 50,
+  streetwear:  75,
+  kids:        15,
+  women:       10,
+  nba:         20,
+  nfl:         20,
 };
+const NORMAL_JERSEY = 10;
+const NORMAL_RETRO  = 16;
+const NORMAL_PLAYER = 13;
+
+// ── Precios modo SOCIO (en $) ──────────────────────────────────────────────
+const SOCIO_PRICES = {
+  windbreaker: 40,
+  streetwear:  67.5,
+  kids:        12,
+  women:        8,
+  nba:         18,
+  nfl:         18,
+};
+const SOCIO_JERSEY = 8;
+const SOCIO_RETRO  = 13;
+const SOCIO_PLAYER = 11;
 
 /**
  * Devuelve la categoría "principal" del producto para efectos de display y precio.
@@ -1960,10 +2060,14 @@ function primaryCat(p) {
 }
 
 function getBasePrice(p) {
-  const pc = primaryCat(p);
-  if (CAT_PRICES[pc] !== undefined) return CAT_PRICES[pc];
-  if (PLAYER_RE.test(p.nameEn)) return 11;
-  return p.priceUsd; // 8 (normal) o 13 (retro) — calculado por categorize.js
+  const pc    = primaryCat(p);
+  const table = socioMode ? SOCIO_PRICES : NORMAL_PRICES;
+  if (table[pc] !== undefined) return table[pc];
+  if (PLAYER_RE.test(p.nameEn))
+    return socioMode ? SOCIO_PLAYER : NORMAL_PLAYER;
+  if ((p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn))
+    return socioMode ? SOCIO_RETRO : NORMAL_RETRO;
+  return socioMode ? SOCIO_JERSEY : NORMAL_JERSEY;
 }
 
 function isPlayerVersion(p) {
@@ -2141,24 +2245,27 @@ function buildSizeGrid(sizes) {
   }
 }
 
-function getModalPriceUsd() {
+// Devuelve el precio base + extras sin descuento socio (para guardar en carrito)
+function getModalPriceBase() {
   if (!currentProduct) return 0;
-  let usd = getBasePrice(currentProduct);
-  if (document.getElementById('opt-dorsal').checked) usd += 3;
-  if (document.getElementById('opt-patch').checked)  usd += 1;
-  return usd;
+  let eur = getBasePrice(currentProduct);
+  if (document.getElementById('opt-dorsal').checked) eur += 3;
+  if (document.getElementById('opt-patch').checked)  eur += 1;
+  return eur;
 }
 
 function updateModalPrice() {
-  const usd = getModalPriceUsd();
-  const { main, sub } = t().price_fmt(usd);
+  const price = getModalPriceBase(); // USD (socio) o EUR (normal)
+  const { main, sub } = t().price_fmt(price);
   document.getElementById('modal-price-main').textContent = main;
   document.getElementById('modal-price-sub').textContent = sub;
 
-  const btnPrice = lang === 'es'
-    ? `${(usd * EUR_RATE).toFixed(2).replace('.', ',')}€`
-    : `$${usd.toFixed(2)}`;
-  document.getElementById('add-to-cart-btn').textContent = t().add_cart(btnPrice);
+  // Botón siempre muestra EUR (lo que el cliente paga)
+  const priceEur = socioMode
+    ? Math.round(price * EUR_RATE * 100) / 100
+    : price;
+  const fmtBtn = Number.isInteger(priceEur) ? priceEur : priceEur.toFixed(2).replace('.', ',');
+  document.getElementById('add-to-cart-btn').textContent = t().add_cart(`${fmtBtn}€`);
 }
 
 // Dorsal toggle
@@ -2202,7 +2309,7 @@ function addToCart() {
     showToast(t().size_required);
     return;
   }
-  const usd = getModalPriceUsd();
+  const usd = getModalPriceBase(); // precio base sin descuento; el dto se aplica en checkout
   const customizations = [];
   if (document.getElementById('opt-dorsal').checked) {
     const name = document.getElementById('input-name').value.trim();
@@ -2270,7 +2377,7 @@ function closeCart() {
 function renderCartItems() {
   const container = document.getElementById('cart-items');
   const totalVal = document.getElementById('cart-total-val');
-  const total = cartTotalUsd();
+  const total = cartTotalEur();
 
   totalVal.textContent = t().total_fmt(total);
 
@@ -2319,34 +2426,74 @@ function getVersion(name) {
 // ═══════════════════════════════════════════════════════════════════════════
 // CHECKOUT
 // ═══════════════════════════════════════════════════════════════════════════
+function fmtEur(n) {
+  return (Number.isInteger(n) ? n : n.toFixed(2).replace('.', ',')) + '€';
+}
+function fmtUsd(n) {
+  return '$' + (Number.isInteger(n) ? n : n.toFixed(2));
+}
+// Devuelve el total del carrito siempre en euros
+function cartTotalEur() {
+  const raw = cartTotalUsd();
+  return socioMode ? Math.round(raw * EUR_RATE * 100) / 100 : raw;
+}
+
+function updateCheckoutTotals() {
+  const raw      = cartTotalUsd();   // USD (socio) o EUR (normal)
+  const totalEur = cartTotalEur();
+
+  const subtotalRow    = document.getElementById('co-subtotal-row');
+  const conversionRow  = document.getElementById('co-conversion-row');
+
+  if (socioMode) {
+    // Mostrar: "Total ($)  →  $X"   y   "× 0.90 =  →  Y€"
+    subtotalRow.style.display   = '';
+    conversionRow.style.display = '';
+    document.getElementById('co-subtotal-label').textContent    = 'Total ($)';
+    document.getElementById('co-subtotal').textContent          = fmtUsd(raw);
+    document.getElementById('co-conversion-label').textContent  = `× ${EUR_RATE} =`;
+    document.getElementById('co-conversion-val').textContent    = fmtEur(totalEur);
+  } else {
+    subtotalRow.style.display   = 'none';
+    conversionRow.style.display = 'none';
+  }
+
+  document.getElementById('co-total-eur').textContent = fmtEur(totalEur);
+}
+
 function openCheckout() {
   if (cart.length === 0) return;
   closeCart();
 
-  const totalUsd = cartTotalUsd();
-  const totalEur = (totalUsd * EUR_RATE).toFixed(2);
   const isEs = lang === 'es';
 
   // Items list — image + name + price breakdown
   const itemsEl = document.getElementById('checkout-items-list');
   itemsEl.innerHTML = '';
   for (const item of cart) {
-    const extrasUsd = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
-    const baseUsd   = item.priceUsd - extrasUsd;
-    const row = document.createElement('div');
+    const extras = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
+    const base   = item.priceUsd - extras;
+    const row    = document.createElement('div');
     row.className = 'checkout-item-row';
 
-    // Price breakdown grid rows
+    const sym = socioMode ? '$' : '€';
+    const fmtAmt = (n) => socioMode ? fmtUsd(n) : fmtEur(n);
+    const baseEur = socioMode ? Math.round(base * EUR_RATE * 100) / 100 : base;
+
     let bdHtml = `<div class="checkout-item-breakdown">`;
-    bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>$${baseUsd}</span>`;
+    bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>${base}${sym}</span>`;
     for (const c of item.customizations) {
       let lbl;
       if (c.type === 'dorsal') lbl = isEs ? 'Nombre + dorsal' : 'Name + number';
       else if (c.type === 'patch') lbl = `Parche: ${c.label}`;
       else lbl = c.type;
-      bdHtml += `<span class="extra">${escHtml(lbl)}</span><span class="extra">+$${c.extraUsd}</span>`;
+      bdHtml += `<span class="extra">${escHtml(lbl)}</span><span class="extra">+${c.extraUsd}${sym}</span>`;
     }
     bdHtml += `</div>`;
+
+    const itemTotalStr = socioMode
+      ? `${fmtUsd(item.priceUsd)} → ${fmtEur(Math.round(item.priceUsd * EUR_RATE * 100) / 100)}`
+      : fmtEur(item.priceUsd);
 
     row.innerHTML = `
       ${item.img
@@ -2358,15 +2505,11 @@ function openCheckout() {
         <div class="checkout-item-size">${isEs ? 'Talla' : 'Size'}: ${escHtml(item.size)}</div>
         ${bdHtml}
       </div>
-      <div class="checkout-item-total">${t().cart_item_price(item.priceUsd)}</div>`;
+      <div class="checkout-item-total">${itemTotalStr}</div>`;
     itemsEl.appendChild(row);
   }
 
-  document.getElementById('co-total-usd').textContent = `$${totalUsd.toFixed(2)}`;
-  document.getElementById('co-conversion').textContent = `${(totalUsd * EUR_RATE).toFixed(2)}€`;
-  document.getElementById('co-total-eur').textContent = `${totalEur}€`;
-  document.getElementById('bizum-amount').textContent = `${totalEur}€`;
-
+  updateCheckoutTotals();
   document.getElementById('checkout-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -2381,24 +2524,98 @@ function closeCheckoutOnOverlay(e) {
 }
 
 function confirmWhatsapp() {
-  const totalUsd = cartTotalUsd();
-  const totalEur = (totalUsd * EUR_RATE).toFixed(2);
-
-  let msg = `🛒 *PEDIDO PEDIDOCAMIS*\n\n`;
+  let msg = '';
   for (const item of cart) {
     const dorsal = item.customizations.find(c => c.type === 'dorsal');
     const patch  = item.customizations.find(c => c.type === 'patch');
-    msg += ` ${item.name}\n`;
-    msg += `  SIZE: ${item.size}\n`;
-    msg += `  Name and Number: ${dorsal ? `${dorsal.name} ${dorsal.number}` : ''}\n`;
-    msg += `  Version: ${getVersion(item.name)}\n`;
-    msg += `  Patch: ${patch ? patch.label : ''}\n`;
+    const priceStr = socioMode
+      ? `${fmtUsd(item.priceUsd)} → ${fmtEur(Math.round(item.priceUsd * EUR_RATE * 100) / 100)}`
+      : fmtEur(item.priceUsd);
+    msg += `• ${item.name} — ${priceStr}\n`;
+    msg += `  Talla: ${item.size}\n`;
+    if (dorsal) msg += `  Nombre + dorsal: ${dorsal.name} ${dorsal.number}\n`;
+    msg += `  Versión: ${getVersion(item.name)}\n`;
+    if (patch)  msg += `  Parche: ${patch.label}\n`;
     msg += `\n`;
   }
-  msg += `💶 TOTAL: ${totalEur}€ (${totalUsd.toFixed(2)}$)`;
+  msg += `💶 TOTAL: ${fmtEur(cartTotalEur())}`;
 
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank', 'noopener');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MODO SOCIO
+// ═══════════════════════════════════════════════════════════════════════════
+
+function toggleUserMenu() {
+  const menu = document.getElementById('user-menu');
+  const isOpen = menu.classList.contains('open');
+  if (isOpen) {
+    menu.classList.remove('open');
+  } else {
+    // Resetear el estado del formulario cada vez que se abre
+    document.getElementById('user-code-input').value = '';
+    document.getElementById('user-code-error').style.display = 'none';
+    updateUserMenuState();
+    menu.classList.add('open');
+    if (!socioMode) document.getElementById('user-code-input').focus();
+  }
+}
+
+// Cierra el menú al hacer clic fuera
+document.addEventListener('click', (e) => {
+  const menu  = document.getElementById('user-menu');
+  const btn   = document.getElementById('user-btn');
+  if (menu.classList.contains('open') && !menu.contains(e.target) && e.target !== btn) {
+    menu.classList.remove('open');
+  }
+});
+
+function updateUserMenuState() {
+  const loginPanel  = document.getElementById('user-menu-login');
+  const activePanel = document.getElementById('user-menu-active');
+  if (socioMode) {
+    loginPanel.style.display  = 'none';
+    activePanel.style.display = 'block';
+  } else {
+    loginPanel.style.display  = 'block';
+    activePanel.style.display = 'none';
+  }
+}
+
+function updateUserBtn() {
+  const btn = document.getElementById('user-btn');
+  btn.classList.toggle('active', socioMode);
+  btn.title = socioMode ? 'Modo socio activo' : 'Acceso socio';
+}
+
+function submitUserCode() {
+  const input = document.getElementById('user-code-input');
+  const error = document.getElementById('user-code-error');
+  const code  = input.value.trim().toUpperCase();
+
+  if (code === 'SOCIO10') {
+    socioMode = true;
+    document.getElementById('user-menu').classList.remove('open');
+    updateUserBtn();
+    renderAll();            // recalcula precios en tarjetas
+    renderCartItems();      // recalcula total del carrito
+    showToast('✓ Modo socio activado — 10% de descuento');
+  } else {
+    error.style.display = 'block';
+    input.value = '';
+    input.focus();
+  }
+}
+
+function deactivateSocio() {
+  socioMode = false;
+  document.getElementById('user-menu').classList.remove('open');
+  updateUserBtn();
+  renderAll();
+  renderCartItems();
+  showToast('Sesión de socio cerrada');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -2433,14 +2650,9 @@ function updateLangUI() {
   document.querySelector('[data-i18n="name_number"]').textContent = t().name_number;
   document.getElementById('input-name').placeholder = t().player_name;
   document.querySelector('[data-i18n="patch"]').textContent = t().patch;
-  document.querySelector('[data-i18n="total_usd"]').textContent = t().total_usd;
-  document.querySelector('[data-i18n="total_eur"]').textContent = t().total_eur;
-  document.querySelector('[data-i18n="send_exactly"]').textContent = t().send_exactly;
-  document.querySelector('[data-i18n="to_this_number"]').textContent = t().to_this_number;
-  document.querySelector('[data-i18n="payment_note"]').textContent = t().payment_note;
   document.querySelector('[data-i18n="confirm_whatsapp"]').textContent = t().confirm_whatsapp;
   document.querySelector('[data-i18n="back_shopping"]').textContent = t().back_shopping;
-  document.getElementById('cart-total-val').textContent = t().total_fmt(cartTotalUsd());
+  document.getElementById('cart-total-val').textContent = t().total_fmt(cartTotalEur());
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
