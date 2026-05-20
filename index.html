@@ -67,6 +67,7 @@
 
     /* ─── Header ───────────────────────────────────────────── */
     #header {
+      position: relative; z-index: 10; /* crea sub-stacking-context → dropdown flota sobre cat-bar */
       background: rgba(8,8,8,0.95);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
@@ -267,9 +268,6 @@
       pointer-events: none;
     }
 
-    /* ─── Smart Header (mobile) ──────────────────────────────── */
-    #sticky-wrapper.smart-hidden { transform: translateY(-100%); }
-
     /* ─── FAB "Volver arriba" ────────────────────────────────── */
     #fab-top {
       position: fixed; bottom: 28px; right: 20px;
@@ -279,7 +277,7 @@
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       box-shadow: 0 4px 16px rgba(232,23,60,0.45);
-      z-index: 150;
+      z-index: 9998;
       opacity: 0; transform: scale(0.7);
       transition: opacity .25s ease, transform .25s ease;
       pointer-events: none;
@@ -532,7 +530,7 @@
     /* ─── Modal ─────────────────────────────────────────────── */
     #modal-overlay {
       display: none;
-      position: fixed; inset: 0; z-index: 200;
+      position: fixed; inset: 0; z-index: 9200;
       background: rgba(0,0,0,0.85);
       backdrop-filter: blur(6px);
       align-items: center; justify-content: center;
@@ -675,13 +673,13 @@
 
     /* ─── Cart Drawer ───────────────────────────────────────── */
     #cart-overlay {
-      display: none; position: fixed; inset: 0; z-index: 300;
+      display: none; position: fixed; inset: 0; z-index: 9300;
       background: rgba(0,0,0,0.7);
     }
     #cart-overlay.open { display: block; }
 
     #cart-drawer {
-      position: fixed; top: 0; right: 0; bottom: 0; z-index: 301;
+      position: fixed; top: 0; right: 0; bottom: 0; z-index: 9301;
       width: min(420px, 100vw);
       background: var(--surface);
       border-left: 1px solid var(--border);
@@ -759,7 +757,7 @@
 
     /* ─── Checkout Modal ─────────────────────────────────────── */
     #checkout-overlay {
-      display: none; position: fixed; inset: 0; z-index: 400;
+      display: none; position: fixed; inset: 0; z-index: 9400;
       background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);
       align-items: center; justify-content: center; padding: 16px;
     }
@@ -955,7 +953,7 @@
 
     /* ─── Toast ─────────────────────────────────────────────── */
     #toast {
-      position: fixed; bottom: 24px; right: 24px; z-index: 500;
+      position: fixed; bottom: 24px; right: 24px; z-index: 9500;
       background: #222; border: 1px solid var(--border);
       color: var(--text); padding: 12px 20px; border-radius: 10px;
       font-size: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
@@ -1727,6 +1725,7 @@ function setCategory(cat) {
   buildCatBar();
   buildFilterBar();
   renderAll();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goHome() {
@@ -2126,7 +2125,7 @@ function buildFilterBar() {
 
   bar.style.display = '';
   rows.innerHTML = '';
-  filterBarScroll.reset(); // Regla 1: al entrar en categoría, siempre mostrar la barra
+  navScroll.reset(); // Al entrar en categoría, siempre mostrar la barra de filtros
 
   const isEs = lang === 'es';
 
@@ -3293,108 +3292,49 @@ function showToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
-// Ocultar filter-bar al scrollear abajo, mostrar al scrollear arriba
-const filterBarScroll = (function () {
-  const HIDE_THRESHOLD = 50;
-  let lastY = window.scrollY;
-  let downAccumulated = 0;
-  let ignoreUntil = 0;
-  let ticking = false;
-
-  function bar() { return document.getElementById('filter-bar'); }
-  function show() {
-    const fb = bar();
-    if (fb) fb.classList.remove('filters-hidden');
-    downAccumulated = 0;
-  }
-  function reset() {
-    show();
-    lastY = window.scrollY;
-    ignoreUntil = Date.now() + 600; // ignora scroll durante el smooth-scroll de setCategory
-  }
-
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      ticking = false;
-      const fb = bar();
-      if (!fb || fb.style.display === 'none') return;
-      if (Date.now() < ignoreUntil) { lastY = window.scrollY; return; }
-
-      const y = window.scrollY;
-      const delta = y - lastY;
-      lastY = y;
-
-      if (y <= 10 || delta < 0) {
-        // Top de página o cualquier scroll hacia arriba → mostrar inmediatamente
-        show();
-      } else if (delta > 0) {
-        // Scroll hacia abajo → acumular y ocultar si supera umbral
-        downAccumulated += delta;
-        if (downAccumulated > HIDE_THRESHOLD) fb.classList.add('filters-hidden');
-      }
-    });
-  }, { passive: true });
-
-  return { reset, show };
-})();
-
-// ─── Smart Header (móvil) + FAB "Volver arriba" ──────────────────────────────
-const smartHeader = (function () {
+// ─── Nav Scroll: smart-header (móvil) + filter-bar (PC) + FAB ────────────────
+const navScroll = (function () {
+  const THRESHOLD = 50;   // px — umbral para ocultar
   const MOBILE_BP = 768;  // px — breakpoint móvil
-  const DOWN_THR  = 50;   // px acumulados hacia abajo para ocultar wrapper
-  const FAB_THR   = 500;  // px de scroll para mostrar FAB
+  const FAB_THR   = 500;  // px — umbral para mostrar el FAB
 
-  let lastY     = window.scrollY;
-  let downAccum = 0;
-  let isHidden  = false;
+  function isMobile()  { return window.innerWidth < MOBILE_BP; }
+  function wrapper()   { return document.getElementById('sticky-wrapper'); }
+  function filterBar() { return document.getElementById('filter-bar'); }
+  function fab()       { return document.getElementById('fab-top'); }
 
-  function isMobile ()  { return window.innerWidth <= MOBILE_BP; }
-  function wrapper ()   { return document.getElementById('sticky-wrapper'); }
-  function fab ()       { return document.getElementById('fab-top'); }
+  function update() {
+    const y  = window.scrollY;
+    const w  = wrapper();
+    const fb = filterBar();
+    const f  = fab();
 
-  function hideNav () {
-    if (isHidden) return;
-    isHidden = true;
-    const w = wrapper();
-    if (w) w.classList.add('smart-hidden');
-  }
-
-  function showNav () {
-    if (!isHidden) return;
-    isHidden  = false;
-    downAccum = 0;
-    const w = wrapper();
-    if (w) w.classList.remove('smart-hidden');
-  }
-
-  window.addEventListener('scroll', () => {
-    const y     = window.scrollY;
-    const delta = y - lastY;
-    lastY = y;
-
-    // FAB — visible en PC y móvil al bajar >500 px
-    const f = fab();
+    // FAB — visible siempre (PC y móvil) al bajar >500 px
     if (f) f.classList.toggle('visible', y > FAB_THR);
 
-    // Smart header — solo en móvil
-    if (!isMobile()) { if (isHidden) showNav(); return; }
-
-    if (y <= 10 || delta < 0) {
-      showNav();                           // Top de página o scroll arriba → mostrar
-    } else if (delta > 0) {
-      downAccum += delta;
-      if (downAccum > DOWN_THR) hideNav(); // Scroll abajo acumulado → ocultar
+    if (isMobile()) {
+      // MÓVIL: ocultar wrapper entero si scrollY > 50; mostrar solo al volver arriba del todo
+      if (w) w.style.transform = y > THRESHOLD ? 'translateY(-100%)' : '';
+    } else {
+      // PC: wrapper siempre visible; colapsar solo #filter-bar al bajar
+      if (w) w.style.transform = '';
+      if (fb && fb.style.display !== 'none') {
+        fb.classList.toggle('filters-hidden', y > THRESHOLD);
+      }
     }
-  }, { passive: true });
+  }
 
-  // Al cambiar tamaño de ventana (orientación/resize), restaurar si pasamos a escritorio
-  window.addEventListener('resize', () => {
-    if (!isMobile() && isHidden) showNav();
-  });
+  function reset() {
+    // Llamado desde buildFilterBar al entrar en categoría — fuerza visibilidad
+    const fb = filterBar();
+    if (fb) fb.classList.remove('filters-hidden');
+    // El wrapper se mostrará automáticamente cuando scrollTo(0) lleve la página arriba
+  }
 
-  return { showNav, hideNav };
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+
+  return { reset };
 })();
 
 // Keyboard: close modals on Escape
