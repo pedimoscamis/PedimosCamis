@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KitZone — Camisetas de Fútbol y NBA</title>
+  <title>PedidoCamis — Camisetas de Fútbol y NBA</title>
   <meta name="description" content="Las mejores camisetas de fútbol y NBA. LaLiga, Premier, NBA y más. Envío a toda España." />
   <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#e8173c" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23080808'/%3E%3Ctext x='16' y='23' font-family='Arial Black%2C Arial' font-weight='900' font-size='15' fill='%23e8173c' text-anchor='middle' letter-spacing='-0.5'%3EPC%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://res.cloudinary.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -884,7 +886,7 @@
 
 <!-- ─── Header ─────────────────────────────────────────────────────────── -->
 <header id="header">
-  <div id="logo" onclick="goHome()">KIT<span>ZONE</span></div>
+  <div id="logo" onclick="goHome()">PEDIDO<span>CAMIS</span></div>
   <div id="search-wrap">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <input id="search" type="search" autocomplete="off" />
@@ -1059,11 +1061,11 @@
 
 <!-- ─── Footer ─────────────────────────────────────────────────────────── -->
 <footer id="footer">
-  <div id="footer-logo">KIT<span>ZONE</span></div>
+  <div id="footer-logo">PEDIDO<span>CAMIS</span></div>
   <div class="footer-links">
     <a href="https://wa.me/34648493470" target="_blank" rel="noopener">WhatsApp</a>
     <span>Email: próximamente</span>
-    <span>© <span id="footer-year"></span> KitZone</span>
+    <span>© <span id="footer-year"></span> PedidoCamis</span>
   </div>
 </footer>
 
@@ -2382,7 +2384,7 @@ function confirmWhatsapp() {
   const totalUsd = cartTotalUsd();
   const totalEur = (totalUsd * EUR_RATE).toFixed(2);
 
-  let msg = `🛒 *PEDIDO KITZONE*\n\n`;
+  let msg = `🛒 *PEDIDO PEDIDOCAMIS*\n\n`;
   for (const item of cart) {
     const dorsal = item.customizations.find(c => c.type === 'dorsal');
     const patch  = item.customizations.find(c => c.type === 'patch');
