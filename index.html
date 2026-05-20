@@ -175,8 +175,25 @@
     }
     #user-logout-btn:hover { border-color: var(--accent); color: var(--text); }
 
-    /* ─── Checkout socio discount row ───────────────────────── */
+    /* ─── Checkout discount rows ────────────────────────────── */
     .checkout-row.discount { color: #4caf50; font-weight: 600; }
+
+    /* ─── Precio tachado (modo 33%) ─────────────────────────── */
+    .price-original {
+      color: var(--muted); font-size: 13px; font-family: 'Barlow', sans-serif;
+      text-decoration: line-through; margin-right: 4px; font-weight: 500;
+    }
+    .badge-discount {
+      display: inline-block;
+      background: #4caf50; color: #fff;
+      font-size: 10px; font-weight: 800; letter-spacing: .4px;
+      padding: 2px 5px; border-radius: 4px; margin-left: 5px;
+      vertical-align: middle;
+    }
+    .modal-price-original {
+      color: var(--muted); font-size: 18px; font-family: 'Bebas Neue', sans-serif;
+      text-decoration: line-through; margin-right: 6px;
+    }
 
     /* ─── Category Bar ─────────────────────────────────────── */
     #cat-bar {
@@ -1216,6 +1233,10 @@
         <span id="co-conversion-label">× 0.90 =</span>
         <span id="co-conversion-val"></span>
       </div>
+      <div class="checkout-row discount" id="co-discount-row" style="display:none">
+        <span id="co-discount-label">Descuento 33%</span>
+        <span id="co-discount-val"></span>
+      </div>
       <div class="checkout-row big">
         <span>TOTAL</span>
         <span id="co-total-eur"></span>
@@ -1277,11 +1298,22 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════════════════════════════════
-let socioMode = false;        // true cuando un código SOCIO está activo
-let activeSocioCode = null;   // código que activó el modo socio en este dispositivo
+let socioMode     = false;        // true cuando un código SOCIO está activo
+let activeSocioCode = null;       // código SOCIO que inició sesión
 
-// Códigos válidos — un solo uso por dispositivo
-const SOCIO_CODES = new Set(['GIL13','BOSS7','TAYRON18','JORGE71','MALYZ15','SOTO22','RONCOLA10','ADMIN8371', 'MARTINHA19']);
+let discountMode  = false;        // true cuando un código de descuento 33% está activo
+let activeDiscountCode = null;    // código de descuento que inició sesión
+
+// Códigos SOCIO (precios en $, modo administrador)
+const SOCIO_CODES    = new Set(['GIL13','BOSS7','TAYRON18','JORGE71','MALYZ15','SOTO22','RONCOLA10','ADMIN8371','MARTINHA19']);
+
+// Códigos de descuento 33% (precios normales con -33%, vista de usuario normal)
+const DISCOUNT_CODES = new Set(['RAUL20','JUANCHI']);
+
+/** Aplica el 33,3% de descuento redondeando hacia arriba a unidades enteras. */
+function getDiscountedPrice(base) {
+  return Math.ceil(base * 2 / 3);
+}
 
 // Detecta "Player Version", "player version", o "player" como palabra independiente
 const PLAYER_RE = /\bplayer\b/i;
@@ -2438,12 +2470,25 @@ function buildKitLabel(name) {
 
 function createCard(p, idx = 0) {
   const base = getBasePrice(p);
-  const { main: priceMain, sub: priceSub } = t().price_fmt(base);
   const pc       = primaryCat(p);
   const catLabel = buildKitLabel(p.nameEn) || t().cat_labels[pc] || pc;
   const sizesStr = p.sizes ? p.sizes.join(' · ') : '';
   const player   = isPlayerVersion(p);
   const hiPri    = idx < 12 ? ' fetchpriority="high"' : '';
+
+  // Precio a mostrar: normal, socio o descuento 33%
+  let priceHtml, priceSubHtml;
+  if (discountMode) {
+    const discounted = getDiscountedPrice(base);
+    const origFmt    = fmtEur(base);
+    const discFmt    = fmtEur(discounted);
+    priceHtml    = `<span class="price-original">${origFmt}</span>${discFmt}<span class="badge-discount">-33%</span>`;
+    priceSubHtml = '';
+  } else {
+    const { main, sub } = t().price_fmt(base);
+    priceHtml    = main;
+    priceSubHtml = sub;
+  }
 
   const card = document.createElement('div');
   card.className = 'card';
@@ -2463,8 +2508,8 @@ function createCard(p, idx = 0) {
       <span class="card-cat">${escHtml(catLabel)}</span>
       <span class="card-name">${escHtml(p.nameEn)}</span>
       <div class="card-price-row">
-        <div class="price-main">${priceMain}${player ? '<span class="badge-player">PLAYER</span>' : ''}</div>
-        <div class="price-sub">${priceSub}</div>
+        <div class="price-main">${priceHtml}${player ? '<span class="badge-player">PLAYER</span>' : ''}</div>
+        <div class="price-sub">${priceSubHtml}</div>
       </div>
       ${sizesStr ? `<div class="card-sizes">${escHtml(sizesStr)}</div>` : ''}
     </div>`;
@@ -2571,26 +2616,42 @@ function buildSizeGrid(sizes) {
   }
 }
 
-// Devuelve el precio base + extras sin descuento socio (para guardar en carrito)
+// Devuelve el precio base + extras para guardar en carrito.
+// En modo descuento aplica el 33% sólo al precio base (los extras son siempre a precio completo).
 function getModalPriceBase() {
   if (!currentProduct) return 0;
-  let eur = getBasePrice(currentProduct);
-  if (document.getElementById('opt-dorsal').checked) eur += 3;
-  if (document.getElementById('opt-patch').checked)  eur += 1;
-  return eur;
+  let base = getBasePrice(currentProduct);
+  if (discountMode) base = getDiscountedPrice(base);
+  let total = base;
+  if (document.getElementById('opt-dorsal').checked) total += 3;
+  if (document.getElementById('opt-patch').checked)  total += 1;
+  return total;
+}
+
+// Precio base original (sin descuento) — para mostrar el tachado en el modal
+function getModalOriginalBase() {
+  if (!currentProduct) return 0;
+  return getBasePrice(currentProduct);
 }
 
 function updateModalPrice() {
-  const price = getModalPriceBase(); // USD (socio) o EUR (normal)
-  const { main, sub } = t().price_fmt(price);
-  document.getElementById('modal-price-main').textContent = main;
-  document.getElementById('modal-price-sub').textContent = sub;
+  const price    = getModalPriceBase(); // precio final (puede ser descuento, socio o normal)
+  const priceMainEl = document.getElementById('modal-price-main');
+  const priceSubEl  = document.getElementById('modal-price-sub');
+
+  if (discountMode) {
+    const origBase   = getModalOriginalBase();
+    priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origBase)}</span>${fmtEur(price)}<span class="badge-discount" style="font-size:12px;padding:3px 7px;">-33%</span>`;
+    priceSubEl.textContent = '';
+  } else {
+    const { main, sub } = t().price_fmt(price);
+    priceMainEl.textContent = main;
+    priceSubEl.textContent  = sub;
+  }
 
   // Botón siempre muestra EUR (lo que el cliente paga)
-  const priceEur = socioMode
-    ? Math.round(price * EUR_RATE * 100) / 100
-    : price;
-  const fmtBtn = Number.isInteger(priceEur) ? priceEur : priceEur.toFixed(2).replace('.', ',');
+  const priceEur = socioMode ? Math.round(price * EUR_RATE * 100) / 100 : price;
+  const fmtBtn   = Number.isInteger(priceEur) ? priceEur : priceEur.toFixed(2).replace('.', ',');
   document.getElementById('add-to-cart-btn').textContent = t().add_cart(`${fmtBtn}€`);
 }
 
@@ -2659,6 +2720,10 @@ function addToCart() {
     size: selectedSize,
     priceUsd: usd,
     customizations,
+    // Guardamos el precio base original para mostrar el desglose del descuento en checkout
+    discountInfo: discountMode
+      ? { pct: 33, originalBase: getBasePrice(currentProduct) }
+      : null,
   });
 
   saveCart();
@@ -2765,23 +2830,44 @@ function cartTotalEur() {
 }
 
 function updateCheckoutTotals() {
-  const raw      = cartTotalUsd();   // USD (socio) o EUR (normal)
+  const raw      = cartTotalUsd();   // USD (socio) o EUR (normal/descuento)
   const totalEur = cartTotalEur();
 
-  const subtotalRow    = document.getElementById('co-subtotal-row');
-  const conversionRow  = document.getElementById('co-conversion-row');
+  const subtotalRow   = document.getElementById('co-subtotal-row');
+  const conversionRow = document.getElementById('co-conversion-row');
+  const discountRow   = document.getElementById('co-discount-row');
 
   if (socioMode) {
-    // Mostrar: "Total ($)  →  $X"   y   "× 0.90 =  →  Y€"
     subtotalRow.style.display   = '';
     conversionRow.style.display = '';
-    document.getElementById('co-subtotal-label').textContent    = 'Total ($)';
-    document.getElementById('co-subtotal').textContent          = fmtUsd(raw);
-    document.getElementById('co-conversion-label').textContent  = `× ${EUR_RATE} =`;
-    document.getElementById('co-conversion-val').textContent    = fmtEur(totalEur);
+    discountRow.style.display   = 'none';
+    document.getElementById('co-subtotal-label').textContent   = 'Total ($)';
+    document.getElementById('co-subtotal').textContent         = fmtUsd(raw);
+    document.getElementById('co-conversion-label').textContent = `× ${EUR_RATE} =`;
+    document.getElementById('co-conversion-val').textContent   = fmtEur(totalEur);
+  } else if (discountMode) {
+    subtotalRow.style.display   = 'none';
+    conversionRow.style.display = 'none';
+    // Calcular descuento total: suma de (originalBase - discountedBase) por ítem
+    let totalDiscount = 0;
+    for (const item of cart) {
+      if (item.discountInfo) {
+        const extras = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
+        const discountedBase = item.priceUsd - extras;
+        totalDiscount += item.discountInfo.originalBase - discountedBase;
+      }
+    }
+    if (totalDiscount > 0) {
+      discountRow.style.display = '';
+      document.getElementById('co-discount-label').textContent = 'Descuento 33%';
+      document.getElementById('co-discount-val').textContent   = '-' + fmtEur(totalDiscount);
+    } else {
+      discountRow.style.display = 'none';
+    }
   } else {
     subtotalRow.style.display   = 'none';
     conversionRow.style.display = 'none';
+    discountRow.style.display   = 'none';
   }
 
   document.getElementById('co-total-eur').textContent = fmtEur(totalEur);
@@ -2802,12 +2888,18 @@ function openCheckout() {
     const row    = document.createElement('div');
     row.className = 'checkout-item-row';
 
-    const sym = socioMode ? '$' : '€';
-    const fmtAmt = (n) => socioMode ? fmtUsd(n) : fmtEur(n);
+    const sym    = socioMode ? '$' : '€';
     const baseEur = socioMode ? Math.round(base * EUR_RATE * 100) / 100 : base;
 
     let bdHtml = `<div class="checkout-item-breakdown">`;
-    bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>${base}${sym}</span>`;
+    if (discountMode && item.discountInfo) {
+      // Mostrar precio original tachado + precio rebajado
+      const discountedBase = getDiscountedPrice(item.discountInfo.originalBase);
+      bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
+      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(item.discountInfo.originalBase)}</del>${fmtEur(discountedBase)}</span>`;
+    } else {
+      bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>${base}${sym}</span>`;
+    }
     for (const c of item.customizations) {
       let lbl;
       if (c.type === 'dorsal') lbl = isEs ? 'Nombre + dorsal' : 'Name + number';
@@ -2851,7 +2943,11 @@ function openCheckout() {
     pedidoStr += `Name and Number: ${nameNum}\n`;
     pedidoStr += `Version: ${version}\n`;
     pedidoStr += `Patch: ${patchStr}\n`;
-    pedidoStr += `Precio: ${fmtEur(eurPrice)}\n\n`;
+    if (item.discountInfo) {
+      pedidoStr += `Precio: ${fmtEur(eurPrice)} (original: ${fmtEur(item.discountInfo.originalBase)})\n\n`;
+    } else {
+      pedidoStr += `Precio: ${fmtEur(eurPrice)}\n\n`;
+    }
   }
   pedidoStr += `Total: ${fmtEur(cartTotalEur())}`;
 
@@ -2862,9 +2958,13 @@ function openCheckout() {
   // Restaurar campos ocultos tras reset (el reset los vacía)
   document.getElementById('form-pedido').value = pedidoStr;
   document.getElementById('form-total').value  = fmtEur(cartTotalEur());
-  // Incluir código de socio si está activo
+  // Identificar el código usado para que sea visible en el email recibido
   const codigoSocioEl = document.getElementById('form-codigo-socio');
-  if (codigoSocioEl) codigoSocioEl.value = (socioMode && activeSocioCode) ? activeSocioCode : '';
+  if (codigoSocioEl) {
+    if (socioMode && activeSocioCode)       codigoSocioEl.value = activeSocioCode;
+    else if (discountMode && activeDiscountCode) codigoSocioEl.value = `33%: ${activeDiscountCode}`;
+    else                                    codigoSocioEl.value = '';
+  }
   document.getElementById('order-success').style.display   = 'none';
   const submitBtn = document.getElementById('order-submit-btn');
   submitBtn.disabled    = false;
@@ -2958,9 +3058,13 @@ document.addEventListener('click', (e) => {
 function updateUserMenuState() {
   const loginPanel  = document.getElementById('user-menu-login');
   const activePanel = document.getElementById('user-menu-active');
-  if (socioMode) {
+  const label       = document.getElementById('socio-active-label');
+  if (socioMode || discountMode) {
     loginPanel.style.display  = 'none';
     activePanel.style.display = 'block';
+    label.textContent = discountMode
+      ? '✓ Descuento 33% activo'
+      : '✓ Modo socio activo';
   } else {
     loginPanel.style.display  = 'block';
     activePanel.style.display = 'none';
@@ -2969,8 +3073,11 @@ function updateUserMenuState() {
 
 function updateUserBtn() {
   const btn = document.getElementById('user-btn');
-  btn.classList.toggle('active', socioMode);
-  btn.title = socioMode ? 'Modo socio activo' : 'Acceso socio';
+  const anyActive = socioMode || discountMode;
+  btn.classList.toggle('active', anyActive);
+  btn.title = discountMode ? 'Descuento 33% activo'
+            : socioMode    ? 'Modo socio activo'
+            :                'Acceso socio';
 }
 
 function submitUserCode() {
@@ -2978,7 +3085,7 @@ function submitUserCode() {
   const error = document.getElementById('user-code-error');
   const code  = input.value.trim().toUpperCase();
 
-  if (!SOCIO_CODES.has(code)) {
+  if (!SOCIO_CODES.has(code) && !DISCOUNT_CODES.has(code)) {
     error.textContent = 'Código no válido';
     error.style.display = 'block';
     input.value = '';
@@ -2986,9 +3093,20 @@ function submitUserCode() {
     return;
   }
 
-  // Código válido — activar modo socio
-  activeSocioCode = code;
-  socioMode = true;
+  // Código válido — activar el modo correspondiente
+  if (SOCIO_CODES.has(code)) {
+    activeSocioCode    = code;
+    socioMode          = true;
+    discountMode       = false;
+    activeDiscountCode = null;
+    showToast('✓ Modo socio activado');
+  } else {
+    activeDiscountCode = code;
+    discountMode       = true;
+    socioMode          = false;
+    activeSocioCode    = null;
+    showToast('✓ Descuento 33% activado');
+  }
 
   document.getElementById('user-menu').classList.remove('open');
   updateUserBtn();
@@ -2996,28 +3114,27 @@ function submitUserCode() {
   buildCatBar();
   renderAll();
   renderCartItems();
-  showToast('✓ Modo socio activado — 50% de descuento');
 }
 
-function deactivateSocio() {
-  socioMode = false;
-  activeSocioCode = null;
+function deactivateUser() {
+  const wasDiscount = discountMode;
+  socioMode          = false;
+  activeSocioCode    = null;
+  discountMode       = false;
+  activeDiscountCode = null;
   document.getElementById('user-menu').classList.remove('open');
   updateUserBtn();
   updateUserMenuState();
-  // Si estaba en una categoría restringida, volver a Todos
+  // Si estaba en una categoría restringida de socio, volver a Todos
   if (SOCIO_ONLY_CATS.has(activeCat)) {
-    activeCat = 'all';
-    searchQuery = '';
-    clearActiveFilters();
+    activeCat = 'all'; searchQuery = ''; clearActiveFilters();
     document.getElementById('search').value = '';
   }
-  buildCatBar();
-  buildFilterBar();
-  renderAll();
-  renderCartItems();
-  showToast('Sesión de socio cerrada');
+  buildCatBar(); buildFilterBar(); renderAll(); renderCartItems();
+  showToast(wasDiscount ? 'Descuento desactivado' : 'Sesión de socio cerrada');
 }
+// Alias para compatibilidad
+function deactivateSocio() { deactivateUser(); }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // LANGUAGE
