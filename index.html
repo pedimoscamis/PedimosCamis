@@ -2313,19 +2313,19 @@ function renderGrid() { /* no-op: init usa renderAll tras cargar datos */ }
 function applyDiscount(price) { return price; }
 
 const EUR_RATE = 0.90; // conversión USD → EUR en modo socio
-const GBP_RATE = 0.85; // conversión EUR → £  en modo normal EN
+const USD_RATE = 0.85; // conversión EUR → USD  en modo normal EN
 
 // ── Precios modo NORMAL (en €) ─────────────────────────────────────────────
 const NORMAL_PRICES = {
   windbreaker: 50,
   streetwear:  75,
-  kids:        15,
-  women:       10,
-  nba:         20,
+  kids:        20,
+  women:       15,
+  nba:         25,
 };
-const NORMAL_JERSEY = 10;
-const NORMAL_RETRO  = 16;
-const NORMAL_PLAYER = 13;
+const NORMAL_JERSEY = 15;
+const NORMAL_RETRO  = 20;
+const NORMAL_PLAYER = 18;
 
 // ── Precios modo SOCIO (en $) ──────────────────────────────────────────────
 const SOCIO_PRICES = {
