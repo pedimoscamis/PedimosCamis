@@ -2016,7 +2016,7 @@ function extractKitType(name) {
 function buildKitLabel(name) {
   const season  = extractSeason(name);
   const typeKey = extractKitType(name);
-  const isEs    = currentLang === 'es';
+  const isEs    = lang === 'es';
 
   if (!typeKey && !season) return null;
 
