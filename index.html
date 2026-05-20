@@ -62,6 +62,7 @@
       padding: 0 24px;
       height: 64px;
       display: flex; align-items: center; gap: 20px;
+      transition: transform .25s ease;
     }
 
     #logo {
@@ -212,6 +213,7 @@
       overflow-x: auto; gap: 4px;
       padding: 10px 24px;
       scrollbar-width: none;
+      transition: transform .25s ease;
     }
     #cat-bar::-webkit-scrollbar { display: none; }
 
@@ -253,6 +255,25 @@
       transform: translateY(-115%);
       pointer-events: none;
     }
+
+    /* ─── Smart Header (mobile) ──────────────────────────────── */
+    #header.smart-hidden { transform: translateY(-100%); }
+
+    /* ─── FAB "Volver arriba" ────────────────────────────────── */
+    #fab-top {
+      position: fixed; bottom: 28px; right: 20px;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      border: none; font-size: 22px; font-weight: 700; line-height: 1;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(232,23,60,0.45);
+      z-index: 150;
+      opacity: 0; transform: scale(0.7);
+      transition: opacity .25s ease, transform .25s ease;
+      pointer-events: none;
+    }
+    #fab-top.visible { opacity: 1; transform: scale(1); pointer-events: auto; }
     #filter-bar-inner {
       display: flex; align-items: flex-start; gap: 16px;
     }
@@ -514,7 +535,7 @@
       border-radius: 14px;
       max-width: 820px; width: 100%;
       max-height: 90vh;
-      overflow-y: auto;
+      overflow: visible;           /* permite que la X sobresalga del borde */
       display: grid;
       grid-template-columns: 1fr 1fr;
       position: relative;
@@ -554,17 +575,22 @@
       padding: 28px 52px 28px 26px;
       display: flex; flex-direction: column; gap: 16px;
       overflow-y: auto;
+      max-height: 86vh;            /* limita la col para que scroll funcione sin overflow-y en #modal */
+      border-radius: 0 14px 14px 0;/* mantiene esquinas redondeadas al recortar internamente */
     }
 
     #modal-close {
-      position: absolute; top: 14px; right: 14px;
-      background: rgba(0,0,0,0.5); border: 1px solid var(--border);
-      color: var(--text); width: 34px; height: 34px;
-      border-radius: 50%; font-size: 18px; cursor: pointer;
+      position: absolute; top: -14px; right: -14px;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      border: 2px solid #111;
+      font-size: 17px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      z-index: 10; transition: background .2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.55);
+      z-index: 100;
+      transition: background .2s, transform .15s;
     }
-    #modal-close:hover { background: var(--accent); border-color: var(--accent); }
+    #modal-close:hover { background: var(--accent-dk); transform: scale(1.12); }
 
     #modal-cat { font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
     #modal-name { font-size: 17px; font-weight: 700; line-height: 1.3; }
@@ -1027,8 +1053,9 @@
     /* ── Bug 2: header 2 filas + Bug 3: filtros wrapping (≤768 px) ── */
     @media (max-width: 768px) {
 
-      /* ─── Header: 2 filas ─────────────────────────────────── */
+      /* ─── Header: 2 filas + fixed para smart-header ────────── */
       #header {
+        position: fixed; left: 0; right: 0;   /* fixed = smart-hide via JS */
         height: auto;
         flex-wrap: wrap;
         align-items: center;
@@ -1043,9 +1070,12 @@
       /* Fila 2: buscador a ancho completo */
       #search-wrap { order: 3; flex: 0 0 100%; max-width: 100%; }
 
-      /* Sticky tops ajustados al header más alto (~100 px) */
-      #cat-bar    { top: 100px; }
+      /* Cat-bar también fixed para deslizarse junto al header */
+      #cat-bar    { position: fixed; left: 0; right: 0; top: 100px; }
       #filter-bar { top: 148px; } /* 100 header + 48 cat-bar */
+
+      /* Compensar espacio de los elementos fixed (header 100 + cat-bar 48) */
+      body { padding-top: 148px; }
 
       /* ─── Bug 3: filtros + ordenar ───────────────────────── */
       /* Los filtros ocupan el 100 % */
@@ -1321,6 +1351,7 @@
 
     <div id="order-success" style="display:none">
       <strong>✅ Pedido enviado</strong>
+      <p style="font-size: 14px; font-weight: 300; margin-top: 8px; color: #aaaaaa;">Le contactaremos en breve!</p>
     </div>
 
     <button id="back-shopping-btn" onclick="closeCheckout()">
@@ -1338,6 +1369,9 @@
   </div>
   <p id="footer-disclaimer">Este sitio es un proyecto personal sin fines comerciales. No representa ninguna marca, empresa u organización oficial.</p>
 </footer>
+
+<!-- ─── FAB "Volver arriba" ──────────────────────────────────────────────── -->
+<button id="fab-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">↑</button>
 
 <!-- ─── Toast ──────────────────────────────────────────────────────────── -->
 <div id="toast"></div>
@@ -3298,6 +3332,71 @@ const filterBarScroll = (function () {
   }, { passive: true });
 
   return { reset, show };
+})();
+
+// ─── Smart Header (móvil) + FAB "Volver arriba" ──────────────────────────────
+const smartHeader = (function () {
+  const MOBILE_BP  = 768;   // px — breakpoint móvil
+  const DOWN_THR   = 50;    // px acumulados hacia abajo para ocultar header
+  const FAB_THR    = 500;   // px de scroll para mostrar FAB
+
+  let lastY     = window.scrollY;
+  let downAccum = 0;
+  let isHidden  = false;
+
+  function isMobile () { return window.innerWidth <= MOBILE_BP; }
+
+  function hdr () { return document.getElementById('header'); }
+  function cat () { return document.getElementById('cat-bar'); }
+  function fab () { return document.getElementById('fab-top'); }
+
+  function hideNav () {
+    if (isHidden) return;
+    isHidden  = true;
+    const h = hdr(), c = cat();
+    if (h) h.classList.add('smart-hidden');
+    if (c) {
+      // Mueve la cat-bar hacia arriba su propia altura + la del header oculto
+      const hdrH = h ? h.offsetHeight : 100;
+      c.style.transform = 'translateY(-' + (hdrH + c.offsetHeight) + 'px)';
+    }
+  }
+
+  function showNav () {
+    if (!isHidden) return;
+    isHidden  = false;
+    downAccum = 0;
+    const h = hdr(), c = cat();
+    if (h) h.classList.remove('smart-hidden');
+    if (c) c.style.transform = '';
+  }
+
+  window.addEventListener('scroll', () => {
+    const y     = window.scrollY;
+    const delta = y - lastY;
+    lastY = y;
+
+    // FAB — visible en PC y móvil al bajar >500 px
+    const f = fab();
+    if (f) f.classList.toggle('visible', y > FAB_THR);
+
+    // Smart header — solo en móvil
+    if (!isMobile()) { if (isHidden) showNav(); return; }
+
+    if (y <= 10 || delta < 0) {
+      showNav();                          // Top de página o scroll arriba → mostrar
+    } else if (delta > 0) {
+      downAccum += delta;
+      if (downAccum > DOWN_THR) hideNav(); // Scroll abajo acumulado → ocultar
+    }
+  }, { passive: true });
+
+  // Al cambiar tamaño de ventana (orientación, resize), restaurar si pasamos a escritorio
+  window.addEventListener('resize', () => {
+    if (!isMobile() && isHidden) showNav();
+  });
+
+  return { showNav, hideNav };
 })();
 
 // Keyboard: close modals on Escape
