@@ -257,14 +257,17 @@
       border-bottom: 1px solid #1e1e1e;
       padding: 6px 24px 8px;
       overflow: hidden;
-      max-height: 200px;   /* suficiente para el contenido de filtros */
-      transition: max-height .35s ease, opacity .25s ease, padding .25s ease;
+      max-height: 200px;   /* valor seguro mayor que la altura real */
+      opacity: 1;
+      transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
     }
     #filter-bar.filters-hidden {
-      max-height: 0;
-      opacity: 0;
-      padding-top: 0;
-      padding-bottom: 0;
+      max-height: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      opacity: 0 !important;
       pointer-events: none;
     }
 
@@ -3294,7 +3297,7 @@ function showToast(msg) {
 
 // ─── Nav Scroll: smart-header (móvil) + filter-bar (PC) + FAB ────────────────
 const navScroll = (function () {
-  const THRESHOLD = 50;   // px — umbral para ocultar
+  const THRESHOLD = 100;  // px — umbral para ocultar (100 evita salto en el borde)
   const MOBILE_BP = 768;  // px — breakpoint móvil
   const FAB_THR   = 500;  // px — umbral para mostrar el FAB
 
