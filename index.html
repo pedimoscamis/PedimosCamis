@@ -68,28 +68,29 @@
       #sticky-wrapper { position: relative !important; z-index: 1000 !important; transform: none !important; }
       #filter-bar, #sticky-wrapper { overflow: visible !important; }
 
-      /* ─── Filtros: lado a lado en móvil ─────────────────────── */
+      /* ─── Filtros: lado a lado en móvil (tamaño orgánico) ────── */
       #filter-bar-inner {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
-        justify-content: space-between;
+        justify-content: flex-start !important;
         align-items: center;
         gap: 10px;
       }
       #filter-rows {
-        flex: 1 !important;
+        flex: 0 0 auto !important;
         width: auto !important;
+        min-width: 0;
       }
       #sort-wrap {
-        flex: 1 !important;
+        flex: 0 0 auto !important;
         width: auto !important;
         border-left: 1px solid var(--border) !important;
         border-top: none !important;
         padding-left: 10px !important;
         padding-top: 0 !important;
         margin-top: 0 !important;
-        justify-content: flex-end !important;
+        justify-content: flex-start !important;
       }
     }
 
