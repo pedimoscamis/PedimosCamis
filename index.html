@@ -222,6 +222,12 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid #1e1e1e;
       padding: 6px 24px 8px;
+      transition: opacity .3s ease, transform .3s ease;
+    }
+    #filter-bar.filters-hidden {
+      opacity: 0;
+      transform: translateY(-115%);
+      pointer-events: none;
     }
     .filter-row {
       display: flex; align-items: center; gap: 6px;
@@ -966,6 +972,22 @@
       #hero { padding: 42px 14px 39px; }
       #featured-inner { padding: 0 14px; }
     }
+    @media (max-width: 480px) {
+      #grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      #main { padding: 14px 10px 60px; }
+      #results-info { margin-bottom: 12px; font-size: 12px; }
+      .card-img-wrap { aspect-ratio: 5/4; }
+      .card-body { padding: 7px 9px 9px; gap: 3px; }
+      .card-cat { font-size: 10px; }
+      .card-name { font-size: 11px; }
+      .price-main { font-size: 18px; }
+      .price-sub { font-size: 10px; }
+      .card-sizes { display: none; }
+      .badge-retro { font-size: 9px; padding: 2px 6px; }
+    }
   </style>
 </head>
 <body>
@@ -1424,7 +1446,7 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','europa','retro','nba','nfl','streetwear','windbreaker','kids','women','otros'];
+const CAT_ORDER = ['all','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','retro','nba','nfl','streetwear','windbreaker','kids','europa','otros'];
 
 function buildCatBar() {
   const bar = document.getElementById('cat-bar');
@@ -1694,6 +1716,7 @@ function matchesTipo(p, tipo) {
   if (tipo === 'Mujer')          return cats.includes('women') || /\bwom[ae]n\b|\bmujer\b|\bfemeni/i.test(p.nameEn);
   if (tipo === 'Niños')          return cats.includes('kids')  || /\bkids\b|\bniños\b|\bchild\b|\bjunior\b/i.test(p.nameEn);
   if (tipo === 'Cortavientos')   return cats.includes('windbreaker');
+  if (tipo === 'Retro')          return cats.includes('retro') || /\bretro\b/i.test(p.nameEn);
   return false;
 }
 
@@ -1702,25 +1725,19 @@ function matchesEquipacion(p, equip) {
   if (equip === 'Visitante')     return /\baway\b|\bvisitante\b/i.test(p.nameEn);
   if (equip === 'Tercera')       return /\bthird\b|\btercera\b|\b3rd\b/i.test(p.nameEn);
   if (equip === 'Portero')       return /\bgoalkeeper\b|\bportero\b|\bkeeper\b|\bgk\b/i.test(p.nameEn);
-  if (equip === 'Retro')         return (p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn);
   if (equip === 'Entrenamiento') return /training|entrenamiento|pre.match|prematch/i.test(p.nameEn);
   return false;
 }
 
 function matchesSeason(name, value) {
-  // 26/27 — formato barra corto/largo O solo el año 2026
-  if (value === '26/27') return /\b(26\/27|2026\/27|2026)\b/.test(name);
-  // 25/26 — formato barra corto/largo O solo el año 2025
-  if (value === '25/26') return /\b(25\/26|2025\/26|2025)\b/.test(name);
-  // 24/25 — formato barra corto/largo O solo el año 2024
-  if (value === '24/25') return /\b(24\/25|2024\/25|2024)\b/.test(name);
   if (value === 'Anteriores') {
-    // excluir temporadas recientes (incluidos años sueltos recientes)
-    if (/\b(26\/27|2026\/27|2026|25\/26|2025\/26|2025|24\/25|2024\/25|2024)\b/.test(name)) return false;
-    // incluir cualquier otra temporada detectada (años anteriores, formato barra antiguo)
-    return extractSeason(name) !== null;
+    const s = extractSeason(name);
+    if (!s) return false;
+    const yr = seasonStartYear(s);
+    return yr !== null && yr < 2024;
   }
-  return false;
+  // Comparación directa en forma canónica
+  return extractSeason(name) === value;
 }
 
 function matchesFilter(p) {
@@ -1852,15 +1869,15 @@ function buildFilterBar() {
   }
 
   // ── 2. Tipo — pills ──────────────────────────────────────────────────────
-  const TIPOS = ['Fan Version','Player Version','Mujer','Niños','Cortavientos'];
+  const TIPOS = ['Fan Version','Player Version','Mujer','Niños','Cortavientos','Retro'];
   const tiposPresent = TIPOS.filter(ti => catProducts.some(p => matchesTipo(p, ti)));
   if (tiposPresent.length > 1) {
     rows.appendChild(makeFilterRow(isEs ? 'Tipo' : 'Type', 'tipos', tiposPresent));
   }
 
   // ── 3. Equipación — pills ────────────────────────────────────────────────
-  const EQUIPS_ES = ['Local','Visitante','Tercera','Portero','Retro','Entrenamiento'];
-  const EQUIPS_EN = ['Home','Away','Third','Goalkeeper','Retro','Training'];
+  const EQUIPS_ES = ['Local','Visitante','Tercera','Portero','Entrenamiento'];
+  const EQUIPS_EN = ['Home','Away','Third','Goalkeeper','Training'];
   const equipsPresent = EQUIPS_ES.filter(eq => catProducts.some(p => matchesEquipacion(p, eq)));
   if (equipsPresent.length > 1) {
     const rowEl = document.createElement('div');
@@ -1879,20 +1896,30 @@ function buildFilterBar() {
     rows.appendChild(rowEl);
   }
 
-  // ── 4. Temporada — select dropdown ──────────────────────────────────────
-  const SEASONS = ['26/27', '25/26', '24/25', 'Anteriores'];
-  const seasonsPresent = SEASONS.filter(s => catProducts.some(p => matchesSeason(p.nameEn, s)));
-  if (seasonsPresent.length > 0) {
-    const seasonItems = seasonsPresent.map(s => ({
-      value: s,
-      label: (!isEs && s === 'Anteriores') ? 'Older' : s,
-    }));
-    rows.appendChild(makeSelectRow(
-      isEs ? 'Temporada' : 'Season',
-      'temporada',
-      seasonItems,
-      isEs ? 'Todas las temporadas' : 'All seasons'
-    ));
+  // ── 4. Temporada — select dropdown (dinámico) ───────────────────────────
+  {
+    const seasonSet = new Set();
+    for (const p of catProducts) {
+      const s = extractSeason(p.nameEn);
+      if (s) seasonSet.add(s);
+    }
+    // Separar recientes (≥2024) de antiguas (<2024)
+    const modernSeasons = [...seasonSet]
+      .filter(s => { const yr = seasonStartYear(s); return yr !== null && yr >= 2024; })
+      .sort((a, b) => seasonStartYear(b) - seasonStartYear(a)); // descendente
+    const hasOlder = [...seasonSet].some(s => { const yr = seasonStartYear(s); return yr !== null && yr < 2024; });
+    const seasonItems = [
+      ...modernSeasons.map(s => ({ value: s, label: s })),
+      ...(hasOlder ? [{ value: 'Anteriores', label: isEs ? 'Anteriores' : 'Older' }] : []),
+    ];
+    if (seasonItems.length > 0) {
+      rows.appendChild(makeSelectRow(
+        isEs ? 'Temporada' : 'Season',
+        'temporada',
+        seasonItems,
+        isEs ? 'Todas las temporadas' : 'All seasons'
+      ));
+    }
   }
 
   // ── Clear button (only when filters active) ──────────────────────────────
@@ -2133,20 +2160,32 @@ function isPlayerVersion(p) {
   return PLAYER_RE.test(p.nameEn);
 }
 
-// Extrae la temporada del nombre del producto.
-// Reconoce: 26/27, 2026/27, 25/26, 2025/26, 2026, 2025, etc.
-// Devuelve la cadena tal como aparece, o null si no hay.
+// Extrae la temporada del nombre y la normaliza a formato corto "YY/YY".
+// Soporta: "2025/26" → "25/26" | "26/27" → "26/27" | "98/99" → "98/99"
+//          "2026" (año solo) → "26/27" | "2025" → "25/26"
 function extractSeason(name) {
-  // Formato largo con barra: 2026/27, 2025/26
-  let m = name.match(/\b(20\d{2}\/\d{2})\b/);
-  if (m) return m[1];
-  // Formato corto con barra: 26/27, 25/26 (solo años modernos)
-  m = name.match(/\b(2[0-9]\/2[0-9])\b/);
-  if (m) return m[1];
-  // Año solo: 2026, 2025
-  m = name.match(/\b(20[2-9]\d)\b/);
-  if (m) return m[1];
+  // 1) Formato largo: 2025/26, 2026/27 → normalizar a "25/26", "26/27"
+  let m = name.match(/\b20(\d{2})\/(\d{2})\b/);
+  if (m) return m[1] + '/' + m[2];
+  // 2) Formato corto con barra: 25/26, 98/99
+  m = name.match(/\b(\d{2})\/(\d{2})\b/);
+  if (m) return m[1] + '/' + m[2];
+  // 3) Año solo 20XX → "XX/(XX+1)"
+  m = name.match(/\b20(\d{2})\b/);
+  if (m) {
+    const yy   = m[1];
+    const next = String((parseInt(yy) + 1) % 100).padStart(2, '0');
+    return yy + '/' + next;
+  }
   return null;
+}
+
+// Devuelve el año de inicio de una temporada canónica "YY/YY" (ej. "25/26" → 2025, "98/99" → 1998)
+function seasonStartYear(s) {
+  const m = s.match(/^(\d{2})\/\d{2}$/);
+  if (!m) return null;
+  const yy = parseInt(m[1]);
+  return yy >= 50 ? 1900 + yy : 2000 + yy;
 }
 
 // Detecta el tipo de equipación en el nombre y devuelve la clave interna,
@@ -2776,6 +2815,27 @@ function showToast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
 }
+
+// Ocultar filter-bar al scrollear abajo, mostrar al scrollear arriba
+(function () {
+  let lastY    = window.scrollY;
+  let ticking  = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const y  = window.scrollY;
+      const fb = document.getElementById('filter-bar');
+      if (y > lastY && y > 80) {
+        fb.classList.add('filters-hidden');
+      } else {
+        fb.classList.remove('filters-hidden');
+      }
+      lastY   = y;
+      ticking = false;
+    });
+  }, { passive: true });
+})();
 
 // Keyboard: close modals on Escape
 document.addEventListener('keydown', e => {
