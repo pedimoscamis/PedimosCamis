@@ -1984,12 +1984,54 @@ function extractSeason(name) {
   return null;
 }
 
+// Detecta el tipo de equipación en el nombre y devuelve la clave interna,
+// o null si no se reconoce ninguna.
+const KIT_TYPE_RULES = [
+  { re: /\bgoalkeeper\b/i,   key: 'goalkeeper'   },
+  { re: /\btraining\b/i,     key: 'training'     },
+  { re: /\bthird\b/i,        key: 'third'        },
+  { re: /\baway\b/i,         key: 'away'         },
+  { re: /\bhome\b/i,         key: 'home'         },
+  { re: /\bretro\b/i,        key: 'retro'        },
+];
+const KIT_TYPE_LABELS = {
+  home:        { es: 'LOCAL',         en: 'HOME'        },
+  away:        { es: 'VISITANTE',     en: 'AWAY'        },
+  third:       { es: 'TERCERA',       en: 'THIRD'       },
+  goalkeeper:  { es: 'PORTERO',       en: 'GOALKEEPER'  },
+  training:    { es: 'ENTRENAMIENTO', en: 'TRAINING'    },
+  retro:       { es: 'RETRO',         en: 'RETRO'       },
+};
+
+function extractKitType(name) {
+  for (const { re, key } of KIT_TYPE_RULES) {
+    if (re.test(name)) return key;
+  }
+  return null;
+}
+
+// Construye la etiqueta de categoría combinando tipo de equipación + temporada.
+// Ejemplos: "LOCAL 25/26", "VISITANTE 26/27", "RETRO 98/99", "26/27"
+// Si no hay ni tipo ni temporada devuelve null (se usará la categoría normal).
+function buildKitLabel(name) {
+  const season  = extractSeason(name);
+  const typeKey = extractKitType(name);
+  const isEs    = currentLang === 'es';
+
+  if (!typeKey && !season) return null;
+
+  const typeLabel = typeKey ? KIT_TYPE_LABELS[typeKey][isEs ? 'es' : 'en'] : null;
+
+  if (typeLabel && season) return `${typeLabel} ${season}`;
+  if (typeLabel)           return typeLabel;
+  return season;
+}
+
 function createCard(p, idx = 0) {
   const base = getBasePrice(p);
   const { main: priceMain, sub: priceSub } = t().price_fmt(base);
-  const season   = extractSeason(p.nameEn);
   const pc       = primaryCat(p);
-  const catLabel = season || t().cat_labels[pc] || pc;
+  const catLabel = buildKitLabel(p.nameEn) || t().cat_labels[pc] || pc;
   const sizesStr = p.sizes ? p.sizes.join(' · ') : '';
   const player   = isPlayerVersion(p);
   const hiPri    = idx < 12 ? ' fetchpriority="high"' : '';
@@ -2053,7 +2095,7 @@ function openModal(p) {
   yupooBtn.textContent = t().see_photos;
 
   const mpc = primaryCat(p);
-  document.getElementById('modal-cat').textContent = extractSeason(p.nameEn) || t().cat_labels[mpc] || mpc;
+  document.getElementById('modal-cat').textContent = buildKitLabel(p.nameEn) || t().cat_labels[mpc] || mpc;
   document.getElementById('modal-name').textContent = p.nameEn;
 
   // Patches
