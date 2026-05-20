@@ -2986,19 +2986,7 @@ function submitUserCode() {
     return;
   }
 
-  // Código válido — comprobar si ya fue usado en este dispositivo
-  const usedCodes = new Set(JSON.parse(localStorage.getItem('kz-used-codes') || '[]'));
-  if (usedCodes.has(code)) {
-    error.textContent = 'Este código ya fue utilizado en este dispositivo';
-    error.style.display = 'block';
-    input.value = '';
-    input.focus();
-    return;
-  }
-
-  // Activar modo socio
-  usedCodes.add(code);
-  localStorage.setItem('kz-used-codes', JSON.stringify([...usedCodes]));
+  // Código válido — activar modo socio
   activeSocioCode = code;
   socioMode = true;
 
