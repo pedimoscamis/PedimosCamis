@@ -1112,6 +1112,7 @@ let activeFilters = { teams: new Set(), tipos: new Set(), equipacion: new Set(),
 const PAGE_SIZE     = 48;
 let currentFiltered = [];   // lista filtrada completa
 let displayedCount  = 0;    // cuántas tarjetas hay en el DOM ahora
+let imgObserver     = null; // IntersectionObserver para lazy-load de imágenes
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INIT
@@ -1123,6 +1124,20 @@ async function init() {
   buildCatBar();
   document.getElementById('results-info').textContent = t().loading;
   updateCartBadge();
+
+  // ── Lazy loading de imágenes con IntersectionObserver ───────────────────
+  imgObserver = new IntersectionObserver((entries, obs) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      const img = entry.target;
+      const src = img.dataset.src;
+      if (src) {
+        img.src = src;
+        img.removeAttribute('data-src');
+      }
+      obs.unobserve(img);
+    }
+  }, { rootMargin: '400px' });
 
   // ── Infinite scroll con IntersectionObserver ────────────────────────────
   const sentinel = document.getElementById('load-more-sentinel');
@@ -1679,9 +1694,19 @@ function appendCards(n) {
   const grid = document.getElementById('grid');
   const from = displayedCount;
   const to   = Math.min(displayedCount + n, currentFiltered.length);
+
+  // Insertar todas las tarjetas de una vez con un fragment
+  const frag = document.createDocumentFragment();
   for (let i = from; i < to; i++) {
-    grid.appendChild(createCard(currentFiltered[i]));
+    frag.appendChild(createCard(currentFiltered[i]));
   }
+  grid.appendChild(frag);
+
+  // Registrar las imágenes lazy recién añadidas en el observer
+  if (imgObserver) {
+    grid.querySelectorAll('img.lazy[data-src]').forEach(img => imgObserver.observe(img));
+  }
+
   displayedCount = to;
   setLoadMoreVisible(displayedCount < currentFiltered.length);
   updateResultsInfo();
@@ -1779,7 +1804,7 @@ function createCard(p) {
   card.innerHTML = `
     <div class="card-img-wrap">
       ${p.img
-        ? `<img class="card-img" src="${escHtml(proxyImg(p.img))}" alt="${escHtml(p.nameEn)}" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        ? `<img class="card-img lazy" data-src="${p.img}" alt="${escHtml(p.nameEn)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
         : ''}
       <div class="card-placeholder" style="${p.img ? 'display:none' : ''}">
         ${jerseyIcon()}
@@ -1815,7 +1840,7 @@ function openModal(p) {
 
   if (p.img) {
     const img = document.createElement('img');
-    img.src = proxyImg(p.img);
+    img.src = p.img;
     img.alt = p.nameEn;
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0';
     imgCol.insertBefore(img, imgCol.firstChild);
@@ -2023,7 +2048,7 @@ function renderCartItems() {
     el.className = 'cart-item';
     const customMeta = buildCustomMeta(item.customizations);
     el.innerHTML = `
-      ${item.img ? `<img class="cart-item-img" src="${escHtml(proxyImg(item.img))}" alt="${escHtml(item.name)}" loading="eager">` : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;">${jerseyIcon(28)}</div>`}
+      ${item.img ? `<img class="cart-item-img" src="${item.img}" alt="${escHtml(item.name)}" loading="lazy">` : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;">${jerseyIcon(28)}</div>`}
       <div class="cart-item-info">
         <div class="cart-item-name">${escHtml(item.name)}</div>
         <div class="cart-item-meta">
@@ -2085,7 +2110,7 @@ function openCheckout() {
 
     row.innerHTML = `
       ${item.img
-        ? `<img class="checkout-item-img" src="${escHtml(proxyImg(item.img))}" alt="" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        ? `<img class="checkout-item-img" src="${item.img}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
         : ''}
       <div class="checkout-item-img-placeholder"${item.img ? ' style="display:none"' : ''}>${jerseyIcon(28)}</div>
       <div class="checkout-item-body">
@@ -2182,9 +2207,6 @@ function updateLangUI() {
 // UTILS
 // ═══════════════════════════════════════════════════════════════════════════
 
-function proxyImg(url) {
-  return url || null;
-}
 
 function escHtml(s) {
   return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
