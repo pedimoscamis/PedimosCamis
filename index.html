@@ -1636,6 +1636,15 @@ let imgObserver     = null; // IntersectionObserver para lazy-load de imágenes
 document.getElementById('footer-year').textContent = new Date().getFullYear();
 
 async function init() {
+  // Restaurar sesión de socio si hay un código guardado y sigue siendo válido
+  const _saved = localStorage.getItem('kz-socio-code');
+  if (_saved && SOCIO_CODES.has(_saved)) {
+    activeSocioCode = _saved;
+    socioMode       = true;
+  }
+  updateUserBtn();
+  updateUserMenuState();
+
   updateLangUI();
   buildCatBar();
   document.getElementById('results-info').textContent = t().loading;
@@ -3185,12 +3194,15 @@ function submitUserCode() {
     socioMode          = true;
     discountMode       = false;
     activeDiscountCode = null;
+    localStorage.setItem('kz-socio-code', code); // persistir solo códigos SOCIO
     showToast('✓ Modo socio activado');
   } else {
     activeDiscountCode = code;
     discountMode       = true;
     socioMode          = false;
     activeSocioCode    = null;
+    // Código de descuento: NO sobrescribir localStorage
+    // (si había un socio base guardado, se mantiene intacto para la próxima recarga)
     showToast('✓ Descuento 33% activado');
   }
 
@@ -3208,6 +3220,7 @@ function deactivateUser() {
   activeSocioCode    = null;
   discountMode       = false;
   activeDiscountCode = null;
+  localStorage.removeItem('kz-socio-code'); // borrar persistencia al cerrar sesión explícitamente
   document.getElementById('user-menu').classList.remove('open');
   updateUserBtn();
   updateUserMenuState();
