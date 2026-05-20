@@ -6,6 +6,7 @@
   <title>KitZone — Camisetas de Fútbol y NBA</title>
   <meta name="description" content="Las mejores camisetas de fútbol y NBA. LaLiga, Premier, NBA y más. Envío a toda España." />
   <meta name="referrer" content="no-referrer" />
+  <link rel="preconnect" href="https://res.cloudinary.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -1257,7 +1258,7 @@ async function init() {
       }
       obs.unobserve(img);
     }
-  }, { rootMargin: '200% 0px' });
+  }, { rootMargin: '500% 0px' });
 
   // ── Infinite scroll con IntersectionObserver ────────────────────────────
   const sentinel = document.getElementById('load-more-sentinel');
@@ -1851,6 +1852,9 @@ function renderAll() {
   currentFiltered = getFiltered();
   displayedCount  = 0;
 
+  // Precargar las primeras 24 imágenes antes de insertar el DOM
+  preloadImages(currentFiltered, 24);
+
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
 
@@ -1867,6 +1871,19 @@ function renderAll() {
   appendCards(PAGE_SIZE);
 }
 
+/**
+ * Precarga en background las primeras `count` imágenes de una lista de productos.
+ * El navegador las mete en caché; cuando el observer les asigne el src real
+ * ya estarán disponibles y se mostrarán al instante.
+ */
+function preloadImages(products, count) {
+  products.slice(0, count).forEach(p => {
+    if (!p.img) return;
+    const img = new Image();
+    img.src = p.img;
+  });
+}
+
 /** Añade las siguientes n tarjetas al grid sin borrar las existentes. */
 function appendCards(n) {
   const grid = document.getElementById('grid');
@@ -1876,7 +1893,7 @@ function appendCards(n) {
   // Insertar todas las tarjetas de una vez con un fragment
   const frag = document.createDocumentFragment();
   for (let i = from; i < to; i++) {
-    frag.appendChild(createCard(currentFiltered[i]));
+    frag.appendChild(createCard(currentFiltered[i], i));
   }
   grid.appendChild(frag);
 
@@ -1967,14 +1984,15 @@ function extractSeason(name) {
   return null;
 }
 
-function createCard(p) {
+function createCard(p, idx = 0) {
   const base = getBasePrice(p);
   const { main: priceMain, sub: priceSub } = t().price_fmt(base);
   const season   = extractSeason(p.nameEn);
   const pc       = primaryCat(p);
   const catLabel = season || t().cat_labels[pc] || pc;
   const sizesStr = p.sizes ? p.sizes.join(' · ') : '';
-  const player = isPlayerVersion(p);
+  const player   = isPlayerVersion(p);
+  const hiPri    = idx < 12 ? ' fetchpriority="high"' : '';
 
   const card = document.createElement('div');
   card.className = 'card';
@@ -1982,7 +2000,7 @@ function createCard(p) {
   card.innerHTML = `
     <div class="card-img-wrap">
       ${p.img
-        ? `<img class="card-img lazy" data-src="${p.img}" alt="${escHtml(p.nameEn)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        ? `<img class="card-img lazy" data-src="${p.img}" alt="${escHtml(p.nameEn)}" loading="lazy"${hiPri} onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
         : ''}
       <div class="card-placeholder" style="${p.img ? 'display:none' : ''}">
         ${jerseyIcon()}
