@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1" />
   <title>PedidoCamis — Camisetas de Fútbol y NBA</title>
   <meta name="description" content="Las mejores camisetas de fútbol y NBA. LaLiga, Premier, NBA y más. Envío a toda España." />
   <meta name="referrer" content="no-referrer" />
@@ -1023,7 +1023,21 @@
       .price-sub { font-size: 10px; }
       .card-sizes { display: none; }
       .badge-retro { font-size: 9px; padding: 2px 6px; }
+      /* Fix search text colour on some mobile browsers */
+      #search { color: var(--text) !important; -webkit-text-fill-color: var(--text); }
     }
+
+    /* ─── Modal fav button ──────────────────────────────────────── */
+    #modal-fav-btn {
+      flex-shrink: 0;
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); padding: 8px 10px;
+      border-radius: 8px; font-size: 20px; line-height: 1;
+      cursor: pointer; transition: all .2s;
+      align-self: flex-start;
+    }
+    #modal-fav-btn:hover { border-color: var(--accent); color: var(--accent); }
+    #modal-fav-btn.active { color: var(--accent); border-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -1124,9 +1138,12 @@
     </div>
     <div id="modal-content-col">
       <button id="modal-close" onclick="closeModal()">×</button>
-      <div>
-        <p id="modal-cat"></p>
-        <h2 id="modal-name"></h2>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div style="flex:1;min-width:0">
+          <p id="modal-cat"></p>
+          <h2 id="modal-name"></h2>
+        </div>
+        <button id="modal-fav-btn" title="Añadir a favoritos">♡</button>
       </div>
       <div class="modal-price-block">
         <div class="modal-price-main" id="modal-price-main"></div>
@@ -1208,6 +1225,7 @@
       <input type="hidden" name="_subject" value="Nuevo pedido PedidoCamis" />
       <input type="hidden" name="pedido" id="form-pedido" />
       <input type="hidden" name="total"  id="form-total" />
+      <input type="hidden" name="codigo_socio" id="form-codigo-socio" />
 
       <div class="form-group">
         <label for="form-nombre">Nombre completo *</label>
@@ -1248,7 +1266,7 @@
     <span>Email: próximamente</span>
     <span>© <span id="footer-year"></span> PedidoCamis</span>
   </div>
-  <p id="footer-disclaimer">Este sitio es un proyecto personal sin fines comerciales. No representa ninguna marca, empresa u organización oficial. Los precios pueden estar sujetos a cambios.</p>
+  <p id="footer-disclaimer">Este sitio es un proyecto personal sin fines comerciales. No representa ninguna marca, empresa u organización oficial.</p>
 </footer>
 
 <!-- ─── Toast ──────────────────────────────────────────────────────────── -->
@@ -1259,9 +1277,16 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════════════════════════════════
-let socioMode = false; // true cuando el código SOCIO10 está activo
+let socioMode = false;        // true cuando un código SOCIO está activo
+let activeSocioCode = null;   // código que activó el modo socio en este dispositivo
+
+// Códigos válidos — un solo uso por dispositivo
+const SOCIO_CODES = new Set(['SOCIO01','SOCIO02','SOCIO03','SOCIO04','SOCIO05','SOCIO06','SOCIO07','SOCIO08']);
+
 // Detecta "Player Version", "player version", o "player" como palabra independiente
 const PLAYER_RE = /\bplayer\b/i;
+// Detecta camisetas de mujer por nombre
+const WOMEN_RE  = /\bwomen\b|\bwoman\b|\bwomen's\b|\bfemenin|\bfemale\b/i;
 const PATCH_CATS = new Set(['laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro','europa','nuevatemporada']);
 
 // Orden de categorías en el grid "Todos"
@@ -1332,7 +1357,7 @@ const T = {
       laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
       seriea: '🇮🇹 Serie A', bundesliga: '🇩🇪 Bundesliga', ligue1: '🇫🇷 Ligue 1',
       selecciones: '🌍 Selecciones', sudamerica: '🌎 Sudamérica',
-      europa: '🏆 Europa', retro: '⏪ Retro', nba: '🏀 NBA', nfl: '🏈 NFL',
+      europa: '🏆 Europa', retro: '⏪ Retro', nba: '🏀 NBA',
       streetwear: '👕 Streetwear', windbreaker: '💨 Cortavientos',
       kids: '👶 Niños', women: '♀️ Mujer', otros: 'Otros',
       favoritos: '❤️ Favoritos',
@@ -1342,7 +1367,7 @@ const T = {
       laliga: 'LaLiga', premier: 'Premier League', seriea: 'Serie A',
       bundesliga: 'Bundesliga', ligue1: 'Ligue 1', selecciones: 'Selecciones',
       sudamerica: 'Sudamérica', europa: 'Europa', retro: 'Retro',
-      nba: 'NBA', nfl: 'NFL', streetwear: 'Streetwear',
+      nba: 'NBA', streetwear: 'Streetwear',
       windbreaker: 'Cortavientos', kids: 'Niños', women: 'Mujer', otros: 'Otros',
       favoritos: 'Favoritos',
     },
@@ -1398,7 +1423,7 @@ const T = {
       laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
       seriea: '🇮🇹 Serie A', bundesliga: '🇩🇪 Bundesliga', ligue1: '🇫🇷 Ligue 1',
       selecciones: '🌍 National Teams', sudamerica: '🌎 South America',
-      europa: '🏆 Europe', retro: '⏪ Retro', nba: '🏀 NBA', nfl: '🏈 NFL',
+      europa: '🏆 Europe', retro: '⏪ Retro', nba: '🏀 NBA',
       streetwear: '👕 Streetwear', windbreaker: '💨 Windbreaker',
       kids: '👶 Kids', women: '♀️ Women', otros: 'Others',
       favoritos: '❤️ Favourites',
@@ -1408,7 +1433,7 @@ const T = {
       laliga: 'LaLiga', premier: 'Premier League', seriea: 'Serie A',
       bundesliga: 'Bundesliga', ligue1: 'Ligue 1', selecciones: 'National Teams',
       sudamerica: 'South America', europa: 'Europe', retro: 'Retro',
-      nba: 'NBA', nfl: 'NFL', streetwear: 'Streetwear',
+      nba: 'NBA', streetwear: 'Streetwear',
       windbreaker: 'Windbreaker', kids: 'Kids', women: 'Women', otros: 'Others',
       favoritos: 'Favourites',
     },
@@ -1445,8 +1470,8 @@ function toggleFav(nameEn) {
   if (favorites.has(nameEn)) { favorites.delete(nameEn); } else { favorites.add(nameEn); }
   saveFavorites();
   updateFavBadge();
-  // Actualizar todos los botones de corazón de ese producto en el DOM
   const isFav = favorites.has(nameEn);
+  // Actualizar todos los botones de corazón de ese producto en el grid
   document.querySelectorAll('.card-fav-btn').forEach(btn => {
     if (btn.dataset.name === nameEn) {
       btn.classList.toggle('active', isFav);
@@ -1454,6 +1479,15 @@ function toggleFav(nameEn) {
       btn.title = isFav ? 'Quitar de favoritos' : 'Añadir a favoritos';
     }
   });
+  // Actualizar el botón de corazón del modal si está abierto para este producto
+  if (currentProduct && currentProduct.nameEn === nameEn) {
+    const mBtn = document.getElementById('modal-fav-btn');
+    if (mBtn) {
+      mBtn.textContent = isFav ? '♥' : '♡';
+      mBtn.classList.toggle('active', isFav);
+      mBtn.title = isFav ? 'Quitar de favoritos' : 'Añadir a favoritos';
+    }
+  }
   // Si estamos en la vista favoritos, re-renderizar el grid
   if (activeCat === 'favoritos') renderAll();
 }
@@ -1542,12 +1576,16 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','retro','nba','nfl','streetwear','windbreaker','kids','europa','otros'];
+const CAT_ORDER = ['all','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','retro','nba','streetwear','windbreaker','kids','europa','otros'];
+// Categorías que sólo se muestran en modo socio
+const SOCIO_ONLY_CATS = new Set(['streetwear']);
 
 function buildCatBar() {
   const bar = document.getElementById('cat-bar');
   bar.innerHTML = '';
   for (const cat of CAT_ORDER) {
+    // Ocultar categorías de socio si no está en modo socio
+    if (!socioMode && SOCIO_ONLY_CATS.has(cat)) continue;
     const btn = document.createElement('button');
     btn.className = 'cat-btn'
       + (cat === 'nuevatemporada' ? ' cat-nuevatemporada' : '')
@@ -1808,8 +1846,8 @@ function detectTeam(name) {
 function matchesTipo(p, tipo) {
   const cats = p.cats || [];
   if (tipo === 'Player Version') return PLAYER_RE.test(p.nameEn);
-  if (tipo === 'Fan Version')    return !PLAYER_RE.test(p.nameEn) && !cats.includes('women') && !/\bwom[ae]n\b|\bmujer\b|\bfemeni/i.test(p.nameEn) && !cats.includes('kids') && !cats.includes('windbreaker');
-  if (tipo === 'Mujer')          return cats.includes('women') || /\bwom[ae]n\b|\bmujer\b|\bfemeni/i.test(p.nameEn);
+  if (tipo === 'Fan Version')    return !PLAYER_RE.test(p.nameEn) && !WOMEN_RE.test(p.nameEn) && !cats.includes('kids') && !cats.includes('windbreaker');
+  if (tipo === 'Mujer')          return WOMEN_RE.test(p.nameEn);  // sólo por nombre
   if (tipo === 'Niños')          return cats.includes('kids')  || /\bkids\b|\bniños\b|\bchild\b|\bjunior\b/i.test(p.nameEn);
   if (tipo === 'Cortavientos')   return cats.includes('windbreaker');
   if (tipo === 'Retro')          return cats.includes('retro') || /\bretro\b/i.test(p.nameEn);
@@ -1820,8 +1858,10 @@ function matchesEquipacion(p, equip) {
   if (equip === 'Local')         return /\bhome\b|\blocal\b/i.test(p.nameEn);
   if (equip === 'Visitante')     return /\baway\b|\bvisitante\b/i.test(p.nameEn);
   if (equip === 'Tercera')       return /\bthird\b|\btercera\b|\b3rd\b/i.test(p.nameEn);
+  if (equip === 'Cuarta')        return /\bfourth\b|\b4th\b/i.test(p.nameEn);
   if (equip === 'Portero')       return /\bgoalkeeper\b|\bportero\b|\bkeeper\b|\bgk\b/i.test(p.nameEn);
   if (equip === 'Entrenamiento') return /training|entrenamiento|pre.match|prematch/i.test(p.nameEn);
+  if (equip === 'Especial')      return /\bspecial\b|\boriginals\b|\banniversary\b|\bvintage\b/i.test(p.nameEn);
   return false;
 }
 
@@ -1969,7 +2009,7 @@ function buildFilterBar() {
   const isEs = lang === 'es';
 
   // ── 1. Equipo — select dropdown ─────────────────────────────────────────
-  const NO_TEAM_CATS = new Set(['streetwear','windbreaker','otros','nfl']);
+  const NO_TEAM_CATS = new Set(['streetwear','windbreaker','otros']);
   if (!NO_TEAM_CATS.has(activeCat)) {
     const teamCount = new Map();
     for (const p of catProducts) {
@@ -1997,8 +2037,8 @@ function buildFilterBar() {
   }
 
   // ── 3. Equipación — pills ────────────────────────────────────────────────
-  const EQUIPS_ES = ['Local','Visitante','Tercera','Portero','Entrenamiento'];
-  const EQUIPS_EN = ['Home','Away','Third','Goalkeeper','Training'];
+  const EQUIPS_ES = ['Local','Visitante','Tercera','Cuarta','Portero','Entrenamiento','Especial'];
+  const EQUIPS_EN = ['Home','Away','Third','Fourth','Goalkeeper','Training','Special'];
   const equipsPresent = EQUIPS_ES.filter(eq => catProducts.some(p => matchesEquipacion(p, eq)));
   if (equipsPresent.length > 1) {
     const rowEl = document.createElement('div');
@@ -2085,6 +2125,11 @@ function getFiltered() {
 
   let result = allProducts.filter(p => {
     if (activeCat !== 'all' && !(p.cats || []).includes(activeCat)) return false;
+    // En 'otros', usuarios no-socio sólo ven camisetas de fútbol (sin streetwear/windbreaker/NBA)
+    if (activeCat === 'otros' && !socioMode) {
+      const cats = p.cats || [];
+      if (cats.includes('streetwear') || cats.includes('windbreaker') || cats.includes('nba')) return false;
+    }
     if (searchQuery) {
       const pc = primaryCat(p);
       const haystack = (p.nameEn + ' ' + p.nameEs + ' ' + (t().cat_labels[pc] || '')).toLowerCase();
@@ -2277,7 +2322,6 @@ const NORMAL_PRICES = {
   kids:        15,
   women:       10,
   nba:         20,
-  nfl:         20,
 };
 const NORMAL_JERSEY = 10;
 const NORMAL_RETRO  = 16;
@@ -2290,7 +2334,6 @@ const SOCIO_PRICES = {
   kids:        12,
   women:        8,
   nba:         18,
-  nfl:         18,
 };
 const SOCIO_JERSEY = 8;
 const SOCIO_RETRO  = 13;
@@ -2415,9 +2458,6 @@ function createCard(p, idx = 0) {
         ${jerseyIcon()}
       </div>
       ${p.type === 'retro' ? '<span class="badge-retro">RETRO</span>' : ''}
-      <button class="card-fav-btn${isFav ? ' active' : ''}" data-name="${escHtml(p.nameEn)}"
-              onclick="event.stopPropagation();toggleFav(${JSON.stringify(p.nameEn)})"
-              title="${isFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${isFav ? '♥' : '♡'}</button>
     </div>
     <div class="card-body">
       <span class="card-cat">${escHtml(catLabel)}</span>
@@ -2428,6 +2468,19 @@ function createCard(p, idx = 0) {
       </div>
       ${sizesStr ? `<div class="card-sizes">${escHtml(sizesStr)}</div>` : ''}
     </div>`;
+
+  // Fav button added via DOM (not innerHTML) so addEventListener works reliably
+  const favBtn = document.createElement('button');
+  favBtn.className = 'card-fav-btn' + (isFav ? ' active' : '');
+  favBtn.dataset.name = p.nameEn;
+  favBtn.title = isFav ? 'Quitar de favoritos' : 'Añadir a favoritos';
+  favBtn.textContent = isFav ? '♥' : '♡';
+  favBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleFav(p.nameEn);
+  });
+  card.querySelector('.card-img-wrap').appendChild(favBtn);
+
   return card;
 }
 
@@ -2463,6 +2516,15 @@ function openModal(p) {
   const yupooBtn = document.getElementById('modal-yupoo-btn');
   yupooBtn.href = p.yupooUrl;
   yupooBtn.textContent = t().see_photos;
+  yupooBtn.style.display = socioMode ? '' : 'none';
+
+  // Modal fav button
+  const modalFavBtn = document.getElementById('modal-fav-btn');
+  const isModalFav = favorites.has(p.nameEn);
+  modalFavBtn.textContent = isModalFav ? '♥' : '♡';
+  modalFavBtn.classList.toggle('active', isModalFav);
+  modalFavBtn.title = isModalFav ? 'Quitar de favoritos' : 'Añadir a favoritos';
+  modalFavBtn.onclick = () => toggleFav(p.nameEn);
 
   const mpc = primaryCat(p);
   document.getElementById('modal-cat').textContent = buildKitLabel(p.nameEn) || t().cat_labels[mpc] || mpc;
@@ -2800,6 +2862,9 @@ function openCheckout() {
   // Restaurar campos ocultos tras reset (el reset los vacía)
   document.getElementById('form-pedido').value = pedidoStr;
   document.getElementById('form-total').value  = fmtEur(cartTotalEur());
+  // Incluir código de socio si está activo
+  const codigoSocioEl = document.getElementById('form-codigo-socio');
+  if (codigoSocioEl) codigoSocioEl.value = (socioMode && activeSocioCode) ? activeSocioCode : '';
   document.getElementById('order-success').style.display   = 'none';
   const submitBtn = document.getElementById('order-submit-btn');
   submitBtn.disabled    = false;
@@ -2913,24 +2978,54 @@ function submitUserCode() {
   const error = document.getElementById('user-code-error');
   const code  = input.value.trim().toUpperCase();
 
-  if (code === 'SOCIO10') {
-    socioMode = true;
-    document.getElementById('user-menu').classList.remove('open');
-    updateUserBtn();
-    renderAll();            // recalcula precios en tarjetas
-    renderCartItems();      // recalcula total del carrito
-    showToast('✓ Modo socio activado — 10% de descuento');
-  } else {
+  if (!SOCIO_CODES.has(code)) {
+    error.textContent = 'Código no válido';
     error.style.display = 'block';
     input.value = '';
     input.focus();
+    return;
   }
+
+  // Código válido — comprobar si ya fue usado en este dispositivo
+  const usedCodes = new Set(JSON.parse(localStorage.getItem('kz-used-codes') || '[]'));
+  if (usedCodes.has(code)) {
+    error.textContent = 'Este código ya fue utilizado en este dispositivo';
+    error.style.display = 'block';
+    input.value = '';
+    input.focus();
+    return;
+  }
+
+  // Activar modo socio
+  usedCodes.add(code);
+  localStorage.setItem('kz-used-codes', JSON.stringify([...usedCodes]));
+  activeSocioCode = code;
+  socioMode = true;
+
+  document.getElementById('user-menu').classList.remove('open');
+  updateUserBtn();
+  updateUserMenuState();
+  buildCatBar();
+  renderAll();
+  renderCartItems();
+  showToast('✓ Modo socio activado — 10% de descuento');
 }
 
 function deactivateSocio() {
   socioMode = false;
+  activeSocioCode = null;
   document.getElementById('user-menu').classList.remove('open');
   updateUserBtn();
+  updateUserMenuState();
+  // Si estaba en una categoría restringida, volver a Todos
+  if (SOCIO_ONLY_CATS.has(activeCat)) {
+    activeCat = 'all';
+    searchQuery = '';
+    clearActiveFilters();
+    document.getElementById('search').value = '';
+  }
+  buildCatBar();
+  buildFilterBar();
   renderAll();
   renderCartItems();
   showToast('Sesión de socio cerrada');
