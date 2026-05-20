@@ -551,7 +551,7 @@
     #modal-yupoo-btn:hover { background: rgba(232,23,60,0.5); }
 
     #modal-content-col {
-      padding: 28px 26px;
+      padding: 28px 52px 28px 26px;
       display: flex; flex-direction: column; gap: 16px;
       overflow-y: auto;
     }
@@ -1354,7 +1354,7 @@ let discountMode  = false;        // true cuando un código de descuento 33% est
 let activeDiscountCode = null;    // código de descuento que inició sesión
 
 // Códigos SOCIO (precios en $, modo administrador)
-const SOCIO_CODES    = new Set(['GIL13','BOSS7','TAYRON18','JORGE71','MALYZ15','SOTO22','RONCOLA10','ADMIN8371','MARTINHA19', 'YECASE20']);
+const SOCIO_CODES    = new Set(['GIL13','BOSS7','TAYRON18','JORGE71','MALYZ15','SOTO22','RONCOLA10','ADMIN8371','MARTINHA19','YECASE20']);
 
 // Códigos de descuento 33% (precios normales con -33%, vista de usuario normal)
 const DISCOUNT_CODES = new Set(['RAUL20','JUANCHI']);
@@ -1389,7 +1389,7 @@ let lang = localStorage.getItem('kz-lang') || 'es';
 
 const T = {
   es: {
-    search_placeholder: 'Buscar camiseta, equipo, jugador…',
+    search_placeholder: 'Buscar por camiseta,equipo...',
     hero_sub: 'Las mejores camisetas de fútbol y NBA. Calidad premium, precios imbatibles.',
     hero_cta: 'VER CATÁLOGO',
     results: (n) => `${n} producto${n !== 1 ? 's' : ''}`,
@@ -2086,6 +2086,7 @@ function buildFilterBar() {
 
   bar.style.display = '';
   rows.innerHTML = '';
+  filterBarScroll.reset(); // Regla 1: al entrar en categoría, siempre mostrar la barra
 
   const isEs = lang === 'es';
 
@@ -3051,6 +3052,13 @@ async function submitOrderForm(e) {
   btn.textContent = 'Enviando…';
 
   const form = document.getElementById('order-form');
+  // Re-set codigo_socio right before serialising so the exact active code is captured
+  const codigoSocioEl2 = document.getElementById('form-codigo-socio');
+  if (codigoSocioEl2) {
+    if (socioMode && activeSocioCode)             codigoSocioEl2.value = activeSocioCode;
+    else if (discountMode && activeDiscountCode)  codigoSocioEl2.value = '33%: ' + activeDiscountCode;
+    else                                          codigoSocioEl2.value = '';
+  }
   const data = new FormData(form);
 
   try {
@@ -3246,24 +3254,50 @@ function showToast(msg) {
 }
 
 // Ocultar filter-bar al scrollear abajo, mostrar al scrollear arriba
-(function () {
-  let lastY    = window.scrollY;
-  let ticking  = false;
+const filterBarScroll = (function () {
+  const HIDE_THRESHOLD = 50;
+  let lastY = window.scrollY;
+  let downAccumulated = 0;
+  let ignoreUntil = 0;
+  let ticking = false;
+
+  function bar() { return document.getElementById('filter-bar'); }
+  function show() {
+    const fb = bar();
+    if (fb) fb.classList.remove('filters-hidden');
+    downAccumulated = 0;
+  }
+  function reset() {
+    show();
+    lastY = window.scrollY;
+    ignoreUntil = Date.now() + 600; // ignora scroll durante el smooth-scroll de setCategory
+  }
+
   window.addEventListener('scroll', () => {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
-      const y  = window.scrollY;
-      const fb = document.getElementById('filter-bar');
-      if (y > lastY && y > 80) {
-        fb.classList.add('filters-hidden');
-      } else {
-        fb.classList.remove('filters-hidden');
-      }
-      lastY   = y;
       ticking = false;
+      const fb = bar();
+      if (!fb || fb.style.display === 'none') return;
+      if (Date.now() < ignoreUntil) { lastY = window.scrollY; return; }
+
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+
+      if (y <= 10 || delta < 0) {
+        // Top de página o cualquier scroll hacia arriba → mostrar inmediatamente
+        show();
+      } else if (delta > 0) {
+        // Scroll hacia abajo → acumular y ocultar si supera umbral
+        downAccumulated += delta;
+        if (downAccumulated > HIDE_THRESHOLD) fb.classList.add('filters-hidden');
+      }
     });
   }, { passive: true });
+
+  return { reset, show };
 })();
 
 // Keyboard: close modals on Escape
