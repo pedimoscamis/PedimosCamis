@@ -280,6 +280,17 @@
       color: var(--muted); font-size: 13px;
       margin-bottom: 18px;
     }
+    #load-more-wrap { text-align: center; padding: 32px 0 12px; }
+    #load-more-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); padding: 11px 36px;
+      border-radius: 24px; cursor: pointer;
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px; font-weight: 600; letter-spacing: 0.03em;
+      transition: all .2s;
+    }
+    #load-more-btn:hover { border-color: var(--accent); color: var(--text); }
+    #load-more-sentinel { height: 1px; }
 
     #grid {
       display: grid;
@@ -820,6 +831,10 @@
 <main id="main">
   <p id="results-info"></p>
   <div id="grid"></div>
+  <div id="load-more-wrap">
+    <button id="load-more-btn" onclick="loadMoreClick()" style="display:none">Cargar más</button>
+    <div id="load-more-sentinel"></div>
+  </div>
 </main>
 
 <!-- ─── Product Modal ──────────────────────────────────────────────────── -->
@@ -1093,6 +1108,11 @@ let selectedSize = null;
 let cart = JSON.parse(localStorage.getItem('kz-cart') || '[]');
 let activeFilters = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set() };
 
+// ── Paginación ─────────────────────────────────────────────────────────────
+const PAGE_SIZE     = 48;
+let currentFiltered = [];   // lista filtrada completa
+let displayedCount  = 0;    // cuántas tarjetas hay en el DOM ahora
+
 // ═══════════════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1101,9 +1121,17 @@ document.getElementById('footer-year').textContent = new Date().getFullYear();
 async function init() {
   updateLangUI();
   buildCatBar();
-  renderGrid([]);
   document.getElementById('results-info').textContent = t().loading;
   updateCartBadge();
+
+  // ── Infinite scroll con IntersectionObserver ────────────────────────────
+  const sentinel = document.getElementById('load-more-sentinel');
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && displayedCount < currentFiltered.length) {
+      appendCards(PAGE_SIZE);
+    }
+  }, { rootMargin: '300px' });
+  observer.observe(sentinel);
 
   try {
     const res = await fetch(PRODUCTS_URL);
@@ -1620,33 +1648,73 @@ function getFiltered() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// RENDER
+// RENDER  (con paginación / infinite scroll)
 // ═══════════════════════════════════════════════════════════════════════════
+
 function renderAll() {
   const hero = document.getElementById('hero');
   hero.style.display = (activeCat === 'all' && !searchQuery) ? 'block' : 'none';
 
-  const products = getFiltered();
-  document.getElementById('results-info').textContent = t().results(products.length);
-  renderGrid(products);
-}
+  currentFiltered = getFiltered();
+  displayedCount  = 0;
 
-function renderGrid(products) {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
 
-  if (products.length === 0 && allProducts.length > 0) {
+  if (currentFiltered.length === 0 && allProducts.length > 0) {
     grid.innerHTML = `<div id="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <p>${t().no_results}</p>
     </div>`;
+    setLoadMoreVisible(false);
+    updateResultsInfo();
     return;
   }
 
-  for (const p of products) {
-    grid.appendChild(createCard(p));
+  appendCards(PAGE_SIZE);
+}
+
+/** Añade las siguientes n tarjetas al grid sin borrar las existentes. */
+function appendCards(n) {
+  const grid = document.getElementById('grid');
+  const from = displayedCount;
+  const to   = Math.min(displayedCount + n, currentFiltered.length);
+  for (let i = from; i < to; i++) {
+    grid.appendChild(createCard(currentFiltered[i]));
+  }
+  displayedCount = to;
+  setLoadMoreVisible(displayedCount < currentFiltered.length);
+  updateResultsInfo();
+}
+
+function loadMoreClick() {
+  appendCards(PAGE_SIZE);
+}
+
+function setLoadMoreVisible(show) {
+  const btn = document.getElementById('load-more-btn');
+  if (btn) btn.style.display = show ? '' : 'none';
+}
+
+function updateResultsInfo() {
+  const el    = document.getElementById('results-info');
+  const total = currentFiltered.length;
+  if (!el) return;
+  if (total === 0) {
+    el.textContent = allProducts.length > 0 ? '' : t().loading;
+    return;
+  }
+  if (displayedCount >= total) {
+    el.textContent = t().results(total);
+  } else {
+    el.textContent = lang === 'es'
+      ? `Mostrando ${displayedCount} de ${total} producto${total !== 1 ? 's' : ''}`
+      : `Showing ${displayedCount} of ${total} product${total !== 1 ? 's' : ''}`;
   }
 }
+
+// Alias para compatibilidad con la llamada inicial en init()
+function renderGrid() { /* no-op: init usa renderAll tras cargar datos */ }
 
 // Devuelve el precio base real del producto:
 // Player Version → $11, retro → $13, resto → $8
@@ -2086,6 +2154,8 @@ function toggleLang() {
 function updateLangUI() {
   document.getElementById('lang-toggle').textContent = lang === 'es' ? 'EN' : 'ES';
   document.getElementById('search').placeholder = t().search_placeholder;
+  const lmBtn = document.getElementById('load-more-btn');
+  if (lmBtn) lmBtn.textContent = lang === 'es' ? 'Cargar más' : 'Load more';
   document.getElementById('hero-sub').textContent = t().hero_sub;
   document.getElementById('hero-cta').textContent = t().hero_cta;
   document.getElementById('cart-title').textContent = t().cart;
