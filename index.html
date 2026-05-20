@@ -256,19 +256,6 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid #1e1e1e;
       padding: 6px 24px 8px;
-      overflow: hidden;
-      max-height: 200px;   /* valor seguro mayor que la altura real */
-      opacity: 1;
-      transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
-    }
-    #filter-bar.filters-hidden {
-      max-height: 0 !important;
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-      opacity: 0 !important;
-      pointer-events: none;
     }
 
     /* ─── FAB "Volver arriba" ────────────────────────────────── */
@@ -3295,57 +3282,37 @@ function showToast(msg) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
-// ─── Nav Scroll: smart-header (móvil) + filter-bar (PC) + FAB ────────────────
+// ─── Nav Scroll: smart-header (móvil) + FAB ──────────────────────────────────
+// En PC el #sticky-wrapper está siempre fijo — no se oculta nada al hacer scroll.
+// En móvil el wrapper entero se oculta cuando el usuario baja de los 50px iniciales.
 const navScroll = (function () {
-  const MOBILE_BP  = 768;  // px — breakpoint móvil
-  const FAB_THR    = 500;  // px — umbral para mostrar el FAB
-  const MOB_THR    = 50;   // px — umbral ocultar wrapper en móvil
-  const PC_HIDE    = 150;  // px — debe haber bajado más de esto para ocultar filtros en PC
-  const PC_SHOW    = 50;   // px — si sube hasta aquí, mostrar filtros en PC
+  const MOBILE_BP = 768;  // px — breakpoint móvil
+  const FAB_THR   = 500;  // px — umbral para mostrar el FAB
+  const MOB_THR   = 50;   // px — umbral para ocultar el wrapper en móvil
 
-  let lastScrollY = window.scrollY;   // rastrea posición anterior para detectar dirección
-
-  function isMobile()  { return window.innerWidth < MOBILE_BP; }
-  function wrapper()   { return document.getElementById('sticky-wrapper'); }
-  function filterBar() { return document.getElementById('filter-bar'); }
-  function fab()       { return document.getElementById('fab-top'); }
+  function isMobile() { return window.innerWidth < MOBILE_BP; }
+  function wrapper()  { return document.getElementById('sticky-wrapper'); }
+  function fab()      { return document.getElementById('fab-top'); }
 
   function update() {
-    const y  = window.scrollY;
-    const w  = wrapper();
-    const fb = filterBar();
-    const f  = fab();
+    const y = window.scrollY;
+    const w = wrapper();
+    const f = fab();
 
-    // FAB — visible siempre (PC y móvil) al bajar >500 px
+    // FAB — visible en PC y móvil al bajar >500 px
     if (f) f.classList.toggle('visible', y > FAB_THR);
 
     if (isMobile()) {
-      // MÓVIL: ocultar wrapper entero si scrollY > umbral; solo reaparece al volver al top
+      // MÓVIL: ocultar wrapper cuando scrollY > 50; vuelve solo al llegar al top
       if (w) w.style.transform = y > MOB_THR ? 'translateY(-100%)' : '';
     } else {
-      // PC: wrapper siempre visible; histéresis por DIRECCIÓN en el filter-bar
+      // PC: wrapper 100% visible e inmóvil en todo momento
       if (w) w.style.transform = '';
-      if (fb && fb.style.display !== 'none') {
-        if (y > lastScrollY && y > PC_HIDE) {
-          // Bajando y ya pasó la cabecera → ocultar filtros
-          fb.classList.add('filters-hidden');
-        } else if (y < lastScrollY || y <= PC_SHOW) {
-          // Subiendo (aunque sea 1 px) o cerca del top → mostrar filtros
-          fb.classList.remove('filters-hidden');
-        }
-        // Si ni sube ni baja (resize, etc.) no hacemos nada → sin yoyó
-      }
     }
-
-    lastScrollY = y;
   }
 
-  function reset() {
-    // Llamado desde buildFilterBar al entrar en categoría — fuerza visibilidad
-    const fb = filterBar();
-    if (fb) fb.classList.remove('filters-hidden');
-    lastScrollY = window.scrollY;
-  }
+  // reset() sigue existiendo por si buildFilterBar lo llama — no hace nada en PC
+  function reset() {}
 
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update, { passive: true });
