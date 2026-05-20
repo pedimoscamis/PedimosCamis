@@ -229,6 +229,22 @@
       transform: translateY(-115%);
       pointer-events: none;
     }
+    #filter-bar-inner {
+      display: flex; align-items: flex-start; gap: 16px;
+    }
+    #filter-rows { flex: 1; min-width: 0; }
+    #sort-wrap {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 7px;
+      padding: 5px 0 3px;
+      border-left: 1px solid var(--border);
+      padding-left: 14px;
+    }
+    #sort-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--muted);
+      font-family: 'Barlow', sans-serif; white-space: nowrap;
+    }
     .filter-row {
       display: flex; align-items: center; gap: 6px;
       padding: 3px 0;
@@ -1031,7 +1047,10 @@
 
 <!-- ─── Filter Bar ────────────────────────────────────────────────────── -->
 <div id="filter-bar" style="display:none">
-  <div id="filter-rows"></div>
+  <div id="filter-bar-inner">
+    <div id="filter-rows"></div>
+    <div id="sort-wrap"></div>
+  </div>
 </div>
 
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
@@ -1383,7 +1402,8 @@ let searchQuery = '';
 let currentProduct = null;
 let selectedSize = null;
 let cart = JSON.parse(localStorage.getItem('kz-cart') || '[]');
-let activeFilters = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set() };
+let activeFilters  = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set() };
+let seasonSortDir  = 'desc'; // 'desc' = más reciente primero, 'asc' = más antiguo
 
 // ── Paginación ─────────────────────────────────────────────────────────────
 const PAGE_SIZE     = 48;
@@ -1832,6 +1852,31 @@ function makeSelectRow(label, group, items, placeholder) {
   return rowEl;
 }
 
+// Productos que pasan categoría + búsqueda + equipo/tipo/equipación,
+// pero NO el filtro de temporada — base para construir opciones dinámicas de temporada.
+function getProductsForSeasonFilter() {
+  return allProducts.filter(p => {
+    if (activeCat !== 'all' && !(p.cats || []).includes(activeCat)) return false;
+    if (searchQuery) {
+      const pc = primaryCat(p);
+      const haystack = (p.nameEn + ' ' + p.nameEs + ' ' + (t().cat_labels[pc] || '')).toLowerCase();
+      if (!haystack.includes(searchQuery)) return false;
+    }
+    const f = activeFilters;
+    if (f.teams.size > 0) {
+      const team = detectTeam(p.nameEn);
+      if (!team || !f.teams.has(team)) return false;
+    }
+    if (f.tipos.size > 0) {
+      if (![...f.tipos].some(tipo => matchesTipo(p, tipo))) return false;
+    }
+    if (f.equipacion.size > 0) {
+      if (![...f.equipacion].some(eq => matchesEquipacion(p, eq))) return false;
+    }
+    return true;
+  });
+}
+
 function buildFilterBar() {
   const bar  = document.getElementById('filter-bar');
   const rows = document.getElementById('filter-rows');
@@ -1896,28 +1941,27 @@ function buildFilterBar() {
     rows.appendChild(rowEl);
   }
 
-  // ── 4. Temporada — select dropdown (dinámico) ───────────────────────────
+  // ── 4. Temporada — select dropdown (dinámico, basado en filtros activos) ──
   {
-    const seasonSet = new Set();
-    for (const p of catProducts) {
+    // Usar sólo los productos que pasan los demás filtros activos
+    const seasonBase = getProductsForSeasonFilter();
+    const seasonSet  = new Set();
+    for (const p of seasonBase) {
       const s = extractSeason(p.nameEn);
       if (s) seasonSet.add(s);
     }
-    // Separar recientes (≥2024) de antiguas (<2024)
-    const modernSeasons = [...seasonSet]
-      .filter(s => { const yr = seasonStartYear(s); return yr !== null && yr >= 2024; })
-      .sort((a, b) => seasonStartYear(b) - seasonStartYear(a)); // descendente
-    const hasOlder = [...seasonSet].some(s => { const yr = seasonStartYear(s); return yr !== null && yr < 2024; });
-    const seasonItems = [
-      ...modernSeasons.map(s => ({ value: s, label: s })),
-      ...(hasOlder ? [{ value: 'Anteriores', label: isEs ? 'Anteriores' : 'Older' }] : []),
-    ];
-    if (seasonItems.length > 0) {
+    // Ordenar todas las temporadas de más reciente a más antigua
+    const seasonsSorted = [...seasonSet].sort((a, b) => {
+      const ya = seasonStartYear(a) ?? -Infinity;
+      const yb = seasonStartYear(b) ?? -Infinity;
+      return yb - ya; // descendente siempre en el menú
+    });
+    if (seasonsSorted.length > 0) {
       rows.appendChild(makeSelectRow(
         isEs ? 'Temporada' : 'Season',
         'temporada',
-        seasonItems,
-        isEs ? 'Todas las temporadas' : 'All seasons'
+        seasonsSorted.map(s => ({ value: s, label: s })),
+        isEs ? 'Todas' : 'All'
       ));
     }
   }
@@ -1930,6 +1974,28 @@ function buildFilterBar() {
     clearBtn.onclick = () => { clearActiveFilters(); buildFilterBar(); renderAll(); };
     rows.appendChild(clearBtn);
   }
+
+  // ── Sort control (siempre visible cuando el filter-bar está activo) ───────
+  const sortWrap = document.getElementById('sort-wrap');
+  sortWrap.innerHTML = '';
+  const sortLbl = document.createElement('span');
+  sortLbl.id = 'sort-label';
+  sortLbl.textContent = isEs ? 'Orden' : 'Order';
+  sortWrap.appendChild(sortLbl);
+  const sortSel = document.createElement('select');
+  sortSel.className = 'filter-select';
+  [
+    { value: 'desc', label: isEs ? 'Reciente ↓' : 'Newest ↓' },
+    { value: 'asc',  label: isEs ? 'Antiguo ↑'  : 'Oldest ↑'  },
+  ].forEach(({ value, label }) => {
+    const opt = document.createElement('option');
+    opt.value = value;
+    opt.textContent = label;
+    if (seasonSortDir === value) opt.selected = true;
+    sortSel.appendChild(opt);
+  });
+  sortSel.onchange = () => { seasonSortDir = sortSel.value; renderAll(); };
+  sortWrap.appendChild(sortSel);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1946,9 +2012,21 @@ function getFiltered() {
     if (activeCat !== 'all' && hasActiveFilters() && !matchesFilter(p)) return false;
     return true;
   });
-  // En la vista "Todos" ordenar por categoría prioritaria
   if (activeCat === 'all') {
+    // Vista "Todos": ordenar por categoría prioritaria
     result = result.slice().sort((a, b) => catPriority(a) - catPriority(b));
+  } else {
+    // Vista de categoría: ordenar por temporada según seasonSortDir
+    result = result.slice().sort((a, b) => {
+      const sa = extractSeason(a.nameEn);
+      const sb = extractSeason(b.nameEn);
+      const ya = sa ? (seasonStartYear(sa) ?? 0) : null;
+      const yb = sb ? (seasonStartYear(sb) ?? 0) : null;
+      if (ya === null && yb === null) return 0;
+      if (ya === null) return 1;   // sin temporada → al final
+      if (yb === null) return -1;
+      return seasonSortDir === 'desc' ? yb - ya : ya - yb;
+    });
   }
   return result;
 }
