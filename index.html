@@ -879,64 +879,16 @@
       display: none; align-items: center; justify-content: center;
     }
 
-    /* ─── Fav drawer ─────────────────────────────────────────── */
-    #fav-overlay {
-      display: none; position: fixed; inset: 0; z-index: 300;
-      background: rgba(0,0,0,0.7);
+    /* ─── Card fav button ────────────────────────────────────── */
+    .card-fav-btn {
+      position: absolute; top: 8px; right: 8px; z-index: 2;
+      background: rgba(0,0,0,0.55); border: none; border-radius: 50%;
+      width: 30px; height: 30px; font-size: 16px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.65); transition: background .2s, color .2s;
     }
-    #fav-overlay.open { display: block; }
-    #fav-drawer {
-      position: fixed; top: 0; right: 0; bottom: 0; z-index: 301;
-      width: min(420px, 100vw);
-      background: var(--surface);
-      border-left: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      transform: translateX(100%);
-      transition: transform .3s cubic-bezier(.4,0,.2,1);
-    }
-    #fav-drawer.open { transform: translateX(0); }
-    #fav-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 20px 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    #fav-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 26px; letter-spacing: 1px;
-    }
-    #fav-close-btn {
-      background: none; border: none; color: var(--muted);
-      font-size: 22px; cursor: pointer; padding: 4px;
-    }
-    #fav-close-btn:hover { color: var(--text); }
-    #fav-items { flex: 1; overflow-y: auto; padding: 16px 20px; }
-    #fav-empty { text-align: center; padding: 60px 0; color: var(--muted); }
-    #fav-empty svg { width: 52px; height: 52px; opacity: .18; margin-bottom: 14px; display: block; margin-left: auto; margin-right: auto; }
-    .fav-item {
-      display: flex; gap: 12px; align-items: center;
-      padding: 12px 0; border-bottom: 1px solid var(--border);
-      cursor: pointer; transition: opacity .15s;
-    }
-    .fav-item:hover { opacity: .8; }
-    .fav-item-img {
-      width: 58px; height: 58px; border-radius: 6px;
-      object-fit: cover; background: #1a1a1a; flex-shrink: 0;
-    }
-    .fav-item-info { flex: 1; min-width: 0; }
-    .fav-item-name {
-      font-size: 13px; font-weight: 600; line-height: 1.3;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .fav-item-price {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 18px; color: var(--accent); margin-top: 3px;
-    }
-    .fav-remove-btn {
-      background: none; border: none; color: var(--accent);
-      font-size: 20px; cursor: pointer; padding: 6px; line-height: 1;
-      flex-shrink: 0; transition: opacity .2s;
-    }
-    .fav-remove-btn:hover { opacity: .6; }
+    .card-fav-btn:hover  { background: rgba(0,0,0,.85); color: var(--accent); }
+    .card-fav-btn.active { color: var(--accent); }
 
     .footer-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
 
@@ -1100,7 +1052,7 @@
         </div>
       </div>
     </div>
-    <button id="fav-btn" onclick="openFav()" title="Favoritos">
+    <button id="fav-btn" onclick="goFavorites()" title="Favoritos">
       <span id="fav-icon">♡</span>
       <span id="fav-badge">0</span>
     </button>
@@ -1217,15 +1169,6 @@
 </div>
 
 <!-- ─── Cart Drawer ────────────────────────────────────────────────────── -->
-<div id="fav-overlay" onclick="closeFav()"></div>
-<div id="fav-drawer">
-  <div id="fav-header">
-    <h2 id="fav-title">Favoritos</h2>
-    <button id="fav-close-btn" onclick="closeFav()">×</button>
-  </div>
-  <div id="fav-items"></div>
-</div>
-
 <div id="cart-overlay" onclick="closeCart()"></div>
 <div id="cart-drawer">
   <div id="cart-header">
@@ -1502,48 +1445,28 @@ function toggleFav(nameEn) {
   if (favorites.has(nameEn)) { favorites.delete(nameEn); } else { favorites.add(nameEn); }
   saveFavorites();
   updateFavBadge();
-  if (document.getElementById('fav-drawer').classList.contains('open')) renderFavItems();
+  // Actualizar todos los botones de corazón de ese producto en el DOM
+  const isFav = favorites.has(nameEn);
+  document.querySelectorAll('.card-fav-btn').forEach(btn => {
+    if (btn.dataset.name === nameEn) {
+      btn.classList.toggle('active', isFav);
+      btn.textContent = isFav ? '♥' : '♡';
+      btn.title = isFav ? 'Quitar de favoritos' : 'Añadir a favoritos';
+    }
+  });
+  // Si estamos en la vista favoritos, re-renderizar el grid
   if (activeCat === 'favoritos') renderAll();
 }
 
-function openFav() {
-  renderFavItems();
-  document.getElementById('fav-overlay').classList.add('open');
-  document.getElementById('fav-drawer').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeFav() {
-  document.getElementById('fav-overlay').classList.remove('open');
-  document.getElementById('fav-drawer').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function renderFavItems() {
-  const container   = document.getElementById('fav-items');
-  const favProducts = allProducts.filter(p => favorites.has(p.nameEn));
-  if (favProducts.length === 0) {
-    container.innerHTML = `<div id="fav-empty">${jerseyIcon(52)}<p>Aún no tienes favoritos</p></div>`;
-    return;
-  }
-  container.innerHTML = '';
-  for (const p of favProducts) {
-    const base              = getBasePrice(p);
-    const { main: priceMain } = t().price_fmt(base);
-    const el = document.createElement('div');
-    el.className = 'fav-item';
-    el.innerHTML = `
-      ${p.img ? `<img class="fav-item-img" src="${p.img}" alt="${escHtml(p.nameEn)}" loading="lazy" onerror="this.style.display='none'">` : `<div class="fav-item-img" style="display:flex;align-items:center;justify-content:center">${jerseyIcon(28)}</div>`}
-      <div class="fav-item-info">
-        <div class="fav-item-name">${escHtml(p.nameEn)}</div>
-        <div class="fav-item-price">${priceMain}</div>
-      </div>
-      <button class="fav-remove-btn" title="Quitar de favoritos">♥</button>`;
-    el.querySelector('.fav-remove-btn').onclick = (e) => { e.stopPropagation(); toggleFav(p.nameEn); };
-    el.querySelector('.fav-item-info').onclick  = () => { closeFav(); openModal(p); };
-    el.querySelector('.fav-item-img').onclick   = () => { closeFav(); openModal(p); };
-    container.appendChild(el);
-  }
+function goFavorites() {
+  activeCat   = 'favoritos';
+  searchQuery = '';
+  clearActiveFilters();
+  document.getElementById('search').value = '';
+  buildCatBar();
+  buildFilterBar();
+  renderAll();
+  document.getElementById('main').scrollIntoView({ behavior: 'smooth' });
 }
 
 // Devuelve la versión/tipo de equipación en inglés para el resumen del pedido
@@ -1619,7 +1542,7 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','retro','nba','nfl','streetwear','windbreaker','kids','europa','otros','favoritos'];
+const CAT_ORDER = ['all','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','retro','nba','nfl','streetwear','windbreaker','kids','europa','otros'];
 
 function buildCatBar() {
   const bar = document.getElementById('cat-bar');
@@ -2261,7 +2184,7 @@ function renderAll() {
 
   if (currentFiltered.length === 0) {
     const msg = activeCat === 'favoritos'
-      ? (lang === 'es' ? 'Aún no tienes favoritos' : 'No favourites yet')
+      ? (lang === 'es' ? 'Aún no tienes favoritos. Pulsa ♡ en cualquier camiseta para guardarla.' : 'No favourites yet. Tap ♡ on any jersey to save it.')
       : t().no_results;
     grid.innerHTML = `<div id="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -2482,6 +2405,7 @@ function createCard(p, idx = 0) {
   const card = document.createElement('div');
   card.className = 'card';
   card.onclick = () => openModal(p);
+  const isFav = favorites.has(p.nameEn);
   card.innerHTML = `
     <div class="card-img-wrap">
       ${p.img
@@ -2491,6 +2415,9 @@ function createCard(p, idx = 0) {
         ${jerseyIcon()}
       </div>
       ${p.type === 'retro' ? '<span class="badge-retro">RETRO</span>' : ''}
+      <button class="card-fav-btn${isFav ? ' active' : ''}" data-name="${escHtml(p.nameEn)}"
+              onclick="event.stopPropagation();toggleFav(${JSON.stringify(p.nameEn)})"
+              title="${isFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${isFav ? '♥' : '♡'}</button>
     </div>
     <div class="card-body">
       <span class="card-cat">${escHtml(catLabel)}</span>
@@ -3095,7 +3022,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeModal();
     closeCart();
-    closeFav();
     closeCheckout();
   }
 });
