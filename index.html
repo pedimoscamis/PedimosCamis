@@ -955,13 +955,7 @@ const EUR_RATE = 0.90;
 const PLAYER_RE = /\bplayer\b/i;
 const PATCH_CATS = new Set(['laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro','europa','nuevatemporada']);
 
-// Detectar base path (GitHub Pages vs local)
-const BASE_PATH = (() => {
-  const p = window.location.pathname;
-  if (p.startsWith('/kitzone')) return '/kitzone';
-  return '';
-})();
-const PRODUCTS_URL = BASE_PATH + '/data/products.json';
+const PRODUCTS_URL = './data/products.json';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // I18N
@@ -2119,11 +2113,7 @@ function updateLangUI() {
 // ═══════════════════════════════════════════════════════════════════════════
 
 function proxyImg(url) {
-  if (!url) return null;
-  // Enruta la imagen a través del servidor para evitar hotlink protection de Yupoo.
-  // El parámetro url lleva la URL sin protocolo: photo.yupoo.com/…
-  const bare = url.replace(/^https?:\/\//, '');
-  return `/proxy?url=${encodeURIComponent(bare)}`;
+  return url || null;
 }
 
 function escHtml(s) {
