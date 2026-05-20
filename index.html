@@ -765,16 +765,54 @@
     }
     .custom-select:focus { border-color: var(--accent); }
 
-    #whatsapp-btn {
-      width: 100%; background: #25D366; color: #fff;
+    /* ─── Order form ─────────────────────────────────────────── */
+    #order-form { margin-top: 4px; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block; font-size: 12px; font-weight: 600;
+      color: var(--muted); text-transform: uppercase; letter-spacing: .5px;
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text);
+      padding: 11px 14px; font-family: 'Barlow', sans-serif; font-size: 14px;
+      outline: none; transition: border-color .2s, box-shadow .2s;
+      resize: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232,23,60,.15);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: #444; }
+
+    #photo-notice {
+      background: rgba(232,23,60,.08); border: 1px solid rgba(232,23,60,.25);
+      border-radius: 8px; padding: 11px 14px;
+      font-size: 13px; color: #ccc; line-height: 1.5; margin-bottom: 16px;
+    }
+
+    #order-submit-btn {
+      width: 100%; background: var(--accent); color: #fff;
       border: none; border-radius: 8px; padding: 14px;
       font-family: 'Bebas Neue', sans-serif;
       font-size: 20px; letter-spacing: 1px;
       cursor: pointer; margin-bottom: 10px;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      transition: background .2s;
+      transition: background .2s, opacity .2s;
     }
-    #whatsapp-btn:hover { background: #1da851; }
+    #order-submit-btn:hover:not(:disabled) { background: var(--accent-dk); }
+    #order-submit-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+    #order-success {
+      text-align: center; padding: 28px 16px;
+      font-size: 15px; line-height: 1.6; color: #ccc;
+    }
+    #order-success strong { display: block; font-size: 24px; margin-bottom: 10px; }
 
     #back-shopping-btn {
       width: 100%; background: none;
@@ -1102,10 +1140,41 @@
       </div>
     </div>
     <p id="price-disclaimer">⚠️ El precio final puede estar sujeto a cambios por parte del proveedor.</p>
-    <button id="whatsapp-btn" onclick="confirmWhatsapp()">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      <span data-i18n="confirm_whatsapp">CONFIRMAR POR WHATSAPP</span>
-    </button>
+
+    <form id="order-form" onsubmit="submitOrderForm(event)">
+      <input type="hidden" name="_subject" value="Nuevo pedido PedidoCamis" />
+      <input type="hidden" name="pedido" id="form-pedido" />
+      <input type="hidden" name="total"  id="form-total" />
+
+      <div class="form-group">
+        <label for="form-nombre">Nombre completo *</label>
+        <input type="text" id="form-nombre" name="nombre" required
+               placeholder="Tu nombre completo" autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label for="form-contacto">Teléfono o contacto *</label>
+        <input type="text" id="form-contacto" name="contacto" required
+               placeholder="Teléfono, Instagram, email…" autocomplete="tel" />
+      </div>
+      <div class="form-group">
+        <label for="form-notas">Notas adicionales</label>
+        <textarea id="form-notas" name="notas" rows="3"
+                  placeholder="Dudas, preferencias de envío, talla alternativa…"></textarea>
+      </div>
+
+      <div id="photo-notice">
+        📸 Adjunta la foto de tu equipación al responder el email de confirmación que recibirás
+      </div>
+
+      <button type="submit" id="order-submit-btn">ENVIAR PEDIDO</button>
+    </form>
+
+    <div id="order-success" style="display:none">
+      <strong>✅ Pedido enviado</strong>
+      Recibirás un email de confirmación en breve.<br>
+      Recuerda adjuntar la foto de tu equipación al responder.
+    </div>
+
     <button id="back-shopping-btn" onclick="closeCheckout()">
       <span data-i18n="back_shopping">← Seguir comprando</span>
     </button>
@@ -1116,7 +1185,6 @@
 <footer id="footer">
   <div id="footer-logo">PEDIDO<span>CAMIS</span></div>
   <div class="footer-links">
-    <a href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a>
     <span>Email: próximamente</span>
     <span>© <span id="footer-year"></span> PedidoCamis</span>
   </div>
@@ -1131,7 +1199,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════════════════════════════════
-const WHATSAPP_NUMBER = '34648493470';
 let socioMode = false; // true cuando el código SOCIO10 está activo
 // Detecta "Player Version", "player version", o "player" como palabra independiente
 const PLAYER_RE = /\bplayer\b/i;
@@ -1171,10 +1238,6 @@ const T = {
     finish_order: 'FINALIZAR PEDIDO',
     cart_empty: 'Tu carrito está vacío',
     order_summary: 'RESUMEN DEL PEDIDO',
-    send_exactly: 'Envía exactamente',
-    to_this_number: 'a este número',
-    payment_note: 'Una vez realizado el pago, envíanos el comprobante por WhatsApp con el detalle de tu pedido.',
-    confirm_whatsapp: 'CONFIRMAR POR WHATSAPP',
     back_shopping: '← Seguir comprando',
     select_size: 'Selecciona una talla',
     added_cart: '¡Añadido al carrito!',
@@ -1238,10 +1301,6 @@ const T = {
     finish_order: 'CHECKOUT',
     cart_empty: 'Your cart is empty',
     order_summary: 'ORDER SUMMARY',
-    send_exactly: 'Send exactly',
-    to_this_number: 'to this number',
-    payment_note: 'Once payment is made, send us the receipt via WhatsApp with your order details.',
-    confirm_whatsapp: 'CONFIRM VIA WHATSAPP',
     back_shopping: '← Continue shopping',
     select_size: 'Select a size',
     added_cart: 'Added to cart!',
@@ -2510,6 +2569,35 @@ function openCheckout() {
   }
 
   updateCheckoutTotals();
+
+  // Rellenar campos ocultos del formulario con el resumen del pedido
+  let pedidoStr = '';
+  for (const item of cart) {
+    const dorsal = item.customizations.find(c => c.type === 'dorsal');
+    const patch  = item.customizations.find(c => c.type === 'patch');
+    const priceStr = socioMode
+      ? `${fmtUsd(item.priceUsd)} → ${fmtEur(Math.round(item.priceUsd * EUR_RATE * 100) / 100)}`
+      : fmtEur(item.priceUsd);
+    pedidoStr += `${item.name} - Talla: ${item.size}`;
+    if (dorsal) pedidoStr += ` - Nombre: ${dorsal.name} #${dorsal.number}`;
+    if (patch)  pedidoStr += ` - Parche: ${patch.label}`;
+    pedidoStr += ` - Precio: ${priceStr}\n`;
+  }
+  document.getElementById('form-pedido').value = pedidoStr.trim();
+  document.getElementById('form-total').value  = fmtEur(cartTotalEur());
+
+  // Resetear formulario al abrir
+  const orderForm = document.getElementById('order-form');
+  orderForm.style.display  = 'block';
+  orderForm.reset();
+  // Restaurar campos ocultos tras reset
+  document.getElementById('form-pedido').value = pedidoStr.trim();
+  document.getElementById('form-total').value  = fmtEur(cartTotalEur());
+  document.getElementById('order-success').style.display   = 'none';
+  const submitBtn = document.getElementById('order-submit-btn');
+  submitBtn.disabled    = false;
+  submitBtn.textContent = 'ENVIAR PEDIDO';
+
   document.getElementById('checkout-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -2523,25 +2611,36 @@ function closeCheckoutOnOverlay(e) {
   if (e.target === document.getElementById('checkout-overlay')) closeCheckout();
 }
 
-function confirmWhatsapp() {
-  let msg = '';
-  for (const item of cart) {
-    const dorsal = item.customizations.find(c => c.type === 'dorsal');
-    const patch  = item.customizations.find(c => c.type === 'patch');
-    const priceStr = socioMode
-      ? `${fmtUsd(item.priceUsd)} → ${fmtEur(Math.round(item.priceUsd * EUR_RATE * 100) / 100)}`
-      : fmtEur(item.priceUsd);
-    msg += `• ${item.name} — ${priceStr}\n`;
-    msg += `  Talla: ${item.size}\n`;
-    if (dorsal) msg += `  Nombre + dorsal: ${dorsal.name} ${dorsal.number}\n`;
-    msg += `  Versión: ${getVersion(item.name)}\n`;
-    if (patch)  msg += `  Parche: ${patch.label}\n`;
-    msg += `\n`;
-  }
-  msg += `💶 TOTAL: ${fmtEur(cartTotalEur())}`;
+async function submitOrderForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('order-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
 
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank', 'noopener');
+  const form = document.getElementById('order-form');
+  const data = new FormData(form);
+
+  try {
+    const res = await fetch('https://formspree.io/f/xeedaolo', {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' },
+    });
+    if (res.ok) {
+      form.style.display = 'none';
+      document.getElementById('order-success').style.display = 'block';
+      cart = [];
+      saveCart();
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'ENVIAR PEDIDO';
+      showToast('Error al enviar. Inténtalo de nuevo.');
+    }
+  } catch {
+    btn.disabled = false;
+    btn.textContent = 'ENVIAR PEDIDO';
+    showToast('Error de conexión. Inténtalo de nuevo.');
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -2650,7 +2749,6 @@ function updateLangUI() {
   document.querySelector('[data-i18n="name_number"]').textContent = t().name_number;
   document.getElementById('input-name').placeholder = t().player_name;
   document.querySelector('[data-i18n="patch"]').textContent = t().patch;
-  document.querySelector('[data-i18n="confirm_whatsapp"]').textContent = t().confirm_whatsapp;
   document.querySelector('[data-i18n="back_shopping"]').textContent = t().back_shopping;
   document.getElementById('cart-total-val').textContent = t().total_fmt(cartTotalEur());
 }
