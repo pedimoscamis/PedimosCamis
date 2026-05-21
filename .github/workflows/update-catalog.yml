@@ -1,9 +1,10 @@
 name: Actualizar catálogo
 
 on:
-  schedule:
-    # Cada día a las 4:00 AM UTC
-    - cron: '0 4 * * *'
+  # schedule DESACTIVADO — el scraper sobreescribe las URLs de Cloudinary con null.
+  # Reactivar solo cuando el scraper preserve las imágenes existentes.
+  # schedule:
+  #   - cron: '0 4 * * *'
   workflow_dispatch:
     inputs:
       force_full:

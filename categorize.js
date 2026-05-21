@@ -256,6 +256,25 @@ function main() {
   const raw = JSON.parse(fs.readFileSync(RAW_FILE, 'utf-8'));
   console.log(`Productos a procesar: ${raw.length}`);
 
+  // ── Cargar catálogo existente para preservar URLs de Cloudinary ───────────
+  // Si un producto ya tiene imagen en Cloudinary, se conserva aunque el scraper
+  // traiga null o una URL de Yupoo distinta. Solo se sobreescribe si la URL
+  // existente NO es de Cloudinary (producto nuevo o sin imagen previa).
+  const existingImgById = new Map();
+  if (fs.existsSync(OUT_FILE)) {
+    try {
+      const existing = JSON.parse(fs.readFileSync(OUT_FILE, 'utf-8'));
+      for (const p of existing) {
+        if (p.id && p.img && p.img.includes('cloudinary.com')) {
+          existingImgById.set(String(p.id), p.img);
+        }
+      }
+      console.log(`URLs Cloudinary preservadas del catálogo anterior: ${existingImgById.size}`);
+    } catch (e) {
+      console.warn('No se pudo leer el catálogo anterior — se usarán las imágenes del scraper.');
+    }
+  }
+
   // Estadísticas de cobertura de yupooCategory
   const withYupooCategory = raw.filter(p => p.yupooCategory).length;
   console.log(`Con yupooCategory del scraper: ${withYupooCategory} (${Math.round(withYupooCategory / raw.length * 100)}%)`);
@@ -266,6 +285,9 @@ function main() {
     const priceUsd = getPrice(cats, p.name);
     const type = cats.includes('retro') ? 'retro' : 'normal';
 
+    // Imagen: prioridad → Cloudinary existente → lo que trajo el scraper → null
+    const img = existingImgById.get(String(p.id)) || p.img || null;
+
     return {
       id: p.id,
       nameEs: p.name,
@@ -275,7 +297,7 @@ function main() {
       priceUsd,
       yupooCategory: p.yupooCategory || null,   // conservar para trazabilidad
       yupooUrl: p.yupooUrl,
-      img: p.img || null,
+      img,
       photos: p.photos || 0,
       sizes,
     };
