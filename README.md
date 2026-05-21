@@ -169,7 +169,7 @@ El tipo de cambio EUR se ajusta en la constante `EUR_RATE` (por defecto `0.90`).
 Busca en `index.html` la línea:
 
 ```html
-<span>Email: próximamente</span>
+<span>Email: pedidocamis12@gmail.com</span>
 ```
 
 Reemplázala por:
@@ -182,8 +182,7 @@ Reemplázala por:
 
 ## Contacto
 
-- **WhatsApp:** [+34 648 49 34 70](https://wa.me/34648493470)
-- **Email:** próximamente
+- **Email:** pedidocamis12@gmail.com
 
 ---
 
