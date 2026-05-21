@@ -256,7 +256,15 @@
     #user-menu-active { display: none; }
     #socio-active-label {
       font-size: 13px; font-weight: 600; color: #4caf50;
+      margin-bottom: 4px;
+    }
+    #coupon-expiry-note {
+      font-size: 11px; color: #888; font-weight: 400;
       margin-bottom: 10px;
+    }
+    #co-coupon-expiry {
+      font-size: 11px; color: #888; text-align: right;
+      padding: 2px 0 6px;
     }
     #user-logout-btn {
       width: 100%; background: none;
@@ -1292,6 +1300,7 @@
         </div>
         <div id="user-menu-active">
           <div id="socio-active-label">✓ Modo socio activo — 10% dto.</div>
+          <div id="coupon-expiry-note" style="display:none"></div>
           <button id="user-logout-btn" onclick="deactivateSocio()">Cerrar sesión</button>
         </div>
       </div>
@@ -1456,6 +1465,7 @@
         <span id="co-discount-label">Descuento 33%</span>
         <span id="co-discount-val"></span>
       </div>
+      <div id="co-coupon-expiry" style="display:none"></div>
       <div class="checkout-row big">
         <span>TOTAL</span>
         <span id="co-total-eur"></span>
@@ -1553,11 +1563,23 @@ const DISCOUNT_CODES = new Set(['RAUL20','JUANCHI', 'GLEZ15', 'CHIGLESIA', 'TAYR
 
 // ── Cupones de descuento variable ────────────────────────────────────────────
 // Edita este objeto para añadir, cambiar o eliminar cupones promocionales.
-// Formato: "CÓDIGO": porcentaje_decimal  (0.15 = 15%, 0.20 = 20%, etc.)
+// Formato: "CÓDIGO": { descuento: 0.XX, caducidad: "AAAA-MM-DD" }
 const cuponesVariables = {
-  'ANITA15': 0.15,
-  //'VERANO20': 0.20,
+  'ANITA15':  { descuento: 0.15, caducidad: '2026-05-31' },
+  'MARA13': { descuento: 0.33, caducidad: '2026-05-31' },
 };
+
+/**
+ * Días enteros que quedan hasta que caduque el cupón (puede ser negativo si ya caducó).
+ * Retorna null si el código no existe o no tiene caducidad definida.
+ */
+function getCouponDaysLeft(code) {
+  const data = cuponesVariables[code];
+  if (!data || !data.caducidad) return null;
+  const expiry = new Date(data.caducidad + 'T23:59:59');
+  const now    = new Date();
+  return Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+}
 
 /** Aplica el 33,3% de descuento redondeando hacia arriba a unidades enteras. */
 function getDiscountedPrice(base) {
@@ -3416,13 +3438,26 @@ function updateCheckoutTotals() {
         totalDiscount += item.discountInfo.originalBase - discountedBase;
       }
     }
+    const expiryEl = document.getElementById('co-coupon-expiry');
     if (totalDiscount > 0) {
       const pctLabel = discountMode ? '33%' : `${Math.round(variableCouponPct * 100)}%`;
       discountRow.style.display = '';
       document.getElementById('co-discount-label').textContent = `Descuento ${pctLabel}`;
       document.getElementById('co-discount-val').textContent   = '-' + fmtEur(totalDiscount);
+      if (variableCouponMode && activeCouponCode) {
+        const days = getCouponDaysLeft(activeCouponCode);
+        if (days !== null && days > 0) {
+          expiryEl.textContent     = `⏳ Válido ${days} día${days === 1 ? '' : 's'} más`;
+          expiryEl.style.display   = 'block';
+        } else {
+          expiryEl.style.display   = 'none';
+        }
+      } else {
+        expiryEl.style.display = 'none';
+      }
     } else {
-      discountRow.style.display = 'none';
+      discountRow.style.display  = 'none';
+      expiryEl.style.display     = 'none';
     }
   } else {
     subtotalRow.style.display   = 'none';
@@ -3688,18 +3723,33 @@ document.addEventListener('click', (e) => {
 });
 
 function updateUserMenuState() {
-  const loginPanel  = document.getElementById('user-menu-login');
-  const activePanel = document.getElementById('user-menu-active');
-  const label       = document.getElementById('socio-active-label');
+  const loginPanel   = document.getElementById('user-menu-login');
+  const activePanel  = document.getElementById('user-menu-active');
+  const label        = document.getElementById('socio-active-label');
+  const expiryNote   = document.getElementById('coupon-expiry-note');
   if (socioMode || discountMode || variableCouponMode) {
     loginPanel.style.display  = 'none';
     activePanel.style.display = 'block';
     label.textContent = discountMode        ? '✓ Descuento 33% activo'
                       : variableCouponMode  ? `✓ Descuento ${Math.round(variableCouponPct*100)}% activo`
                       :                      '✓ Modo socio activo';
+    if (variableCouponMode && activeCouponCode) {
+      const days = getCouponDaysLeft(activeCouponCode);
+      if (days !== null) {
+        expiryNote.textContent = days > 0
+          ? `⏳ Caduca en ${days} día${days === 1 ? '' : 's'}`
+          : '⌛ Cupón caducado';
+        expiryNote.style.display = 'block';
+      } else {
+        expiryNote.style.display = 'none';
+      }
+    } else {
+      expiryNote.style.display = 'none';
+    }
   } else {
     loginPanel.style.display  = 'block';
     activePanel.style.display = 'none';
+    expiryNote.style.display  = 'none';
   }
 }
 
@@ -3718,7 +3768,8 @@ function submitUserCode() {
   const error = document.getElementById('user-code-error');
   const code  = input.value.trim().toUpperCase();
 
-  const variablePct = cuponesVariables[code];
+  const couponData  = cuponesVariables[code];
+  const variablePct = couponData ? couponData.descuento : undefined;
   if (!SOCIO_CODES.has(code) && !DISCOUNT_CODES.has(code) && variablePct === undefined) {
     error.textContent = 'Código no válido';
     error.style.display = 'block';
@@ -3727,7 +3778,19 @@ function submitUserCode() {
     return;
   }
 
-  // Código válido — activar el modo correspondiente
+  // Comprobar caducidad del cupón variable antes de activarlo
+  if (variablePct !== undefined) {
+    const daysLeft = getCouponDaysLeft(code);
+    if (daysLeft !== null && daysLeft < 0) {
+      error.textContent = '⌛ Cupón caducado';
+      error.style.display = 'block';
+      input.value = '';
+      input.focus();
+      return;
+    }
+  }
+
+  // Código válido y vigente — activar el modo correspondiente
   if (SOCIO_CODES.has(code)) {
     activeSocioCode    = code;
     socioMode          = true;
@@ -3741,7 +3804,6 @@ function submitUserCode() {
     socioMode          = false;  activeSocioCode    = null;
     variableCouponMode = false;  variableCouponPct  = 0;  activeCouponCode = null;
     // Código de descuento: NO sobrescribir localStorage
-    // (si había un socio base guardado, se mantiene intacto para la próxima recarga)
     showToast('✓ Descuento 33% activado');
   } else {
     // Cupón variable
@@ -3750,7 +3812,9 @@ function submitUserCode() {
     variableCouponPct  = variablePct;
     socioMode          = false;  activeSocioCode    = null;
     discountMode       = false;  activeDiscountCode = null;
-    showToast(`✓ Descuento ${Math.round(variablePct * 100)}% activado`);
+    const daysLeft = getCouponDaysLeft(code);
+    const toastExtra = daysLeft !== null ? ` · caduca en ${daysLeft}d` : '';
+    showToast(`✓ Descuento ${Math.round(variablePct * 100)}% activado${toastExtra}`);
   }
 
   document.getElementById('user-menu').classList.remove('open');
