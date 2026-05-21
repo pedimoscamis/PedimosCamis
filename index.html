@@ -1302,9 +1302,9 @@
   <div id="hero-pills">
     <span class="hero-pill" onclick="setCategory('mundial2026')">⚽ Mundial 2026</span>
     <span class="hero-pill" onclick="setCategory('nuevatemporada')">🆕 Nueva Temp</span>
+    <span class="hero-pill" onclick="setCategory('retro')">⏪ Retro</span>
     <span class="hero-pill" onclick="setCategory('laliga')">🇪🇸 LaLiga</span>
     <span class="hero-pill" onclick="setCategory('premier')">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier</span>
-    <span class="hero-pill" onclick="setCategory('retro')">⏪ Retro</span>
     <span class="hero-pill" onclick="setCategory('selecciones')">🌍 Selecciones</span>
     <span class="hero-pill" onclick="setCategory('nba')">🏀 NBA</span>
   </div>
@@ -1547,6 +1547,22 @@ function mundialPriority(p) {
     if (MUNDIAL_PRIORITY[i].some(k => n.includes(k))) return i;
   }
   return MUNDIAL_PRIORITY.length;
+}
+
+// Orden de relevancia por defecto en la categoría Retro
+const RETRO_PRIORITY_TEAMS = [
+  ['spain','españa','espana'],
+  ['real madrid'],
+  ['barcelona','barça','barca'],
+  ['atletico','atlético','atleti'],
+  ['france','francia'],
+];
+function retroPriority(p) {
+  const n = p.nameEn.toLowerCase();
+  for (let i = 0; i < RETRO_PRIORITY_TEAMS.length; i++) {
+    if (RETRO_PRIORITY_TEAMS[i].some(k => n.includes(k))) return i;
+  }
+  return RETRO_PRIORITY_TEAMS.length;
 }
 
 // Orden de categorías en el grid "Todos"
@@ -1847,7 +1863,7 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','mundial2026','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','retro','nba','streetwear','windbreaker','kids','europa','otros'];
+const CAT_ORDER = ['all','mundial2026','nuevatemporada','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','nba','streetwear','windbreaker','kids','europa','otros'];
 // Categorías que sólo se muestran en modo socio
 const SOCIO_ONLY_CATS = new Set(['streetwear']);
 
@@ -2280,9 +2296,10 @@ function buildFilterBar() {
     : allProducts.filter(p => (p.cats || []).includes(activeCat));
   if (catProducts.length === 0) { bar.style.display = 'none'; return; }
 
-  // En Mundial 2026 la vista es temática → ocultar Temporada y Ordenar
+  // En vistas temáticas (Mundial 2026 y Nueva Temp) → ocultar Temporada y Ordenar
   const ctrlRow = document.getElementById('filter-ctrl-row');
-  if (ctrlRow) ctrlRow.style.display = activeCat === 'mundial2026' ? 'none' : '';
+  const hideCtrl = activeCat === 'mundial2026' || activeCat === 'nuevatemporada';
+  if (ctrlRow) ctrlRow.style.display = hideCtrl ? 'none' : '';
 
   bar.style.display = '';
   pillRows.innerHTML = '';
@@ -2404,9 +2421,10 @@ function getFiltered() {
     return allProducts.filter(p => favorites.has(p.nameEn));
   }
 
-  // Vista Mundial 2026: mismo orden canónico que el carrusel de inicio
+  // Vista Mundial 2026: orden canónico + activeFilters aplicados encima
   if (activeCat === 'mundial2026') {
-    return getMundialItems(); // todos los productos, bloque prioritario primero
+    const base = getMundialItems();
+    return hasActiveFilters() ? base.filter(matchesFilter) : base;
   }
 
   let result = allProducts.filter(p => {
@@ -2424,9 +2442,23 @@ function getFiltered() {
     if (activeCat !== 'all' && hasActiveFilters() && !matchesFilter(p)) return false;
     return true;
   });
+
   if (activeCat === 'all') {
     // Vista "Todos": ordenar por categoría prioritaria
     result = result.slice().sort((a, b) => catPriority(a) - catPriority(b));
+  } else if (activeCat === 'retro') {
+    // Vista Retro: primero los más relevantes, luego por temporada
+    result = result.slice().sort((a, b) => {
+      const pa = retroPriority(a), pb = retroPriority(b);
+      if (pa !== pb) return pa - pb;
+      const sa = extractSeason(a.nameEn), sb = extractSeason(b.nameEn);
+      const ya = sa ? (seasonStartYear(sa) ?? 0) : null;
+      const yb = sb ? (seasonStartYear(sb) ?? 0) : null;
+      if (ya === null && yb === null) return 0;
+      if (ya === null) return 1;
+      if (yb === null) return -1;
+      return seasonSortDir === 'desc' ? yb - ya : ya - yb;
+    });
   } else {
     // Vista de categoría: ordenar por temporada según seasonSortDir
     result = result.slice().sort((a, b) => {
@@ -2447,50 +2479,61 @@ function getFiltered() {
 // MUNDIAL 2026 — filtro compartido (Home + Featured + getFiltered)
 // ═══════════════════════════════════════════════════════════════════════════
 
-// Versiones PROHIBIDAS en el bloque prioritario
-const MUNDIAL_EXCLUDE_RE = /entrenamiento|training|especial|special|edition|edición|niño|niños|kids|kid|baby|mujer|women|woman|ladies|portero|goalkeeper|player\s*version|authentic|long\s*sleeve|manga\s*larga/i;
+// Exclusiones base: kids, training, especial, mujer, portero, long sleeve (fuera siempre)
+const MUNDIAL_EXCL_BASE = /entrenamiento|training|especial|special|edition|edición|niño|niños|kids|kid|baby|mujer|women|woman|ladies|portero|goalkeeper|long\s*sleeve|manga\s*larga/i;
+// Exclusiones Fan: base + player/authentic (solo para los slots Home Fan y Away Fan)
+const MUNDIAL_EXCL_FAN  = /entrenamiento|training|especial|special|edition|edición|niño|niños|kids|kid|baby|mujer|women|woman|ladies|portero|goalkeeper|long\s*sleeve|manga\s*larga|\bplayer\b|authentic/i;
+
 const isMundialHome = n => /\bhome\b|\blocal\b/i.test(n);
 const isMundialAway = n => /\baway\b|\bvisitante\b/i.test(n);
 
 /**
  * Devuelve el array de productos Mundial 2026 en el orden canónico:
- * — Bloque prioritario: España(H+A), Brasil(H+A), Francia(H+A), Alemania(H+A), Portugal(H+A)
- *   Solo versiones Fan/Stadium estándar (sin Player, Authentic, Long Sleeve, Kids, Training…)
- * — Resto de selecciones mundialistas (sin restricción adicional), hasta maxExtra más
+ * — Por cada selección prioritaria (MUNDIAL_PRIORITY):
+ *     1. Home Fan (versión estándar)
+ *     2. Away Fan (versión estándar)
+ *     3. Player Version Home (versión de jugador local)
+ * — Resto de selecciones mundialistas (fan → player → resto)
+ * @param {number} maxExtra  máx. extras tras el bloque prioritario (Infinity = todos)
  */
 function getMundialItems(maxExtra = Infinity) {
-  // Base sin versiones prohibidas para el bloque prioritario
-  const mundialClean = allProducts.filter(p => isMundial2026(p) && !MUNDIAL_EXCLUDE_RE.test(p.nameEn));
-  const mundialAll   = allProducts.filter(p => isMundial2026(p));
+  const fanPool    = allProducts.filter(p => isMundial2026(p) && !MUNDIAL_EXCL_FAN.test(p.nameEn));
+  const playerPool = allProducts.filter(p => isMundial2026(p) && !MUNDIAL_EXCL_BASE.test(p.nameEn) && PLAYER_RE.test(p.nameEn));
+  const allMundial = allProducts.filter(p => isMundial2026(p));
 
   const picked = new Set();
   const items  = [];
 
   for (const keywords of MUNDIAL_PRIORITY) {
-    const team = mundialClean.filter(p => {
-      const n = p.nameEn.toLowerCase();
-      return keywords.some(k => n.includes(k));
-    });
-    let addedHome = false, addedAway = false;
-    // 1. Home
-    for (const p of team) {
+    const matchTeam  = p => keywords.some(k => p.nameEn.toLowerCase().includes(k));
+    const teamFan    = fanPool.filter(matchTeam);
+    const teamPlayer = playerPool.filter(matchTeam);
+
+    let addedHome = false, addedAway = false, addedPlayerHome = false;
+
+    // 1. Home Fan
+    for (const p of teamFan) {
       if (!addedHome && isMundialHome(p.nameEn)) { items.push(p); picked.add(p.id); addedHome = true; break; }
     }
-    // 2. Away
-    for (const p of team) {
+    // 2. Away Fan
+    for (const p of teamFan) {
       if (!addedAway && !picked.has(p.id) && isMundialAway(p.nameEn)) { items.push(p); picked.add(p.id); addedAway = true; break; }
     }
-    // 3. Si equipo tiene productos pero ninguno home/away etiquetado, el primero disponible
-    if (!addedHome && !addedAway) {
-      for (const p of team) {
+    // 3. Player Version Home
+    for (const p of teamPlayer) {
+      if (!addedPlayerHome && !picked.has(p.id) && isMundialHome(p.nameEn)) { items.push(p); picked.add(p.id); addedPlayerHome = true; break; }
+    }
+    // Fallback: equipo con productos pero sin home/away reconocidos
+    if (!addedHome && !addedAway && !addedPlayerHome) {
+      for (const p of [...teamFan, ...teamPlayer]) {
         if (!picked.has(p.id)) { items.push(p); picked.add(p.id); break; }
       }
     }
   }
 
-  // Resto (sin orden estricto): primero los clean, luego los restantes
+  // Resto (fan → player → resto mundial)
   let extra = 0;
-  for (const p of [...mundialClean, ...mundialAll]) {
+  for (const p of [...fanPool, ...playerPool, ...allMundial]) {
     if (extra >= maxExtra) break;
     if (!picked.has(p.id)) { items.push(p); picked.add(p.id); extra++; }
   }
