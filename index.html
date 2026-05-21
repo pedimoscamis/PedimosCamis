@@ -1462,11 +1462,13 @@
         <span id="co-conversion-val"></span>
       </div>
       <div class="checkout-row discount" id="co-discount-row" style="display:none">
-        <span id="co-discount-label">Descuento 33%</span>
+        <div>
+          <span id="co-discount-label">Descuento 33%</span>
+          <div id="co-coupon-expiry" style="display:none"></div>
+        </div>
         <span id="co-discount-val"></span>
       </div>
-      <div id="co-coupon-expiry" style="display:none"></div>
-      <div class="checkout-row big">
+      <div class="checkout-row big" id="co-total-row">
         <span>TOTAL</span>
         <span id="co-total-eur"></span>
       </div>
@@ -3417,15 +3419,19 @@ function updateCheckoutTotals() {
   const subtotalRow   = document.getElementById('co-subtotal-row');
   const conversionRow = document.getElementById('co-conversion-row');
   const discountRow   = document.getElementById('co-discount-row');
+  const totalRow      = document.getElementById('co-total-row');
 
   if (socioMode) {
     subtotalRow.style.display   = '';
     conversionRow.style.display = '';
     discountRow.style.display   = 'none';
+    document.getElementById('co-coupon-expiry').style.display = 'none';
     document.getElementById('co-subtotal-label').textContent   = 'Total ($)';
     document.getElementById('co-subtotal').textContent         = fmtUsd(raw);
     document.getElementById('co-conversion-label').textContent = `× ${EUR_RATE} =`;
     document.getElementById('co-conversion-val').textContent   = fmtEur(totalEur);
+    totalRow.style.borderTop = '';
+    totalRow.style.marginTop = '';
   } else if (discountMode || variableCouponMode) {
     subtotalRow.style.display   = 'none';
     conversionRow.style.display = 'none';
@@ -3455,14 +3461,21 @@ function updateCheckoutTotals() {
       } else {
         expiryEl.style.display = 'none';
       }
+      totalRow.style.borderTop = '';
+      totalRow.style.marginTop = '';
     } else {
       discountRow.style.display  = 'none';
       expiryEl.style.display     = 'none';
+      totalRow.style.borderTop   = 'none';
+      totalRow.style.marginTop   = '0';
     }
   } else {
     subtotalRow.style.display   = 'none';
     conversionRow.style.display = 'none';
     discountRow.style.display   = 'none';
+    document.getElementById('co-coupon-expiry').style.display = 'none';
+    totalRow.style.borderTop    = 'none';
+    totalRow.style.marginTop    = '0';
   }
 
   document.getElementById('co-total-eur').textContent = fmtEur(totalEur);
