@@ -2533,6 +2533,7 @@ const isMundialAway = n => /\baway\b|\bvisitante\b/i.test(n);
  *     1. Home Fan (versión estándar)
  *     2. Away Fan (versión estándar)
  *     3. Player Version Home (versión de jugador local)
+ *     4. Retro Home de esa misma selección (cualquier temporada histórica)
  * — Resto de selecciones mundialistas (fan → player → resto)
  * @param {number} maxExtra  máx. extras tras el bloque prioritario (Infinity = todos)
  */
@@ -2541,15 +2542,24 @@ function getMundialItems(maxExtra = Infinity) {
   const playerPool = allProducts.filter(p => isMundial2026(p) && !MUNDIAL_EXCL_BASE.test(p.nameEn) && PLAYER_RE.test(p.nameEn));
   const allMundial = allProducts.filter(p => isMundial2026(p));
 
+  // Pool retro de selecciones: camisetas históricas de selecciones nacionales
+  // (no son "mundial2026" — son de temporadas anteriores a 2020)
+  const retroSelPool = allProducts.filter(p =>
+    (p.cats || []).includes('selecciones') &&
+    (p.cats || []).includes('retro') &&
+    !MUNDIAL_CLUBS_RE.test(p.nameEn)
+  );
+
   const picked = new Set();
   const items  = [];
 
   for (const keywords of MUNDIAL_PRIORITY) {
-    const matchTeam  = p => keywords.some(k => p.nameEn.toLowerCase().includes(k));
-    const teamFan    = fanPool.filter(matchTeam);
-    const teamPlayer = playerPool.filter(matchTeam);
+    const matchTeam     = p => keywords.some(k => p.nameEn.toLowerCase().includes(k));
+    const teamFan       = fanPool.filter(matchTeam);
+    const teamPlayer    = playerPool.filter(matchTeam);
+    const teamRetro     = retroSelPool.filter(matchTeam);
 
-    let addedHome = false, addedAway = false, addedPlayerHome = false;
+    let addedHome = false, addedAway = false, addedPlayerHome = false, addedRetro = false;
 
     // 1. Home Fan
     for (const p of teamFan) {
@@ -2563,8 +2573,18 @@ function getMundialItems(maxExtra = Infinity) {
     for (const p of teamPlayer) {
       if (!addedPlayerHome && !picked.has(p.id) && isMundialHome(p.nameEn)) { items.push(p); picked.add(p.id); addedPlayerHome = true; break; }
     }
-    // Fallback: equipo con productos pero sin home/away reconocidos
-    if (!addedHome && !addedAway && !addedPlayerHome) {
+    // 4. Retro Home (prioridad: home; fallback: cualquier retro de esa selección)
+    for (const p of teamRetro) {
+      if (!addedRetro && !picked.has(p.id) && isMundialHome(p.nameEn)) { items.push(p); picked.add(p.id); addedRetro = true; break; }
+    }
+    if (!addedRetro) {
+      for (const p of teamRetro) {
+        if (!picked.has(p.id)) { items.push(p); picked.add(p.id); addedRetro = true; break; }
+      }
+    }
+
+    // Fallback global: equipo con productos pero ningún slot rellenado
+    if (!addedHome && !addedAway && !addedPlayerHome && !addedRetro) {
       for (const p of [...teamFan, ...teamPlayer]) {
         if (!picked.has(p.id)) { items.push(p); picked.add(p.id); break; }
       }
@@ -2604,9 +2624,10 @@ function renderFeatured() {
 
   scroll.innerHTML = '';
   for (const p of items) {
-    const price = getBasePrice(p);
+    const price  = getBasePrice(p);
     const { main: priceMain } = t().price_fmt(price);
-    const card  = document.createElement('div');
+    const isPlayer = PLAYER_RE.test(p.nameEn);
+    const card   = document.createElement('div');
     card.className = 'featured-card';
     card.onclick   = () => openModal(p);
     card.innerHTML = `
@@ -2617,7 +2638,9 @@ function renderFeatured() {
       </div>
       <div class="featured-card-body">
         <div class="featured-card-name">${escHtml(p.nameEn)}</div>
-        <div class="featured-card-price">${priceMain}</div>
+        <div class="featured-card-price">
+          ${priceMain}${isPlayer ? '<span class="badge-player" style="margin-left:5px">PLAYER</span>' : ''}
+        </div>
       </div>`;
     scroll.appendChild(card);
   }
