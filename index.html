@@ -314,13 +314,13 @@
       background: var(--accent); border-color: var(--accent);
       color: #fff; font-weight: 700;
     }
-    /* Nueva temporada — siempre destacada en rojo */
-    .cat-btn.cat-nuevatemporada {
-      border-color: var(--accent); color: var(--accent); font-weight: 700;
+    /* Mundial 2026 — destacado en dorado (primera posición) */
+    .cat-btn.cat-mundial2026 {
+      border-color: #c9a227; color: #c9a227; font-weight: 700;
     }
-    .cat-btn.cat-nuevatemporada:hover,
-    .cat-btn.cat-nuevatemporada.active {
-      background: var(--accent); border-color: var(--accent); color: #fff;
+    .cat-btn.cat-mundial2026:hover,
+    .cat-btn.cat-mundial2026.active {
+      background: #c9a227; border-color: #c9a227; color: #111;
     }
 
     /* ─── Filter Bar ───────────────────────────────────────── */
@@ -456,9 +456,9 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23e8173c'/%3E%3C/svg%3E");
     }
 
-    /* ─── Hero ──────────────────────────────────────────────── */
+    /* ─── Hero — Mundial 2026 ───────────────────────────────── */
     #hero {
-      background: linear-gradient(135deg, #0d0000 0%, #1a0008 30%, #0a0a0a 70%, #000 100%);
+      background: linear-gradient(135deg, #000b20 0%, #001840 35%, #080c18 70%, #000 100%);
       padding: 60px 24px 54px;
       text-align: center;
       position: relative; overflow: hidden;
@@ -466,7 +466,7 @@
     #hero::before {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(232,23,60,0.18) 0%, transparent 65%);
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,162,39,0.18) 0%, transparent 65%);
     }
     #hero-title {
       font-family: 'Bebas Neue', sans-serif;
@@ -475,7 +475,7 @@
       letter-spacing: 3px;
       position: relative;
     }
-    #hero-title span { color: var(--accent); display: block; }
+    #hero-title span { color: #c9a227; display: block; }  /* dorado Mundial */
     #hero-sub {
       color: var(--muted); font-size: 15px;
       margin: 13px auto 21px; max-width: 460px;
@@ -483,7 +483,7 @@
     }
     #hero-cta {
       display: inline-block;
-      background: var(--accent); color: #fff;
+      background: #c9a227; color: #111;           /* botón dorado */
       padding: 10px 30px; border-radius: 8px;
       font-family: 'Bebas Neue', sans-serif;
       font-size: 18px; letter-spacing: 1px;
@@ -492,7 +492,7 @@
       transition: background .2s, transform .15s;
       position: relative;
     }
-    #hero-cta:hover { background: var(--accent-dk); transform: translateY(-2px); }
+    #hero-cta:hover { background: #a88520; transform: translateY(-2px); }
 
     #hero-pills {
       display: flex; flex-wrap: wrap; justify-content: center;
@@ -1282,8 +1282,8 @@
 
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
-  <h1 id="hero-title">NUEVA<span>TEMPORADA</span></h1>
-  <p id="hero-sub">Las mejores camisetas de fútbol y NBA. Calidad premium, precios imbatibles.</p>
+  <h1 id="hero-title">PREPÁRATE PARA EL<span>MUNDIAL 2026</span></h1>
+  <p id="hero-sub">Calidad premium, precios imbatibles.</p>
   <button id="hero-cta" onclick="scrollToGrid()">VER CATÁLOGO</button>
   <div id="hero-pills">
     <span class="hero-pill" onclick="setCategory('laliga')">🇪🇸 LaLiga</span>
@@ -1295,15 +1295,15 @@
   </div>
 </section>
 
-<!-- ─── Featured: Nueva Temporada ─────────────────────────────────────── -->
+<!-- ─── Featured: Mundial 2026 ─────────────────────────────────────── -->
 <section id="featured-section">
   <div id="featured-inner">
     <div id="featured-header">
       <div id="featured-title-wrap">
-        <span id="featured-title">NUEVA TEMPORADA 26/27</span>
-        <span class="badge-new">NUEVO</span>
+        <span id="featured-title">MUNDIAL 2026</span>
+        <span class="badge-new" style="background:#c9a227;color:#111">⚽ 2026</span>
       </div>
-      <button id="featured-see-all" onclick="setCategory('nuevatemporada')">Ver todas →</button>
+      <button id="featured-see-all" onclick="setCategory('mundial2026')">Ver todas →</button>
     </div>
     <div id="featured-scroll"></div>
   </div>
@@ -1498,6 +1498,28 @@ const PLAYER_RE = /\bplayer\b/i;
 const WOMEN_RE  = /\bwomen\b|\bwoman\b|\bwomen's\b|\bfemenin|\bfemale\b/i;
 const PATCH_CATS = new Set(['laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro','europa','nuevatemporada']);
 
+// ── Mundial 2026 ─────────────────────────────────────────────────────────────
+// Producto es Mundial 2026 si es selección + tiene 2026 / 26/27 en el nombre
+const MUNDIAL_2026_RE = /2026|26\/27|2026\/27|2026-27/i;
+function isMundial2026(p) {
+  return (p.cats || []).includes('selecciones') && MUNDIAL_2026_RE.test(p.nameEn);
+}
+// Prioridad de selecciones en el carrusel/grid de Mundial
+const MUNDIAL_PRIORITY = [
+  ['spain','españa','espana'],
+  ['brasil','brazil'],
+  ['france','francia'],
+  ['germany','deutschland','alemania'],
+  ['portugal'],
+];
+function mundialPriority(p) {
+  const n = p.nameEn.toLowerCase();
+  for (let i = 0; i < MUNDIAL_PRIORITY.length; i++) {
+    if (MUNDIAL_PRIORITY[i].some(k => n.includes(k))) return i;
+  }
+  return MUNDIAL_PRIORITY.length;
+}
+
 // Orden de categorías en el grid "Todos"
 const GRID_CAT_ORDER = ['nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones'];
 function catPriority(p) {
@@ -1562,7 +1584,7 @@ const T = {
       return `${eur}€`;
     },
     cats: {
-      all: 'Todos', nuevatemporada: '🆕 Nueva Temp. 26/27',
+      all: 'Todos', mundial2026: '⚽ Mundial 2026', nuevatemporada: '🆕 Nueva Temp. 26/27',
       laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
       seriea: '🇮🇹 Serie A', bundesliga: '🇩🇪 Bundesliga', ligue1: '🇫🇷 Ligue 1',
       selecciones: '🌍 Selecciones', sudamerica: '🌎 Sudamérica',
@@ -1572,6 +1594,7 @@ const T = {
       favoritos: '❤️ Favoritos',
     },
     cat_labels: {
+      mundial2026: 'Mundial 2026',
       nuevatemporada: 'Nueva Temporada 26/27',
       laliga: 'LaLiga', premier: 'Premier League', seriea: 'Serie A',
       bundesliga: 'Bundesliga', ligue1: 'Ligue 1', selecciones: 'Selecciones',
@@ -1628,7 +1651,7 @@ const T = {
       return `${eur}€`;
     },
     cats: {
-      all: 'All', nuevatemporada: '🆕 New Season 26/27',
+      all: 'All', mundial2026: '⚽ World Cup 2026', nuevatemporada: '🆕 New Season 26/27',
       laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
       seriea: '🇮🇹 Serie A', bundesliga: '🇩🇪 Bundesliga', ligue1: '🇫🇷 Ligue 1',
       selecciones: '🌍 National Teams', sudamerica: '🌎 South America',
@@ -1638,6 +1661,7 @@ const T = {
       favoritos: '❤️ Favourites',
     },
     cat_labels: {
+      mundial2026: 'World Cup 2026',
       nuevatemporada: 'New Season 26/27',
       laliga: 'LaLiga', premier: 'Premier League', seriea: 'Serie A',
       bundesliga: 'Bundesliga', ligue1: 'Ligue 1', selecciones: 'National Teams',
@@ -1794,7 +1818,7 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','retro','nba','streetwear','windbreaker','kids','europa','otros'];
+const CAT_ORDER = ['all','mundial2026','nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','retro','nba','streetwear','windbreaker','kids','europa','otros'];
 // Categorías que sólo se muestran en modo socio
 const SOCIO_ONLY_CATS = new Set(['streetwear']);
 
@@ -1806,7 +1830,7 @@ function buildCatBar() {
     if (!socioMode && SOCIO_ONLY_CATS.has(cat)) continue;
     const btn = document.createElement('button');
     btn.className = 'cat-btn'
-      + (cat === 'nuevatemporada' ? ' cat-nuevatemporada' : '')
+      + (cat === 'mundial2026' ? ' cat-mundial2026' : '')
       + (cat === activeCat ? ' active' : '');
     btn.textContent = t().cats[cat];
     btn.dataset.cat = cat;
@@ -2216,7 +2240,7 @@ function buildFilterBar() {
   const pillRows = document.getElementById('filter-pill-rows'); // pills scrollables
   const selects  = document.getElementById('filter-selects');   // selects compactos
 
-  if (activeCat === 'all' || activeCat === 'favoritos' || allProducts.length === 0) {
+  if (activeCat === 'all' || activeCat === 'favoritos' || activeCat === 'mundial2026' || allProducts.length === 0) {
     bar.style.display = 'none';
     return;
   }
@@ -2343,6 +2367,13 @@ function getFiltered() {
     return allProducts.filter(p => favorites.has(p.nameEn));
   }
 
+  // Vista Mundial 2026: selecciones con temporada 2026, ordenadas por prioridad
+  if (activeCat === 'mundial2026') {
+    return allProducts
+      .filter(isMundial2026)
+      .sort((a, b) => mundialPriority(a) - mundialPriority(b));
+  }
+
   let result = allProducts.filter(p => {
     if (activeCat !== 'all' && !(p.cats || []).includes(activeCat)) return false;
     // En 'otros', usuarios no-socio sólo ven camisetas de fútbol (sin streetwear/windbreaker/NBA)
@@ -2378,7 +2409,7 @@ function getFiltered() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// FEATURED SECTION — Nueva Temporada
+// FEATURED SECTION — Mundial 2026
 // ═══════════════════════════════════════════════════════════════════════════
 
 function renderFeatured() {
@@ -2391,9 +2422,11 @@ function renderFeatured() {
     return;
   }
 
+  // Selecciones 2026, ordenadas: España ×2, Brasil, Francia, Alemania, Portugal, resto
   const items = allProducts
-    .filter(p => (p.cats || []).includes('nuevatemporada'))
-    .slice(0, 8);
+    .filter(isMundial2026)
+    .sort((a, b) => mundialPriority(a) - mundialPriority(b))
+    .slice(0, 10);
 
   if (items.length === 0) {
     section.style.display = 'none';
