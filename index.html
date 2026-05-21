@@ -95,7 +95,7 @@
 
       /* Nivel 2: Temporada + Ordenar en la misma fila */
       #filter-ctrl-row {
-        display: flex !important;
+        display: flex;
         flex-direction: row !important;
         justify-content: flex-start !important;
         align-items: center !important;
@@ -1227,7 +1227,8 @@
       #main { padding: 20px 14px 60px; }
       #hero { padding: 42px 14px 39px; }
       #hero-title {
-        -webkit-text-stroke: 0.6px currentColor;
+        font-weight: 900;
+        -webkit-text-stroke: 1px currentColor;
         paint-order: stroke fill;
       }
       #featured-inner { padding: 0 14px; }
