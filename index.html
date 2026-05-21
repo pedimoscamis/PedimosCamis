@@ -1541,11 +1541,11 @@ let discountMode  = false;        // true cuando un código de descuento 33% est
 let activeDiscountCode = null;    // código de descuento que inició sesión
 
 // Códigos SOCIO (precios en $, modo administrador)
-const SOCIO_CODES    = new Set(['GIL13','BOSS7','TAYRON18','JORGE71','MALYZ15',
+const SOCIO_CODES    = new Set(['GIL13','BOSS7','JORGE71','MALYZ15',
 'SOTO22','RONCOLA10','ADMIN8371','MARTINHA19','YECASE20', 'JOJELROJEL']);
 
 // Códigos de descuento 33% (precios normales con -33%, vista de usuario normal)
-const DISCOUNT_CODES = new Set(['RAUL20','JUANCHI', 'GLEZ15', 'CHIGLESIA']);
+const DISCOUNT_CODES = new Set(['RAUL20','JUANCHI', 'GLEZ15', 'CHIGLESIA', 'TAYRON18', 'CABEZON156']);
 
 /** Aplica el 33,3% de descuento redondeando hacia arriba a unidades enteras. */
 function getDiscountedPrice(base) {
