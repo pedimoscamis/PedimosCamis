@@ -458,7 +458,18 @@
 
     /* ─── Hero — Mundial 2026 ───────────────────────────────── */
     #hero {
-      background: linear-gradient(135deg, #000b20 0%, #001840 35%, #080c18 70%, #000 100%);
+      background: linear-gradient(
+        135deg,
+        #D32F2F 0%,
+        #FB8C00 14%,
+        #FDD835 28%,
+        #C9A635 36%,
+        #43A047 50%,
+        #4FC3F7 62%,
+        #1976D2 74%,
+        #8E24AA 87%,
+        #D32F2F 100%
+      );
       padding: 60px 24px 54px;
       text-align: center;
       position: relative; overflow: hidden;
@@ -466,24 +477,27 @@
     #hero::before {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(201,162,39,0.18) 0%, transparent 65%);
+      background: rgba(0,0,0,0.48);
     }
     #hero-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(39px, 6.75vw, 72px);
       line-height: 1;
       letter-spacing: 3px;
+      color: #fff;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.7), 0 0 3px rgba(0,0,0,0.9);
       position: relative;
     }
-    #hero-title span { color: #c9a227; display: block; }  /* dorado Mundial */
+    #hero-title span { color: #FDD835; display: block; text-shadow: 0 2px 14px rgba(0,0,0,0.8); }
     #hero-sub {
-      color: var(--muted); font-size: 15px;
+      color: rgba(255,255,255,0.88); font-size: 15px;
       margin: 13px auto 21px; max-width: 460px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.7);
       position: relative;
     }
     #hero-cta {
       display: inline-block;
-      background: #c9a227; color: #111;           /* botón dorado */
+      background: #C9A635; color: #111;
       padding: 10px 30px; border-radius: 8px;
       font-family: 'Bebas Neue', sans-serif;
       font-size: 18px; letter-spacing: 1px;
@@ -1286,12 +1300,13 @@
   <p id="hero-sub">Calidad premium, precios imbatibles.</p>
   <button id="hero-cta" onclick="scrollToGrid()">VER CATÁLOGO</button>
   <div id="hero-pills">
+    <span class="hero-pill" onclick="setCategory('mundial2026')">⚽ Mundial 2026</span>
+    <span class="hero-pill" onclick="setCategory('nuevatemporada')">🆕 Nueva Temp</span>
     <span class="hero-pill" onclick="setCategory('laliga')">🇪🇸 LaLiga</span>
     <span class="hero-pill" onclick="setCategory('premier')">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier</span>
-    <span class="hero-pill" onclick="setCategory('nba')">🏀 NBA</span>
-    <span class="hero-pill" onclick="setCategory('selecciones')">🌍 Selecciones</span>
     <span class="hero-pill" onclick="setCategory('retro')">⏪ Retro</span>
-    <span class="hero-pill" onclick="setCategory('seriea')">🇮🇹 Serie A</span>
+    <span class="hero-pill" onclick="setCategory('selecciones')">🌍 Selecciones</span>
+    <span class="hero-pill" onclick="setCategory('nba')">🏀 NBA</span>
   </div>
 </section>
 
@@ -2422,11 +2437,45 @@ function renderFeatured() {
     return;
   }
 
-  // Selecciones 2026, ordenadas: España ×2, Brasil, Francia, Alemania, Portugal, resto
-  const items = allProducts
-    .filter(isMundial2026)
-    .sort((a, b) => mundialPriority(a) - mundialPriority(b))
-    .slice(0, 10);
+  // Selecciones 2026 — excluir entrenamiento/especiales/kids/mujer
+  const MUNDAL_EXCLUDE_RE = /entrenamiento|training|especial|special|niño|niños|kids|kid|mujer|women|woman|portero|goalkeeper/i;
+  const isHomeKit  = n => /\bhome\b|\blocal\b/i.test(n);
+  const isAwayKit  = n => /\baway\b|\bvisitante\b/i.test(n);
+
+  const mundial = allProducts.filter(p => isMundial2026(p) && !MUNDAL_EXCLUDE_RE.test(p.nameEn));
+
+  // Para cada equipo prioritario: 1 home + 1 away máx
+  const picked = new Set();
+  const items = [];
+
+  for (let pi = 0; pi < MUNDIAL_PRIORITY.length; pi++) {
+    const keywords = MUNDIAL_PRIORITY[pi];
+    const teamProducts = mundial.filter(p => {
+      const n = p.nameEn.toLowerCase();
+      return keywords.some(k => n.includes(k));
+    });
+    let addedHome = false, addedAway = false;
+    // Home primero
+    for (const p of teamProducts) {
+      if (!addedHome && isHomeKit(p.nameEn)) { items.push(p); picked.add(p.id); addedHome = true; }
+    }
+    // Away después
+    for (const p of teamProducts) {
+      if (!addedAway && !picked.has(p.id) && isAwayKit(p.nameEn)) { items.push(p); picked.add(p.id); addedAway = true; }
+    }
+    // Si no hay home ni away explícitos, añadir el primero disponible
+    if (!addedHome && !addedAway) {
+      for (const p of teamProducts) {
+        if (!picked.has(p.id)) { items.push(p); picked.add(p.id); break; }
+      }
+    }
+  }
+
+  // Resto de selecciones mundialistas (sin prioridad estricta, max 10 total)
+  for (const p of mundial) {
+    if (items.length >= 12) break;
+    if (!picked.has(p.id)) { items.push(p); picked.add(p.id); }
+  }
 
   if (items.length === 0) {
     section.style.display = 'none';
