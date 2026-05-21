@@ -76,8 +76,14 @@
         gap: 4px;
       }
 
-      /* Filter-bar: overflow visible → dropdowns caen libremente sobre el grid */
-      #filter-bar { overflow: visible !important; }
+      /* Filter-bar: sin límite de altura, padding generoso, margen inferior para separar del grid */
+      #filter-bar {
+        overflow: visible !important;
+        max-height: none !important;
+        height: auto !important;
+        padding-bottom: 15px !important;
+        margin-bottom: 15px !important;
+      }
 
       /* Pills: fila independiente con scroll horizontal */
       #filter-pill-rows {
@@ -352,9 +358,10 @@
     #filter-pill-rows {
       width: 100%;
     }
-    /* Fila inferior: selectores (Equipo, Temporada) + Ordenar */
+    /* Fila inferior: selectores (Equipo, Temporada) + Ordenar — PC: horizontal */
     #filter-ctrl-row {
       display: flex;
+      flex-direction: row;
       align-items: center;
       gap: 16px;
       flex-wrap: wrap;
