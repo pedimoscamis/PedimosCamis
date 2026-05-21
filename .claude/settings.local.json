@@ -5,7 +5,8 @@
       "Bash(node categorize.js)",
       "Bash(node scraper.js)",
       "Bash(npm install *)",
-      "Bash(node apply-cloudinary.js)"
+      "Bash(node apply-cloudinary.js)",
+      "Bash(git push *)"
     ]
   }
 }
