@@ -1466,12 +1466,22 @@
                placeholder="Tu nombre completo" autocomplete="name" />
       </div>
       <div class="form-group">
+        <label for="form-correo">Correo electrónico *</label>
+        <input type="email" id="form-correo" name="correo" required
+               placeholder="tu@email.com" autocomplete="email" />
+      </div>
+      <div class="form-group">
         <label for="form-contacto">Teléfono *</label>
         <input type="text" id="form-contacto" name="contacto" required
                placeholder="Número de teléfono" autocomplete="tel" inputmode="numeric" />
         <div class="form-field-error" id="form-contacto-error">
           Introduce un número de teléfono válido (mínimo 9 dígitos)
         </div>
+      </div>
+      <div class="form-group">
+        <label for="form-direccion">Dirección de envío <span style="font-weight:400;color:var(--muted)">(opcional)</span></label>
+        <input type="text" id="form-direccion" name="direccion"
+               placeholder="Calle, número, ciudad… (si procede)" autocomplete="street-address" />
       </div>
       <div class="form-group">
         <label for="form-notas">Notas adicionales</label>
@@ -2842,6 +2852,9 @@ function applyDiscount(price) { return price; }
 const EUR_RATE = 0.90; // conversión USD → EUR en modo socio
 const USD_RATE = 0.85; // conversión EUR → USD  en modo normal EN
 
+// ── Webhook Google Sheets ─────────────────────────────────────────────────
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwRZxqgRX2hyWGffIizKuKNiYx03f4YanLLLN-k-iOVth-2vG-0ne8bMMysnn-hjKUi/exec';
+
 // ── Precios modo NORMAL (en €) ─────────────────────────────────────────────
 const NORMAL_PRICES = {
   windbreaker: 50,
@@ -3478,6 +3491,46 @@ function closeCheckoutOnOverlay(e) {
   if (e.target === document.getElementById('checkout-overlay')) closeCheckout();
 }
 
+function buildWebhookPayload(nombre, correo, telefono, direccion) {
+  const carritoPayload = cart.map(item => {
+    const dorsal  = item.customizations.find(c => c.type === 'dorsal');
+    const patch   = item.customizations.find(c => c.type === 'patch');
+
+    // ── Precio cobrado al cliente en € ──────────────────────────────────────
+    const priceEur = socioMode
+      ? (Math.round(item.priceUsd * EUR_RATE * 100) / 100) + '€'
+      : item.priceUsd + '€';
+
+    // ── Gasto real (precio socio USD→EUR) ───────────────────────────────────
+    const cats    = item.cats || [];
+    const pc      = cats.find(c => c !== 'nuevatemporada') || cats[0] || 'otros';
+    const socioBase = SOCIO_PRICES[pc] !== undefined             ? SOCIO_PRICES[pc]
+                    : PLAYER_RE.test(item.name)                   ? SOCIO_PLAYER
+                    : (cats.includes('retro') || /\bretro\b/i.test(item.name)) ? SOCIO_RETRO
+                    : SOCIO_JERSEY;
+    const extras    = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
+    const gastoEur  = Math.round((socioBase + extras) * EUR_RATE * 100) / 100;
+
+    return {
+      jersey:   item.name,
+      version:  PLAYER_RE.test(item.name) ? 'Player' : 'Fan',
+      name:     dorsal ? [dorsal.name, dorsal.number].filter(Boolean).join(' ') : '',
+      patches:  patch ? patch.label : '',
+      size:     item.size,
+      picture:  item.img || '',
+      price:    priceEur,
+      gasto:    gastoEur + '€',
+    };
+  });
+  return {
+    cliente:   nombre,
+    correo:    correo,
+    telefono:  telefono,
+    direccion: direccion,
+    carrito:   carritoPayload,
+  };
+}
+
 async function submitOrderForm(e) {
   e.preventDefault();
   const btn      = document.getElementById('order-submit-btn');
@@ -3495,6 +3548,21 @@ async function submitOrderForm(e) {
 
   btn.disabled = true;
   btn.textContent = 'Enviando…';
+
+  // ── Fire-and-forget → Google Sheets webhook ──────────────────────────────
+  const _whPayload = buildWebhookPayload(
+    document.getElementById('form-nombre').value.trim(),
+    document.getElementById('form-correo').value.trim(),
+    contactoVal,
+    (document.getElementById('form-direccion').value || '').trim()
+  );
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(_whPayload),
+  }).catch(() => {}); // silencioso — no bloquea al usuario
+  // ─────────────────────────────────────────────────────────────────────────
 
   const form = document.getElementById('order-form');
   // Re-set codigo_socio right before serialising so the exact active code is captured
