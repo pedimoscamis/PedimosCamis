@@ -63,12 +63,12 @@
       display: flex;
       flex-direction: column;
     }
-    /* ── Móvil ≤767px: layout definitivo ───────────────────────── */
+    /* ── Móvil ≤767px ───────────────────────────────────────────── */
     @media (max-width: 767px) {
-      /* Wrapper estático con stacking context (sin overflow visible para no romper cat-bar) */
+      /* Wrapper: flujo relativo + stacking context */
       #sticky-wrapper { position: relative !important; z-index: 1000 !important; transform: none !important; }
 
-      /* Cat-bar: scroll horizontal blindado */
+      /* Cat-bar: scroll horizontal protegido */
       #cat-bar {
         overflow-x: auto !important;
         display: flex !important;
@@ -76,65 +76,49 @@
         gap: 4px;
       }
 
-      /* Filter-bar: overflow visible para que los dropdowns no queden recortados */
+      /* Filter-bar: overflow visible → dropdowns caen libremente sobre el grid */
       #filter-bar { overflow: visible !important; }
 
-      /* Pills scrollables en su propia fila */
+      /* Pills: fila independiente con scroll horizontal */
       #filter-pill-rows {
         overflow-x: auto !important;
         display: flex !important;
         flex-direction: column !important;
-        flex-wrap: nowrap !important;
         width: 100%;
       }
 
-      /* ── CONTENEDOR de Temporada + Ordenar (fuerza bruta) ─────── */
+      /* Contenedor Temporada + Ordenar: apilados en columna */
       #filter-ctrl-row {
         display: flex !important;
-        flex-direction: row !important;
-        justify-content: flex-start !important;
-        align-items: center !important;
-        gap: 15px !important;
-        flex-wrap: nowrap !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        width: 100% !important;
         overflow: visible !important;
         margin-top: 6px;
       }
 
-      /* ── HIJOS: selectores al tamaño exacto de su texto ────────── */
+      /* Selects (Equipo, Temporada): ancho natural */
       #filter-selects {
         display: flex !important;
-        flex-direction: row !important;
-        justify-content: flex-start !important;
-        align-items: center !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
         gap: 8px !important;
-        flex-wrap: nowrap !important;
+        width: 100% !important;
         overflow: visible !important;
-        flex: 0 0 auto !important;
-        width: fit-content !important;
       }
       #filter-selects .filter-row {
-        flex: 0 0 auto !important;
-        width: fit-content !important;
-        max-width: fit-content !important;
+        width: auto !important;
         overflow: visible !important;
         padding: 0;
       }
-      #filter-selects .filter-select,
-      #sort-wrap .filter-select {
-        flex: 0 0 auto !important;
-        width: fit-content !important;
-        max-width: fit-content !important;
-        padding: 5px 12px !important;
-      }
 
-      /* sort-wrap: tamaño orgánico, separador izquierdo, z-index para el dropdown */
+      /* Sort-wrap (Ordenar): ancho natural, sin borde izquierdo en móvil */
       #sort-wrap {
-        flex: 0 0 auto !important;
-        width: fit-content !important;
-        max-width: fit-content !important;
-        border-left: 1px solid var(--border) !important;
+        width: auto !important;
+        border-left: none !important;
         border-top: none !important;
-        padding-left: 10px !important;
+        padding-left: 0 !important;
         padding-top: 0 !important;
         margin-top: 0 !important;
         position: relative !important;
