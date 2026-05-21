@@ -1890,6 +1890,8 @@ async function init() {
 const CAT_ORDER = ['all','mundial2026','nuevatemporada','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','nba','streetwear','windbreaker','kids','europa','otros'];
 // Categorías que sólo se muestran en modo socio
 const SOCIO_ONLY_CATS = new Set(['streetwear']);
+// Categorías ocultas para usuarios normales (visibles en modo socio o si se accede directamente)
+const HIDDEN_NORMAL_CATS = new Set(['otros']);
 
 function buildCatBar() {
   const bar = document.getElementById('cat-bar');
@@ -1897,6 +1899,8 @@ function buildCatBar() {
   for (const cat of CAT_ORDER) {
     // Ocultar categorías de socio si no está en modo socio
     if (!socioMode && SOCIO_ONLY_CATS.has(cat)) continue;
+    // Ocultar "Otros" para usuarios normales
+    if (!socioMode && HIDDEN_NORMAL_CATS.has(cat)) continue;
     const btn = document.createElement('button');
     btn.className = 'cat-btn'
       + (cat === 'mundial2026' ? ' cat-mundial2026' : '')
@@ -3640,6 +3644,10 @@ document.addEventListener('keydown', e => {
     closeCheckout();
   }
 });
+
+// Siempre arrancar en el top del banner al cargar/recargar
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
 
 // Start
 init();

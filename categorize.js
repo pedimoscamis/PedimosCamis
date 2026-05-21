@@ -184,32 +184,42 @@ const VALID_CATS = new Set([
 // Detecta la temporada 26/27 en cualquiera de sus formas escritas
 const NEW_SEASON_RE = /26\/27|2026\/27|2026-27/;
 
+// Categorías "overlay": se añaden ENCIMA de la liga real, nunca la reemplazan.
+// Igual que 'retro' y 'nuevatemporada', 'women' y 'kids' deben coexistir
+// con la liga/selección del producto.
+const OVERLAY_CATS = new Set(['retro', 'nuevatemporada', 'women', 'kids']);
+
+// Regex para detectar overlays por nombre (independiente de yupooCategory)
+const WOMEN_NAME_RE = /\bwomen\b|\bwomen's\b|\bwoman\b|\bfemenin|\bfemale\b|\bmujer\b/i;
+const KIDS_NAME_RE  = /\bkid\b|\bkids\b|\bbaby\b|\byouth\b|\bchildren\b|9[-–]12|9–12/i;
+
 /**
  * Determina el array de categorías de un producto.
  *
  * Reglas:
- *  1. Se determina la categoría "base" (liga/deporte) desde yupooCategory o keywords.
- *  2. Si el producto es retro → se añade 'retro' Y también la liga si se detecta.
- *     Ej: 'Retro 98/99 Barcelona' → ['retro', 'laliga']
- *  3. Si el nombre contiene 26/27 → se añade 'nuevatemporada' ADEMÁS de la base.
- *     Ej: '26/27 Real Madrid Home' → ['laliga', 'nuevatemporada']
- *  4. Un producto puede pertenecer a múltiples categorías simultáneamente.
+ *  1. Se determina la categoría "base" (liga/deporte) ignorando los overlays.
+ *     Si yupooCategory es 'women' o 'kids', se busca la liga igualmente por keywords.
+ *  2. Si el producto es retro → 'retro' + liga (si detectada).
+ *  3. Si contiene 26/27 → añadir 'nuevatemporada'.
+ *  4. Si el nombre o yupooCategory indica mujer → añadir 'women'.
+ *  5. Si el nombre o yupooCategory indica niños → añadir 'kids'.
+ *  Resultado: un producto puede pertenecer a múltiples categorías simultáneamente.
+ *  Ej: 'Brazil 2026 Women Home' → ['selecciones', 'nuevatemporada', 'women']
  */
 function categorizeCats(name, yupooCategory) {
   const lower = name.toLowerCase();
   const result = new Set();
 
   // ── Paso 1: Determinar categoría liga/deporte base ──────────────────────────
-  // Usar yupooCategory si es un valor concreto de liga (no 'retro' ni 'nuevatemporada',
-  // ya que estos se aplican como overlays encima de la liga real).
+  // yupooCategory solo se acepta como liga si NO es un overlay.
   let leagueCat = null;
-  if (yupooCategory && VALID_CATS.has(yupooCategory) &&
-      yupooCategory !== 'retro' && yupooCategory !== 'nuevatemporada') {
+  if (yupooCategory && VALID_CATS.has(yupooCategory) && !OVERLAY_CATS.has(yupooCategory)) {
     leagueCat = yupooCategory;
   }
-  // Siempre intentar detección por keywords como fallback o para añadir liga a retros
+  // Detección por keywords (saltando categorías overlay para no contaminar la liga)
   if (!leagueCat) {
     for (const { cat, keywords } of CATEGORY_RULES) {
+      if (OVERLAY_CATS.has(cat)) continue;
       for (const kw of keywords) {
         if (lower.includes(kw)) { leagueCat = cat; break; }
       }
@@ -221,16 +231,20 @@ function categorizeCats(name, yupooCategory) {
   // ── Paso 2: Retro ───────────────────────────────────────────────────────────
   if (isRetro(name)) {
     result.add('retro');
-    // Conservar la liga/deporte de origen si se detectó (no 'otros')
     if (leagueCat !== 'otros') result.add(leagueCat);
   } else {
     result.add(leagueCat);
   }
 
-  // ── Paso 3: Nueva temporada 26/27 (overlay aditivo) ─────────────────────────
-  if (NEW_SEASON_RE.test(name)) {
-    result.add('nuevatemporada');
-  }
+  // ── Paso 3: Overlays aditivos ───────────────────────────────────────────────
+  // Nueva temporada 26/27
+  if (NEW_SEASON_RE.test(name)) result.add('nuevatemporada');
+
+  // Mujer: overlay — se añade si el nombre lo indica O si el scraper lo clasificó como women
+  if (WOMEN_NAME_RE.test(name) || yupooCategory === 'women') result.add('women');
+
+  // Niños: overlay — se añade si el nombre lo indica O si el scraper lo clasificó como kids
+  if (KIDS_NAME_RE.test(name) || yupooCategory === 'kids') result.add('kids');
 
   return [...result];
 }
