@@ -63,12 +63,12 @@
       display: flex;
       flex-direction: column;
     }
-    /* Móvil: flujo natural con contexto de apilamiento */
+    /* ── Móvil ≤767px: layout definitivo ───────────────────────── */
     @media (max-width: 767px) {
-      /* Wrapper: flujo relativo + stacking context; SIN overflow visible (no afecta cat-bar) */
+      /* Wrapper estático con stacking context (sin overflow visible para no romper cat-bar) */
       #sticky-wrapper { position: relative !important; z-index: 1000 !important; transform: none !important; }
 
-      /* ── 1. Cat-bar: scroll horizontal restaurado explícitamente ── */
+      /* Cat-bar: scroll horizontal blindado */
       #cat-bar {
         overflow-x: auto !important;
         display: flex !important;
@@ -76,41 +76,70 @@
         gap: 4px;
       }
 
-      /* ── 2. Filter-bar: overflow visible SOLO aquí (dropdown no se recorta) ── */
+      /* Filter-bar: overflow visible para que los dropdowns no queden recortados */
       #filter-bar { overflow: visible !important; }
 
-      /* ── 3. Sub-contenedor Temporada + Ordenar lado a lado ─────── */
-      #filter-bar-inner {
+      /* Pills scrollables en su propia fila */
+      #filter-pill-rows {
+        overflow-x: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        flex-wrap: nowrap !important;
+        width: 100%;
+      }
+
+      /* ── CONTENEDOR de Temporada + Ordenar (fuerza bruta) ─────── */
+      #filter-ctrl-row {
         display: flex !important;
         flex-direction: row !important;
-        flex-wrap: nowrap !important;
         justify-content: flex-start !important;
         align-items: center !important;
-        gap: 10px;
-        overflow: visible !important;   /* dropdown del select cae por encima del grid */
+        gap: 15px !important;
+        flex-wrap: nowrap !important;
+        overflow: visible !important;
+        margin-top: 6px;
       }
 
-      /* filter-rows: flex shrinkable → sus .filter-row hijos pueden scrollear */
-      #filter-rows {
-        flex: 1 1 auto !important;
-        min-width: 0 !important;        /* permite encoger por debajo del contenido */
-        width: auto !important;
-        overflow: visible !important;   /* dropdown Temporada no se recorta */
+      /* ── HIJOS: selectores al tamaño exacto de su texto ────────── */
+      #filter-selects {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-wrap: nowrap !important;
+        overflow: visible !important;
+        flex: 0 0 auto !important;
+        width: fit-content !important;
+      }
+      #filter-selects .filter-row {
+        flex: 0 0 auto !important;
+        width: fit-content !important;
+        max-width: fit-content !important;
+        overflow: visible !important;
+        padding: 0;
+      }
+      #filter-selects .filter-select,
+      #sort-wrap .filter-select {
+        flex: 0 0 auto !important;
+        width: fit-content !important;
+        max-width: fit-content !important;
+        padding: 5px 12px !important;
       }
 
-      /* sort-wrap: tamaño orgánico, siempre en pantalla, z-index alto para el select */
+      /* sort-wrap: tamaño orgánico, separador izquierdo, z-index para el dropdown */
       #sort-wrap {
         flex: 0 0 auto !important;
-        width: auto !important;
+        width: fit-content !important;
+        max-width: fit-content !important;
         border-left: 1px solid var(--border) !important;
         border-top: none !important;
         padding-left: 10px !important;
         padding-top: 0 !important;
         margin-top: 0 !important;
-        justify-content: flex-start !important;
         position: relative !important;
         z-index: 9999 !important;
-        overflow: visible !important;   /* dropdown Ordenar no se recorta */
+        overflow: visible !important;
       }
     }
 
@@ -335,10 +364,26 @@
       pointer-events: none;
     }
     #fab-top.visible { opacity: 1; transform: scale(1); pointer-events: auto; }
-    #filter-bar-inner {
-      display: flex; align-items: flex-start; gap: 16px;
+    /* Fila superior: pills scrollables */
+    #filter-pill-rows {
+      width: 100%;
     }
-    #filter-rows { flex: 1; min-width: 0; }
+    /* Fila inferior: selectores (Equipo, Temporada) + Ordenar */
+    #filter-ctrl-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      overflow: visible;
+      margin-top: 4px;
+    }
+    #filter-selects {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      overflow: visible;
+    }
     #sort-wrap {
       flex-shrink: 0;
       display: flex; align-items: center; gap: 7px;
@@ -346,6 +391,7 @@
       border-left: 1px solid var(--border);
       padding-left: 14px;
       position: relative; z-index: 9999;
+      overflow: visible;
     }
     #sort-label {
       font-size: 10px; font-weight: 700; text-transform: uppercase;
@@ -1131,20 +1177,10 @@
       /* Fila 2: buscador a ancho completo */
       #search-wrap { order: 3; flex: 0 0 100%; max-width: 100%; }
 
-      /* ─── Filtros: wrapping ──────────────────────────────────── */
-      #filter-bar-inner { flex-wrap: wrap; gap: 4px 0; }
-      #filter-rows      { flex: 0 0 100%; }
-
-      /* El selector de orden baja a una nueva línea */
-      #sort-wrap {
-        flex: 0 0 100%;
-        border-left: none;
-        border-top: 1px solid var(--border);
-        padding-left: 0;
-        padding-top: 8px;
-        margin-top: 2px;
-        justify-content: flex-start;
-      }
+      /* ─── Filtros en tablet/mobile ≤768px ─────────────────────── */
+      #filter-pill-rows { width: 100%; }
+      #filter-ctrl-row  { flex-wrap: wrap; gap: 8px; }
+      #sort-wrap        { border-left: 1px solid var(--border); padding-left: 14px; }
     }
 
     @media (max-width: 700px) {
@@ -1237,8 +1273,11 @@
 
 <!-- ─── Filter Bar ────────────────────────────────────────────────────── -->
 <div id="filter-bar" style="display:none">
-  <div id="filter-bar-inner">
-    <div id="filter-rows"></div>
+  <!-- Fila superior: pills scrollables (Tipo, Equipación) -->
+  <div id="filter-pill-rows"></div>
+  <!-- Fila inferior: selectores + ordenar, siempre lado a lado -->
+  <div id="filter-ctrl-row">
+    <div id="filter-selects"></div>
     <div id="sort-wrap"></div>
   </div>
 </div>
@@ -2176,8 +2215,10 @@ function getProductsForSeasonFilter() {
 }
 
 function buildFilterBar() {
-  const bar  = document.getElementById('filter-bar');
-  const rows = document.getElementById('filter-rows');
+  const bar      = document.getElementById('filter-bar');
+  const pillRows = document.getElementById('filter-pill-rows'); // pills scrollables
+  const selects  = document.getElementById('filter-selects');   // selects compactos
+
   if (activeCat === 'all' || activeCat === 'favoritos' || allProducts.length === 0) {
     bar.style.display = 'none';
     return;
@@ -2186,12 +2227,13 @@ function buildFilterBar() {
   if (catProducts.length === 0) { bar.style.display = 'none'; return; }
 
   bar.style.display = '';
-  rows.innerHTML = '';
+  pillRows.innerHTML = '';
+  selects.innerHTML  = '';
   navScroll.reset(); // Al entrar en categoría, siempre mostrar la barra de filtros
 
   const isEs = lang === 'es';
 
-  // ── 1. Equipo — select dropdown ─────────────────────────────────────────
+  // ── 1. Equipo — select → #filter-selects ────────────────────────────────
   const NO_TEAM_CATS = new Set(['streetwear','windbreaker','otros']);
   if (!NO_TEAM_CATS.has(activeCat)) {
     const teamCount = new Map();
@@ -2203,7 +2245,7 @@ function buildFilterBar() {
       const sorted = [...teamCount.entries()]
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([name]) => name);
-      rows.appendChild(makeSelectRow(
+      selects.appendChild(makeSelectRow(
         isEs ? 'Equipo' : 'Team',
         'teams',
         sorted,
@@ -2212,14 +2254,14 @@ function buildFilterBar() {
     }
   }
 
-  // ── 2. Tipo — pills ──────────────────────────────────────────────────────
+  // ── 2. Tipo — pills → #filter-pill-rows ─────────────────────────────────
   const TIPOS = ['Fan Version','Player Version','Mujer','Niños','Cortavientos','Retro'];
   const tiposPresent = TIPOS.filter(ti => catProducts.some(p => matchesTipo(p, ti)));
   if (tiposPresent.length > 1) {
-    rows.appendChild(makeFilterRow(isEs ? 'Tipo' : 'Type', 'tipos', tiposPresent));
+    pillRows.appendChild(makeFilterRow(isEs ? 'Tipo' : 'Type', 'tipos', tiposPresent));
   }
 
-  // ── 3. Equipación — pills ────────────────────────────────────────────────
+  // ── 3. Equipación — pills → #filter-pill-rows ───────────────────────────
   const EQUIPS_ES = ['Local','Visitante','Tercera','Cuarta','Portero','Entrenamiento','Especial'];
   const EQUIPS_EN = ['Home','Away','Third','Fourth','Goalkeeper','Training','Special'];
   const equipsPresent = EQUIPS_ES.filter(eq => catProducts.some(p => matchesEquipacion(p, eq)));
@@ -2237,26 +2279,24 @@ function buildFilterBar() {
       pill.onclick = () => toggleFilter('equipacion', esKey);
       rowEl.appendChild(pill);
     });
-    rows.appendChild(rowEl);
+    pillRows.appendChild(rowEl);
   }
 
-  // ── 4. Temporada — select dropdown (dinámico, basado en filtros activos) ──
+  // ── 4. Temporada — select → #filter-selects ─────────────────────────────
   {
-    // Usar sólo los productos que pasan los demás filtros activos
     const seasonBase = getProductsForSeasonFilter();
     const seasonSet  = new Set();
     for (const p of seasonBase) {
       const s = extractSeason(p.nameEn);
       if (s) seasonSet.add(s);
     }
-    // Ordenar todas las temporadas de más reciente a más antigua
     const seasonsSorted = [...seasonSet].sort((a, b) => {
       const ya = seasonStartYear(a) ?? -Infinity;
       const yb = seasonStartYear(b) ?? -Infinity;
-      return yb - ya; // descendente siempre en el menú
+      return yb - ya;
     });
     if (seasonsSorted.length > 0) {
-      rows.appendChild(makeSelectRow(
+      selects.appendChild(makeSelectRow(
         isEs ? 'Temporada' : 'Season',
         'temporada',
         seasonsSorted.map(s => ({ value: s, label: s })),
@@ -2265,16 +2305,16 @@ function buildFilterBar() {
     }
   }
 
-  // ── Clear button (only when filters active) ──────────────────────────────
+  // ── Clear button → #filter-selects (solo cuando hay filtros activos) ─────
   if (hasActiveFilters()) {
     const clearBtn = document.createElement('button');
     clearBtn.id = 'filter-clear-btn';
-    clearBtn.textContent = isEs ? '✕ Limpiar filtros' : '✕ Clear filters';
+    clearBtn.textContent = isEs ? '✕ Limpiar' : '✕ Clear';
     clearBtn.onclick = () => { clearActiveFilters(); buildFilterBar(); renderAll(); };
-    rows.appendChild(clearBtn);
+    selects.appendChild(clearBtn);
   }
 
-  // ── Sort control (siempre visible cuando el filter-bar está activo) ───────
+  // ── Sort control → #sort-wrap (siempre visible) ──────────────────────────
   const sortWrap = document.getElementById('sort-wrap');
   sortWrap.innerHTML = '';
   const sortLbl = document.createElement('span');
