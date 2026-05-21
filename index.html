@@ -1470,11 +1470,7 @@
         <input type="text" id="form-nombre" name="nombre" required
                placeholder="Tu nombre completo" autocomplete="name" />
       </div>
-      <div class="form-group">
-        <label for="form-correo">Correo electrónico *</label>
-        <input type="email" id="form-correo" name="correo" required
-               placeholder="tu@email.com" autocomplete="email" />
-      </div>
+
       <div class="form-group">
         <label for="form-contacto">Teléfono *</label>
         <input type="text" id="form-contacto" name="contacto" required
@@ -3496,7 +3492,7 @@ function closeCheckoutOnOverlay(e) {
   if (e.target === document.getElementById('checkout-overlay')) closeCheckout();
 }
 
-function buildWebhookPayload(nombre, correo, telefono, direccion) {
+function buildWebhookPayload(nombre, telefono, direccion) {
   const carritoPayload = cart.map(item => {
     const dorsal  = item.customizations.find(c => c.type === 'dorsal');
     const patch   = item.customizations.find(c => c.type === 'patch');
@@ -3529,7 +3525,6 @@ function buildWebhookPayload(nombre, correo, telefono, direccion) {
   });
   return {
     cliente:   nombre,
-    correo:    correo,
     telefono:  telefono,
     direccion: direccion,
     carrito:   carritoPayload,
@@ -3557,7 +3552,6 @@ async function submitOrderForm(e) {
   // ── Fire-and-forget → Google Sheets webhook ──────────────────────────────
   const _whPayload = buildWebhookPayload(
     document.getElementById('form-nombre').value.trim(),
-    document.getElementById('form-correo').value.trim(),
     contactoVal,
     (document.getElementById('form-direccion').value || '').trim()
   );
