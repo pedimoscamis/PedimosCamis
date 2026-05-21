@@ -1369,12 +1369,12 @@
   <p id="hero-sub">Calidad premium, precios imbatibles.</p>
   <button id="hero-cta" onclick="scrollToGrid()">VER CATÁLOGO</button>
   <div id="hero-pills">
-    <span class="hero-pill" onclick="setCategory('mundial2026')">⚽ Mundial 2026</span>
-    <span class="hero-pill" onclick="setCategory('nuevatemporada')">🆕 Nueva Temp</span>
+    <span class="hero-pill" data-i18n="pill_mundial" onclick="setCategory('mundial2026')">⚽ Mundial 2026</span>
+    <span class="hero-pill" data-i18n="pill_newseason" onclick="setCategory('nuevatemporada')">🆕 Nueva Temp</span>
     <span class="hero-pill" onclick="setCategory('retro')">⏪ Retro</span>
     <span class="hero-pill" onclick="setCategory('laliga')">🇪🇸 LaLiga</span>
     <span class="hero-pill" onclick="setCategory('premier')">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier</span>
-    <span class="hero-pill" onclick="setCategory('selecciones')">🌍 Selecciones</span>
+    <span class="hero-pill" data-i18n="pill_nations" onclick="setCategory('selecciones')">🌍 Selecciones</span>
     <span class="hero-pill" onclick="setCategory('nba')">🏀 NBA</span>
   </div>
 </section>
@@ -1781,6 +1781,13 @@ const T = {
     cart_empty: 'Tu carrito está vacío',
     order_summary: 'RESUMEN DEL PEDIDO',
     back_shopping: '← Seguir comprando',
+    hero_line1: 'PREPÁRATE PARA EL',
+    hero_line2: 'MUNDIAL 2026',
+    pill_mundial: '⚽ Mundial 2026',
+    pill_newseason: '🆕 Nueva Temp',
+    pill_nations: '🌍 Selecciones',
+    featured_title: 'MUNDIAL 2026',
+    featured_see_all: 'Ver todas →',
     select_size: 'Selecciona una talla',
     added_cart: '¡Añadido al carrito!',
     see_photos: 'VER FOTOS EN YUPOO →',
@@ -1847,6 +1854,13 @@ const T = {
     cart_empty: 'Your cart is empty',
     order_summary: 'ORDER SUMMARY',
     back_shopping: '← Continue shopping',
+    hero_line1: 'GET READY FOR THE',
+    hero_line2: 'WORLD CUP 2026',
+    pill_mundial: '⚽ World Cup 2026',
+    pill_newseason: '🆕 New Season',
+    pill_nations: '🌍 National Teams',
+    featured_title: 'WORLD CUP 2026',
+    featured_see_all: 'View all →',
     select_size: 'Select a size',
     added_cart: 'Added to cart!',
     see_photos: 'SEE PHOTOS ON YUPOO →',
@@ -4016,6 +4030,15 @@ function updateLangUI() {
   document.getElementById('input-name').placeholder = t().player_name;
   document.querySelector('[data-i18n="patch"]').textContent = t().patch;
   document.querySelector('[data-i18n="back_shopping"]').textContent = t().back_shopping;
+  const heroTitle = document.getElementById('hero-title');
+  if (heroTitle) heroTitle.innerHTML = `${t().hero_line1}<span>${t().hero_line2}</span>`;
+  document.querySelectorAll('[data-i18n="pill_mundial"]').forEach(el => el.textContent = t().pill_mundial);
+  document.querySelectorAll('[data-i18n="pill_newseason"]').forEach(el => el.textContent = t().pill_newseason);
+  document.querySelectorAll('[data-i18n="pill_nations"]').forEach(el => el.textContent = t().pill_nations);
+  const featuredTitle = document.getElementById('featured-title');
+  if (featuredTitle) featuredTitle.textContent = t().featured_title;
+  const featuredSeeAll = document.getElementById('featured-see-all');
+  if (featuredSeeAll) featuredSeeAll.textContent = t().featured_see_all;
   document.getElementById('cart-total-val').textContent = t().total_fmt(cartTotalEur());
 }
 
