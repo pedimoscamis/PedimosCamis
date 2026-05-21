@@ -305,6 +305,26 @@
       padding: 8px 10px; background: rgba(255,255,255,.04);
       border-radius: 6px; line-height: 1.4;
     }
+    #shipping-upsell {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 13px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(56,189,148,.13), rgba(56,142,189,.10));
+      border: 1px solid rgba(56,189,148,.35);
+      font-size: 12px; line-height: 1.5; color: #a8f0d8;
+      display: none;
+    }
+    #shipping-upsell strong { color: #56e0b0; font-weight: 700; }
+    #shipping-upsell .upsell-bar-wrap {
+      margin-top: 7px; background: rgba(255,255,255,.08);
+      border-radius: 99px; height: 5px; overflow: hidden;
+    }
+    #shipping-upsell .upsell-bar {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, #38bd94, #38a8bd);
+      transition: width .4s ease;
+    }
 
     /* ─── Precio tachado (modo 33%) ─────────────────────────── */
     .price-original {
@@ -1538,6 +1558,11 @@
         </div>
       </div>
 
+      <div id="shipping-upsell" aria-live="polite">
+        <span id="shipping-upsell-text"></span>
+        <div class="upsell-bar-wrap"><div class="upsell-bar" id="upsell-bar"></div></div>
+      </div>
+
       <div class="form-group" id="direccion-group" style="display:none">
         <label for="form-direccion">Dirección completa *</label>
         <input type="text" id="form-direccion" name="direccion"
@@ -1652,15 +1677,32 @@ function getShippingCost() {
   return cart.length >= SHIPPING_FREE_AT ? 0 : SHIPPING_COST;
 }
 
+/** Actualiza el banner de upselling de envío gratis. */
+function updateShippingUpsell() {
+  const upsellEl = document.getElementById('shipping-upsell');
+  if (!upsellEl) return;
+  const esDomicilio = document.getElementById('envio-domicilio')?.checked;
+  const missing     = SHIPPING_FREE_AT - cart.length;
+  if (esDomicilio && missing > 0) {
+    document.getElementById('shipping-upsell-text').innerHTML = t().upsell_shipping(missing);
+    const pct = Math.round((cart.length / SHIPPING_FREE_AT) * 100);
+    document.getElementById('upsell-bar').style.width = pct + '%';
+    upsellEl.style.display = 'block';
+  } else {
+    upsellEl.style.display = 'none';
+  }
+}
+
 /** Muestra/oculta campos según el tipo de envío seleccionado y refresca totales. */
 function onShippingChange() {
-  const esMano       = document.getElementById('envio-mano').checked;
-  const notaMano     = document.getElementById('shipping-note-mano');
-  const dirGroup     = document.getElementById('direccion-group');
-  const dirInput     = document.getElementById('form-direccion');
-  notaMano.style.display  = esMano ? 'block' : 'none';
-  dirGroup.style.display  = esMano ? 'none'  : '';
-  dirInput.required       = !esMano;
+  const esMano   = document.getElementById('envio-mano').checked;
+  const notaMano = document.getElementById('shipping-note-mano');
+  const dirGroup = document.getElementById('direccion-group');
+  const dirInput = document.getElementById('form-direccion');
+  notaMano.style.display = esMano ? 'block' : 'none';
+  dirGroup.style.display = esMano ? 'none'  : '';
+  dirInput.required      = !esMano;
+  updateShippingUpsell();
   updateCheckoutTotals();
 }
 
@@ -1788,6 +1830,7 @@ const T = {
     pill_nations: '🌍 Selecciones',
     featured_title: 'MUNDIAL 2026',
     featured_see_all: 'Ver todas →',
+    upsell_shipping: (n) => `🚚 ¡Estás a solo <strong>${n} camiseta${n === 1 ? '' : 's'}</strong> del envío <strong>GRATIS</strong>!`,
     select_size: 'Selecciona una talla',
     added_cart: '¡Añadido al carrito!',
     see_photos: 'VER FOTOS EN YUPOO →',
@@ -1861,6 +1904,7 @@ const T = {
     pill_nations: '🌍 National Teams',
     featured_title: 'WORLD CUP 2026',
     featured_see_all: 'View all →',
+    upsell_shipping: (n) => `🚚 You're only <strong>${n} shirt${n === 1 ? '' : 's'}</strong> away from <strong>FREE</strong> shipping!`,
     select_size: 'Select a size',
     added_cart: 'Added to cart!',
     see_photos: 'SEE PHOTOS ON YUPOO →',
@@ -3679,6 +3723,7 @@ function openCheckout() {
   document.getElementById('shipping-note-mano').style.display = 'block';
   document.getElementById('direccion-group').style.display    = 'none';
   document.getElementById('form-direccion').required          = false;
+  document.getElementById('shipping-upsell').style.display   = 'none';
   // Restaurar campos ocultos tras reset (el reset los vacía)
   document.getElementById('form-pedido').value = pedidoStr;
   document.getElementById('form-total').value  = fmtEur(cartTotalEur());
