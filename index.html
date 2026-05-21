@@ -474,12 +474,12 @@
       border-color: transparent transparent #1976D2 transparent;
       opacity: 0.55;
     }
-    /* Barra de colores World Cup en la base */
+    /* Franja verde césped — asienta visualmente el banner */
     #hero::after {
       content: '';
       position: absolute; bottom: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #D32F2F 0%, #FDD835 33%, #1976D2 66%, #43A047 100%);
+      height: 6px;
+      background: #43A047;
     }
     #hero-title {
       font-family: 'Bebas Neue', sans-serif;
@@ -1514,18 +1514,32 @@ const WOMEN_RE  = /\bwomen\b|\bwoman\b|\bwomen's\b|\bfemenin|\bfemale\b/i;
 const PATCH_CATS = new Set(['laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro','europa','nuevatemporada']);
 
 // ── Mundial 2026 ─────────────────────────────────────────────────────────────
-// Producto es Mundial 2026 si es selección + tiene 2026 / 26/27 en el nombre
+// Producto es Mundial 2026 si es selección nacional + tiene 2026/26-27 en el nombre.
+// Se excluyen explícitamente clubes que puedan haberse colado en la cat "selecciones"
+// por coincidencia de keywords (ej: "México" → Club América, "Uruguay" → Nacional…).
 const MUNDIAL_2026_RE = /2026|26\/27|2026\/27|2026-27/i;
+const MUNDIAL_CLUBS_RE = /\b(nacional|pe[nñ]arol|club\s*am[eé]rica|lafc|los\s*angeles\s*fc|racing\s*club|independiente|san\s*lorenzo|colo[\s-]*colo|olimpia|olimpo|millonarios|botafogo|flamengo|palmeiras|corinthians|river\s*plate|boca\s*juniors|atletico\s*mineiro|monterrey|chivas|guadalajara|cruz\s*azul|vancouver|whitecaps|nycfc|new\s*york\s*city\s*fc)\b/i;
+
 function isMundial2026(p) {
-  return (p.cats || []).includes('selecciones') && MUNDIAL_2026_RE.test(p.nameEn);
+  return (p.cats || []).includes('selecciones')
+    && MUNDIAL_2026_RE.test(p.nameEn)
+    && !MUNDIAL_CLUBS_RE.test(p.nameEn);
 }
-// Prioridad de selecciones en el carrusel/grid de Mundial
+
+// Orden de prioridad de selecciones en el carrusel y la categoría Mundial 2026
 const MUNDIAL_PRIORITY = [
   ['spain','españa','espana'],
   ['brasil','brazil'],
   ['france','francia'],
   ['germany','deutschland','alemania'],
   ['portugal'],
+  ['argentina'],
+  ['england','inglaterra'],
+  ['italy','italia'],
+  ['netherlands','holland','holanda','países bajos','paises bajos'],
+  ['uruguay'],
+  ['morocco','marruecos'],
+  ['japan','japon','japón'],
 ];
 function mundialPriority(p) {
   const n = p.nameEn.toLowerCase();
@@ -2255,12 +2269,20 @@ function buildFilterBar() {
   const pillRows = document.getElementById('filter-pill-rows'); // pills scrollables
   const selects  = document.getElementById('filter-selects');   // selects compactos
 
-  if (activeCat === 'all' || activeCat === 'favoritos' || activeCat === 'mundial2026' || allProducts.length === 0) {
+  if (activeCat === 'all' || activeCat === 'favoritos' || allProducts.length === 0) {
     bar.style.display = 'none';
     return;
   }
-  const catProducts = allProducts.filter(p => (p.cats || []).includes(activeCat));
+
+  // Mundial 2026: usar el pool canónico como base de los filtros
+  const catProducts = activeCat === 'mundial2026'
+    ? getMundialItems()
+    : allProducts.filter(p => (p.cats || []).includes(activeCat));
   if (catProducts.length === 0) { bar.style.display = 'none'; return; }
+
+  // En Mundial 2026 la vista es temática → ocultar Temporada y Ordenar
+  const ctrlRow = document.getElementById('filter-ctrl-row');
+  if (ctrlRow) ctrlRow.style.display = activeCat === 'mundial2026' ? 'none' : '';
 
   bar.style.display = '';
   pillRows.innerHTML = '';
