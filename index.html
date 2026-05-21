@@ -7,7 +7,7 @@
   <meta name="description" content="Las mejores camisetas de fútbol y NBA. LaLiga, Premier, NBA y más. Envío a toda España." />
   <meta name="referrer" content="no-referrer" />
   <meta name="theme-color" content="#e8173c" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23080808'/%3E%3Ctext x='16' y='23' font-family='Arial Black%2C Arial' font-weight='900' font-size='13' fill='%23e8173c' text-anchor='middle' letter-spacing='-0.5'%3EPC%3F%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23080808'/%3E%3Ctext x='16' y='23' font-family='Arial Black%2C Arial' font-weight='900' font-size='13' text-anchor='middle' letter-spacing='-0.5'%3E%3Ctspan fill='%23ffffff'%3EP%3C/tspan%3E%3Ctspan fill='%23e8173c'%3EC%3F%3C/tspan%3E%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://res.cloudinary.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -152,7 +152,7 @@
     #logo {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 32px;
-      letter-spacing: 1px;
+      letter-spacing: 0;
       white-space: nowrap;
       text-decoration: none; color: var(--text);
       cursor: pointer;
@@ -1226,6 +1226,10 @@
       #cat-bar { padding: 8px 14px; }
       #main { padding: 20px 14px 60px; }
       #hero { padding: 42px 14px 39px; }
+      #hero-title {
+        -webkit-text-stroke: 0.6px currentColor;
+        paint-order: stroke fill;
+      }
       #featured-inner { padding: 0 14px; }
     }
     @media (max-width: 480px) {
