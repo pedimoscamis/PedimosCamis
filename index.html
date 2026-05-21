@@ -1164,6 +1164,18 @@
     .featured-card-price {
       font-size: 13px; font-weight: 700;
       color: var(--accent); margin-top: 5px;
+      display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+    }
+    /* Badges reducidos exclusivamente en el escaparate de inicio */
+    .featured-card .badge-player {
+      font-size: 7px; padding: 1px 4px; margin-left: 0;
+    }
+    .featured-card .badge-retro-inline {
+      display: inline-block;
+      background: var(--accent); color: #fff;
+      font-size: 7px; font-weight: 700;
+      letter-spacing: .6px; padding: 1px 4px;
+      border-radius: 3px;
     }
 
     /* ─── Responsive ─────────────────────────────────────────── */
@@ -2553,7 +2565,14 @@ function getMundialItems(maxExtra = Infinity) {
   const picked = new Set();
   const items  = [];
 
-  for (const keywords of MUNDIAL_PRIORITY) {
+  // Overrides para el slot 4 (Retro): predicate adicional por índice de selección
+  // índice 0 = España → forzar obligatoriamente la de 2010 Home
+  const RETRO_SLOT_FILTER = {
+    0: p => p.nameEn.includes('2010') && isMundialHome(p.nameEn), // España 2010 Home
+  };
+
+  for (let si = 0; si < MUNDIAL_PRIORITY.length; si++) {
+    const keywords = MUNDIAL_PRIORITY[si];
     const matchTeam     = p => keywords.some(k => p.nameEn.toLowerCase().includes(k));
     const teamFan       = fanPool.filter(matchTeam);
     const teamPlayer    = playerPool.filter(matchTeam);
@@ -2573,9 +2592,19 @@ function getMundialItems(maxExtra = Infinity) {
     for (const p of teamPlayer) {
       if (!addedPlayerHome && !picked.has(p.id) && isMundialHome(p.nameEn)) { items.push(p); picked.add(p.id); addedPlayerHome = true; break; }
     }
-    // 4. Retro Home (prioridad: home; fallback: cualquier retro de esa selección)
-    for (const p of teamRetro) {
-      if (!addedRetro && !picked.has(p.id) && isMundialHome(p.nameEn)) { items.push(p); picked.add(p.id); addedRetro = true; break; }
+    // 4. Retro Home — con override por selección si existe
+    const retroFilter = RETRO_SLOT_FILTER[si];
+    if (retroFilter) {
+      // Intentar el override primero (ej: España 2010 Home)
+      for (const p of teamRetro) {
+        if (!picked.has(p.id) && retroFilter(p)) { items.push(p); picked.add(p.id); addedRetro = true; break; }
+      }
+    }
+    // Si no hay override o no encontró nada: home retro genérico, luego cualquier retro
+    if (!addedRetro) {
+      for (const p of teamRetro) {
+        if (!picked.has(p.id) && isMundialHome(p.nameEn)) { items.push(p); picked.add(p.id); addedRetro = true; break; }
+      }
     }
     if (!addedRetro) {
       for (const p of teamRetro) {
@@ -2626,7 +2655,8 @@ function renderFeatured() {
   for (const p of items) {
     const price  = getBasePrice(p);
     const { main: priceMain } = t().price_fmt(price);
-    const isPlayer = PLAYER_RE.test(p.nameEn);
+    const isPlayer  = PLAYER_RE.test(p.nameEn);
+    const isRetroKit = (p.cats || []).includes('retro');
     const card   = document.createElement('div');
     card.className = 'featured-card';
     card.onclick   = () => openModal(p);
@@ -2639,7 +2669,9 @@ function renderFeatured() {
       <div class="featured-card-body">
         <div class="featured-card-name">${escHtml(p.nameEn)}</div>
         <div class="featured-card-price">
-          ${priceMain}${isPlayer ? '<span class="badge-player" style="margin-left:5px">PLAYER</span>' : ''}
+          ${priceMain}
+          ${isPlayer   ? '<span class="badge-player">PLAYER</span>' : ''}
+          ${isRetroKit ? '<span class="badge-retro-inline">RETRO</span>' : ''}
         </div>
       </div>`;
     scroll.appendChild(card);
