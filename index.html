@@ -458,26 +458,28 @@
 
     /* ─── Hero — Mundial 2026 ───────────────────────────────── */
     #hero {
-      background: linear-gradient(
-        135deg,
-        #D32F2F 0%,
-        #FB8C00 14%,
-        #FDD835 28%,
-        #C9A635 36%,
-        #43A047 50%,
-        #4FC3F7 62%,
-        #1976D2 74%,
-        #8E24AA 87%,
-        #D32F2F 100%
-      );
+      /* Bloque rojo (top-left) + fondo navy (resto): diagonal limpia */
+      background: linear-gradient(155deg, #D32F2F 0%, #C62828 30%, #0D1B2A 30%, #0D1B2A 100%);
       padding: 60px 24px 54px;
       text-align: center;
       position: relative; overflow: hidden;
     }
+    /* Triángulo azul esquina inferior-derecha */
     #hero::before {
       content: '';
-      position: absolute; inset: 0;
-      background: rgba(0,0,0,0.48);
+      position: absolute; bottom: 0; right: 0;
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 0 0 90px 200px;
+      border-color: transparent transparent #1976D2 transparent;
+      opacity: 0.55;
+    }
+    /* Barra de colores World Cup en la base */
+    #hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #D32F2F 0%, #FDD835 33%, #1976D2 66%, #43A047 100%);
     }
     #hero-title {
       font-family: 'Bebas Neue', sans-serif;
@@ -485,20 +487,18 @@
       line-height: 1;
       letter-spacing: 3px;
       color: #fff;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.7), 0 0 3px rgba(0,0,0,0.9);
       position: relative;
     }
-    #hero-title span { color: #FDD835; display: block; text-shadow: 0 2px 14px rgba(0,0,0,0.8); }
+    #hero-title span { color: #FDD835; display: block; }
     #hero-sub {
-      color: rgba(255,255,255,0.88); font-size: 15px;
+      color: rgba(255,255,255,0.78); font-size: 15px;
       margin: 13px auto 21px; max-width: 460px;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.7);
       position: relative;
     }
     #hero-cta {
       display: inline-block;
-      background: #C9A635; color: #111;
-      padding: 10px 30px; border-radius: 8px;
+      background: #FDD835; color: #111;
+      padding: 10px 30px; border-radius: 6px;
       font-family: 'Bebas Neue', sans-serif;
       font-size: 18px; letter-spacing: 1px;
       text-decoration: none; cursor: pointer;
@@ -506,7 +506,7 @@
       transition: background .2s, transform .15s;
       position: relative;
     }
-    #hero-cta:hover { background: #a88520; transform: translateY(-2px); }
+    #hero-cta:hover { background: #F9C900; transform: translateY(-2px); }
 
     #hero-pills {
       display: flex; flex-wrap: wrap; justify-content: center;
@@ -1555,7 +1555,7 @@ let lang = localStorage.getItem('kz-lang') || 'es';
 const T = {
   es: {
     search_placeholder: 'Buscar por camiseta, equipo...',
-    hero_sub: 'Las mejores camisetas de fútbol y NBA. Calidad premium, precios imbatibles.',
+    hero_sub: 'Calidad premium, precios imbatibles.',
     hero_cta: 'VER CATÁLOGO',
     results: (n) => `${n} producto${n !== 1 ? 's' : ''}`,
     sizes: 'Tallas',
@@ -1621,7 +1621,7 @@ const T = {
   },
   en: {
     search_placeholder: 'Search jersey, team, player…',
-    hero_sub: 'The best football and NBA jerseys. Premium quality, unbeatable prices.',
+    hero_sub: 'Premium quality, unbeatable prices.',
     hero_cta: 'BROWSE CATALOG',
     results: (n) => `${n} product${n !== 1 ? 's' : ''}`,
     sizes: 'Sizes',
@@ -2382,11 +2382,9 @@ function getFiltered() {
     return allProducts.filter(p => favorites.has(p.nameEn));
   }
 
-  // Vista Mundial 2026: selecciones con temporada 2026, ordenadas por prioridad
+  // Vista Mundial 2026: mismo orden canónico que el carrusel de inicio
   if (activeCat === 'mundial2026') {
-    return allProducts
-      .filter(isMundial2026)
-      .sort((a, b) => mundialPriority(a) - mundialPriority(b));
+    return getMundialItems(); // todos los productos, bloque prioritario primero
   }
 
   let result = allProducts.filter(p => {
@@ -2424,6 +2422,61 @@ function getFiltered() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// MUNDIAL 2026 — filtro compartido (Home + Featured + getFiltered)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Versiones PROHIBIDAS en el bloque prioritario
+const MUNDIAL_EXCLUDE_RE = /entrenamiento|training|especial|special|edition|edición|niño|niños|kids|kid|baby|mujer|women|woman|ladies|portero|goalkeeper|player\s*version|authentic|long\s*sleeve|manga\s*larga/i;
+const isMundialHome = n => /\bhome\b|\blocal\b/i.test(n);
+const isMundialAway = n => /\baway\b|\bvisitante\b/i.test(n);
+
+/**
+ * Devuelve el array de productos Mundial 2026 en el orden canónico:
+ * — Bloque prioritario: España(H+A), Brasil(H+A), Francia(H+A), Alemania(H+A), Portugal(H+A)
+ *   Solo versiones Fan/Stadium estándar (sin Player, Authentic, Long Sleeve, Kids, Training…)
+ * — Resto de selecciones mundialistas (sin restricción adicional), hasta maxExtra más
+ */
+function getMundialItems(maxExtra = Infinity) {
+  // Base sin versiones prohibidas para el bloque prioritario
+  const mundialClean = allProducts.filter(p => isMundial2026(p) && !MUNDIAL_EXCLUDE_RE.test(p.nameEn));
+  const mundialAll   = allProducts.filter(p => isMundial2026(p));
+
+  const picked = new Set();
+  const items  = [];
+
+  for (const keywords of MUNDIAL_PRIORITY) {
+    const team = mundialClean.filter(p => {
+      const n = p.nameEn.toLowerCase();
+      return keywords.some(k => n.includes(k));
+    });
+    let addedHome = false, addedAway = false;
+    // 1. Home
+    for (const p of team) {
+      if (!addedHome && isMundialHome(p.nameEn)) { items.push(p); picked.add(p.id); addedHome = true; break; }
+    }
+    // 2. Away
+    for (const p of team) {
+      if (!addedAway && !picked.has(p.id) && isMundialAway(p.nameEn)) { items.push(p); picked.add(p.id); addedAway = true; break; }
+    }
+    // 3. Si equipo tiene productos pero ninguno home/away etiquetado, el primero disponible
+    if (!addedHome && !addedAway) {
+      for (const p of team) {
+        if (!picked.has(p.id)) { items.push(p); picked.add(p.id); break; }
+      }
+    }
+  }
+
+  // Resto (sin orden estricto): primero los clean, luego los restantes
+  let extra = 0;
+  for (const p of [...mundialClean, ...mundialAll]) {
+    if (extra >= maxExtra) break;
+    if (!picked.has(p.id)) { items.push(p); picked.add(p.id); extra++; }
+  }
+
+  return items;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // FEATURED SECTION — Mundial 2026
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -2437,45 +2490,7 @@ function renderFeatured() {
     return;
   }
 
-  // Selecciones 2026 — excluir entrenamiento/especiales/kids/mujer
-  const MUNDAL_EXCLUDE_RE = /entrenamiento|training|especial|special|niño|niños|kids|kid|mujer|women|woman|portero|goalkeeper/i;
-  const isHomeKit  = n => /\bhome\b|\blocal\b/i.test(n);
-  const isAwayKit  = n => /\baway\b|\bvisitante\b/i.test(n);
-
-  const mundial = allProducts.filter(p => isMundial2026(p) && !MUNDAL_EXCLUDE_RE.test(p.nameEn));
-
-  // Para cada equipo prioritario: 1 home + 1 away máx
-  const picked = new Set();
-  const items = [];
-
-  for (let pi = 0; pi < MUNDIAL_PRIORITY.length; pi++) {
-    const keywords = MUNDIAL_PRIORITY[pi];
-    const teamProducts = mundial.filter(p => {
-      const n = p.nameEn.toLowerCase();
-      return keywords.some(k => n.includes(k));
-    });
-    let addedHome = false, addedAway = false;
-    // Home primero
-    for (const p of teamProducts) {
-      if (!addedHome && isHomeKit(p.nameEn)) { items.push(p); picked.add(p.id); addedHome = true; }
-    }
-    // Away después
-    for (const p of teamProducts) {
-      if (!addedAway && !picked.has(p.id) && isAwayKit(p.nameEn)) { items.push(p); picked.add(p.id); addedAway = true; }
-    }
-    // Si no hay home ni away explícitos, añadir el primero disponible
-    if (!addedHome && !addedAway) {
-      for (const p of teamProducts) {
-        if (!picked.has(p.id)) { items.push(p); picked.add(p.id); break; }
-      }
-    }
-  }
-
-  // Resto de selecciones mundialistas (sin prioridad estricta, max 10 total)
-  for (const p of mundial) {
-    if (items.length >= 12) break;
-    if (!picked.has(p.id)) { items.push(p); picked.add(p.id); }
-  }
+  const items = getMundialItems(2); // bloque prioritario + hasta 2 extras
 
   if (items.length === 0) {
     section.style.display = 'none';
