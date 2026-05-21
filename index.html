@@ -93,38 +93,43 @@
         width: 100%;
       }
 
-      /* Contenedor Temporada + Ordenar: apilados en columna */
+      /* Nivel 2: Temporada + Ordenar en la misma fila */
       #filter-ctrl-row {
         display: flex !important;
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 10px !important;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        gap: 15px !important;
         width: 100% !important;
         overflow: visible !important;
+        flex-wrap: nowrap !important;
         margin-top: 6px;
       }
 
-      /* Selects (Equipo, Temporada): ancho natural */
+      /* #filter-selects (solo Temporada): tamaño natural */
       #filter-selects {
         display: flex !important;
-        flex-direction: column !important;
-        align-items: flex-start !important;
+        flex-direction: row !important;
+        align-items: center !important;
         gap: 8px !important;
-        width: 100% !important;
+        flex: 0 0 auto !important;
+        width: auto !important;
         overflow: visible !important;
       }
       #filter-selects .filter-row {
+        flex: 0 0 auto !important;
         width: auto !important;
         overflow: visible !important;
         padding: 0;
       }
 
-      /* Sort-wrap (Ordenar): ancho natural, sin borde izquierdo en móvil */
+      /* Sort-wrap (Ordenar): tamaño natural, sin borde izquierdo en móvil */
       #sort-wrap {
+        flex: 0 0 auto !important;
         width: auto !important;
-        border-left: none !important;
+        border-left: 1px solid var(--border) !important;
         border-top: none !important;
-        padding-left: 0 !important;
+        padding-left: 10px !important;
         padding-top: 0 !important;
         margin-top: 0 !important;
         position: relative !important;
@@ -2224,7 +2229,7 @@ function buildFilterBar() {
 
   const isEs = lang === 'es';
 
-  // ── 1. Equipo — select → #filter-selects ────────────────────────────────
+  // ── 1. Equipo — select → #filter-pill-rows (nivel 1, con Tipo y Equipación) ──
   const NO_TEAM_CATS = new Set(['streetwear','windbreaker','otros']);
   if (!NO_TEAM_CATS.has(activeCat)) {
     const teamCount = new Map();
@@ -2236,7 +2241,7 @@ function buildFilterBar() {
       const sorted = [...teamCount.entries()]
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([name]) => name);
-      selects.appendChild(makeSelectRow(
+      pillRows.appendChild(makeSelectRow(
         isEs ? 'Equipo' : 'Team',
         'teams',
         sorted,
