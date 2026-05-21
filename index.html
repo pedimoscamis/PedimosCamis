@@ -330,7 +330,7 @@
       border-bottom: 1px solid #1e1e1e;
       padding: 6px 24px 8px;
       overflow: hidden;
-      max-height: 150px;
+      max-height: 280px;
       transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
     }
     #filter-bar.filters-hidden {
@@ -362,6 +362,9 @@
     /* Fila superior: pills scrollables */
     #filter-pill-rows {
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
     }
     /* Fila inferior: selectores (Equipo, Temporada) + Ordenar — PC: horizontal */
     #filter-ctrl-row {
@@ -399,6 +402,7 @@
       padding: 3px 0;
       overflow-x: auto; flex-wrap: nowrap;
       scrollbar-width: none;
+      flex-shrink: 0;
     }
     .filter-row::-webkit-scrollbar { display: none; }
     .filter-label {
