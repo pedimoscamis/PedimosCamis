@@ -969,6 +969,7 @@
       margin-bottom: 6px;
     }
     .form-group input,
+    .form-group select,
     .form-group textarea {
       width: 100%;
       background: var(--card); border: 1px solid var(--border);
@@ -978,6 +979,7 @@
       resize: none;
     }
     .form-group input:focus,
+    .form-group select:focus,
     .form-group textarea:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(232,23,60,.15);
@@ -1483,6 +1485,13 @@
         <label for="form-direccion">Dirección de envío <span style="font-weight:400;color:var(--muted)">(opcional)</span></label>
         <input type="text" id="form-direccion" name="direccion"
                placeholder="Calle, número, ciudad… (si procede)" autocomplete="street-address" />
+      </div>
+      <div class="form-group">
+        <label for="form-metodo-pago">Método de pago *</label>
+        <select id="form-metodo-pago" name="metodoPago" required>
+          <option value="Bizum" selected>Bizum</option>
+          <option value="Efectivo">Efectivo</option>
+        </select>
       </div>
       <div class="form-group">
         <label for="form-notas">Notas adicionales</label>
@@ -3492,7 +3501,7 @@ function closeCheckoutOnOverlay(e) {
   if (e.target === document.getElementById('checkout-overlay')) closeCheckout();
 }
 
-function buildWebhookPayload(nombre, telefono, direccion) {
+function buildWebhookPayload(nombre, telefono, direccion, metodoPago) {
   const carritoPayload = cart.map(item => {
     const dorsal  = item.customizations.find(c => c.type === 'dorsal');
     const patch   = item.customizations.find(c => c.type === 'patch');
@@ -3524,9 +3533,10 @@ function buildWebhookPayload(nombre, telefono, direccion) {
     };
   });
   return {
-    cliente:   nombre,
-    telefono:  telefono,
-    direccion: direccion,
+    cliente:    nombre,
+    telefono:   telefono,
+    direccion:  direccion,
+    metodoPago: metodoPago,
     carrito:   carritoPayload,
   };
 }
@@ -3553,7 +3563,8 @@ async function submitOrderForm(e) {
   const _whPayload = buildWebhookPayload(
     document.getElementById('form-nombre').value.trim(),
     contactoVal,
-    (document.getElementById('form-direccion').value || '').trim()
+    (document.getElementById('form-direccion').value || '').trim(),
+    document.getElementById('form-metodo-pago').value
   );
   fetch(WEBHOOK_URL, {
     method: 'POST',
