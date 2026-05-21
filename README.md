@@ -1,4 +1,4 @@
-# KitZone 🛍️
+# PedimosCamis? 🛍️
 
 Tienda online de camisetas de fútbol y NBA. Catálogo extraído automáticamente de Yupoo, desplegada en GitHub Pages con actualización diaria vía GitHub Actions.
 
@@ -65,7 +65,7 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador. La tienda c
 ```bash
 git init
 git add .
-git commit -m "feat: KitZone inicial"
+git commit -m "feat: PedimosCamis? inicial"
 git remote add origin https://github.com/TU_USUARIO/kitzone.git
 git push -u origin main
 ```

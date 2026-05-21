@@ -1,5 +1,5 @@
 /**
- * KitZone — Aplicar URLs de Cloudinary a products.json
+ * PedimosCamis? — Aplicar URLs de Cloudinary a products.json
  *
  * Lee data/cloudinary-progress.json (mapa id → URL de Cloudinary generado
  * por upload-cloudinary.js) y actualiza data/products.json reemplazando
@@ -68,7 +68,7 @@ if (updated > 0) {
 
 // ─── Resumen ──────────────────────────────────────────────────────────────────
 
-console.log('=== KitZone — Apply Cloudinary ===\n');
+console.log('=== PedimosCamis? — Apply Cloudinary ===\n');
 console.log(`Entradas en cloudinary-progress.json : ${progressIds.size}`);
 console.log(`Productos en products.json            : ${products.length}`);
 console.log(`─────────────────────────────────────`);

@@ -1,5 +1,5 @@
 /**
- * KitZone — Descargador de imágenes
+ * PedimosCamis? — Descargador de imágenes
  *
  * Lee products.json, descarga las imágenes de las categorías principales
  * a la carpeta images/ y actualiza products.json para apuntar a los
@@ -76,7 +76,7 @@ function downloadFile(url, destPath, retries = 3) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log('=== KitZone Descargador de imágenes ===');
+  console.log('=== PedimosCamis? Descargador de imágenes ===');
 
   if (!fs.existsSync(PRODUCTS_FILE)) {
     console.error('Error: data/products.json no encontrado. Ejecuta node categorize.js primero.');

@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 /**
- * KitZone — Subida de imágenes a Cloudinary
+ * PedimosCamis? — Subida de imágenes a Cloudinary
  *
  * Lee products.json, descarga cada imagen de Yupoo y la sube a Cloudinary.
  * Actualiza el campo img con la URL de Cloudinary entregada por el CDN.
@@ -143,7 +143,7 @@ function uploadBuffer(buffer, publicId) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log('=== KitZone Upload Cloudinary ===');
+  console.log('=== PedimosCamis? Upload Cloudinary ===');
   console.log(`Cloud: ${CLOUDINARY_CLOUD_NAME}  Carpeta: ${CLOUDINARY_FOLDER}\n`);
 
   if (!fs.existsSync(PRODUCTS_FILE)) {

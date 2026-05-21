@@ -1,5 +1,5 @@
 /**
- * KitZone Categorizador
+ * PedimosCamis? Categorizador
  * Lee products-raw.json y genera products.json con categorías, tallas y precios.
  */
 
@@ -259,7 +259,7 @@ function getPrice(cats, name) {
 // ─── Procesado principal ──────────────────────────────────────────────────────
 
 function main() {
-  console.log('=== KitZone Categorizador ===');
+  console.log('=== PedimosCamis? Categorizador ===');
 
   if (!fs.existsSync(RAW_FILE)) {
     console.error(`Error: No se encontró ${RAW_FILE}`);

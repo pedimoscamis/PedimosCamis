@@ -1,5 +1,5 @@
 /**
- * KitZone — fix-cloudinary.js
+ * PedimosCamis? — fix-cloudinary.js
  *
  * Lee data/cloudinary-progress.json y data/products.json.
  * Para cada producto cuyo id esté en el progreso, reemplaza

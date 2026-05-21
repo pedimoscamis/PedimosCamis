@@ -1,5 +1,5 @@
 /**
- * KitZone — Servidor local de desarrollo
+ * PedimosCamis? — Servidor local de desarrollo
  * Sirve index.html y el directorio data/ en http://localhost:3000
  */
 
@@ -104,6 +104,6 @@ if (!fs.existsSync(productsFile)) {
 }
 
 app.listen(PORT, () => {
-  console.log(`\n  KitZone corriendo en http://localhost:${PORT}`);
+  console.log(`\n  PedimosCamis? corriendo en http://localhost:${PORT}`);
   console.log(`  Pulsa Ctrl+C para detener\n`);
 });

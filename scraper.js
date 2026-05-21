@@ -1,5 +1,5 @@
 /**
- * KitZone Scraper — por categorías de Yupoo
+ * PedimosCamis? Scraper — por categorías de Yupoo
  *
  * En lugar de recorrer /albums?tab=gallery (lista global sin categoría),
  * recorre cada categoría de Yupoo individualmente y guarda el campo
@@ -29,12 +29,12 @@ const DELAY_LISTING = 800;   // ms entre páginas de listado
 const DELAY_ALBUM   = 600;   // ms entre visitas a álbumes individuales
 const MAX_EMPTY_PAGES = 2;   // páginas consecutivas vacías antes de parar
 
-// ─── Mapeo de categorías Yupoo → categoría KitZone ───────────────────────────
+// ─── Mapeo de categorías Yupoo → categoría PedimosCamis? ─────────────────────
 //
 // Para añadir una categoría nueva:
 //   1. Navega a ggjersey.x.yupoo.com y abre la categoría deseada.
 //   2. Copia el ID numérico de la URL: /categories/XXXXXXX
-//   3. Añade una entrada al array con ese ID y el nombre de cat de KitZone.
+//   3. Añade una entrada al array con ese ID y el nombre de cat de PedimosCamis?.
 //
 // Las categorías sin ID conocido llevan id: null y se omiten en el scraping.
 
@@ -210,7 +210,7 @@ async function fetchAlbumImage(albumUrl) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log('=== KitZone Scraper (por categorías) ===');
+  console.log('=== PedimosCamis? Scraper (por categorías) ===');
   console.log(`Fecha: ${new Date().toISOString()}`);
   console.log(`Categorías activas: ${ACTIVE_CATEGORIES.length} / ${YUPOO_CATEGORIES.length} configuradas`);
 
