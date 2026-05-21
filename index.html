@@ -1565,6 +1565,30 @@ function retroPriority(p) {
   return RETRO_PRIORITY_TEAMS.length;
 }
 
+/**
+ * Reordena un array ya filtrado de productos Retro colocando
+ * las 4 más relevantes de cada equipo prioritario al principio.
+ * @param {Array} filtered  productos ya filtrados por categoría + activeFilters
+ */
+function getRetroRelevanceItems(filtered) {
+  const picked = new Set();
+  const items  = [];
+
+  for (const keywords of RETRO_PRIORITY_TEAMS) {
+    const team = filtered.filter(p => keywords.some(k => p.nameEn.toLowerCase().includes(k)));
+    let count = 0;
+    for (const p of team) {
+      if (count >= 4) break;
+      items.push(p); picked.add(p.id); count++;
+    }
+  }
+  // Resto de retros (sin prioridad estricta)
+  for (const p of filtered) {
+    if (!picked.has(p.id)) items.push(p);
+  }
+  return items;
+}
+
 // Orden de categorías en el grid "Todos"
 const GRID_CAT_ORDER = ['nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones'];
 function catPriority(p) {
@@ -1889,6 +1913,8 @@ function setCategory(cat) {
   searchQuery = '';
   clearActiveFilters();
   document.getElementById('search').value = '';
+  // Retro → default relevance; el resto → temporada más reciente primero
+  seasonSortDir = (cat === 'retro') ? 'relevance' : 'desc';
   buildCatBar();
   buildFilterBar();
   renderAll();
@@ -2398,10 +2424,17 @@ function buildFilterBar() {
   sortWrap.appendChild(sortLbl);
   const sortSel = document.createElement('select');
   sortSel.className = 'filter-select';
-  [
-    { value: 'desc', label: isEs ? 'Reciente ↓' : 'Newest ↓' },
-    { value: 'asc',  label: isEs ? 'Antiguo ↑'  : 'Oldest ↑'  },
-  ].forEach(({ value, label }) => {
+  const sortOpts = activeCat === 'retro'
+    ? [
+        { value: 'relevance', label: isEs ? 'Relevante'  : 'Relevant'  },
+        { value: 'desc',      label: isEs ? 'Reciente ↓' : 'Newest ↓'  },
+        { value: 'asc',       label: isEs ? 'Antiguo ↑'  : 'Oldest ↑'  },
+      ]
+    : [
+        { value: 'desc', label: isEs ? 'Reciente ↓' : 'Newest ↓' },
+        { value: 'asc',  label: isEs ? 'Antiguo ↑'  : 'Oldest ↑' },
+      ];
+  sortOpts.forEach(({ value, label }) => {
     const opt = document.createElement('option');
     opt.value = value;
     opt.textContent = label;
@@ -2447,18 +2480,21 @@ function getFiltered() {
     // Vista "Todos": ordenar por categoría prioritaria
     result = result.slice().sort((a, b) => catPriority(a) - catPriority(b));
   } else if (activeCat === 'retro') {
-    // Vista Retro: primero los más relevantes, luego por temporada
-    result = result.slice().sort((a, b) => {
-      const pa = retroPriority(a), pb = retroPriority(b);
-      if (pa !== pb) return pa - pb;
-      const sa = extractSeason(a.nameEn), sb = extractSeason(b.nameEn);
-      const ya = sa ? (seasonStartYear(sa) ?? 0) : null;
-      const yb = sb ? (seasonStartYear(sb) ?? 0) : null;
-      if (ya === null && yb === null) return 0;
-      if (ya === null) return 1;
-      if (yb === null) return -1;
-      return seasonSortDir === 'desc' ? yb - ya : ya - yb;
-    });
+    if (seasonSortDir === 'relevance') {
+      // Modo relevancia: 4 por equipo prioritario, resto al final
+      result = getRetroRelevanceItems(result);
+    } else {
+      // Modo libre: sort por temporada según elección del usuario
+      result = result.slice().sort((a, b) => {
+        const sa = extractSeason(a.nameEn), sb = extractSeason(b.nameEn);
+        const ya = sa ? (seasonStartYear(sa) ?? 0) : null;
+        const yb = sb ? (seasonStartYear(sb) ?? 0) : null;
+        if (ya === null && yb === null) return 0;
+        if (ya === null) return 1;
+        if (yb === null) return -1;
+        return seasonSortDir === 'desc' ? yb - ya : ya - yb;
+      });
+    }
   } else {
     // Vista de categoría: ordenar por temporada según seasonSortDir
     result = result.slice().sort((a, b) => {
