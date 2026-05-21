@@ -1540,6 +1540,10 @@ let activeSocioCode = null;       // código SOCIO que inició sesión
 let discountMode  = false;        // true cuando un código de descuento 33% está activo
 let activeDiscountCode = null;    // código de descuento que inició sesión
 
+let variableCouponMode = false;   // true cuando un cupón variable está activo
+let variableCouponPct  = 0;       // porcentaje de descuento (ej. 0.15 = 15%)
+let activeCouponCode   = null;    // código del cupón variable activo
+
 // Códigos SOCIO (precios en $, modo administrador)
 const SOCIO_CODES    = new Set(['GIL13','BOSS7','JORGE71','MALYZ15',
 'SOTO22','RONCOLA10','ADMIN8371','MARTINHA19','YECASE20', 'JOJELROJEL']);
@@ -1547,9 +1551,22 @@ const SOCIO_CODES    = new Set(['GIL13','BOSS7','JORGE71','MALYZ15',
 // Códigos de descuento 33% (precios normales con -33%, vista de usuario normal)
 const DISCOUNT_CODES = new Set(['RAUL20','JUANCHI', 'GLEZ15', 'CHIGLESIA', 'TAYRON18', 'CABEZON156']);
 
+// ── Cupones de descuento variable ────────────────────────────────────────────
+// Edita este objeto para añadir, cambiar o eliminar cupones promocionales.
+// Formato: "CÓDIGO": porcentaje_decimal  (0.15 = 15%, 0.20 = 20%, etc.)
+const cuponesVariables = {
+  'ANITA15': 0.15,
+  //'VERANO20': 0.20,
+};
+
 /** Aplica el 33,3% de descuento redondeando hacia arriba a unidades enteras. */
 function getDiscountedPrice(base) {
   return Math.ceil(base * 2 / 3);
+}
+
+/** Aplica el porcentaje del cupón variable activo, redondeando hacia arriba. */
+function getVariableCouponPrice(base) {
+  return Math.ceil(base * (1 - variableCouponPct));
 }
 
 // Detecta "Player Version", "player version", o "player" como palabra independiente
@@ -2723,11 +2740,22 @@ function renderFeatured() {
 
   scroll.innerHTML = '';
   for (const p of items) {
-    const price  = getBasePrice(p);
-    const { main: priceMain } = t().price_fmt(price);
-    const isPlayer  = PLAYER_RE.test(p.nameEn);
+    const price = getBasePrice(p);
+    let priceHtml;
+    if (discountMode) {
+      const discounted = getDiscountedPrice(price);
+      priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">-33%</span>`;
+    } else if (variableCouponMode) {
+      const discounted = getVariableCouponPrice(price);
+      const pctLabel   = `-${Math.round(variableCouponPct * 100)}%`;
+      priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">${pctLabel}</span>`;
+    } else {
+      const { main } = t().price_fmt(price);
+      priceHtml = main;
+    }
+    const isPlayer   = PLAYER_RE.test(p.nameEn);
     const isRetroKit = (p.cats || []).includes('retro');
-    const card   = document.createElement('div');
+    const card = document.createElement('div');
     card.className = 'featured-card';
     card.onclick   = () => openModal(p);
     card.innerHTML = `
@@ -2740,7 +2768,7 @@ function renderFeatured() {
       <div class="featured-card-body">
         <div class="featured-card-name">${escHtml(p.nameEn)}</div>
         <div class="featured-card-price">
-          ${priceMain}
+          ${priceHtml}
           ${isPlayer ? '<span class="badge-player">PLAYER</span>' : ''}
         </div>
       </div>`;
@@ -2994,13 +3022,18 @@ function createCard(p, idx = 0) {
   const player   = isPlayerVersion(p);
   const hiPri    = idx < 12 ? ' fetchpriority="high"' : '';
 
-  // Precio a mostrar: normal, socio o descuento 33%
+  // Precio a mostrar: normal, socio, descuento 33% o cupón variable
   let priceHtml, priceSubHtml;
   if (discountMode) {
     const discounted = getDiscountedPrice(base);
     const origFmt    = fmtEur(base);
     const discFmt    = fmtEur(discounted);
     priceHtml    = `<span class="price-original">${origFmt}</span>${discFmt}<span class="badge-discount">-33%</span>`;
+    priceSubHtml = '';
+  } else if (variableCouponMode) {
+    const discounted = getVariableCouponPrice(base);
+    const pctLabel   = `-${Math.round(variableCouponPct * 100)}%`;
+    priceHtml    = `<span class="price-original">${fmtEur(base)}</span>${fmtEur(discounted)}<span class="badge-discount">${pctLabel}</span>`;
     priceSubHtml = '';
   } else {
     const { main, sub } = t().price_fmt(base);
@@ -3139,7 +3172,8 @@ function buildSizeGrid(sizes) {
 function getModalPriceBase() {
   if (!currentProduct) return 0;
   let base = getBasePrice(currentProduct);
-  if (discountMode) base = getDiscountedPrice(base);
+  if (discountMode)           base = getDiscountedPrice(base);
+  else if (variableCouponMode) base = getVariableCouponPrice(base);
   let total = base;
   if (document.getElementById('opt-dorsal').checked) total += 3;
   if (document.getElementById('opt-patch').checked)  total += 1;
@@ -3160,6 +3194,11 @@ function updateModalPrice() {
   if (discountMode) {
     const origBase   = getModalOriginalBase();
     priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origBase)}</span>${fmtEur(price)}<span class="badge-discount" style="font-size:12px;padding:3px 7px;">-33%</span>`;
+    priceSubEl.textContent = '';
+  } else if (variableCouponMode) {
+    const origBase  = getModalOriginalBase();
+    const pctLabel  = `-${Math.round(variableCouponPct * 100)}%`;
+    priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origBase)}</span>${fmtEur(price)}<span class="badge-discount" style="font-size:12px;padding:3px 7px;">${pctLabel}</span>`;
     priceSubEl.textContent = '';
   } else {
     const { main, sub } = t().price_fmt(price);
@@ -3241,7 +3280,9 @@ function addToCart() {
     // Guardamos el precio base original para mostrar el desglose del descuento en checkout
     discountInfo: discountMode
       ? { pct: 33, originalBase: getBasePrice(currentProduct) }
-      : null,
+      : variableCouponMode
+        ? { pct: Math.round(variableCouponPct * 100), originalBase: getBasePrice(currentProduct) }
+        : null,
   });
 
   saveCart();
@@ -3363,7 +3404,7 @@ function updateCheckoutTotals() {
     document.getElementById('co-subtotal').textContent         = fmtUsd(raw);
     document.getElementById('co-conversion-label').textContent = `× ${EUR_RATE} =`;
     document.getElementById('co-conversion-val').textContent   = fmtEur(totalEur);
-  } else if (discountMode) {
+  } else if (discountMode || variableCouponMode) {
     subtotalRow.style.display   = 'none';
     conversionRow.style.display = 'none';
     // Calcular descuento total: suma de (originalBase - discountedBase) por ítem
@@ -3376,8 +3417,9 @@ function updateCheckoutTotals() {
       }
     }
     if (totalDiscount > 0) {
+      const pctLabel = discountMode ? '33%' : `${Math.round(variableCouponPct * 100)}%`;
       discountRow.style.display = '';
-      document.getElementById('co-discount-label').textContent = 'Descuento 33%';
+      document.getElementById('co-discount-label').textContent = `Descuento ${pctLabel}`;
       document.getElementById('co-discount-val').textContent   = '-' + fmtEur(totalDiscount);
     } else {
       discountRow.style.display = 'none';
@@ -3411,8 +3453,13 @@ function openCheckout() {
 
     let bdHtml = `<div class="checkout-item-breakdown">`;
     if (discountMode && item.discountInfo) {
-      // Mostrar precio original tachado + precio rebajado
+      // Mostrar precio original tachado + precio rebajado (33%)
       const discountedBase = getDiscountedPrice(item.discountInfo.originalBase);
+      bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
+      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(item.discountInfo.originalBase)}</del>${fmtEur(discountedBase)}</span>`;
+    } else if (variableCouponMode && item.discountInfo) {
+      // Mostrar precio original tachado + precio rebajado (cupón variable)
+      const discountedBase = getVariableCouponPrice(item.discountInfo.originalBase);
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
       bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(item.discountInfo.originalBase)}</del>${fmtEur(discountedBase)}</span>`;
     } else {
@@ -3479,9 +3526,10 @@ function openCheckout() {
   // Identificar el código usado para que sea visible en el email recibido
   const codigoSocioEl = document.getElementById('form-codigo-socio');
   if (codigoSocioEl) {
-    if (socioMode && activeSocioCode)       codigoSocioEl.value = activeSocioCode;
-    else if (discountMode && activeDiscountCode) codigoSocioEl.value = `33%: ${activeDiscountCode}`;
-    else                                    codigoSocioEl.value = '';
+    if (socioMode && activeSocioCode)                   codigoSocioEl.value = activeSocioCode;
+    else if (discountMode && activeDiscountCode)        codigoSocioEl.value = `33%: ${activeDiscountCode}`;
+    else if (variableCouponMode && activeCouponCode)    codigoSocioEl.value = `${Math.round(variableCouponPct*100)}%: ${activeCouponCode}`;
+    else                                                codigoSocioEl.value = '';
   }
   document.getElementById('order-success').style.display   = 'none';
   const submitBtn = document.getElementById('order-submit-btn');
@@ -3532,12 +3580,16 @@ function buildWebhookPayload(nombre, telefono, direccion, metodoPago) {
       gasto:    gastoEur + '€',
     };
   });
+  const cuponInfo = discountMode       ? `${activeDiscountCode} (-33%)`
+                  : variableCouponMode ? `${activeCouponCode} (-${Math.round(variableCouponPct*100)}%)`
+                  : '';
   return {
     cliente:    nombre,
     telefono:   telefono,
     direccion:  direccion,
     metodoPago: metodoPago,
-    carrito:   carritoPayload,
+    cupon:      cuponInfo,
+    carrito:    carritoPayload,
   };
 }
 
@@ -3639,12 +3691,12 @@ function updateUserMenuState() {
   const loginPanel  = document.getElementById('user-menu-login');
   const activePanel = document.getElementById('user-menu-active');
   const label       = document.getElementById('socio-active-label');
-  if (socioMode || discountMode) {
+  if (socioMode || discountMode || variableCouponMode) {
     loginPanel.style.display  = 'none';
     activePanel.style.display = 'block';
-    label.textContent = discountMode
-      ? '✓ Descuento 33% activo'
-      : '✓ Modo socio activo';
+    label.textContent = discountMode        ? '✓ Descuento 33% activo'
+                      : variableCouponMode  ? `✓ Descuento ${Math.round(variableCouponPct*100)}% activo`
+                      :                      '✓ Modo socio activo';
   } else {
     loginPanel.style.display  = 'block';
     activePanel.style.display = 'none';
@@ -3653,11 +3705,12 @@ function updateUserMenuState() {
 
 function updateUserBtn() {
   const btn = document.getElementById('user-btn');
-  const anyActive = socioMode || discountMode;
+  const anyActive = socioMode || discountMode || variableCouponMode;
   btn.classList.toggle('active', anyActive);
-  btn.title = discountMode ? 'Descuento 33% activo'
-            : socioMode    ? 'Modo socio activo'
-            :                'Acceso socio';
+  btn.title = discountMode       ? 'Descuento 33% activo'
+            : variableCouponMode ? `Descuento ${Math.round(variableCouponPct*100)}% activo`
+            : socioMode          ? 'Modo socio activo'
+            :                      'Acceso socio';
 }
 
 function submitUserCode() {
@@ -3665,7 +3718,8 @@ function submitUserCode() {
   const error = document.getElementById('user-code-error');
   const code  = input.value.trim().toUpperCase();
 
-  if (!SOCIO_CODES.has(code) && !DISCOUNT_CODES.has(code)) {
+  const variablePct = cuponesVariables[code];
+  if (!SOCIO_CODES.has(code) && !DISCOUNT_CODES.has(code) && variablePct === undefined) {
     error.textContent = 'Código no válido';
     error.style.display = 'block';
     input.value = '';
@@ -3677,18 +3731,26 @@ function submitUserCode() {
   if (SOCIO_CODES.has(code)) {
     activeSocioCode    = code;
     socioMode          = true;
-    discountMode       = false;
-    activeDiscountCode = null;
+    discountMode       = false;  activeDiscountCode = null;
+    variableCouponMode = false;  variableCouponPct  = 0;  activeCouponCode = null;
     localStorage.setItem('kz-socio-code', code); // persistir solo códigos SOCIO
     showToast('✓ Modo socio activado');
-  } else {
+  } else if (DISCOUNT_CODES.has(code)) {
     activeDiscountCode = code;
     discountMode       = true;
-    socioMode          = false;
-    activeSocioCode    = null;
+    socioMode          = false;  activeSocioCode    = null;
+    variableCouponMode = false;  variableCouponPct  = 0;  activeCouponCode = null;
     // Código de descuento: NO sobrescribir localStorage
     // (si había un socio base guardado, se mantiene intacto para la próxima recarga)
     showToast('✓ Descuento 33% activado');
+  } else {
+    // Cupón variable
+    activeCouponCode   = code;
+    variableCouponMode = true;
+    variableCouponPct  = variablePct;
+    socioMode          = false;  activeSocioCode    = null;
+    discountMode       = false;  activeDiscountCode = null;
+    showToast(`✓ Descuento ${Math.round(variablePct * 100)}% activado`);
   }
 
   document.getElementById('user-menu').classList.remove('open');
@@ -3700,11 +3762,10 @@ function submitUserCode() {
 }
 
 function deactivateUser() {
-  const wasDiscount = discountMode;
-  socioMode          = false;
-  activeSocioCode    = null;
-  discountMode       = false;
-  activeDiscountCode = null;
+  const wasDiscount = discountMode || variableCouponMode;
+  socioMode          = false;  activeSocioCode    = null;
+  discountMode       = false;  activeDiscountCode = null;
+  variableCouponMode = false;  variableCouponPct  = 0;  activeCouponCode = null;
   localStorage.removeItem('kz-socio-code'); // borrar persistencia al cerrar sesión explícitamente
   document.getElementById('user-menu').classList.remove('open');
   updateUserBtn();
