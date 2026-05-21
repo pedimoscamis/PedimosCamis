@@ -6,7 +6,8 @@
       "Bash(node scraper.js)",
       "Bash(npm install *)",
       "Bash(node apply-cloudinary.js)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(python -c \"import json; d=json.load\\(open\\('data/products.json'\\)\\); print\\(f'Total productos: {len\\(d\\)}'\\); p=d[0]; print\\('Primer producto keys:', list\\(p.keys\\(\\)\\)\\); print\\('img:', p.get\\('img','NO IMG'\\)[:80]\\)\")"
     ]
   }
 }
