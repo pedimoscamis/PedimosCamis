@@ -1149,6 +1149,15 @@
       overflow: hidden;
       background: #1c1c1c;
       display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    /* Badge RETRO superpuesto arriba-izquierda dentro de la imagen */
+    .featured-badge-retro {
+      position: absolute; top: 7px; left: 7px; z-index: 2;
+      background: var(--accent); color: #fff;
+      font-size: 8px; font-weight: 700;
+      letter-spacing: .6px; padding: 2px 5px;
+      border-radius: 3px; pointer-events: none;
     }
     .featured-card-img {
       width: 100%; height: 100%;
@@ -1764,7 +1773,7 @@ let searchQuery = '';
 let currentProduct = null;
 let selectedSize = null;
 let cart = JSON.parse(localStorage.getItem('kz-cart') || '[]');
-let activeFilters  = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set() };
+let activeFilters  = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set(), liga: new Set() };
 let seasonSortDir  = 'desc'; // 'desc' = más reciente primero, 'asc' = más antiguo
 let favorites      = new Set(JSON.parse(localStorage.getItem('kz-fav') || '[]'));
 
@@ -2220,16 +2229,21 @@ function matchesFilter(p) {
   if (f.temporada.size > 0) {
     if (![...f.temporada].some(s => matchesSeason(p.nameEn, s))) return false;
   }
+  if (f.liga.size > 0) {
+    const cats = p.cats || [];
+    if (![...f.liga].some(l => cats.includes(l))) return false;
+  }
   return true;
 }
 
 function hasActiveFilters() {
   return activeFilters.teams.size > 0 || activeFilters.tipos.size > 0 ||
-         activeFilters.equipacion.size > 0 || activeFilters.temporada.size > 0;
+         activeFilters.equipacion.size > 0 || activeFilters.temporada.size > 0 ||
+         activeFilters.liga.size > 0;
 }
 
 function clearActiveFilters() {
-  activeFilters = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set() };
+  activeFilters = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set(), liga: new Set() };
 }
 
 function toggleFilter(group, value) {
@@ -2332,9 +2346,10 @@ function buildFilterBar() {
     return;
   }
 
-  // Mundial 2026: usar el pool canónico como base de los filtros
+  // Mundial 2026: solo equipaciones 2026 (sin retros del escaparate)
+  const mundialBase = p => isMundial2026(p) && !(p.cats || []).includes('retro');
   const catProducts = activeCat === 'mundial2026'
-    ? getMundialItems()
+    ? allProducts.filter(mundialBase)
     : allProducts.filter(p => (p.cats || []).includes(activeCat));
   if (catProducts.length === 0) { bar.style.display = 'none'; return; }
 
@@ -2349,6 +2364,34 @@ function buildFilterBar() {
   navScroll.reset(); // Al entrar en categoría, siempre mostrar la barra de filtros
 
   const isEs = lang === 'es';
+
+  // ── 0. Liga — select → #filter-pill-rows (solo en categorías multi-liga) ──
+  const LIGA_FILTER_CATS = new Set(['women','retro','kids','nuevatemporada']);
+  if (LIGA_FILTER_CATS.has(activeCat)) {
+    const LIGA_LIST = [
+      { cat: 'laliga',     es: 'LaLiga',        en: 'LaLiga' },
+      { cat: 'premier',    es: 'Premier',        en: 'Premier' },
+      { cat: 'seriea',     es: 'Serie A',        en: 'Serie A' },
+      { cat: 'bundesliga', es: 'Bundesliga',     en: 'Bundesliga' },
+      { cat: 'ligue1',     es: 'Ligue 1',        en: 'Ligue 1' },
+      { cat: 'selecciones',es: 'Selecciones',    en: 'National Teams' },
+      { cat: 'sudamerica', es: 'Sudamérica',     en: 'South America' },
+      { cat: 'europa',     es: 'Europa',         en: 'Europe' },
+      { cat: 'nba',        es: 'NBA',            en: 'NBA' },
+      { cat: 'nfl',        es: 'NFL',            en: 'NFL' },
+    ];
+    const ligasPresent = LIGA_LIST.filter(({ cat }) =>
+      catProducts.some(p => (p.cats || []).includes(cat))
+    );
+    if (ligasPresent.length > 1) {
+      pillRows.appendChild(makeSelectRow(
+        isEs ? 'Liga' : 'League',
+        'liga',
+        ligasPresent.map(({ cat, es, en }) => ({ value: cat, label: isEs ? es : en })),
+        isEs ? 'Todas las ligas' : 'All leagues'
+      ));
+    }
+  }
 
   // ── 1. Equipo — select → #filter-pill-rows (nivel 1, con Tipo y Equipación) ──
   const NO_TEAM_CATS = new Set(['streetwear','windbreaker','otros']);
@@ -2470,9 +2513,9 @@ function getFiltered() {
     return allProducts.filter(p => favorites.has(p.nameEn));
   }
 
-  // Vista Mundial 2026: orden canónico + activeFilters aplicados encima
+  // Vista Mundial 2026: equipaciones 2026 en orden canónico, sin retros del escaparate
   if (activeCat === 'mundial2026') {
-    const base = getMundialItems();
+    const base = getMundialItems().filter(p => !(p.cats || []).includes('retro'));
     return hasActiveFilters() ? base.filter(matchesFilter) : base;
   }
 
@@ -2565,10 +2608,13 @@ function getMundialItems(maxExtra = Infinity) {
   const picked = new Set();
   const items  = [];
 
-  // Overrides para el slot 4 (Retro): predicate adicional por índice de selección
-  // índice 0 = España → forzar obligatoriamente la de 2010 Home
+  // Overrides para el slot 4 (Retro): predicate adicional por índice de selección.
+  // índice 0 = España → "Retro 2010 Spain Home S-XXL" (adulto estándar, ni kids ni player ni manga larga)
   const RETRO_SLOT_FILTER = {
-    0: p => p.nameEn.includes('2010') && isMundialHome(p.nameEn), // España 2010 Home
+    0: p => p.nameEn === 'Retro 2010 Spain Home S-XXL'
+         || (p.nameEn.includes('2010') && isMundialHome(p.nameEn)
+             && !PLAYER_RE.test(p.nameEn)
+             && !/kids|16[-–]28|long\s*sleeve|manga\s*larga|goalkeeper/i.test(p.nameEn)),
   };
 
   for (let si = 0; si < MUNDIAL_PRIORITY.length; si++) {
@@ -2665,13 +2711,13 @@ function renderFeatured() {
         ${p.img
           ? `<img class="featured-card-img lazy" data-src="${p.img}" alt="${escHtml(p.nameEn)}" loading="lazy" onerror="this.style.display='none'">`
           : jerseyIcon(56)}
+        ${isRetroKit ? '<span class="featured-badge-retro">RETRO</span>' : ''}
       </div>
       <div class="featured-card-body">
         <div class="featured-card-name">${escHtml(p.nameEn)}</div>
         <div class="featured-card-price">
           ${priceMain}
-          ${isPlayer   ? '<span class="badge-player">PLAYER</span>' : ''}
-          ${isRetroKit ? '<span class="badge-retro-inline">RETRO</span>' : ''}
+          ${isPlayer ? '<span class="badge-player">PLAYER</span>' : ''}
         </div>
       </div>`;
     scroll.appendChild(card);
