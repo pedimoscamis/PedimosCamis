@@ -3992,9 +3992,17 @@ function buildSizeGrid(sizes) {
 // En modo descuento aplica el 33% sólo al precio base (los extras son siempre a precio completo).
 function getModalPriceBase() {
   if (!currentProduct) return 0;
-  let base = getBasePrice(currentProduct);
-  if (discountMode)           base = getDiscountedPrice(base);
-  else if (variableCouponMode) base = getVariableCouponPrice(base);
+  let base;
+  if (currentProduct.discountInfo?.source === 'ucl-flash') {
+    // Precio ya rebajado un 10% — inyectado directamente desde renderUclFlash()
+    base = currentProduct.priceUsd;
+  } else if (discountMode) {
+    base = getDiscountedPrice(getBasePrice(currentProduct));
+  } else if (variableCouponMode) {
+    base = getVariableCouponPrice(getBasePrice(currentProduct));
+  } else {
+    base = getBasePrice(currentProduct);
+  }
   let total = base;
   if (document.getElementById('opt-dorsal').checked) total += 3;
   if (document.getElementById('opt-patch').checked)  total += 1;
@@ -4012,7 +4020,11 @@ function updateModalPrice() {
   const priceMainEl = document.getElementById('modal-price-main');
   const priceSubEl  = document.getElementById('modal-price-sub');
 
-  if (discountMode) {
+  if (currentProduct?.discountInfo?.source === 'ucl-flash') {
+    const origBase = currentProduct.discountInfo.originalBase;
+    priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origBase)}</span>${fmtEur(price)}<span class="badge-discount" style="font-size:12px;padding:3px 7px;">-10%</span>`;
+    priceSubEl.textContent = '';
+  } else if (discountMode) {
     const origBase   = getModalOriginalBase();
     priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origBase)}</span>${fmtEur(price)}<span class="badge-discount" style="font-size:12px;padding:3px 7px;">-33%</span>`;
     priceSubEl.textContent = '';
@@ -4099,11 +4111,13 @@ function addToCart() {
     priceUsd: usd,
     customizations,
     // Guardamos el precio base original para mostrar el desglose del descuento en checkout
-    discountInfo: discountMode
-      ? { pct: 33, originalBase: getBasePrice(currentProduct) }
-      : variableCouponMode
-        ? { pct: Math.round(variableCouponPct * 100), originalBase: getBasePrice(currentProduct) }
-        : null,
+    discountInfo: currentProduct.discountInfo?.source === 'ucl-flash'
+      ? currentProduct.discountInfo   // preservar descuento UCL Flash (10%, precio ya aplicado)
+      : discountMode
+        ? { pct: 33, originalBase: getBasePrice(currentProduct) }
+        : variableCouponMode
+          ? { pct: Math.round(variableCouponPct * 100), originalBase: getBasePrice(currentProduct) }
+          : null,
   });
 
   saveCart();
