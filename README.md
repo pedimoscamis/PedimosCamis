@@ -1,206 +1,48 @@
-# PedimosCamis? 🛍️
+# 🛒 PedimosCamis - Mock E-commerce SPA
 
-Tienda online de camisetas de fútbol y NBA. Catálogo extraído automáticamente de Yupoo, desplegada en GitHub Pages con actualización diaria vía GitHub Actions.
+![PedimosCamis Cover](https://res.cloudinary.com/dbeystyls/image/upload/v1779456332/ChatGPT_Image_22_may_2026_15_11_57_asrrdf.png)
 
----
-
-## Requisitos previos
-
-- [Node.js](https://nodejs.org/) v18 o superior
-- Conexión a internet (el scraper accede a ggjersey.x.yupoo.com)
-- Cuenta en GitHub (para el despliegue en GitHub Pages)
+> ⚠️ **Aviso Legal / Disclaimer:** Este repositorio y la página web asociada son un proyecto personal de desarrollo web creado exclusivamente con fines educativos, experimentales y de portfolio. **NO es una tienda real**. Este proyecto no tiene fines comerciales, no realiza ventas, no procesa pagos reales y no representa ni está afiliado a ninguna marca, empresa u organización oficial.
 
 ---
 
-## Instalación
+## 💻 Sobre el Proyecto
 
-```bash
-# Clona el repositorio
-git clone https://github.com/TU_USUARIO/kitzone.git
-cd kitzone
+**PedimosCamis** es una simulación completa de un e-commerce construida como una Single Page Application (SPA) utilizando **JavaScript Vanilla**. El objetivo principal de este proyecto es demostrar habilidades en la estructuración de aplicaciones web sin depender de frameworks pesados, manejando el estado del cliente, la manipulación del DOM y las interacciones asíncronas desde cero.
 
-# Instala las dependencias
-npm install
-```
+## ✨ Características Técnicas (Simulación)
 
----
+* **Arquitectura Zero-Dependency:** Frontend construido 100% con HTML5, CSS3 y JavaScript moderno (ES6+), demostrando control total sobre el rendimiento y la lógica del navegador.
+* **Gestión de Estado Dinámica:** Sistema propio para el manejo del catálogo, filtrado de productos y un carrito de compras complejo (agrupación por ID y variantes, cálculo de subtotales).
+* **UI/UX Interactiva:**
+    * Interfaz visual estructurada en filas deslizables (estilo "Netflix") para la exhibición de productos.
+    * Modales interactivos para la selección de variables (talla, versión, personalización).
+    * Efectos visuales y animaciones avanzadas mediante CSS puro (`@keyframes`, pseudo-elementos).
+* **Simulación de Checkout y Backend:**
+    * Formulario de validación de pedidos en el lado del cliente.
+    * Integración asíncrona (`Fetch API`) con un Webhook (Google Apps Script) para simular el registro de datos en un backend serverless y disparar correos de prueba en formato HTML.
+* **Diseño Responsivo:** Patrón *Mobile First* para asegurar que la interfaz fluya perfectamente en cualquier dispositivo.
 
-## Uso
+## 🛠️ Tecnologías Empleadas
 
-### 1. Ejecutar el scraper por primera vez
+* **Frontend:** HTML5, CSS3 (Variables, Flexbox, Grid), Vanilla JS.
+* **Alojamiento de assets:** Cloudinary CDN.
+* **Backend Simulado:** Google Apps Script (Procesamiento de JSON a través de endpoints `doPost`).
+* **Control de Versiones:** Git & GitHub.
 
-```bash
-node scraper.js
-```
+## 💡 Lógica del Flujo (Frontend)
 
-> **Aviso:** La primera ejecución recorre las 127 páginas del catálogo (con delays de 800ms entre páginas y 600ms entre álbumes). Puede tardar **entre 3 y 6 horas** dependiendo de tu conexión. Las ejecuciones posteriores son incrementales y solo procesan productos nuevos.
+1. **Renderizado:** El catálogo se inyecta dinámicamente en el DOM a partir de una base de datos local en formato JSON (*Mock Data*).
+2. **Interacción:** El usuario puede filtrar categorías, ver detalles y configurar parámetros específicos de un artículo simulado.
+3. **Manejo del Carrito:** Los arrays de datos se actualizan en tiempo real, reflejando cantidades y sumatorios visuales.
+4. **Envío de Datos:** Al finalizar, el sistema empaqueta un payload JSON estructurado y realiza una petición POST al script de Google para registrar la interacción.
 
-Al terminar, genera `data/products-raw.json` con todos los productos y sus imágenes.
+## 📝 Roadmap / Futuras Mejoras de Código
 
-### 2. Categorizar los productos
-
-```bash
-node categorize.js
-```
-
-Lee `products-raw.json` y genera `data/products.json` con categorías, tallas y precios. Tarda solo unos segundos.
-
-### 3. Arrancar el servidor local
-
-```bash
-node server.js
-```
-
-Abre [http://localhost:3000](http://localhost:3000) en tu navegador. La tienda carga `data/products.json` vía fetch y muestra el catálogo completo.
+* [ ] Implementación de *Fuzzy Search* para optimizar el motor de búsqueda interno.
+* [ ] Refactorización de la base de datos Mock a un entorno Firebase o MongoDB.
+* [ ] Soporte de internacionalización (i18n) simulado.
+* [ ] Optimización de carga de imágenes (Lazy Loading nativo).
 
 ---
-
-## Despliegue en GitHub Pages
-
-### Paso 1 — Crear el repositorio en GitHub
-
-1. Ve a [github.com/new](https://github.com/new) y crea un repositorio llamado `kitzone`.
-2. Sube el proyecto:
-
-```bash
-git init
-git add .
-git commit -m "feat: PedimosCamis? inicial"
-git remote add origin https://github.com/TU_USUARIO/kitzone.git
-git push -u origin main
-```
-
-### Paso 2 — Activar GitHub Pages
-
-1. Ve a **Settings → Pages** en tu repositorio.
-2. En **Source**, selecciona **GitHub Actions**.
-3. El workflow `deploy.yml` se ejecutará automáticamente con cada push a `main`.
-
-### Paso 3 — Verificar el despliegue
-
-La web quedará disponible en:
-
-```
-https://TU_USUARIO.github.io/kitzone/
-```
-
-> Si el nombre de tu repositorio es diferente a `kitzone`, actualiza el campo `BASE_PATH` en `index.html` (línea con `'/kitzone'`).
-
----
-
-## Actualización automática del catálogo
-
-El workflow `update-catalog.yml` se ejecuta **cada día a las 4:00 AM UTC**:
-
-1. Ejecuta `node scraper.js` (incremental, solo productos nuevos)
-2. Ejecuta `node categorize.js`
-3. Si `products.json` cambió, hace commit y push automático
-4. El workflow `deploy.yml` se dispara y redespliega la web
-
-### Forzar actualización manual
-
-1. Ve a la pestaña **Actions** de tu repositorio en GitHub.
-2. Selecciona el workflow **"Actualizar catálogo"**.
-3. Haz clic en **"Run workflow"**.
-4. Opcional: marca **"Forzar scraping completo"** para ignorar la caché y reescrapear todo.
-
----
-
-## Añadir imágenes propias
-
-Si quieres usar imágenes alojadas por ti mismo en lugar de las de Yupoo:
-
-1. Guarda la imagen en la carpeta `images/` (ej: `images/12345.jpg`).
-2. Edita `data/products.json` y modifica el campo `img` del producto correspondiente:
-
-```json
-{
-  "id": "12345",
-  "img": "./images/12345.jpg",
-  ...
-}
-```
-
-3. Haz commit y push. El workflow de despliegue actualizará la web.
-
-> Las imágenes en `images/` se despliegan junto al resto del sitio en GitHub Pages.
-
----
-
-## Estructura de precios
-
-| Producto | Precio base |
-|---|---|
-| Camiseta normal | $8 |
-| Camiseta retro | $13 |
-| + Nombre y dorsal | +$3 |
-| + Parche UCL | +$1 |
-| + Parche Mundial 2026 | +$1 |
-| + Brazalete Capitán | +$1 |
-
-**Conversión a euros:** precio_usd × 0.90
-
-### Cómo cambiar los precios
-
-Edita `categorize.js`, función `getPrice()`:
-
-```js
-function getPrice(cat, name) {
-  if (cat === 'retro' || name.toLowerCase().includes('retro')) return 13; // precio retro
-  return 8; // precio normal
-}
-```
-
-Para cambiar el extra de los parches o el nombre/dorsal, busca en `index.html`:
-
-```js
-if (document.getElementById('opt-dorsal').checked) usd += 3;  // nombre+dorsal
-if (document.getElementById('opt-ucl').checked) usd += 1;     // UCL
-if (document.getElementById('opt-wc').checked) usd += 1;      // Mundial
-if (document.getElementById('opt-cap').checked) usd += 1;     // Capitán
-```
-
-El tipo de cambio EUR se ajusta en la constante `EUR_RATE` (por defecto `0.90`).
-
----
-
-## Cambiar el email cuando esté disponible
-
-Busca en `index.html` la línea:
-
-```html
-<span>Email: pedimoscamis@gmail.com</span>
-```
-
-Reemplázala por:
-
-```html
-<a href="mailto:TU_EMAIL@ejemplo.com">TU_EMAIL@ejemplo.com</a>
-```
-
----
-
-## Contacto
-
-- **Email:** pedimoscamis@gmail.com
-
----
-
-## Estructura del proyecto
-
-```
-kitzone/
-├── index.html              # SPA completa (HTML + CSS + JS vanilla)
-├── server.js               # Servidor Express local
-├── scraper.js              # Extrae catálogo de Yupoo
-├── categorize.js           # Categoriza y enriquece los productos
-├── package.json
-├── data/
-│   ├── products-raw.json   # Datos crudos del scraper
-│   └── products.json       # Catálogo final (lo lee la web)
-├── images/                 # Imágenes propias (opcional)
-└── .github/
-    └── workflows/
-        ├── update-catalog.yml  # Actualización diaria automática
-        └── deploy.yml          # Despliegue en GitHub Pages
-```
+*Desarrollado como proyecto personal para la exploración y mejora de técnicas de programación frontend.*
