@@ -897,6 +897,23 @@
     }
     .cart-remove-btn:hover { color: var(--accent); }
 
+    /* ─── Qty controls inside cart ──────────────────────── */
+    .cart-qty-ctrl {
+      display: flex; align-items: center; gap: 6px; margin-top: 7px;
+    }
+    .qty-btn {
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); cursor: pointer; border-radius: 5px;
+      width: 26px; height: 26px; font-size: 15px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .18s, color .18s; flex-shrink: 0;
+    }
+    .qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .qty-num {
+      font-size: 14px; font-weight: 700;
+      min-width: 22px; text-align: center;
+    }
+
     #cart-empty {
       text-align: center; color: var(--muted); padding: 60px 0;
       font-size: 14px;
@@ -1598,7 +1615,7 @@
 
 <!-- ─── Header ─────────────────────────────────────────────────────────── -->
 <header id="header">
-  <div id="logo" onclick="goHome()">PEDIMOS<span>CAMIS?</span></div>
+  <div id="logo" onclick="logoClick()">PEDIMOS<span>CAMIS?</span></div>
   <div id="search-wrap">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <input id="search" type="search" autocomplete="off" />
@@ -2100,6 +2117,11 @@
 let socioMode     = false;        // true cuando un código SOCIO está activo
 let activeSocioCode = null;       // código SOCIO que inició sesión
 
+// ── Modo Admin (easter egg: 5 clicks rápidos en el logo) ─────────────────────
+let adminMode    = false;         // muestra botones Yupoo; se reinicia en cada recarga
+let _logoClicks  = 0;
+let _logoTimer   = null;
+
 let discountMode  = false;        // true cuando un código de descuento 33% está activo
 let activeDiscountCode = null;    // código de descuento que inició sesión
 
@@ -2152,7 +2174,8 @@ function getVariableCouponPrice(base) {
 function getShippingCost() {
   const el = document.getElementById('envio-domicilio');
   if (!el || !el.checked) return 0;
-  return cart.length >= SHIPPING_FREE_AT ? 0 : SHIPPING_COST;
+  const totalQty = cart.reduce((s, i) => s + (i.qty || 1), 0);
+  return totalQty >= SHIPPING_FREE_AT ? 0 : SHIPPING_COST;
 }
 
 /** Actualiza el banner de upselling de envío gratis. */
@@ -2160,10 +2183,11 @@ function updateShippingUpsell() {
   const upsellEl = document.getElementById('shipping-upsell');
   if (!upsellEl) return;
   const esDomicilio = document.getElementById('envio-domicilio')?.checked;
-  const missing     = SHIPPING_FREE_AT - cart.length;
+  const totalQty    = cart.reduce((s, i) => s + (i.qty || 1), 0);
+  const missing     = SHIPPING_FREE_AT - totalQty;
   if (esDomicilio && missing > 0) {
     document.getElementById('shipping-upsell-text').innerHTML = t().upsell_shipping(missing);
-    const pct = Math.round((cart.length / SHIPPING_FREE_AT) * 100);
+    const pct = Math.round((totalQty / SHIPPING_FREE_AT) * 100);
     document.getElementById('upsell-bar').style.width = pct + '%';
     upsellEl.style.display = 'block';
   } else {
@@ -2636,6 +2660,34 @@ function goHome() {
 
 function scrollToGrid() {
   document.getElementById('main').scrollIntoView({ behavior: 'smooth' });
+}
+
+/**
+ * Easter-egg: 5 clicks rápidos en el logo activan/desactivan el Modo Admin,
+ * que hace visibles los botones "Ver fotos en Yupoo" solo para el administrador.
+ * Un clic solitario (sin que llegue a 5) navega a Home normalmente.
+ */
+function logoClick() {
+  _logoClicks++;
+  clearTimeout(_logoTimer);
+
+  if (_logoClicks >= 5) {
+    _logoClicks = 0;
+    adminMode = !adminMode;
+    showToast(adminMode ? '🔑 Modo Admin activado' : '🔒 Modo Admin desactivado');
+    // Actualizar botón Yupoo si el modal está abierto
+    if (currentProduct) {
+      document.getElementById('modal-yupoo-btn').style.display =
+        (socioMode || adminMode) ? '' : 'none';
+    }
+    return;
+  }
+
+  // Si no llega a 5 clicks en 700ms → navega a Home
+  _logoTimer = setTimeout(() => {
+    _logoClicks = 0;
+    goHome();
+  }, 700);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -3933,7 +3985,7 @@ function openModal(p) {
   const yupooBtn = document.getElementById('modal-yupoo-btn');
   yupooBtn.href = p.yupooUrl;
   yupooBtn.textContent = t().see_photos;
-  yupooBtn.style.display = socioMode ? '' : 'none';
+  yupooBtn.style.display = (socioMode || adminMode) ? '' : 'none';
 
   // Modal fav button
   const modalFavBtn = document.getElementById('modal-fav-btn');
@@ -4081,44 +4133,63 @@ function closeModalOnOverlay(e) {
 // ═══════════════════════════════════════════════════════════════════════════
 // CART
 // ═══════════════════════════════════════════════════════════════════════════
+
+/** Clave de identidad para detectar artículos duplicados en el carrito. */
+function cartItemKey(item) {
+  const customs = (item.customizations || [])
+    .map(c => c.type === 'dorsal' ? `d:${c.name}:${c.number}` : `p:${c.label}`)
+    .sort().join('|');
+  return `${item.productId}|${item.size}|${customs}`;
+}
+
 function addToCart() {
   if (!selectedSize) {
     showToast(t().size_required);
     return;
   }
-  const usd = getModalPriceBase(); // precio base sin descuento; el dto se aplica en checkout
+  const usd = getModalPriceBase();
   const customizations = [];
   if (document.getElementById('opt-dorsal').checked) {
-    const name = document.getElementById('input-name').value.trim();
+    const name   = document.getElementById('input-name').value.trim();
     const number = document.getElementById('input-number').value.trim();
     customizations.push({ type: 'dorsal', name, number, extraUsd: 3 });
   }
   if (document.getElementById('opt-patch').checked) {
-    const patchType = document.getElementById('patch-type').value;
+    const patchType  = document.getElementById('patch-type').value;
     const patchOther = document.getElementById('patch-other').value.trim();
     const patchLabel = patchType === 'Otro' ? (patchOther || 'Otro') : patchType;
     customizations.push({ type: 'patch', label: patchLabel, extraUsd: 1 });
   }
 
-  cart.push({
-    id: Date.now(),
-    productId: currentProduct.id,
-    name: currentProduct.nameEn,
-    cats: currentProduct.cats,
-    img: currentProduct.img,
-    yupooUrl: currentProduct.yupooUrl,
-    size: selectedSize,
-    priceUsd: usd,
+  const discountInfo = currentProduct.discountInfo?.source === 'ucl-flash'
+    ? currentProduct.discountInfo   // descuento UCL Flash (10%, precio ya aplicado)
+    : discountMode
+      ? { pct: 33, originalBase: getBasePrice(currentProduct) }
+      : variableCouponMode
+        ? { pct: Math.round(variableCouponPct * 100), originalBase: getBasePrice(currentProduct) }
+        : null;
+
+  const newItem = {
+    id:           Date.now(),
+    productId:    currentProduct.id,
+    name:         currentProduct.nameEn,
+    cats:         currentProduct.cats,
+    img:          currentProduct.img,
+    yupooUrl:     currentProduct.yupooUrl,
+    size:         selectedSize,
+    priceUsd:     usd,
+    qty:          1,
     customizations,
-    // Guardamos el precio base original para mostrar el desglose del descuento en checkout
-    discountInfo: currentProduct.discountInfo?.source === 'ucl-flash'
-      ? currentProduct.discountInfo   // preservar descuento UCL Flash (10%, precio ya aplicado)
-      : discountMode
-        ? { pct: 33, originalBase: getBasePrice(currentProduct) }
-        : variableCouponMode
-          ? { pct: Math.round(variableCouponPct * 100), originalBase: getBasePrice(currentProduct) }
-          : null,
-  });
+    discountInfo,
+  };
+
+  // Si ya existe un artículo idéntico, solo incrementar cantidad
+  const existing = cart.find(i => cartItemKey(i) === cartItemKey(newItem));
+  if (existing) {
+    existing.qty = (existing.qty || 1) + 1;
+  } else {
+    cart.push(newItem);
+  }
 
   saveCart();
   closeModal();
@@ -4131,19 +4202,30 @@ function removeFromCart(id) {
   renderCartItems();
 }
 
+/** Sube o baja la cantidad de un artículo del carrito; si llega a 0 lo elimina. */
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  item.qty = (item.qty || 1) + delta;
+  if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+  saveCart();
+  renderCartItems();
+}
+
 function saveCart() {
   localStorage.setItem('kz-cart', JSON.stringify(cart));
   updateCartBadge();
 }
 
 function updateCartBadge() {
-  const badge = document.getElementById('cart-badge');
-  badge.style.display = cart.length ? 'flex' : 'none';
-  badge.textContent = cart.length;
+  const badge    = document.getElementById('cart-badge');
+  const totalQty = cart.reduce((s, i) => s + (i.qty || 1), 0);
+  badge.style.display = totalQty ? 'flex' : 'none';
+  badge.textContent   = totalQty;
 }
 
 function cartTotalUsd() {
-  return cart.reduce((s, i) => s + i.priceUsd, 0);
+  return cart.reduce((s, i) => s + i.priceUsd * (i.qty || 1), 0);
 }
 
 function openCart() {
@@ -4161,10 +4243,8 @@ function closeCart() {
 
 function renderCartItems() {
   const container = document.getElementById('cart-items');
-  const totalVal = document.getElementById('cart-total-val');
-  const total = cartTotalEur();
-
-  totalVal.textContent = t().total_fmt(total);
+  const totalVal  = document.getElementById('cart-total-val');
+  totalVal.textContent = t().total_fmt(cartTotalEur());
 
   if (cart.length === 0) {
     container.innerHTML = `<div id="cart-empty">
@@ -4176,19 +4256,29 @@ function renderCartItems() {
 
   container.innerHTML = '';
   for (const item of cart) {
-    const el = document.createElement('div');
-    el.className = 'cart-item';
+    const qty        = item.qty || 1;
+    const lineTotal  = item.priceUsd * qty;
+    const el         = document.createElement('div');
+    el.className     = 'cart-item';
     const customMeta = buildCustomMeta(item.customizations);
+
     el.innerHTML = `
-      ${item.img ? `<img class="cart-item-img" src="${item.img}" alt="${escHtml(item.name)}" loading="lazy">` : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;">${jerseyIcon(28)}</div>`}
+      ${item.img
+        ? `<img class="cart-item-img" src="${item.img}" alt="${escHtml(item.name)}" loading="lazy">`
+        : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;">${jerseyIcon(28)}</div>`}
       <div class="cart-item-info">
         <div class="cart-item-name">${escHtml(item.name)}</div>
         <div class="cart-item-meta">
           Talla: ${escHtml(item.size)}${customMeta ? '<br>' + customMeta : ''}
         </div>
+        <div class="cart-qty-ctrl">
+          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+          <span class="qty-num">${qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+        </div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <span class="cart-item-price">${t().cart_item_price(item.priceUsd)}</span>
+        <span class="cart-item-price">${t().cart_item_price(lineTotal)}</span>
         <button class="cart-remove-btn" onclick="removeFromCart(${item.id})">×</button>
       </div>`;
     container.appendChild(el);
@@ -4322,12 +4412,13 @@ function openCheckout() {
   const itemsEl = document.getElementById('checkout-items-list');
   itemsEl.innerHTML = '';
   for (const item of cart) {
+    const qty    = item.qty || 1;
     const extras = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
     const base   = item.priceUsd - extras;
     const row    = document.createElement('div');
     row.className = 'checkout-item-row';
 
-    const sym    = socioMode ? '$' : '€';
+    const sym     = socioMode ? '$' : '€';
     const baseEur = socioMode ? Math.round(base * EUR_RATE * 100) / 100 : base;
 
     let bdHtml = `<div class="checkout-item-breakdown">`;
@@ -4341,6 +4432,9 @@ function openCheckout() {
       const discountedBase = getVariableCouponPrice(item.discountInfo.originalBase);
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
       bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(item.discountInfo.originalBase)}</del>${fmtEur(discountedBase)}</span>`;
+    } else if (item.discountInfo?.source === 'ucl-flash') {
+      bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
+      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(item.discountInfo.originalBase)}</del>${fmtEur(base)}</span>`;
     } else {
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>${base}${sym}</span>`;
     }
@@ -4351,11 +4445,23 @@ function openCheckout() {
       else lbl = c.type;
       bdHtml += `<span class="extra">${escHtml(lbl)}</span><span class="extra">+${c.extraUsd}${sym}</span>`;
     }
+    if (qty > 1) {
+      // Mostrar desglose de cantidad: precio unitario × cantidad
+      const unitEur  = socioMode ? Math.round(item.priceUsd * EUR_RATE * 100) / 100 : item.priceUsd;
+      const totalEur = Math.round(unitEur * qty * 100) / 100;
+      bdHtml += `<span style="color:var(--muted)">${isEs ? 'Cantidad' : 'Qty'}</span><span>${fmtEur(unitEur)} × ${qty} = ${fmtEur(totalEur)}</span>`;
+    }
     bdHtml += `</div>`;
 
-    const itemTotalStr = socioMode
-      ? `${fmtUsd(item.priceUsd)} → ${fmtEur(Math.round(item.priceUsd * EUR_RATE * 100) / 100)}`
-      : fmtEur(item.priceUsd);
+    // Total de línea (precio unitario × cantidad)
+    const lineUnitSocio = Math.round(item.priceUsd * EUR_RATE * 100) / 100;
+    const lineUnitNorm  = item.priceUsd;
+    const lineTotal     = socioMode
+      ? Math.round(lineUnitSocio * qty * 100) / 100
+      : lineUnitNorm * qty;
+    const itemTotalStr  = socioMode
+      ? `${fmtUsd(item.priceUsd * qty)} → ${fmtEur(lineTotal)}`
+      : fmtEur(lineTotal);
 
     row.innerHTML = `
       ${item.img
@@ -4363,7 +4469,7 @@ function openCheckout() {
         : ''}
       <div class="checkout-item-img-placeholder"${item.img ? ' style="display:none"' : ''}>${jerseyIcon(28)}</div>
       <div class="checkout-item-body">
-        <div class="checkout-item-name">${escHtml(item.name)}</div>
+        <div class="checkout-item-name">${escHtml(item.name)}${qty > 1 ? ` <span style="font-size:12px;color:var(--muted)">×${qty}</span>` : ''}</div>
         <div class="checkout-item-size">${isEs ? 'Talla' : 'Size'}: ${escHtml(item.size)}</div>
         ${bdHtml}
       </div>
@@ -4384,21 +4490,22 @@ function openCheckout() {
   // Rellenar campos ocultos del formulario con el resumen del pedido
   let pedidoStr = '';
   for (const item of cart) {
+    const qty      = item.qty || 1;
     const dorsal   = item.customizations.find(c => c.type === 'dorsal');
     const patch    = item.customizations.find(c => c.type === 'patch');
     const eurPrice = socioMode ? Math.round(item.priceUsd * EUR_RATE * 100) / 100 : item.priceUsd;
     const nameNum  = dorsal ? `${dorsal.name} #${dorsal.number}` : 'N/A';
     const version  = getKitVersion(item.name);
     const patchStr = patch ? patch.label : 'None';
-    pedidoStr += `${item.name}\n`;
+    pedidoStr += `${item.name}${qty > 1 ? ` (×${qty})` : ''}\n`;
     pedidoStr += `SIZE: ${item.size}\n`;
     pedidoStr += `Name and Number: ${nameNum}\n`;
     pedidoStr += `Version: ${version}\n`;
     pedidoStr += `Patch: ${patchStr}\n`;
     if (item.discountInfo) {
-      pedidoStr += `Precio: ${fmtEur(eurPrice)} (original: ${fmtEur(item.discountInfo.originalBase)})\n\n`;
+      pedidoStr += `Precio: ${fmtEur(eurPrice)}${qty > 1 ? ` × ${qty} = ${fmtEur(Math.round(eurPrice * qty * 100) / 100)}` : ''} (original: ${fmtEur(item.discountInfo.originalBase)})\n\n`;
     } else {
-      pedidoStr += `Precio: ${fmtEur(eurPrice)}\n\n`;
+      pedidoStr += `Precio: ${fmtEur(eurPrice)}${qty > 1 ? ` × ${qty} = ${fmtEur(Math.round(eurPrice * qty * 100) / 100)}` : ''}\n\n`;
     }
   }
   pedidoStr += `Total: ${fmtEur(cartTotalEur())}`;
@@ -4443,7 +4550,9 @@ function closeCheckoutOnOverlay(e) {
 }
 
 function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
-  const carritoPayload = cart.map(item => {
+  // flatMap: si qty > 1, cada artículo se duplica como filas independientes
+  // para que Google Apps Script reciba siempre una fila por unidad.
+  const carritoPayload = cart.flatMap(item => {
     const dorsal  = item.customizations.find(c => c.type === 'dorsal');
     const patch   = item.customizations.find(c => c.type === 'patch');
 
@@ -4465,7 +4574,7 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
     const extras = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
     const coste  = Math.round((socioBase + extras) * EUR_RATE * 100) / 100;
 
-    return {
+    const row = {
       jersey:   item.name,
       version:  PLAYER_RE.test(item.name) ? 'Player' : 'Fan',
       name:     dorsal ? [dorsal.name, dorsal.number].filter(Boolean).join(' ') : '',
@@ -4475,6 +4584,10 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
       cobro,   // número puro — Google Sheets lo lee como numeric
       coste,   // número puro — Google Sheets lo lee como numeric
     };
+
+    // Repetir la fila tantas veces como qty (sin campo cantidad: el backend no lo espera)
+    const qty = item.qty || 1;
+    return Array.from({ length: qty }, () => ({ ...row }));
   });
   const cuponInfo = discountMode       ? `${activeDiscountCode} (-33%)`
                   : variableCouponMode ? `${activeCouponCode} (-${Math.round(variableCouponPct*100)}%)`
