@@ -308,6 +308,7 @@
     #shipping-upsell {
       display: none;
       margin-top: 10px;
+      margin-bottom: 16px;
       padding: 10px 13px;
       border-radius: 8px;
       background: linear-gradient(135deg, rgba(56,189,148,.13), rgba(56,142,189,.10));
@@ -1595,6 +1596,7 @@
                   placeholder="Dudas, preferencias de envío, talla alternativa…"></textarea>
       </div>
 
+      <p id="delivery-note" data-i18n="delivery_note" style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px;line-height:1.4;">⏱️ Plazo de entrega estimado: aproximadamente 2 semanas.</p>
       <button type="submit" id="order-submit-btn">ENVIAR PEDIDO</button>
     </form>
 
@@ -1844,6 +1846,7 @@ const T = {
     upsell_shipping: (n) => `🚚 ¡Estás a solo <strong>${n} camiseta${n === 1 ? '' : 's'}</strong> del envío <strong>GRATIS</strong>!`,
     label_email: 'Correo electrónico *',
     error_email: 'Introduce un correo electrónico válido',
+    delivery_note: '⏱️ Plazo de entrega estimado: aproximadamente 2 semanas.',
     select_size: 'Selecciona una talla',
     added_cart: '¡Añadido al carrito!',
     see_photos: 'VER FOTOS EN YUPOO →',
@@ -1920,6 +1923,7 @@ const T = {
     upsell_shipping: (n) => `🚚 You're only <strong>${n} shirt${n === 1 ? '' : 's'}</strong> away from <strong>FREE</strong> shipping!`,
     label_email: 'Email *',
     error_email: 'Please enter a valid email address',
+    delivery_note: '⏱️ Estimated delivery time: approximately 2 weeks.',
     select_size: 'Select a size',
     added_cart: 'Added to cart!',
     see_photos: 'SEE PHOTOS ON YUPOO →',
@@ -3705,6 +3709,14 @@ function openCheckout() {
     itemsEl.appendChild(row);
   }
 
+  // Resetear el selector de envío a "Entrega en mano" ANTES de calcular totales
+  // para garantizar que getShippingCost() devuelva 0 en el estado inicial.
+  document.getElementById('envio-mano').checked                = true;
+  document.getElementById('shipping-note-mano').style.display  = 'block';
+  document.getElementById('direccion-group').style.display     = 'none';
+  document.getElementById('form-direccion').required           = false;
+  document.getElementById('shipping-upsell').style.display     = 'none';
+
   updateCheckoutTotals();
 
   // Rellenar campos ocultos del formulario con el resumen del pedido
@@ -3733,12 +3745,12 @@ function openCheckout() {
   const orderForm = document.getElementById('order-form');
   orderForm.style.display  = 'block';
   orderForm.reset();
-  // Restaurar el selector de envío a "Entrega en mano" y ocultar campo dirección
-  document.getElementById('envio-mano').checked       = true;
-  document.getElementById('shipping-note-mano').style.display = 'block';
-  document.getElementById('direccion-group').style.display    = 'none';
-  document.getElementById('form-direccion').required          = false;
-  document.getElementById('shipping-upsell').style.display   = 'none';
+  // Re-aplicar el estado de envío tras el reset del formulario (reset() borra el checked)
+  document.getElementById('envio-mano').checked                = true;
+  document.getElementById('shipping-note-mano').style.display  = 'block';
+  document.getElementById('direccion-group').style.display     = 'none';
+  document.getElementById('form-direccion').required           = false;
+  document.getElementById('shipping-upsell').style.display     = 'none';
   // Restaurar campos ocultos tras reset (el reset los vacía)
   document.getElementById('form-pedido').value = pedidoStr;
   document.getElementById('form-total').value  = fmtEur(cartTotalEur());
@@ -4118,6 +4130,8 @@ function updateLangUI() {
   document.querySelectorAll('[data-i18n="label_email"]').forEach(el => el.textContent = t().label_email);
   const emailErrEl = document.getElementById('form-correo-error');
   if (emailErrEl) emailErrEl.textContent = t().error_email;
+  const deliveryNote = document.getElementById('delivery-note');
+  if (deliveryNote) deliveryNote.textContent = t().delivery_note;
   document.getElementById('cart-total-val').textContent = t().total_fmt(cartTotalEur());
 }
 
