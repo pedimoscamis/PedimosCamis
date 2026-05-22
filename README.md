@@ -1,7 +1,3 @@
-# 🛒 PedimosCamis - Mock E-commerce SPA
-
-![PedimosCamis Cover](https://res.cloudinary.com/dbeystyls/image/upload/v1779456332/ChatGPT_Image_22_may_2026_15_11_57_asrrdf.png)
-
 > ⚠️ **Aviso Legal / Disclaimer:** Este repositorio y la página web asociada son un proyecto personal de desarrollo web creado exclusivamente con fines educativos, experimentales y de portfolio. **NO es una tienda real**. Este proyecto no tiene fines comerciales, no realiza ventas, no procesa pagos reales y no representa ni está afiliado a ninguna marca, empresa u organización oficial.
 
 ---
