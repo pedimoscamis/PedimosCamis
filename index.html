@@ -4597,14 +4597,23 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
   const cuponInfo = discountMode       ? `${activeDiscountCode} (-33%)`
                   : variableCouponMode ? `${activeCouponCode} (-${Math.round(variableCouponPct*100)}%)`
                   : '';
+
+  // Código de descuento para la columna L de Google Sheets
+  const hasUclFlash = cart.some(i => i.discountInfo?.source === 'ucl-flash');
+  const codigoDescuento = discountMode       ? `${activeDiscountCode} (-33%)`
+                        : variableCouponMode ? `${activeCouponCode} (-${Math.round(variableCouponPct*100)}%)`
+                        : hasUclFlash        ? 'UCL Flash (-10%)'
+                        : '';
+
   return {
-    cliente:    nombre,
-    telefono:   telefono,
-    correo:     correo,
-    direccion:  direccion,
-    metodoPago: metodoPago,
-    cupon:      cuponInfo,
-    carrito:    carritoPayload,
+    cliente:          nombre,
+    telefono:         telefono,
+    correo:           correo,
+    direccion:        direccion,
+    metodoPago:       metodoPago,
+    cupon:            cuponInfo,
+    codigoDescuento,  // columna L — string vacío si no hay descuento activo
+    carrito:          carritoPayload,
   };
 }
 
