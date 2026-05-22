@@ -10,7 +10,9 @@
       "Bash(python -c \"import json; d=json.load\\(open\\('data/products.json'\\)\\); print\\(f'Total productos: {len\\(d\\)}'\\); p=d[0]; print\\('Primer producto keys:', list\\(p.keys\\(\\)\\)\\); print\\('img:', p.get\\('img','NO IMG'\\)[:80]\\)\")",
       "Bash(git checkout *)",
       "Bash(git commit -m ' *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(node -e \"const fs=require\\('fs'\\);const h=fs.readFileSync\\('index.html','utf-8'\\);const s=h.match\\(/<script[\\\\s\\\\S]*?<\\\\/script>/g\\)||[];let src=s.map\\(b=>b.replace\\(/<\\\\/?script[^>]*>/g,''\\)\\).join\\('\\\\n'\\);require\\('vm'\\).createContext\\({}\\);try{new Function\\(src\\);console.log\\('OK - sin errores de sintaxis'\\)}catch\\(e\\){console.error\\('ERROR:',e.message\\)}\")",
+      "Bash(node -e \"const fs=require\\('fs'\\);const h=fs.readFileSync\\('index.html','utf-8'\\);const s=h.match\\(/<script[\\\\s\\\\S]*?<\\\\/script>/g\\)||[];let src=s.map\\(b=>b.replace\\(/<\\\\/?script[^>]*>/g,''\\)\\).join\\('\\\\n'\\);try{new Function\\(src\\);console.log\\('OK'\\)}catch\\(e\\){console.error\\('ERROR:',e.message\\)}\")"
     ]
   }
 }
