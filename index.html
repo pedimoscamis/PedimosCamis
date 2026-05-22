@@ -2209,7 +2209,9 @@ function onShippingChange() {
 }
 
 // Detecta "Player Version", "player version", o "player" como palabra independiente
-const PLAYER_RE = /\bplayer\b/i;
+const PLAYER_RE      = /\bplayer\b/i;
+// Detecta chaquetas/cortavientos por nombre (precio fijo: 60€ modo normal)
+const WINDBREAKER_RE = /windbreaker|jacket/i;
 // Detecta camisetas de mujer por nombre
 const WOMEN_RE  = /\bwomen\b|\bwoman\b|\bwomen's\b|\bfemenin|\bfemale\b/i;
 const PATCH_CATS = new Set(['laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro','europa','nuevatemporada']);
@@ -3768,7 +3770,7 @@ const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwRZxqgRX2hyWGffIiz
 
 // ── Precios modo NORMAL (en €) ─────────────────────────────────────────────
 const NORMAL_PRICES = {
-  windbreaker: 50,
+  windbreaker: 60,   // también aplica a cualquier producto con "jacket" en el nombre
   streetwear:  75,
   kids:        20,
   women:       15,
@@ -3802,13 +3804,25 @@ function primaryCat(p) {
 }
 
 function getBasePrice(p) {
+  // ① Windbreaker / jacket → precio fijo 60€ (o precio socio de windbreaker)
+  if (WINDBREAKER_RE.test(p.nameEn))
+    return socioMode ? (SOCIO_PRICES.windbreaker ?? SOCIO_JERSEY) : NORMAL_PRICES.windbreaker;
+
   const pc    = primaryCat(p);
   const table = socioMode ? SOCIO_PRICES : NORMAL_PRICES;
+
+  // ② Categoría con precio propio (windbreaker, nba, kids, women, streetwear…)
   if (table[pc] !== undefined) return table[pc];
+
+  // ③ Versión Player (precio especial)
   if (PLAYER_RE.test(p.nameEn))
     return socioMode ? SOCIO_PLAYER : NORMAL_PLAYER;
+
+  // ④ Retro
   if ((p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn))
     return socioMode ? SOCIO_RETRO : NORMAL_RETRO;
+
+  // ⑤ Camiseta estándar
   return socioMode ? SOCIO_JERSEY : NORMAL_JERSEY;
 }
 
