@@ -1250,6 +1250,215 @@
       border-radius: 3px;
     }
 
+    /* ─── Home rows genéricas (Netflix-style) ───────────────── */
+    .home-row-section {
+      background: #131313;
+      padding: 28px 0 32px;
+      display: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .home-row-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .home-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .home-row-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .home-row-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 1px;
+    }
+    .home-row-see-all {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 7px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: border-color .2s, color .2s;
+    }
+    .home-row-see-all:hover { border-color: var(--accent); color: var(--text); }
+    .home-row-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: #333 transparent;
+    }
+    .home-row-scroll::-webkit-scrollbar { height: 4px; }
+    .home-row-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+    /* ─── UCL Flash Event ────────────────────────────────────── */
+    #ucl-section {
+      display: none;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+    }
+    #ucl-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 36px 24px 40px;
+    }
+    #ucl-header {
+      text-align: center;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 2;
+    }
+    #ucl-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--accent); text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    #ucl-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(28px, 5vw, 52px);
+      letter-spacing: 2px;
+      line-height: 1;
+      background: linear-gradient(90deg, #4169e1 20%, #fff 50%, #e8173c 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    #ucl-subtitle {
+      font-size: 13px; color: var(--muted); margin-top: 8px; font-weight: 400;
+    }
+    #ucl-cards {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+      max-width: 680px;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.6);
+      position: relative;
+      z-index: 2;
+    }
+    /* Divisor VS central */
+    #ucl-cards::after {
+      content: 'VS';
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+      color: #fff;
+      background: #0a0a0a;
+      border: 2px solid #333;
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+      box-shadow: 0 0 20px rgba(0,0,0,.8);
+      padding-top: 2px;
+    }
+    .ucl-team-card {
+      flex: 1;
+      padding: 28px 20px 24px;
+      cursor: pointer;
+      transition: filter .2s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .ucl-team-card:hover { filter: brightness(1.08); }
+    .ucl-team-card.psg {
+      background: linear-gradient(160deg, #003087 0%, #001a5e 60%, #0a0a18 100%);
+    }
+    .ucl-team-card.arsenal {
+      background: linear-gradient(160deg, #EF0107 0%, #9a0005 60%, #1a0000 100%);
+    }
+    /* Glow decorativo de fondo */
+    .ucl-team-card.psg::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(65,105,225,.35) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .ucl-team-card.arsenal::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(232,23,60,.35) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .ucl-team-logo {
+      font-size: 32px; line-height: 1;
+    }
+    .ucl-team-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px; letter-spacing: 2px; color: #fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,.5);
+    }
+    .ucl-jersey-img-wrap {
+      width: 120px; height: 120px;
+      display: flex; align-items: center; justify-content: center;
+      filter: drop-shadow(0 8px 24px rgba(0,0,0,.5));
+    }
+    .ucl-jersey-img-wrap img {
+      width: 100%; height: 100%; object-fit: contain;
+    }
+    .ucl-price-block { text-align: center; }
+    .ucl-price-original {
+      font-size: 12px; color: rgba(255,255,255,.45);
+      text-decoration: line-through; display: block; margin-bottom: 2px;
+    }
+    .ucl-price-final {
+      font-size: 22px; font-weight: 800; color: #fff;
+      text-shadow: 0 2px 10px rgba(0,0,0,.4);
+    }
+    .ucl-badge-discount {
+      display: inline-block;
+      background: #f5c518; color: #000;
+      font-size: 10px; font-weight: 800;
+      padding: 2px 6px; border-radius: 4px;
+      margin-left: 6px; vertical-align: middle;
+    }
+    .ucl-cta-btn {
+      margin-top: 4px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.25);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 12px; font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+      letter-spacing: .5px;
+    }
+    .ucl-cta-btn:hover {
+      background: rgba(255,255,255,.22);
+      border-color: rgba(255,255,255,.5);
+    }
+    @media (max-width: 480px) {
+      #ucl-cards { max-width: 100%; border-radius: 12px; }
+      .ucl-team-card { padding: 20px 12px 18px; gap: 10px; }
+      .ucl-jersey-img-wrap { width: 90px; height: 90px; }
+      .ucl-team-name { font-size: 18px; }
+      .ucl-price-final { font-size: 18px; }
+      #ucl-cards::after { width: 36px; height: 36px; font-size: 16px; }
+    }
+
     /* ─── Responsive ─────────────────────────────────────────── */
 
     /* ── Bug 2: header 2 filas + Bug 3: filtros wrapping (≤768 px) ── */
@@ -1412,6 +1621,87 @@
       <button id="featured-see-all" onclick="setCategory('mundial2026')">Ver todas →</button>
     </div>
     <div id="featured-scroll"></div>
+  </div>
+</section>
+
+<!-- ─── UCL Flash Event ─────────────────────────────────────────────── -->
+<section id="ucl-section">
+  <div id="ucl-inner">
+    <div id="ucl-header">
+      <div id="ucl-eyebrow">⚡ EVENTO FLASH</div>
+      <div id="ucl-title">FINAL UCL: DECIDE TU BANDO ⚡</div>
+      <div id="ucl-subtitle">Descuento exclusivo del 10% en estas dos equipaciones</div>
+    </div>
+    <div id="ucl-cards">
+      <!-- PSG -->
+      <div class="ucl-team-card psg" id="ucl-card-psg">
+        <div class="ucl-team-logo">🔵🔴</div>
+        <div class="ucl-team-name">PSG</div>
+        <div class="ucl-jersey-img-wrap" id="ucl-img-psg">
+          <!-- imagen se inyecta por JS -->
+        </div>
+        <div class="ucl-price-block">
+          <span class="ucl-price-original" id="ucl-original-psg"></span>
+          <span class="ucl-price-final" id="ucl-final-psg"></span>
+          <span class="ucl-badge-discount">-10%</span>
+        </div>
+        <button class="ucl-cta-btn" id="ucl-btn-psg">ELEGIR PSG</button>
+      </div>
+      <!-- Arsenal -->
+      <div class="ucl-team-card arsenal" id="ucl-card-arsenal">
+        <div class="ucl-team-logo">🔴⚪</div>
+        <div class="ucl-team-name">ARSENAL</div>
+        <div class="ucl-jersey-img-wrap" id="ucl-img-arsenal">
+          <!-- imagen se inyecta por JS -->
+        </div>
+        <div class="ucl-price-block">
+          <span class="ucl-price-original" id="ucl-original-arsenal"></span>
+          <span class="ucl-price-final" id="ucl-final-arsenal"></span>
+          <span class="ucl-badge-discount">-10%</span>
+        </div>
+        <button class="ucl-cta-btn" id="ucl-btn-arsenal">ELEGIR ARSENAL</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Home row: Nueva Temporada ───────────────────────────────────── -->
+<section class="home-row-section" id="row-nuevatemporada">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap">
+        <span class="home-row-title">🆕 NUEVA TEMPORADA</span>
+        <span class="badge-new">2025/26</span>
+      </div>
+      <button class="home-row-see-all" onclick="setCategory('nuevatemporada')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-nuevatemporada"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Retro ──────────────────────────────────────────────── -->
+<section class="home-row-section" id="row-retro">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap">
+        <span class="home-row-title">⏪ RETRO</span>
+      </div>
+      <button class="home-row-see-all" onclick="setCategory('retro')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-retro"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Premier League ────────────────────────────────────── -->
+<section class="home-row-section" id="row-premier">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap">
+        <span class="home-row-title">🏴󠁧󠁢󠁥󠁮󠁧󠁿 PREMIER LEAGUE</span>
+      </div>
+      <button class="home-row-see-all" onclick="setCategory('premier')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-premier"></div>
   </div>
 </section>
 
@@ -2954,6 +3244,157 @@ function renderFeatured() {
   section.style.display = 'block';
 }
 
+// ─── Render genérico de una fila horizontal ──────────────────────────────
+/**
+ * Rellena una home-row-section con las primeras N camisetas de una categoría.
+ * @param {string} sectionId  id de la <section>
+ * @param {string} scrollId   id del contenedor scroll
+ * @param {string} cat        categoría a filtrar de allProducts
+ * @param {number} limit      máximo de tarjetas a mostrar
+ */
+function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
+  const section = document.getElementById(sectionId);
+  const scroll  = document.getElementById(scrollId);
+  if (!section || !scroll) return;
+
+  const isHome = activeCat === 'all' && !searchQuery;
+  if (!isHome || allProducts.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  const items = allProducts
+    .filter(p => (p.cats || []).includes(cat) && p.img)
+    .slice(0, limit);
+
+  if (items.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  scroll.innerHTML = '';
+  for (const p of items) {
+    const price = getBasePrice(p);
+    let priceHtml;
+    if (discountMode) {
+      const discounted = getDiscountedPrice(price);
+      priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">-33%</span>`;
+    } else if (variableCouponMode) {
+      const discounted = getVariableCouponPrice(price);
+      priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">-${Math.round(variableCouponPct*100)}%</span>`;
+    } else {
+      priceHtml = t().price_fmt(price).main;
+    }
+    const isPlayer   = PLAYER_RE.test(p.nameEn);
+    const isRetroKit = (p.cats || []).includes('retro');
+    const card = document.createElement('div');
+    card.className = 'featured-card';
+    card.onclick   = () => openModal(p);
+    card.innerHTML = `
+      <div class="featured-card-img-wrap">
+        ${p.img
+          ? `<img class="featured-card-img lazy" data-src="${p.img}" alt="${escHtml(p.nameEn)}" loading="lazy" onerror="this.style.display='none'">`
+          : jerseyIcon(56)}
+        ${isRetroKit ? '<span class="featured-badge-retro">RETRO</span>' : ''}
+      </div>
+      <div class="featured-card-body">
+        <div class="featured-card-name">${escHtml(p.nameEn)}</div>
+        <div class="featured-card-price">
+          ${priceHtml}
+          ${isPlayer ? '<span class="badge-player">PLAYER</span>' : ''}
+        </div>
+      </div>`;
+    scroll.appendChild(card);
+  }
+
+  if (imgObserver) {
+    scroll.querySelectorAll('img.lazy[data-src]').forEach(img => imgObserver.observe(img));
+  }
+  section.style.display = 'block';
+}
+
+// ─── Render UCL Flash Event ──────────────────────────────────────────────
+const UCL_DISCOUNT = 0.10; // 10 %
+
+function renderUclFlash() {
+  const section = document.getElementById('ucl-section');
+  if (!section) return;
+
+  const isHome = activeCat === 'all' && !searchQuery;
+  if (!isHome || allProducts.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  // Buscar camiseta home del PSG y del Arsenal en el catálogo
+  const findKit = (keywords) => allProducts.find(p => {
+    const n = (p.nameEn || p.name || '').toLowerCase();
+    return keywords.every(kw => n.includes(kw)) && p.img;
+  });
+
+  const psgKit     = findKit(['psg']) || findKit(['paris']);
+  const arsenalKit = findKit(['arsenal']);
+
+  // Si no hay datos reales aún, ocultamos la sección
+  if (!psgKit && !arsenalKit) {
+    section.style.display = 'none';
+    return;
+  }
+
+  function setupTeam(kit, imgWrapId, originalId, finalId, btnId, cardId) {
+    if (!kit) return;
+    const basePrice  = getBasePrice(kit);
+    const finalPrice = Math.ceil(basePrice * (1 - UCL_DISCOUNT));
+
+    // Imagen
+    const imgWrap = document.getElementById(imgWrapId);
+    if (imgWrap) {
+      imgWrap.innerHTML = kit.img
+        ? `<img src="${kit.img}" alt="${escHtml(kit.nameEn)}" loading="lazy" onerror="this.style.display='none'">`
+        : jerseyIcon(80);
+    }
+
+    // Precios
+    const origEl  = document.getElementById(originalId);
+    const finalEl = document.getElementById(finalId);
+    if (origEl)  origEl.textContent  = fmtEur(basePrice);
+    if (finalEl) finalEl.textContent = fmtEur(finalPrice);
+
+    // Botón: abrir modal con precio ya rebajado
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      btn.onclick = () => {
+        // Clonar el producto con cobro al precio rebajado
+        const discountedKit = {
+          ...kit,
+          priceUsd:     finalPrice,   // precio EUR que el cliente paga
+          discountInfo: { originalBase: basePrice, source: 'ucl-flash' },
+        };
+        openModal(discountedKit);
+      };
+    }
+
+    // Clic en la tarjeta también abre modal
+    const card = document.getElementById(cardId);
+    if (card) {
+      card.onclick = (e) => {
+        if (e.target.closest('button')) return; // deja actuar al botón
+        const discountedKit = {
+          ...kit,
+          priceUsd:     finalPrice,
+          discountInfo: { originalBase: basePrice, source: 'ucl-flash' },
+        };
+        openModal(discountedKit);
+      };
+    }
+  }
+
+  setupTeam(psgKit,     'ucl-img-psg',     'ucl-original-psg',     'ucl-final-psg',     'ucl-btn-psg',     'ucl-card-psg');
+  setupTeam(arsenalKit, 'ucl-img-arsenal', 'ucl-original-arsenal', 'ucl-final-arsenal', 'ucl-btn-arsenal', 'ucl-card-arsenal');
+
+  section.style.display = 'block';
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // RENDER  (con paginación / infinite scroll)
 // ═══════════════════════════════════════════════════════════════════════════
@@ -2963,6 +3404,10 @@ function renderAll() {
   hero.style.display = (activeCat === 'all' && !searchQuery) ? 'block' : 'none';
 
   renderFeatured();
+  renderUclFlash();
+  renderHomeRow('row-nuevatemporada', 'scroll-nuevatemporada', 'nuevatemporada', 12);
+  renderHomeRow('row-retro',          'scroll-retro',          'retro',          12);
+  renderHomeRow('row-premier',        'scroll-premier',        'premier',        12);
 
   currentFiltered = getFiltered();
   displayedCount  = 0;
