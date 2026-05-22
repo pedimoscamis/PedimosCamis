@@ -1304,37 +1304,58 @@
     .home-row-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
     /* ─── UCL Flash Event ────────────────────────────────────── */
+    @keyframes smokeFloat {
+      0%   { transform: translateY(0)   scale(1)    rotate(0deg);   opacity: .55; }
+      33%  { transform: translateY(-18px) scale(1.12) rotate(3deg);  opacity: .7;  }
+      66%  { transform: translateY(-8px)  scale(1.06) rotate(-2deg); opacity: .6;  }
+      100% { transform: translateY(0)   scale(1)    rotate(0deg);   opacity: .55; }
+    }
+    @keyframes smokeFloat2 {
+      0%   { transform: translateY(0)    scale(1.05) rotate(0deg);  opacity: .4; }
+      40%  { transform: translateY(-22px) scale(1.2)  rotate(-4deg); opacity: .6; }
+      80%  { transform: translateY(-6px)  scale(1.1)  rotate(2deg);  opacity: .5; }
+      100% { transform: translateY(0)    scale(1.05) rotate(0deg);  opacity: .4; }
+    }
     #ucl-section {
       display: none;
       border-bottom: 1px solid var(--border);
       overflow: hidden;
       position: relative;
+      background: #07070f;
+    }
+    /* Bruma global de fondo sobre toda la sección */
+    #ucl-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 25% 60%, rgba(65,105,225,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 75% 60%, rgba(220,20,30,.18) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
     }
     #ucl-inner {
       max-width: 1440px;
       margin: 0 auto;
-      padding: 36px 24px 40px;
+      padding: 36px 24px 44px;
+      position: relative; z-index: 1;
     }
     #ucl-header {
       text-align: center;
       margin-bottom: 28px;
-      position: relative;
-      z-index: 2;
     }
     #ucl-eyebrow {
-      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      font-size: 11px; font-weight: 700; letter-spacing: 3px;
       color: var(--accent); text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     #ucl-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(28px, 5vw, 52px);
-      letter-spacing: 2px;
-      line-height: 1;
-      background: linear-gradient(90deg, #4169e1 20%, #fff 50%, #e8173c 80%);
+      letter-spacing: 2px; line-height: 1;
+      background: linear-gradient(90deg, #4a7fff 15%, #fff 50%, #ff3b3b 85%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      filter: drop-shadow(0 0 18px rgba(255,255,255,.12));
     }
     #ucl-subtitle {
       font-size: 13px; color: var(--muted); margin-top: 8px; font-weight: 400;
@@ -1343,120 +1364,156 @@
       display: flex;
       gap: 0;
       align-items: stretch;
-      max-width: 680px;
+      max-width: 700px;
       margin: 0 auto;
-      border-radius: 16px;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,.6);
+      box-shadow: 0 24px 80px rgba(0,0,0,.75);
       position: relative;
-      z-index: 2;
     }
-    /* Divisor VS central */
-    #ucl-cards::after {
-      content: 'VS';
+    /* Divisor VS — ahora es un elemento HTML */
+    #ucl-vs {
       position: absolute;
       left: 50%; top: 50%;
       transform: translate(-50%, -50%);
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 2px;
-      color: #fff;
+      font-size: 20px; letter-spacing: 3px; color: #fff;
       background: #0a0a0a;
-      border: 2px solid #333;
+      border: 2px solid rgba(255,255,255,.2);
       border-radius: 50%;
-      width: 44px; height: 44px;
+      width: 46px; height: 46px;
       display: flex; align-items: center; justify-content: center;
-      z-index: 10;
-      box-shadow: 0 0 20px rgba(0,0,0,.8);
-      padding-top: 2px;
+      z-index: 20;
+      box-shadow: 0 0 30px rgba(0,0,0,.9), 0 0 0 6px rgba(255,255,255,.04);
+      padding-top: 3px;
     }
     .ucl-team-card {
       flex: 1;
-      padding: 28px 20px 24px;
-      cursor: pointer;
-      transition: filter .2s;
+      padding: 30px 20px 26px;
+      cursor: default;
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 14px;
+      overflow: hidden;
+      transition: transform .35s ease;
     }
-    .ucl-team-card:hover { filter: brightness(1.08); }
+    /* capa base de color */
     .ucl-team-card.psg {
-      background: linear-gradient(160deg, #003087 0%, #001a5e 60%, #0a0a18 100%);
+      background: linear-gradient(170deg, #001f6b 0%, #00123f 55%, #040410 100%);
     }
     .ucl-team-card.arsenal {
-      background: linear-gradient(160deg, #EF0107 0%, #9a0005 60%, #1a0000 100%);
+      background: linear-gradient(170deg, #c0000a 0%, #780006 55%, #100002 100%);
     }
-    /* Glow decorativo de fondo */
-    .ucl-team-card.psg::before {
+    /* ::before — humo capa 1 (lento) */
+    .ucl-team-card::before {
       content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(65,105,225,.35) 0%, transparent 65%);
+      position: absolute; inset: -30%; z-index: 0;
+      border-radius: 50%;
+      filter: blur(42px);
+      animation: smokeFloat 7s ease-in-out infinite;
       pointer-events: none;
+    }
+    .ucl-team-card.psg::before {
+      background: radial-gradient(ellipse at 50% 70%, rgba(55,100,255,.65) 0%, rgba(20,60,180,.3) 45%, transparent 75%);
     }
     .ucl-team-card.arsenal::before {
+      background: radial-gradient(ellipse at 50% 70%, rgba(240,20,20,.65) 0%, rgba(150,5,10,.3) 45%, transparent 75%);
+    }
+    /* ::after — humo capa 2 (contrafase, más difuso) */
+    .ucl-team-card::after {
       content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(232,23,60,.35) 0%, transparent 65%);
+      position: absolute; inset: -20%; z-index: 0;
+      border-radius: 50%;
+      filter: blur(60px);
+      animation: smokeFloat2 9s ease-in-out infinite reverse;
       pointer-events: none;
     }
-    .ucl-team-logo {
-      font-size: 32px; line-height: 1;
+    .ucl-team-card.psg::after {
+      background: radial-gradient(ellipse at 40% 30%, rgba(80,130,255,.45) 0%, transparent 65%);
     }
+    .ucl-team-card.arsenal::after {
+      background: radial-gradient(ellipse at 60% 30%, rgba(255,50,50,.45) 0%, transparent 65%);
+    }
+    /* hover: la tarjeta se levanta y el humo se intensifica */
+    .ucl-team-card:hover { transform: translateY(-4px); }
+    .ucl-team-card:hover::before { filter: blur(34px); animation-duration: 4s; }
+    .ucl-team-card:hover::after  { filter: blur(48px); animation-duration: 5s; }
+
+    /* contenido sobre el humo */
+    .ucl-team-card > * { position: relative; z-index: 2; }
+    .ucl-team-logo { font-size: 30px; line-height: 1; }
     .ucl-team-name {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px; letter-spacing: 2px; color: #fff;
-      text-shadow: 0 2px 8px rgba(0,0,0,.5);
+      font-size: 26px; letter-spacing: 3px; color: #fff;
+      text-shadow: 0 2px 12px rgba(0,0,0,.6);
     }
     .ucl-jersey-img-wrap {
-      width: 120px; height: 120px;
+      width: 140px; height: 140px;
       display: flex; align-items: center; justify-content: center;
-      filter: drop-shadow(0 8px 24px rgba(0,0,0,.5));
+      filter: drop-shadow(0 12px 32px rgba(0,0,0,.6));
+      transition: transform .35s ease, filter .35s ease;
+    }
+    .ucl-team-card:hover .ucl-jersey-img-wrap {
+      transform: translateY(-6px) scale(1.05);
+      filter: drop-shadow(0 18px 40px rgba(0,0,0,.7));
     }
     .ucl-jersey-img-wrap img {
       width: 100%; height: 100%; object-fit: contain;
     }
     .ucl-price-block { text-align: center; }
     .ucl-price-original {
-      font-size: 12px; color: rgba(255,255,255,.45);
+      font-size: 12px; color: rgba(255,255,255,.4);
       text-decoration: line-through; display: block; margin-bottom: 2px;
     }
     .ucl-price-final {
-      font-size: 22px; font-weight: 800; color: #fff;
-      text-shadow: 0 2px 10px rgba(0,0,0,.4);
+      font-size: 24px; font-weight: 800; color: #fff;
+      text-shadow: 0 2px 12px rgba(0,0,0,.5);
     }
     .ucl-badge-discount {
       display: inline-block;
       background: #f5c518; color: #000;
-      font-size: 10px; font-weight: 800;
-      padding: 2px 6px; border-radius: 4px;
+      font-size: 10px; font-weight: 900;
+      padding: 2px 7px; border-radius: 4px;
       margin-left: 6px; vertical-align: middle;
+      letter-spacing: .4px;
     }
+    /* Botón de filtrado de equipo */
     .ucl-cta-btn {
-      margin-top: 4px;
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.25);
-      color: #fff;
-      padding: 8px 20px;
-      border-radius: 20px;
+      margin-top: 2px;
+      padding: 11px 22px;
+      border-radius: 24px;
       font-family: 'Barlow', sans-serif;
-      font-size: 12px; font-weight: 700;
-      cursor: pointer;
-      transition: background .2s, border-color .2s;
-      letter-spacing: .5px;
+      font-size: 13px; font-weight: 800;
+      cursor: pointer; letter-spacing: .6px;
+      text-transform: uppercase;
+      transition: transform .2s, box-shadow .2s, filter .2s;
+      white-space: nowrap;
+    }
+    .ucl-cta-btn.psg-btn {
+      background: linear-gradient(135deg, #3a6bff, #1a3eb5);
+      border: none; color: #fff;
+      box-shadow: 0 4px 18px rgba(58,107,255,.5);
+    }
+    .ucl-cta-btn.arsenal-btn {
+      background: linear-gradient(135deg, #ff2a2a, #a00007);
+      border: none; color: #fff;
+      box-shadow: 0 4px 18px rgba(220,20,20,.5);
     }
     .ucl-cta-btn:hover {
-      background: rgba(255,255,255,.22);
-      border-color: rgba(255,255,255,.5);
+      transform: translateY(-2px) scale(1.04);
+      filter: brightness(1.12);
+      box-shadow: 0 8px 28px rgba(0,0,0,.5);
     }
-    @media (max-width: 480px) {
-      #ucl-cards { max-width: 100%; border-radius: 12px; }
-      .ucl-team-card { padding: 20px 12px 18px; gap: 10px; }
-      .ucl-jersey-img-wrap { width: 90px; height: 90px; }
-      .ucl-team-name { font-size: 18px; }
-      .ucl-price-final { font-size: 18px; }
-      #ucl-cards::after { width: 36px; height: 36px; font-size: 16px; }
+    @media (max-width: 520px) {
+      #ucl-cards { border-radius: 14px; }
+      .ucl-team-card { padding: 22px 12px 20px; gap: 10px; }
+      .ucl-jersey-img-wrap { width: 100px; height: 100px; }
+      .ucl-team-name { font-size: 20px; }
+      .ucl-price-final { font-size: 19px; }
+      #ucl-vs { width: 38px; height: 38px; font-size: 15px; }
+      .ucl-cta-btn { font-size: 11px; padding: 9px 14px; }
     }
 
     /* ─── Responsive ─────────────────────────────────────────── */
@@ -1633,33 +1690,30 @@
       <div id="ucl-subtitle">Descuento exclusivo del 10% en estas dos equipaciones</div>
     </div>
     <div id="ucl-cards">
+      <div id="ucl-vs">VS</div>
       <!-- PSG -->
       <div class="ucl-team-card psg" id="ucl-card-psg">
         <div class="ucl-team-logo">🔵🔴</div>
         <div class="ucl-team-name">PSG</div>
-        <div class="ucl-jersey-img-wrap" id="ucl-img-psg">
-          <!-- imagen se inyecta por JS -->
-        </div>
+        <div class="ucl-jersey-img-wrap" id="ucl-img-psg"></div>
         <div class="ucl-price-block">
           <span class="ucl-price-original" id="ucl-original-psg"></span>
           <span class="ucl-price-final" id="ucl-final-psg"></span>
           <span class="ucl-badge-discount">-10%</span>
         </div>
-        <button class="ucl-cta-btn" id="ucl-btn-psg">ELEGIR PSG</button>
+        <button class="ucl-cta-btn psg-btn" id="ucl-btn-psg">¡ELIGE TU BANDO!</button>
       </div>
       <!-- Arsenal -->
       <div class="ucl-team-card arsenal" id="ucl-card-arsenal">
         <div class="ucl-team-logo">🔴⚪</div>
         <div class="ucl-team-name">ARSENAL</div>
-        <div class="ucl-jersey-img-wrap" id="ucl-img-arsenal">
-          <!-- imagen se inyecta por JS -->
-        </div>
+        <div class="ucl-jersey-img-wrap" id="ucl-img-arsenal"></div>
         <div class="ucl-price-block">
           <span class="ucl-price-original" id="ucl-original-arsenal"></span>
           <span class="ucl-price-final" id="ucl-final-arsenal"></span>
           <span class="ucl-badge-discount">-10%</span>
         </div>
-        <button class="ucl-cta-btn" id="ucl-btn-arsenal">ELEGIR ARSENAL</button>
+        <button class="ucl-cta-btn arsenal-btn" id="ucl-btn-arsenal">¡ELIGE TU BANDO!</button>
       </div>
     </div>
   </div>
@@ -1671,7 +1725,7 @@
     <div class="home-row-header">
       <div class="home-row-title-wrap">
         <span class="home-row-title">🆕 NUEVA TEMPORADA</span>
-        <span class="badge-new">2025/26</span>
+        <span class="badge-new">26/27</span>
       </div>
       <button class="home-row-see-all" onclick="setCategory('nuevatemporada')">Ver todas →</button>
     </div>
@@ -1702,6 +1756,127 @@
       <button class="home-row-see-all" onclick="setCategory('premier')">Ver todas →</button>
     </div>
     <div class="home-row-scroll" id="scroll-premier"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: La Liga ────────────────────────────────────────────── -->
+<section class="home-row-section" id="row-laliga">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🇪🇸 LA LIGA</span></div>
+      <button class="home-row-see-all" onclick="setCategory('laliga')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-laliga"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Serie A ─────────────────────────────────────────────── -->
+<section class="home-row-section" id="row-seriea">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🇮🇹 SERIE A</span></div>
+      <button class="home-row-see-all" onclick="setCategory('seriea')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-seriea"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Bundesliga ──────────────────────────────────────────── -->
+<section class="home-row-section" id="row-bundesliga">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🇩🇪 BUNDESLIGA</span></div>
+      <button class="home-row-see-all" onclick="setCategory('bundesliga')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-bundesliga"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Ligue 1 ─────────────────────────────────────────────── -->
+<section class="home-row-section" id="row-ligue1">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🇫🇷 LIGUE 1</span></div>
+      <button class="home-row-see-all" onclick="setCategory('ligue1')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-ligue1"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Selecciones ─────────────────────────────────────────── -->
+<section class="home-row-section" id="row-selecciones">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🌍 SELECCIONES</span></div>
+      <button class="home-row-see-all" onclick="setCategory('selecciones')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-selecciones"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Mujer ───────────────────────────────────────────────── -->
+<section class="home-row-section" id="row-women">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">👩 MUJER</span></div>
+      <button class="home-row-see-all" onclick="setCategory('women')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-women"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Sudamérica ──────────────────────────────────────────── -->
+<section class="home-row-section" id="row-sudamerica">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🌎 SUDAMÉRICA</span></div>
+      <button class="home-row-see-all" onclick="setCategory('sudamerica')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-sudamerica"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: NBA ─────────────────────────────────────────────────── -->
+<section class="home-row-section" id="row-nba">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🏀 NBA</span></div>
+      <button class="home-row-see-all" onclick="setCategory('nba')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-nba"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Cortavientos ───────────────────────────────────────── -->
+<section class="home-row-section" id="row-windbreaker">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🧥 CORTAVIENTOS</span></div>
+      <button class="home-row-see-all" onclick="setCategory('windbreaker')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-windbreaker"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Niños ───────────────────────────────────────────────── -->
+<section class="home-row-section" id="row-kids">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">👦 NIÑOS</span></div>
+      <button class="home-row-see-all" onclick="setCategory('kids')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-kids"></div>
+  </div>
+</section>
+
+<!-- ─── Home row: Europa ──────────────────────────────────────────────── -->
+<section class="home-row-section" id="row-europa">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🏆 EUROPA</span></div>
+      <button class="home-row-see-all" onclick="setCategory('europa')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-europa"></div>
   </div>
 </section>
 
@@ -2492,6 +2667,11 @@ const KNOWN_TEAMS = [
   { d: 'Valladolid',       k: ['valladolid'] },
   { d: 'Cádiz',            k: ['cadiz', 'cádiz'] },
   { d: 'Córdoba',          k: ['cordoba', 'córdoba'] },
+  // ── Ligue 1 ──
+  { d: 'PSG',              k: ['psg', 'paris saint', 'paris sg'] },
+  { d: 'Monaco',           k: ['monaco', 'as monaco'] },
+  { d: 'Lyon',             k: ['lyon', 'olympique lyonnais'] },
+  { d: 'Marseille',        k: ['marseille', 'olympique marseille'] },
   // ── Premier League ──
   { d: 'Manchester United',k: ['manchester united', 'man united', 'man utd', 'man. united'] },
   { d: 'Manchester City',  k: ['manchester city', 'man city', 'man. city'] },
@@ -3313,6 +3493,25 @@ function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
   section.style.display = 'block';
 }
 
+/**
+ * Navega a una categoría y activa el filtro de equipo, luego hace scroll al grid.
+ * @param {string} cat       categoría destino (ej. 'ligue1', 'premier')
+ * @param {string} teamName  nombre canónico del equipo (ej. 'PSG', 'Arsenal')
+ */
+function filterToTeam(cat, teamName) {
+  activeCat    = cat;
+  searchQuery  = '';
+  clearActiveFilters();
+  activeFilters.teams.add(teamName);
+  document.getElementById('search').value = '';
+  seasonSortDir = 'desc';
+  buildCatBar();
+  buildFilterBar();
+  renderAll();
+  const grid = document.getElementById('main');
+  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // ─── Render UCL Flash Event ──────────────────────────────────────────────
 const UCL_DISCOUNT = 0.10; // 10 %
 
@@ -3326,14 +3525,18 @@ function renderUclFlash() {
     return;
   }
 
-  // Buscar camiseta home del PSG y del Arsenal en el catálogo
-  const findKit = (keywords) => allProducts.find(p => {
+  // Buscar por nombre exacto (insensible a mayúsculas)
+  const findExact = (target) => allProducts.find(p => {
     const n = (p.nameEn || p.name || '').toLowerCase();
-    return keywords.every(kw => n.includes(kw)) && p.img;
+    return n === target.toLowerCase() && p.img;
+  }) || allProducts.find(p => {
+    // fallback: contiene el texto completo
+    const n = (p.nameEn || p.name || '').toLowerCase();
+    return n.includes(target.toLowerCase()) && p.img;
   });
 
-  const psgKit     = findKit(['psg']) || findKit(['paris']);
-  const arsenalKit = findKit(['arsenal']);
+  const psgKit     = findExact('25/26 Player PSG Home Jersey S-XXL');
+  const arsenalKit = findExact('2025/26 Arsenal Home Jersey Player Version S-4XL');
 
   // Si no hay datos reales aún, ocultamos la sección
   if (!psgKit && !arsenalKit) {
@@ -3341,7 +3544,7 @@ function renderUclFlash() {
     return;
   }
 
-  function setupTeam(kit, imgWrapId, originalId, finalId, btnId, cardId) {
+  function setupTeam(kit, imgWrapId, originalId, finalId, btnId, cardId, filterCat, filterTeam) {
     if (!kit) return;
     const basePrice  = getBasePrice(kit);
     const finalPrice = Math.ceil(basePrice * (1 - UCL_DISCOUNT));
@@ -3360,37 +3563,26 @@ function renderUclFlash() {
     if (origEl)  origEl.textContent  = fmtEur(basePrice);
     if (finalEl) finalEl.textContent = fmtEur(finalPrice);
 
-    // Botón: abrir modal con precio ya rebajado
+    // Botón: navega al grid filtrado por equipo
     const btn = document.getElementById(btnId);
-    if (btn) {
-      btn.onclick = () => {
-        // Clonar el producto con cobro al precio rebajado
-        const discountedKit = {
-          ...kit,
-          priceUsd:     finalPrice,   // precio EUR que el cliente paga
-          discountInfo: { originalBase: basePrice, source: 'ucl-flash' },
-        };
-        openModal(discountedKit);
-      };
-    }
+    if (btn) btn.onclick = () => filterToTeam(filterCat, filterTeam);
 
-    // Clic en la tarjeta también abre modal
+    // Clic en la tarjeta: abre modal con precio rebajado
     const card = document.getElementById(cardId);
     if (card) {
       card.onclick = (e) => {
-        if (e.target.closest('button')) return; // deja actuar al botón
-        const discountedKit = {
+        if (e.target.closest('button')) return;
+        openModal({
           ...kit,
           priceUsd:     finalPrice,
           discountInfo: { originalBase: basePrice, source: 'ucl-flash' },
-        };
-        openModal(discountedKit);
+        });
       };
     }
   }
 
-  setupTeam(psgKit,     'ucl-img-psg',     'ucl-original-psg',     'ucl-final-psg',     'ucl-btn-psg',     'ucl-card-psg');
-  setupTeam(arsenalKit, 'ucl-img-arsenal', 'ucl-original-arsenal', 'ucl-final-arsenal', 'ucl-btn-arsenal', 'ucl-card-arsenal');
+  setupTeam(psgKit,     'ucl-img-psg',     'ucl-original-psg',     'ucl-final-psg',     'ucl-btn-psg',     'ucl-card-psg',     'ligue1',  'PSG');
+  setupTeam(arsenalKit, 'ucl-img-arsenal', 'ucl-original-arsenal', 'ucl-final-arsenal', 'ucl-btn-arsenal', 'ucl-card-arsenal', 'premier', 'Arsenal');
 
   section.style.display = 'block';
 }
@@ -3407,7 +3599,18 @@ function renderAll() {
   renderUclFlash();
   renderHomeRow('row-nuevatemporada', 'scroll-nuevatemporada', 'nuevatemporada', 12);
   renderHomeRow('row-retro',          'scroll-retro',          'retro',          12);
+  renderHomeRow('row-laliga',         'scroll-laliga',         'laliga',         12);
   renderHomeRow('row-premier',        'scroll-premier',        'premier',        12);
+  renderHomeRow('row-seriea',         'scroll-seriea',         'seriea',         12);
+  renderHomeRow('row-bundesliga',     'scroll-bundesliga',     'bundesliga',     12);
+  renderHomeRow('row-ligue1',         'scroll-ligue1',         'ligue1',         12);
+  renderHomeRow('row-selecciones',    'scroll-selecciones',    'selecciones',    12);
+  renderHomeRow('row-women',          'scroll-women',          'women',          12);
+  renderHomeRow('row-sudamerica',     'scroll-sudamerica',     'sudamerica',     12);
+  renderHomeRow('row-nba',            'scroll-nba',            'nba',            12);
+  renderHomeRow('row-windbreaker',    'scroll-windbreaker',    'windbreaker',    12);
+  renderHomeRow('row-kids',           'scroll-kids',           'kids',           12);
+  renderHomeRow('row-europa',         'scroll-europa',         'europa',         12);
 
   currentFiltered = getFiltered();
   displayedCount  = 0;
