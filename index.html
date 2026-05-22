@@ -1615,7 +1615,7 @@
 
 <!-- ─── Header ─────────────────────────────────────────────────────────── -->
 <header id="header">
-  <div id="logo" onclick="logoClick()">PEDIMOS<span>CAMIS?</span></div>
+  <div id="logo" onclick="goHome()">PEDIMOS<span>CAMIS?</span></div>
   <div id="search-wrap">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <input id="search" type="search" autocomplete="off" />
@@ -2117,10 +2117,8 @@
 let socioMode     = false;        // true cuando un código SOCIO está activo
 let activeSocioCode = null;       // código SOCIO que inició sesión
 
-// ── Modo Admin (easter egg: 5 clicks rápidos en el logo) ─────────────────────
-let adminMode    = false;         // muestra botones Yupoo; se reinicia en cada recarga
-let _logoClicks  = 0;
-let _logoTimer   = null;
+// ── Modo Admin (contraseña en el buscador: ADMIN8371) ────────────────────────
+let adminMode = false;            // muestra botones Yupoo; se reinicia en cada recarga
 
 let discountMode  = false;        // true cuando un código de descuento 33% está activo
 let activeDiscountCode = null;    // código de descuento que inició sesión
@@ -2601,9 +2599,24 @@ async function init() {
     console.error(e);
   }
 
-  // Search
+  // Search — con intercepción de contraseña de Modo Admin
   document.getElementById('search').addEventListener('input', (e) => {
-    searchQuery = e.target.value.trim().toLowerCase();
+    const raw = e.target.value;
+
+    // Contraseña Modo Admin: case-sensitive, no se ejecuta búsqueda
+    if (raw === 'ADMIN8371') {
+      adminMode = true;
+      e.target.value = '';          // borrar el input al instante
+      searchQuery    = '';
+      showToast('🔑 Modo Súper Admin Activado');
+      // Si el modal del producto está abierto, mostrar el botón Yupoo ya
+      if (currentProduct) {
+        document.getElementById('modal-yupoo-btn').style.display = '';
+      }
+      return;                       // no continuar con la búsqueda
+    }
+
+    searchQuery = raw.trim().toLowerCase();
     renderAll();
   });
 }
@@ -2669,29 +2682,6 @@ function scrollToGrid() {
  * que hace visibles los botones "Ver fotos en Yupoo" solo para el administrador.
  * Un clic solitario (sin que llegue a 5) navega a Home normalmente.
  */
-function logoClick() {
-  _logoClicks++;
-  clearTimeout(_logoTimer);
-
-  if (_logoClicks >= 5) {
-    _logoClicks = 0;
-    adminMode = !adminMode;
-    showToast(adminMode ? '🔑 Modo Admin activado' : '🔒 Modo Admin desactivado');
-    // Actualizar botón Yupoo si el modal está abierto
-    if (currentProduct) {
-      document.getElementById('modal-yupoo-btn').style.display =
-        (socioMode || adminMode) ? '' : 'none';
-    }
-    return;
-  }
-
-  // Si no llega a 5 clicks en 700ms → navega a Home
-  _logoTimer = setTimeout(() => {
-    _logoClicks = 0;
-    goHome();
-  }, 700);
-}
-
 // ═══════════════════════════════════════════════════════════════════════════
 // FILTER SYSTEM
 // ═══════════════════════════════════════════════════════════════════════════
@@ -3999,7 +3989,7 @@ function openModal(p) {
   const yupooBtn = document.getElementById('modal-yupoo-btn');
   yupooBtn.href = p.yupooUrl;
   yupooBtn.textContent = t().see_photos;
-  yupooBtn.style.display = (socioMode || adminMode) ? '' : 'none';
+  yupooBtn.style.display = adminMode ? '' : 'none';   // solo visible con contraseña admin
 
   // Modal fav button
   const modalFavBtn = document.getElementById('modal-fav-btn');
