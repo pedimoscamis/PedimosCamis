@@ -2176,6 +2176,19 @@ function getCouponMaxUses(code) {
 }
 
 /**
+ * Devuelve la cadena de usos restantes para mostrar en UI, con formato " - N uso(s) restante(s)".
+ * Retorna '' si el código no tiene límite configurado.
+ * Retorna ' - Sin usos restantes' si el contador ya está agotado.
+ */
+function getCouponUsesText(code) {
+  const max = getCouponMaxUses(code);
+  if (!isFinite(max)) return '';                     // sin límite → no mostrar nada
+  const remaining = Math.max(0, max - getCouponUses(code));
+  if (remaining === 0) return ' · Sin usos restantes';
+  return ` · ${remaining} uso${remaining === 1 ? ' restante' : 's restantes'}`;
+}
+
+/**
  * Días enteros que quedan hasta que caduque el cupón (puede ser negativo si ya caducó).
  * Retorna null si el código no existe o no tiene caducidad definida.
  */
@@ -4466,8 +4479,13 @@ function updateCheckoutTotals() {
       document.getElementById('co-discount-val').textContent   = '-' + fmtEur(totalDiscount);
       if (variableCouponMode && activeCouponCode) {
         const days = getCouponDaysLeft(activeCouponCode);
+        const usesText = getCouponUsesText(activeCouponCode);
         if (days !== null && days > 0) {
-          expiryEl.textContent   = `⏳ Válido ${days} día${days === 1 ? '' : 's'} más`;
+          expiryEl.textContent   = `⏳ Válido ${days} día${days === 1 ? '' : 's'} más${usesText}`;
+          expiryEl.style.display = 'block';
+        } else if (usesText) {
+          // sin caducidad pero sí límite de usos → mostrar solo usos
+          expiryEl.textContent   = `⏳${usesText}`;
           expiryEl.style.display = 'block';
         } else {
           expiryEl.style.display = 'none';
@@ -4885,11 +4903,16 @@ function updateUserMenuState() {
                       : variableCouponMode  ? `✓ Descuento ${Math.round(variableCouponPct*100)}% activo`
                       :                      '✓ Modo socio activo';
     if (variableCouponMode && activeCouponCode) {
-      const days = getCouponDaysLeft(activeCouponCode);
+      const days     = getCouponDaysLeft(activeCouponCode);
+      const usesText = getCouponUsesText(activeCouponCode);
       if (days !== null) {
         expiryNote.textContent = days > 0
-          ? `⏳ Caduca en ${days} día${days === 1 ? '' : 's'}`
+          ? `⏳ Caduca en ${days} día${days === 1 ? '' : 's'}${usesText}`
           : '⌛ Cupón caducado';
+        expiryNote.style.display = 'block';
+      } else if (usesText) {
+        // sin caducidad pero sí límite de usos
+        expiryNote.textContent   = `⏳${usesText}`;
         expiryNote.style.display = 'block';
       } else {
         expiryNote.style.display = 'none';
@@ -4973,8 +4996,13 @@ function submitUserCode() {
     variableCouponPct  = variablePct;
     socioMode          = false;  activeSocioCode    = null;
     discountMode       = false;  activeDiscountCode = null;
-    const daysLeft = getCouponDaysLeft(code);
-    const toastExtra = daysLeft !== null ? ` · caduca en ${daysLeft}d` : '';
+    const daysLeft  = getCouponDaysLeft(code);
+    // Construir las partes del toast: caducidad + usos restantes (si aplica)
+    const parts = [];
+    if (daysLeft !== null) parts.push(`caduca en ${daysLeft}d`);
+    const usesRaw = getCouponUsesText(code).replace(/^ · /, '');
+    if (usesRaw) parts.push(usesRaw);
+    const toastExtra = parts.length ? ` · ${parts.join(' · ')}` : '';
     showToast(`✓ Descuento ${Math.round(variablePct * 100)}% activado${toastExtra}`);
   }
 
