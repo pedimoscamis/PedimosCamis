@@ -1853,6 +1853,17 @@
   </div>
 </section>
 
+<!-- ─── Home row: Shorts ──────────────────────────────────────────────── -->
+<section class="home-row-section" id="row-shorts">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🩳 CORTOS</span></div>
+      <button class="home-row-see-all" onclick="setCategory('shorts')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-shorts"></div>
+  </div>
+</section>
+
 <!-- ─── Home row: NBA ─────────────────────────────────────────────────── -->
 <section class="home-row-section" id="row-nba">
   <div class="home-row-inner">
@@ -2136,12 +2147,33 @@ const DISCOUNT_CODES = new Set(['RAUL20','JUANCHI', 'GLEZ15', 'CHIGLESIA', 'TAYR
 
 // ── Cupones de descuento variable ────────────────────────────────────────────
 // Edita este objeto para añadir, cambiar o eliminar cupones promocionales.
-// Formato: "CÓDIGO": { descuento: 0.XX, caducidad: "AAAA-MM-DD" }
+// Formato: "CÓDIGO": { descuento: 0.XX, caducidad: "AAAA-MM-DD", maxUsesPerUser: N }
+//   maxUsesPerUser: cuántas compras puede completar un mismo dispositivo con este cupón.
+//   Omitir o poner Infinity para sin límite.
 const cuponesVariables = {
-  'ANITA15':  { descuento: 0.15, caducidad: '2026-05-31' },
-  'MARA13': { descuento: 0.33, caducidad: '2026-05-31' },
-  'MARCOS15': { descuento: 0.10, caducidad: '2026-06-15' },
+  'ANITA15':  { descuento: 0.15, caducidad: '2026-05-31', maxUsesPerUser: 1 },
+  'MARA13':   { descuento: 0.33, caducidad: '2026-05-31', maxUsesPerUser: 1 },
+  'MARCOS15': { descuento: 0.10, caducidad: '2026-06-15', maxUsesPerUser: 1 },
 };
+
+// ── Helpers de uso de cupones por dispositivo (localStorage) ─────────────────
+/** Clave de localStorage para el contador de usos de un código. */
+function _couponUsesKey(code) { return 'promo_uses_' + code; }
+
+/** Devuelve cuántas compras completadas lleva este dispositivo con ese código. */
+function getCouponUses(code) {
+  return parseInt(localStorage.getItem(_couponUsesKey(code)) || '0', 10);
+}
+
+/** Suma 1 al contador de usos de ese código en localStorage (llamar solo al comprar). */
+function incrementCouponUses(code) {
+  localStorage.setItem(_couponUsesKey(code), getCouponUses(code) + 1);
+}
+
+/** Límite configurado para ese código (Infinity si no tiene límite). */
+function getCouponMaxUses(code) {
+  return cuponesVariables[code]?.maxUsesPerUser ?? Infinity;
+}
 
 /**
  * Días enteros que quedan hasta que caduque el cupón (puede ser negativo si ya caducó).
@@ -2370,6 +2402,7 @@ const T = {
       laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
       seriea: '🇮🇹 Serie A', bundesliga: '🇩🇪 Bundesliga', ligue1: '🇫🇷 Ligue 1',
       selecciones: '🌍 Selecciones', sudamerica: '🌎 Sudamérica',
+      shorts: '🩳 Cortos',
       europa: '🏆 Europa', retro: '⏪ Retro', nba: '🏀 NBA',
       streetwear: '👕 Streetwear', windbreaker: '💨 Cortavientos',
       kids: '👶 Niños', women: '♀️ Mujer', otros: 'Otros',
@@ -2380,7 +2413,7 @@ const T = {
       nuevatemporada: 'Nueva Temporada 26/27',
       laliga: 'LaLiga', premier: 'Premier League', seriea: 'Serie A',
       bundesliga: 'Bundesliga', ligue1: 'Ligue 1', selecciones: 'Selecciones',
-      sudamerica: 'Sudamérica', europa: 'Europa', retro: 'Retro',
+      sudamerica: 'Sudamérica', shorts: 'Cortos', europa: 'Europa', retro: 'Retro',
       nba: 'NBA', streetwear: 'Streetwear',
       windbreaker: 'Cortavientos', kids: 'Niños', women: 'Mujer', otros: 'Otros',
       favoritos: 'Favoritos',
@@ -2447,6 +2480,7 @@ const T = {
       laliga: '🇪🇸 LaLiga', premier: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier',
       seriea: '🇮🇹 Serie A', bundesliga: '🇩🇪 Bundesliga', ligue1: '🇫🇷 Ligue 1',
       selecciones: '🌍 National Teams', sudamerica: '🌎 South America',
+      shorts: '🩳 Shorts',
       europa: '🏆 Europe', retro: '⏪ Retro', nba: '🏀 NBA',
       streetwear: '👕 Streetwear', windbreaker: '💨 Windbreaker',
       kids: '👶 Kids', women: '♀️ Women', otros: 'Others',
@@ -2457,7 +2491,7 @@ const T = {
       nuevatemporada: 'New Season 26/27',
       laliga: 'LaLiga', premier: 'Premier League', seriea: 'Serie A',
       bundesliga: 'Bundesliga', ligue1: 'Ligue 1', selecciones: 'National Teams',
-      sudamerica: 'South America', europa: 'Europe', retro: 'Retro',
+      sudamerica: 'South America', shorts: 'Shorts', europa: 'Europe', retro: 'Retro',
       nba: 'NBA', streetwear: 'Streetwear',
       windbreaker: 'Windbreaker', kids: 'Kids', women: 'Women', otros: 'Others',
       favoritos: 'Favourites',
@@ -2593,6 +2627,7 @@ async function init() {
     const res = await fetch(PRODUCTS_URL);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     allProducts = await res.json();
+    buildCatBar();     // reconstruir tras cargar datos (ej. la pill 'shorts' depende de allProducts)
     buildFilterBar();
     renderAll();
   } catch (e) {
@@ -2625,7 +2660,7 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','mundial2026','nuevatemporada','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','nba','streetwear','windbreaker','kids','europa','otros'];
+const CAT_ORDER = ['all','mundial2026','nuevatemporada','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','shorts','nba','streetwear','windbreaker','kids','europa','otros'];
 // Categorías que sólo se muestran en modo socio
 const SOCIO_ONLY_CATS = new Set(['streetwear']);
 // Categorías ocultas para usuarios normales (visibles en modo socio o si se accede directamente)
@@ -2634,11 +2669,13 @@ const HIDDEN_NORMAL_CATS = new Set(['otros']);
 function buildCatBar() {
   const bar = document.getElementById('cat-bar');
   bar.innerHTML = '';
+  // Pre-compute si hay productos shorts cargados (evita mostrar pill vacía antes de cargar datos)
+  const hasShorts = allProducts.length > 0 && allProducts.some(isShortProduct);
   for (const cat of CAT_ORDER) {
-    // Ocultar categorías de socio si no está en modo socio
     if (!socioMode && SOCIO_ONLY_CATS.has(cat)) continue;
-    // Ocultar "Otros" para usuarios normales
     if (!socioMode && HIDDEN_NORMAL_CATS.has(cat)) continue;
+    // Ocultar 'shorts' mientras no haya productos de esa categoría cargados
+    if (cat === 'shorts' && !hasShorts) continue;
     const btn = document.createElement('button');
     btn.className = 'cat-btn'
       + (cat === 'mundial2026' ? ' cat-mundial2026' : '')
@@ -2908,12 +2945,44 @@ function detectTeam(name) {
   return null;
 }
 
+/**
+ * Detecta si un producto es un pantalón corto (Shorts).
+ * Busca la palabra "short" (singular o plural) de forma case-insensitive
+ * en nameEn, nameEs, cats y yupooCategory — así funciona independientemente
+ * de cómo lo haya guardado el scraper.
+ * Se excluyen productos NBA (que tienen sus propios "shorts" de baloncesto).
+ */
+function isShortProduct(p) {
+  const re = /short/i;          // cubre "Short", "Shorts", "shorts", etc.
+  const cats = p.cats || [];
+  if (cats.includes('nba')) return false;   // NBA shorts → quedan en su propia categoría
+  return re.test(p.nameEn || '')
+      || re.test(p.nameEs || '')
+      || cats.some(c => re.test(c))
+      || re.test(p.yupooCategory || '');
+}
+
+/**
+ * Artículo infantil tipo "Kid Kit": cualquier producto de la categoría 'kids'
+ * que NO sea un Baby Jersey. Cubre "Kid Kit", "Kids Retro", "Kid Jersey", etc.
+ */
+function isKidKit(p) {
+  const cats = p.cats || [];
+  const isKidsCategory = cats.includes('kids') || /\bkids?\b/i.test(p.nameEn || '') || /\bkids?\b/i.test(p.nameEs || '');
+  return isKidsCategory && !isBabyJersey(p);
+}
+/** Artículo infantil tipo "Baby Jersey" (nombre contiene "Baby"). */
+function isBabyJersey(p) {
+  return /baby/i.test(p.nameEn || '') || /baby/i.test(p.nameEs || '');
+}
+
 function matchesTipo(p, tipo) {
   const cats = p.cats || [];
   if (tipo === 'Player Version') return PLAYER_RE.test(p.nameEn);
   if (tipo === 'Fan Version')    return !PLAYER_RE.test(p.nameEn) && !WOMEN_RE.test(p.nameEn) && !cats.includes('kids') && !cats.includes('windbreaker');
-  if (tipo === 'Mujer')          return WOMEN_RE.test(p.nameEn);  // sólo por nombre
-  if (tipo === 'Niños')          return cats.includes('kids')  || /\bkids\b|\bniños\b|\bchild\b|\bjunior\b/i.test(p.nameEn);
+  if (tipo === 'Mujer')          return WOMEN_RE.test(p.nameEn);
+  if (tipo === 'Kid Kit')        return isKidKit(p);
+  if (tipo === 'Baby Jersey')    return isBabyJersey(p);
   if (tipo === 'Cortavientos')   return cats.includes('windbreaker');
   if (tipo === 'Retro')          return cats.includes('retro') || /\bretro\b/i.test(p.nameEn);
   return false;
@@ -3042,7 +3111,7 @@ function makeSelectRow(label, group, items, placeholder) {
 // pero NO el filtro de temporada — base para construir opciones dinámicas de temporada.
 function getProductsForSeasonFilter() {
   return allProducts.filter(p => {
-    if (activeCat !== 'all' && !(p.cats || []).includes(activeCat)) return false;
+    if (activeCat !== 'all' && !(activeCat === 'shorts' ? isShortProduct(p) : (p.cats || []).includes(activeCat))) return false;
     if (searchQuery) {
       const pc = primaryCat(p);
       const haystack = (p.nameEn + ' ' + p.nameEs + ' ' + (t().cat_labels[pc] || '')).toLowerCase();
@@ -3075,9 +3144,12 @@ function buildFilterBar() {
 
   // Mundial 2026: solo equipaciones 2026 (sin retros del escaparate)
   const mundialBase = p => isMundial2026(p) && !(p.cats || []).includes('retro');
+  // Shorts: no tienen 'shorts' en cats[] — se detectan por nombre con isShortProduct()
   const catProducts = activeCat === 'mundial2026'
     ? allProducts.filter(mundialBase)
-    : allProducts.filter(p => (p.cats || []).includes(activeCat));
+    : activeCat === 'shorts'
+      ? allProducts.filter(isShortProduct)
+      : allProducts.filter(p => (p.cats || []).includes(activeCat));
   if (catProducts.length === 0) { bar.style.display = 'none'; return; }
 
   // En vistas temáticas (Mundial 2026 y Nueva Temp) → ocultar Temporada y Ordenar
@@ -3093,7 +3165,7 @@ function buildFilterBar() {
   const isEs = lang === 'es';
 
   // ── 0. Liga — select → #filter-pill-rows (solo en categorías multi-liga) ──
-  const LIGA_FILTER_CATS = new Set(['women','retro','kids','nuevatemporada']);
+  const LIGA_FILTER_CATS = new Set(['women','retro','kids','nuevatemporada','shorts']);
   if (LIGA_FILTER_CATS.has(activeCat)) {
     const LIGA_LIST = [
       { cat: 'laliga',     es: 'LaLiga',        en: 'LaLiga' },
@@ -3142,7 +3214,7 @@ function buildFilterBar() {
   }
 
   // ── 2. Tipo — pills → #filter-pill-rows ─────────────────────────────────
-  const TIPOS = ['Fan Version','Player Version','Mujer','Niños','Cortavientos','Retro'];
+  const TIPOS = ['Fan Version','Player Version','Mujer','Kid Kit','Baby Jersey','Cortavientos','Retro'];
   const tiposPresent = TIPOS.filter(ti => catProducts.some(p => matchesTipo(p, ti)));
   if (tiposPresent.length > 1) {
     pillRows.appendChild(makeFilterRow(isEs ? 'Tipo' : 'Type', 'tipos', tiposPresent));
@@ -3238,6 +3310,21 @@ function getFiltered() {
   // Vista de favoritos: sólo los guardados en localStorage
   if (activeCat === 'favoritos') {
     return allProducts.filter(p => favorites.has(p.nameEn));
+  }
+
+  // Vista Shorts: usa isShortProduct() para máxima flexibilidad
+  if (activeCat === 'shorts') {
+    let base = allProducts.filter(isShortProduct);
+    if (searchQuery) {
+      const sq = searchQuery;
+      base = base.filter(p => (p.nameEn + ' ' + (p.nameEs || '')).toLowerCase().includes(sq));
+    }
+    const filtered = hasActiveFilters() ? base.filter(matchesFilter) : base;
+    return filtered.slice().sort((a, b) => {
+      const ya = seasonStartYear(extractSeason(a.nameEn) || '') ?? 0;
+      const yb = seasonStartYear(extractSeason(b.nameEn) || '') ?? 0;
+      return seasonSortDir === 'asc' ? ya - yb : yb - ya;
+    });
   }
 
   // Vista Mundial 2026: equipaciones 2026 en orden canónico, sin retros del escaparate
@@ -3489,7 +3576,7 @@ function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
   }
 
   const items = allProducts
-    .filter(p => (p.cats || []).includes(cat) && p.img)
+    .filter(p => p.img && (cat === 'shorts' ? isShortProduct(p) : (p.cats || []).includes(cat)))
     .slice(0, limit);
 
   if (items.length === 0) {
@@ -3652,6 +3739,7 @@ function renderAll() {
   renderHomeRow('row-selecciones',    'scroll-selecciones',    'selecciones',    12);
   renderHomeRow('row-women',          'scroll-women',          'women',          12);
   renderHomeRow('row-sudamerica',     'scroll-sudamerica',     'sudamerica',     12);
+  renderHomeRow('row-shorts',         'scroll-shorts',         'shorts',         12);
   renderHomeRow('row-nba',            'scroll-nba',            'nba',            12);
   renderHomeRow('row-windbreaker',    'scroll-windbreaker',    'windbreaker',    12);
   renderHomeRow('row-kids',           'scroll-kids',           'kids',           12);
@@ -3767,9 +3855,11 @@ const NORMAL_PRICES = {
   women:       15,
   nba:         25,
 };
-const NORMAL_JERSEY = 15;
-const NORMAL_RETRO  = 22;
-const NORMAL_PLAYER = 20;
+const NORMAL_JERSEY        = 15;
+const NORMAL_RETRO         = 22;
+const NORMAL_PLAYER        = 20;
+const NORMAL_SHORTS_FAN    = 13;
+const NORMAL_SHORTS_PLAYER = 18;
 
 // ── Precios modo SOCIO (en $) ──────────────────────────────────────────────
 const SOCIO_PRICES = {
@@ -3779,9 +3869,11 @@ const SOCIO_PRICES = {
   women:        8,
   nba:         18,
 };
-const SOCIO_JERSEY = 8;
-const SOCIO_RETRO  = 13;
-const SOCIO_PLAYER = 11;
+const SOCIO_JERSEY        = 8;
+const SOCIO_RETRO         = 13;
+const SOCIO_PLAYER        = 11;
+const SOCIO_SHORTS_FAN    = 7;   // 7$ × 0.90 = 6.30€ en pantalla
+const SOCIO_SHORTS_PLAYER = 10;  // 10$ × 0.90 = 9.00€ en pantalla
 
 /**
  * Devuelve la categoría "principal" del producto para efectos de display y precio.
@@ -3795,25 +3887,39 @@ function primaryCat(p) {
 }
 
 function getBasePrice(p) {
-  // ① Windbreaker / jacket → precio fijo 60€ (o precio socio de windbreaker)
+  // ① Pantalón corto → precio fijo según versión
+  if (isShortProduct(p)) {
+    if (PLAYER_RE.test(p.nameEn)) return socioMode ? SOCIO_SHORTS_PLAYER : NORMAL_SHORTS_PLAYER;
+    return socioMode ? SOCIO_SHORTS_FAN : NORMAL_SHORTS_FAN;
+  }
+
+  // ② Windbreaker / jacket → precio fijo 60€ normal / 34.20€ socio
+  // 38$ × EUR_RATE(0.90) = 34.20€ — precio de coste fijo para socioMode
   if (WINDBREAKER_RE.test(p.nameEn))
-    return socioMode ? (SOCIO_PRICES.windbreaker ?? SOCIO_JERSEY) : NORMAL_PRICES.windbreaker;
+    return socioMode ? 38 : NORMAL_PRICES.windbreaker;
+
+  // ③ Kid Kit → precio fijo según si es retro o normal; mismo coste socio (14$)
+  if (isKidKit(p)) {
+    if (socioMode) return 14;  // 14$ × 0.90 = 12.60€ para todos los Kid Kits
+    const isRetro = (p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn || '');
+    return isRetro ? 28 : 25;  // Retro → 28€, Normal → 25€
+  }
 
   const pc    = primaryCat(p);
   const table = socioMode ? SOCIO_PRICES : NORMAL_PRICES;
 
-  // ② Categoría con precio propio (windbreaker, nba, kids, women, streetwear…)
+  // ④ Categoría con precio propio (nba, kids, women, streetwear…)
   if (table[pc] !== undefined) return table[pc];
 
-  // ③ Versión Player (precio especial)
+  // ⑤ Versión Player (precio especial)
   if (PLAYER_RE.test(p.nameEn))
     return socioMode ? SOCIO_PLAYER : NORMAL_PLAYER;
 
-  // ④ Retro
+  // ⑥ Retro
   if ((p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn))
     return socioMode ? SOCIO_RETRO : NORMAL_RETRO;
 
-  // ⑤ Camiseta estándar
+  // ⑦ Camiseta estándar
   return socioMode ? SOCIO_JERSEY : NORMAL_JERSEY;
 }
 
@@ -4567,17 +4673,29 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
       : item.priceUsd;
 
     // ── Coste: precio de fábrica/socio (número puro en €) ────────────────────
-    const cats    = item.cats || [];
-    const pc      = cats.find(c => c !== 'nuevatemporada') || cats[0] || 'otros';
-    const socioBase = SOCIO_PRICES[pc] !== undefined
-                    ? SOCIO_PRICES[pc]
-                    : PLAYER_RE.test(item.name)
-                      ? SOCIO_PLAYER
-                      : (cats.includes('retro') || /\bretro\b/i.test(item.name))
-                        ? SOCIO_RETRO
-                        : SOCIO_JERSEY;
+    const cats   = item.cats || [];
+    const pc     = cats.find(c => c !== 'nuevatemporada') || cats[0] || 'otros';
     const extras = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
-    const coste  = Math.round((socioBase + extras) * EUR_RATE * 100) / 100;
+    const extrasEur = Math.round(extras * EUR_RATE * 100) / 100;
+
+    let costeBase; // precio base en € (sin extras)
+    if (WINDBREAKER_RE.test(item.name)) {
+      costeBase = 34.2;                                          // 38 $ → 34.2 € fijo
+    } else if (isKidKit(item)) {
+      costeBase = 12.6;                                          // 14 $ → 12.6 € fijo
+    } else if (isShortProduct(item)) {
+      costeBase = PLAYER_RE.test(item.name) ? 9 : 6.3;          // Player 10$ / Fan 7$ → en €
+    } else {
+      const socioBase = SOCIO_PRICES[pc] !== undefined
+                      ? SOCIO_PRICES[pc]
+                      : PLAYER_RE.test(item.name)
+                        ? SOCIO_PLAYER
+                        : (cats.includes('retro') || /\bretro\b/i.test(item.name))
+                          ? SOCIO_RETRO
+                          : SOCIO_JERSEY;
+      costeBase = Math.round(socioBase * EUR_RATE * 100) / 100;
+    }
+    const coste = Math.round((costeBase + extrasEur) * 100) / 100;
 
     const row = {
       jersey:   item.name,
@@ -4707,6 +4825,10 @@ async function submitOrderForm(e) {
       headers: { 'Accept': 'application/json' },
     });
     if (res.ok) {
+      // ── Registrar uso del cupón en localStorage (solo al completar compra) ──
+      if (variableCouponMode && activeCouponCode) incrementCouponUses(activeCouponCode);
+      else if (discountMode && activeDiscountCode) incrementCouponUses(activeDiscountCode);
+
       form.style.display = 'none';
       document.getElementById('order-success').style.display = 'block';
       cart = [];
@@ -4817,6 +4939,16 @@ function submitUserCode() {
       input.focus();
       return;
     }
+  }
+
+  // Comprobar límite de usos por dispositivo (solo cupones variables con maxUsesPerUser)
+  const maxUses = getCouponMaxUses(code);
+  if (isFinite(maxUses) && getCouponUses(code) >= maxUses) {
+    error.textContent = '⚠️ Has alcanzado el límite de usos para este código';
+    error.style.display = 'block';
+    input.value = '';
+    input.focus();
+    return;
   }
 
   // Código válido y vigente — activar el modo correspondiente
