@@ -1539,13 +1539,23 @@
       </div>
 
       <div class="form-group">
-        <label for="form-contacto">Teléfono *</label>
+        <label for="form-contacto" data-i18n="label_phone">Teléfono *</label>
         <input type="text" id="form-contacto" name="contacto" required
                placeholder="Número de teléfono" autocomplete="tel" inputmode="numeric" />
         <div class="form-field-error" id="form-contacto-error">
           Introduce un número de teléfono válido (mínimo 9 dígitos)
         </div>
       </div>
+
+      <div class="form-group">
+        <label for="form-correo" data-i18n="label_email">Correo electrónico *</label>
+        <input type="email" id="form-correo" name="correo" required
+               placeholder="tu@correo.com" autocomplete="email" />
+        <div class="form-field-error" id="form-correo-error">
+          Introduce un correo electrónico válido
+        </div>
+      </div>
+
       <div class="form-group">
         <label>Tipo de entrega *</label>
         <div class="shipping-selector">
@@ -1603,7 +1613,7 @@
 <footer id="footer">
   <div id="footer-logo">PEDIMOS<span>CAMIS?</span></div>
   <div class="footer-links">
-    <span>Email: pedidocamis12@gmail.com</span>
+    <span>Email: pedimoscamis@gmail.com</span>
     <span>© <span id="footer-year"></span> PedimosCamis?</span>
   </div>
   <p id="footer-disclaimer">Este sitio es un proyecto personal sin fines comerciales. No representa ninguna marca, empresa u organización oficial.</p>
@@ -1832,6 +1842,8 @@ const T = {
     featured_title: 'MUNDIAL 2026',
     featured_see_all: 'Ver todas →',
     upsell_shipping: (n) => `🚚 ¡Estás a solo <strong>${n} camiseta${n === 1 ? '' : 's'}</strong> del envío <strong>GRATIS</strong>!`,
+    label_email: 'Correo electrónico *',
+    error_email: 'Introduce un correo electrónico válido',
     select_size: 'Selecciona una talla',
     added_cart: '¡Añadido al carrito!',
     see_photos: 'VER FOTOS EN YUPOO →',
@@ -1906,6 +1918,8 @@ const T = {
     featured_title: 'WORLD CUP 2026',
     featured_see_all: 'View all →',
     upsell_shipping: (n) => `🚚 You're only <strong>${n} shirt${n === 1 ? '' : 's'}</strong> away from <strong>FREE</strong> shipping!`,
+    label_email: 'Email *',
+    error_email: 'Please enter a valid email address',
     select_size: 'Select a size',
     added_cart: 'Added to cart!',
     see_photos: 'SEE PHOTOS ON YUPOO →',
@@ -3754,25 +3768,28 @@ function closeCheckoutOnOverlay(e) {
   if (e.target === document.getElementById('checkout-overlay')) closeCheckout();
 }
 
-function buildWebhookPayload(nombre, telefono, direccion, metodoPago) {
+function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
   const carritoPayload = cart.map(item => {
     const dorsal  = item.customizations.find(c => c.type === 'dorsal');
     const patch   = item.customizations.find(c => c.type === 'patch');
 
-    // ── Precio cobrado al cliente en € ──────────────────────────────────────
-    const priceEur = socioMode
-      ? (Math.round(item.priceUsd * EUR_RATE * 100) / 100) + '€'
-      : item.priceUsd + '€';
+    // ── Cobro: precio final que paga el cliente (número puro en €) ───────────
+    const cobro = socioMode
+      ? Math.round(item.priceUsd * EUR_RATE * 100) / 100
+      : item.priceUsd;
 
-    // ── Gasto real (precio socio USD→EUR) ───────────────────────────────────
+    // ── Coste: precio de fábrica/socio (número puro en €) ────────────────────
     const cats    = item.cats || [];
     const pc      = cats.find(c => c !== 'nuevatemporada') || cats[0] || 'otros';
-    const socioBase = SOCIO_PRICES[pc] !== undefined             ? SOCIO_PRICES[pc]
-                    : PLAYER_RE.test(item.name)                   ? SOCIO_PLAYER
-                    : (cats.includes('retro') || /\bretro\b/i.test(item.name)) ? SOCIO_RETRO
-                    : SOCIO_JERSEY;
-    const extras    = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
-    const gastoEur  = Math.round((socioBase + extras) * EUR_RATE * 100) / 100;
+    const socioBase = SOCIO_PRICES[pc] !== undefined
+                    ? SOCIO_PRICES[pc]
+                    : PLAYER_RE.test(item.name)
+                      ? SOCIO_PLAYER
+                      : (cats.includes('retro') || /\bretro\b/i.test(item.name))
+                        ? SOCIO_RETRO
+                        : SOCIO_JERSEY;
+    const extras = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
+    const coste  = Math.round((socioBase + extras) * EUR_RATE * 100) / 100;
 
     return {
       jersey:   item.name,
@@ -3781,8 +3798,8 @@ function buildWebhookPayload(nombre, telefono, direccion, metodoPago) {
       patches:  patch ? patch.label : '',
       size:     item.size,
       picture:  item.img || '',
-      price:    priceEur,
-      gasto:    gastoEur + '€',
+      cobro,   // número puro — Google Sheets lo lee como numeric
+      coste,   // número puro — Google Sheets lo lee como numeric
     };
   });
   const cuponInfo = discountMode       ? `${activeDiscountCode} (-33%)`
@@ -3791,6 +3808,7 @@ function buildWebhookPayload(nombre, telefono, direccion, metodoPago) {
   return {
     cliente:    nombre,
     telefono:   telefono,
+    correo:     correo,
     direccion:  direccion,
     metodoPago: metodoPago,
     cupon:      cuponInfo,
@@ -3800,9 +3818,10 @@ function buildWebhookPayload(nombre, telefono, direccion, metodoPago) {
 
 async function submitOrderForm(e) {
   e.preventDefault();
-  const btn      = document.getElementById('order-submit-btn');
-  const phoneErr = document.getElementById('form-contacto-error');
-  const dirErr   = document.getElementById('form-direccion-error');
+  const btn       = document.getElementById('order-submit-btn');
+  const phoneErr  = document.getElementById('form-contacto-error');
+  const emailErr  = document.getElementById('form-correo-error');
+  const dirErr    = document.getElementById('form-direccion-error');
 
   // Validar teléfono: al menos 9 dígitos
   const contactoVal = document.getElementById('form-contacto').value;
@@ -3813,6 +3832,16 @@ async function submitOrderForm(e) {
     return;
   }
   phoneErr.style.display = 'none';
+
+  // Validar email
+  const correoVal = document.getElementById('form-correo').value.trim();
+  const emailRe   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRe.test(correoVal)) {
+    emailErr.style.display = 'block';
+    document.getElementById('form-correo').focus();
+    return;
+  }
+  emailErr.style.display = 'none';
 
   // Validar dirección si es envío a domicilio
   const esDomicilio   = document.getElementById('envio-domicilio').checked;
@@ -3832,6 +3861,7 @@ async function submitOrderForm(e) {
   const _whPayload = buildWebhookPayload(
     document.getElementById('form-nombre').value.trim(),
     contactoVal,
+    correoVal,
     esDomicilio ? direccionVal : 'Entrega en mano (Rivas)',
     document.getElementById('form-metodo-pago').value
   );
@@ -3844,8 +3874,8 @@ async function submitOrderForm(e) {
       name:    '-',
       patches: '-',
       size:    '-',
-      gasto:   4.5,
-      price:   shippingCost,
+      coste:   4.5,
+      cobro:   shippingCost,
     });
   }
   fetch(WEBHOOK_URL, {
@@ -3870,7 +3900,7 @@ async function submitOrderForm(e) {
   const data = new FormData(form);
 
   try {
-    const res = await fetch('https://formspree.io/f/xeedaolo', {
+    const res = await fetch('https://formspree.io/f/maqkjnjo', {
       method: 'POST',
       body: data,
       headers: { 'Accept': 'application/json' },
@@ -4085,6 +4115,9 @@ function updateLangUI() {
   if (featuredTitle) featuredTitle.textContent = t().featured_title;
   const featuredSeeAll = document.getElementById('featured-see-all');
   if (featuredSeeAll) featuredSeeAll.textContent = t().featured_see_all;
+  document.querySelectorAll('[data-i18n="label_email"]').forEach(el => el.textContent = t().label_email);
+  const emailErrEl = document.getElementById('form-correo-error');
+  if (emailErrEl) emailErrEl.textContent = t().error_email;
   document.getElementById('cart-total-val').textContent = t().total_fmt(cartTotalEur());
 }
 
