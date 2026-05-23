@@ -584,8 +584,10 @@
     #main {
       max-width: 1440px; margin: 0 auto;
       padding: 28px 24px 60px;
-      scroll-margin-top: 230px;
+      scroll-margin-top: 115px; /* header 64px + cat-bar ~46px + 5px holgura */
     }
+    /* El destino preferido de "Ver Catálogo" también necesita el offset */
+    #featured-section { scroll-margin-top: 115px; }
 
     #results-info {
       color: var(--muted); font-size: 13px;
@@ -1382,10 +1384,15 @@
       display: inline-block;
     }
     #gallery-cta .cta-btn:hover { background: #1565c0; }
+    @keyframes galleryFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0);   }
+    }
     #gallery-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
+      animation: galleryFadeIn 0.3s ease-out forwards;
     }
     @media (min-width: 600px) {
       #gallery-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
@@ -1401,6 +1408,9 @@
       box-shadow: 0 4px 16px rgba(0,0,0,.55);
       aspect-ratio: 1 / 1;
       cursor: zoom-in;
+      /* Aceleración GPU: avisa al navegador con antelación y fuerza compositing layer */
+      will-change: transform, opacity;
+      transform: translateZ(0);
     }
     .gallery-item img {
       width: 100%;
@@ -1408,6 +1418,11 @@
       object-fit: cover;
       display: block;
       transition: transform .35s ease;
+      /* Suavizado de alta calidad al redimensionar — elimina el aliasing/efecto dentado */
+      image-rendering: auto;
+      image-rendering: -webkit-optimize-contrast; /* Chrome/Edge en PC */
+      /* Fuerza compositing layer propio para la imagen → sin lag al hacer hover */
+      backface-visibility: hidden;
     }
     .gallery-item:hover img { transform: scale(1.06); }
 
@@ -2880,7 +2895,19 @@ function goHome() {
 }
 
 function scrollToGrid() {
-  document.getElementById('main').scrollIntoView({ behavior: 'smooth' });
+  // Destino: primer contenido real tras el hero (featured o primera home-row)
+  const dest   = document.getElementById('featured-section')
+              || document.getElementById('row-nuevatemporada')
+              || document.getElementById('main');
+  if (!dest) return;
+
+  // Altura del sticky (header + cat-bar) medida en tiempo real
+  const sticky = document.getElementById('sticky-wrapper');
+  const stickyH = sticky ? sticky.offsetHeight : 0;
+
+  // Posición absoluta del destino en el documento menos el sticky → queda justo debajo
+  const top = dest.getBoundingClientRect().top + window.scrollY - stickyH;
+  window.scrollTo({ top, behavior: 'smooth' });
 }
 
 /**
@@ -3910,16 +3937,30 @@ const GALLERY_IMAGES = [
 
 ];
 
+/**
+ * Inyecta parámetros de optimización Cloudinary (f_auto,q_auto,w_600) en la URL.
+ * - Si la URL ya tiene parámetros de transformación la devuelve sin tocar.
+ * - Si no es una URL de Cloudinary la devuelve tal cual.
+ * El array GALLERY_IMAGES se mantiene con URLs limpias; esta función las optimiza en runtime.
+ */
+function optimizeCloudinaryUrl(url) {
+  if (!url.includes('res.cloudinary.com')) return url;
+  // Si ya hay transformaciones entre /upload/ y /vXXXX o el nombre de archivo → no tocar
+  if (/\/upload\/[a-z_,0-9]+\//.test(url)) return url;
+  return url.replace('/upload/', '/upload/f_auto,q_auto,w_600/');
+}
+
 function renderGallery() {
   const grid = document.getElementById('gallery-grid');
-  if (!grid || grid.dataset.rendered) return;  // solo renderizar una vez
+  if (!grid || grid.dataset.rendered) return;  // idempotente: construye el grid solo la primera vez
   grid.dataset.rendered = '1';
-  grid.innerHTML = GALLERY_IMAGES.map((url, i) =>
-    `<div class="gallery-item" onclick="openGalleryLightbox(${i})" role="button" aria-label="Ver foto ${i + 1}">
-       <img src="${url}" alt="Foto de la galería ${i + 1}" loading="lazy"
+  grid.innerHTML = GALLERY_IMAGES.map((url, i) => {
+    const src = optimizeCloudinaryUrl(url);
+    return `<div class="gallery-item" onclick="openGalleryLightbox(${i})" role="button" aria-label="Ver foto ${i + 1}">
+       <img src="${src}" alt="Foto de la galería ${i + 1}" loading="lazy" decoding="async"
             onerror="this.closest('.gallery-item').style.display='none'">
-     </div>`
-  ).join('');
+     </div>`;
+  }).join('');
 }
 
 function openGalleryLightbox(idx) {
