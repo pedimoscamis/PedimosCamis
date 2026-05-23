@@ -1320,6 +1320,129 @@
     .home-row-scroll::-webkit-scrollbar { height: 4px; }
     .home-row-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
+    /* ─── La Galería ─────────────────────────────────────────── */
+    #gallery-section {
+      display: none;          /* oculta por defecto; JS la muestra al activar cat 'gallery' */
+      background: #0e0e0e;
+      padding: 48px 20px 60px;
+      border-top: 1px solid var(--border);
+    }
+    #gallery-section .gallery-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    #gallery-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      letter-spacing: 2px;
+      color: var(--fg);
+      margin: 0 0 6px;
+    }
+    #gallery-cta {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border: 1px solid #2a4a7f;
+      border-radius: 12px;
+      padding: 18px 24px;
+      margin: 0 0 36px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    #gallery-cta .cta-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+    #gallery-cta .cta-text {
+      flex: 1;
+      min-width: 200px;
+    }
+    #gallery-cta .cta-text p {
+      margin: 0;
+      color: #d0d8e8;
+      font-size: .93rem;
+      line-height: 1.5;
+    }
+    #gallery-cta .cta-text p strong {
+      color: #fff;
+      font-size: 1rem;
+    }
+    #gallery-cta .cta-btn {
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    #gallery-cta .cta-btn:hover { background: #1565c0; }
+    #gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    @media (min-width: 600px) {
+      #gallery-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    }
+    @media (min-width: 1024px) {
+      #gallery-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 6px;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,.55);
+      aspect-ratio: 1 / 1;
+      cursor: zoom-in;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .35s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.06); }
+
+    /* ─── Lightbox de galería ─────────────────────────────────── */
+    #gallery-lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.88);
+      z-index: 9000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    #gallery-lightbox.open { display: flex; }
+    #gallery-lightbox img {
+      max-width: 90vw;
+      max-height: 88vh;
+      border-radius: 6px;
+      border: 3px solid #fff;
+      box-shadow: 0 8px 40px rgba(0,0,0,.7);
+      object-fit: contain;
+    }
+    #gallery-lightbox-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
     /* ─── UCL Flash Event ────────────────────────────────────── */
     @keyframes smokeFloat {
       0%   { transform: translateY(0)   scale(1)    rotate(0deg);   opacity: .55; }
@@ -1681,6 +1804,7 @@
     <span class="hero-pill" onclick="setCategory('premier')">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier</span>
     <span class="hero-pill" data-i18n="pill_nations" onclick="setCategory('selecciones')">🌍 Selecciones</span>
     <span class="hero-pill" onclick="setCategory('nba')">🏀 NBA</span>
+    <span class="hero-pill" onclick="setCategory('gallery')">🖼️ Galería</span>
   </div>
 </section>
 
@@ -2104,6 +2228,28 @@
   </div>
 </div>
 
+<!-- ─── La Galería ─────────────────────────────────────────────────────── -->
+<section id="gallery-section">
+  <div class="gallery-inner">
+    <h2 id="gallery-title">🖼️ La Galería</h2>
+    <div id="gallery-cta">
+      <div class="cta-icon">📸</div>
+      <div class="cta-text">
+        <p><strong>¿Quieres que tu cami aparezca aquí?</strong></p>
+        <p>Mándanos la mejor foto que le hayas hecho y la pondremos aquí de forma anónima 📧</p>
+      </div>
+      <a class="cta-btn" href="mailto:pedimoscamis@gmail.com?subject=Foto%20para%20La%20Galería">✉️ Enviar foto</a>
+    </div>
+    <div id="gallery-grid"></div>
+  </div>
+</section>
+
+<!-- ─── Lightbox de galería ─────────────────────────────────────────────── -->
+<div id="gallery-lightbox" onclick="closeGalleryLightbox(event)">
+  <button id="gallery-lightbox-close" onclick="closeGalleryLightbox()">✕</button>
+  <img id="gallery-lightbox-img" src="" alt="Foto de galería">
+</div>
+
 <!-- ─── Footer ─────────────────────────────────────────────────────────── -->
 <footer id="footer">
   <div id="footer-logo">PEDIMOS<span>CAMIS?</span></div>
@@ -2427,6 +2573,7 @@ const T = {
       streetwear: '👕 Streetwear', windbreaker: '💨 Cortavientos',
       kids: '👶 Niños', women: '♀️ Mujer', otros: 'Otros',
       favoritos: '❤️ Favoritos',
+      gallery: '🖼️ Galería',
     },
     cat_labels: {
       mundial2026: 'Mundial 2026',
@@ -2436,7 +2583,7 @@ const T = {
       sudamerica: 'Sudamérica', shorts: 'Cortos', europa: 'Europa', retro: 'Retro',
       nba: 'NBA', streetwear: 'Streetwear',
       windbreaker: 'Cortavientos', kids: 'Niños', women: 'Mujer', otros: 'Otros',
-      favoritos: 'Favoritos',
+      favoritos: 'Favoritos', gallery: 'Galería',
     },
   },
   en: {
@@ -2505,6 +2652,7 @@ const T = {
       streetwear: '👕 Streetwear', windbreaker: '💨 Windbreaker',
       kids: '👶 Kids', women: '♀️ Women', otros: 'Others',
       favoritos: '❤️ Favourites',
+      gallery: '🖼️ Gallery',
     },
     cat_labels: {
       mundial2026: 'World Cup 2026',
@@ -2514,7 +2662,7 @@ const T = {
       sudamerica: 'South America', shorts: 'Shorts', europa: 'Europe', retro: 'Retro',
       nba: 'NBA', streetwear: 'Streetwear',
       windbreaker: 'Windbreaker', kids: 'Kids', women: 'Women', otros: 'Others',
-      favoritos: 'Favourites',
+      favoritos: 'Favourites', gallery: 'Gallery',
     },
   },
 };
@@ -2680,7 +2828,7 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','mundial2026','nuevatemporada','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','shorts','nba','streetwear','windbreaker','kids','europa','otros'];
+const CAT_ORDER = ['all','mundial2026','nuevatemporada','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','shorts','nba','streetwear','windbreaker','kids','europa','otros','gallery'];
 // Categorías que sólo se muestran en modo socio
 const SOCIO_ONLY_CATS = new Set(['streetwear']);
 // Categorías ocultas para usuarios normales (visibles en modo socio o si se accede directamente)
@@ -3157,7 +3305,7 @@ function buildFilterBar() {
   const pillRows = document.getElementById('filter-pill-rows'); // pills scrollables
   const selects  = document.getElementById('filter-selects');   // selects compactos
 
-  if (activeCat === 'all' || activeCat === 'favoritos' || allProducts.length === 0) {
+  if (activeCat === 'all' || activeCat === 'favoritos' || activeCat === 'gallery' || allProducts.length === 0) {
     bar.style.display = 'none';
     return;
   }
@@ -3327,6 +3475,9 @@ function buildFilterBar() {
 // FILTERING
 // ═══════════════════════════════════════════════════════════════════════════
 function getFiltered() {
+  // Vista Galería: sin productos — la galería tiene su propio render
+  if (activeCat === 'gallery') return [];
+
   // Vista de favoritos: sólo los guardados en localStorage
   if (activeCat === 'favoritos') {
     return allProducts.filter(p => favorites.has(p.nameEn));
@@ -3740,13 +3891,80 @@ function renderUclFlash() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════
+// LA GALERÍA
+// ═══════════════════════════════════════════════════════════════════════════
+
+const GALLERY_IMAGES = [
+  'https://res.cloudinary.com/dbeystyls/image/upload/v1779534970/WhatsApp_Image_2026-05-23_at_13.14.50_4_hpwzaa.jpg',
+  'https://res.cloudinary.com/dbeystyls/image/upload/v1779534970/WhatsApp_Image_2026-05-23_at_13.14.50_yiq0e4.jpg',
+  'https://res.cloudinary.com/dbeystyls/image/upload/v1779534969/WhatsApp_Image_2026-05-23_at_13.14.50_1_qisolb.jpg',
+  'https://res.cloudinary.com/dbeystyls/image/upload/v1779534970/WhatsApp_Image_2026-05-23_at_13.14.52_2_vtxghg.jpg',
+  'https://res.cloudinary.com/dbeystyls/image/upload/v1779534970/WhatsApp_Image_2026-05-23_at_13.14.52_3_sutmyz.jpg',
+  'https://res.cloudinary.com/dbeystyls/image/upload/v1779535249/WhatsApp_Image_2026-05-23_at_13.19.21_vksxb1.jpg',
+  'https://res.cloudinary.com/dbeystyls/image/upload/v1779534970/WhatsApp_Image_2026-05-23_at_13.14.50_3_arorgg.jpg',
+  'https://res.cloudinary.com/dbeystyls/image/upload/v1779534970/WhatsApp_Image_2026-05-23_at_13.14.52_w1qepw.jpg',
+];
+
+function renderGallery() {
+  const grid = document.getElementById('gallery-grid');
+  if (!grid || grid.dataset.rendered) return;  // solo renderizar una vez
+  grid.dataset.rendered = '1';
+  grid.innerHTML = GALLERY_IMAGES.map((url, i) =>
+    `<div class="gallery-item" onclick="openGalleryLightbox(${i})" role="button" aria-label="Ver foto ${i + 1}">
+       <img src="${url}" alt="Foto de la galería ${i + 1}" loading="lazy"
+            onerror="this.closest('.gallery-item').style.display='none'">
+     </div>`
+  ).join('');
+}
+
+function openGalleryLightbox(idx) {
+  const lb  = document.getElementById('gallery-lightbox');
+  const img = document.getElementById('gallery-lightbox-img');
+  img.src = GALLERY_IMAGES[idx];
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeGalleryLightbox(e) {
+  if (e && e.target.id === 'gallery-lightbox-img') return; // clic en la imagen → no cerrar
+  document.getElementById('gallery-lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // RENDER  (con paginación / infinite scroll)
 // ═══════════════════════════════════════════════════════════════════════════
 
 function renderAll() {
-  const hero = document.getElementById('hero');
+  const hero           = document.getElementById('hero');
+  const gallerySect   = document.getElementById('gallery-section');
+  const filterBar     = document.getElementById('filter-bar');
+  const mainGrid      = document.getElementById('main');
+  const isGallery     = activeCat === 'gallery';
+
+  // ── Vista Galería: pantalla completa dedicada ────────────────────────────
+  if (isGallery) {
+    hero.style.display        = 'none';
+    gallerySect.style.display = 'block';
+    if (filterBar) filterBar.style.display = 'none';
+    if (mainGrid)  mainGrid.style.display  = 'none';
+    // Ocultar todas las secciones del home que renderHomeRow/renderFeatured
+    // normalmente gestionan — como hacemos return early, debemos hacerlo aquí.
+    document.querySelectorAll('.home-row-section, #featured-section, #ucl-section')
+      .forEach(s => { s.style.display = 'none'; });
+    renderGallery();     // idempotente: construye el grid solo la primera vez
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;              // no renderizar nada más
+  }
+
+  // ── Vista normal: ocultar galería, mostrar catálogo ──────────────────────
+  gallerySect.style.display = 'none';
+  if (mainGrid) mainGrid.style.display = '';
+
   hero.style.display = (activeCat === 'all' && !searchQuery) ? 'block' : 'none';
 
+  renderGallery();
   renderFeatured();
   renderUclFlash();
   renderHomeRow('row-nuevatemporada', 'scroll-nuevatemporada', 'nuevatemporada', 12);
