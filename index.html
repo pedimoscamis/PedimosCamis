@@ -2140,10 +2140,10 @@ let activeCouponCode   = null;    // código del cupón variable activo
 
 // Códigos SOCIO (precios en $, modo administrador)
 const SOCIO_CODES    = new Set(['GIL13','BOSS7','JORGE71','MALYZ15',
-'SOTO22','RONCOLA10','ADMIN8371','MARTINHA19','YECASE20', 'JOJELROJEL']);
+'SOTO22','RONCOLA10','ADMIN8371','MARTINHA19','YECASE20']);
 
 // Códigos de descuento 33% (precios normales con -33%, vista de usuario normal)
-const DISCOUNT_CODES = new Set(['RAUL20','JUANCHI', 'GLEZ15', 'CHIGLESIA', 'TAYRON18', 'CABEZON156']);
+const DISCOUNT_CODES = new Set(['GLEZ15', 'CHIGLESIA', 'TAYRON18']);
 
 // ── Cupones de descuento variable ────────────────────────────────────────────
 // Edita este objeto para añadir, cambiar o eliminar cupones promocionales.
@@ -2154,6 +2154,10 @@ const cuponesVariables = {
   'ANITA15':  { descuento: 0.15, caducidad: '2026-05-31', maxUsesPerUser: 1 },
   'MARA13':   { descuento: 0.33, caducidad: '2026-05-31', maxUsesPerUser: 1 },
   'MARCOS15': { descuento: 0.10, caducidad: '2026-06-15', maxUsesPerUser: 1 },
+  'JUANCHI':  { descuento: 0.33, caducidad: null, maxUsesPerUser: 1 },
+  'RAUL20':    { descuento: 0.33, caducidad: null, maxUsesPerUser: 1 },
+  'CABEZON156': { descuento: 0.33, caducidad: null, maxUsesPerUser: 1 },
+  'JOJELROJEL' : { descuento: 0.33, caducidad: null, maxUsesPerUser: 1 },
 };
 
 // ── Helpers de uso de cupones por dispositivo (localStorage) ─────────────────
