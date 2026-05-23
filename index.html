@@ -1458,6 +1458,122 @@
       line-height: 1;
     }
 
+    /* ─── Menú hamburguesa (solo móvil) ─────────────────────── */
+    #mobile-menu-toggle {
+      display: none;          /* oculto en desktop */
+      background: none;
+      border: none;
+      color: var(--fg);
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      transition: background .15s;
+    }
+    #mobile-menu-toggle:hover { background: rgba(255,255,255,.07); }
+    #mobile-menu-toggle svg { display: block; }
+
+    /* Overlay oscuro */
+    #mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 1100;
+      backdrop-filter: blur(2px);
+    }
+    #mobile-overlay.overlay-open { display: block; }
+
+    /* Sidebar deslizante */
+    #mobile-sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 75%;
+      max-width: 300px;
+      height: 100dvh;           /* dvh: respeta barra de URL de Safari/Chrome móvil */
+      background: #111;
+      border-right: 1px solid var(--border);
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform .28s cubic-bezier(.4,0,.2,1);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    #mobile-sidebar.sidebar-open { transform: translateX(0); }
+
+    /* Cabecera del sidebar */
+    #sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px 14px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    #sidebar-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: var(--fg);
+      letter-spacing: 1px;
+    }
+    #sidebar-close {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 6px;
+      width: 32px; height: 32px;
+      font-size: 18px; line-height: 1;
+      cursor: pointer;
+      transition: border-color .15s, color .15s;
+    }
+    #sidebar-close:hover { border-color: var(--accent); color: var(--fg); }
+
+    /* Lista de categorías dentro del sidebar */
+    #sidebar-nav {
+      list-style: none;
+      margin: 0; padding: 8px 0;
+      flex: 1;
+    }
+    #sidebar-nav li {
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    #sidebar-nav li button {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--muted);
+      text-align: left;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #sidebar-nav li button:hover,
+    #sidebar-nav li button.active {
+      background: rgba(232,23,60,.1);
+      color: var(--fg);
+    }
+    #sidebar-nav li button.active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    /* Mundial dorado también en sidebar */
+    #sidebar-nav li button.cat-mundial2026 { color: #c9a227; }
+    #sidebar-nav li button.cat-mundial2026:hover,
+    #sidebar-nav li button.cat-mundial2026.active { background: rgba(201,162,39,.12); color: #c9a227; }
+
+    /* En móvil: ocultar cat-bar horizontal, mostrar hamburguesa */
+    @media (max-width: 768px) {
+      #cat-bar { display: none !important; }
+      #mobile-menu-toggle { display: flex; align-items: center; }
+    }
+
     /* ─── UCL Flash Event ────────────────────────────────────── */
     @keyframes smokeFloat {
       0%   { transform: translateY(0)   scale(1)    rotate(0deg);   opacity: .55; }
@@ -1753,6 +1869,14 @@
 
 <!-- ─── Header ─────────────────────────────────────────────────────────── -->
 <header id="header">
+  <!-- Botón hamburguesa — solo visible en móvil (CSS lo oculta en desktop) -->
+  <button id="mobile-menu-toggle" onclick="openSidebar()" aria-label="Abrir menú de categorías">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+      <line x1="3" y1="6"  x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
   <div id="logo" onclick="goHome()">PEDIMOS<span>CAMIS?</span></div>
   <div id="search-wrap">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1805,6 +1929,18 @@
 </div>
 
 </div><!-- /#sticky-wrapper -->
+
+<!-- ─── Mobile sidebar + overlay (solo activos en móvil) ───────────────── -->
+<div id="mobile-overlay" onclick="closeSidebar()"></div>
+<div id="mobile-sidebar">
+  <div id="sidebar-header">
+    <span id="sidebar-logo">PEDIMOS<span style="color:var(--accent)">CAMIS?</span></span>
+    <button id="sidebar-close" onclick="closeSidebar()" aria-label="Cerrar menú">✕</button>
+  </div>
+  <ul id="sidebar-nav">
+    <!-- buildCatBar() lo rellena dinámicamente junto con las pills del desktop -->
+  </ul>
+</div>
 
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
@@ -2849,24 +2985,56 @@ const SOCIO_ONLY_CATS = new Set(['streetwear']);
 // Categorías ocultas para usuarios normales (visibles en modo socio o si se accede directamente)
 const HIDDEN_NORMAL_CATS = new Set(['otros']);
 
+// ── Sidebar móvil ────────────────────────────────────────────────────────
+function openSidebar() {
+  document.getElementById('mobile-sidebar').classList.add('sidebar-open');
+  document.getElementById('mobile-overlay').classList.add('overlay-open');
+  document.body.style.overflow = 'hidden';   // evitar scroll del fondo
+}
+function closeSidebar() {
+  document.getElementById('mobile-sidebar').classList.remove('sidebar-open');
+  document.getElementById('mobile-overlay').classList.remove('overlay-open');
+  document.body.style.overflow = '';
+}
+
 function buildCatBar() {
-  const bar = document.getElementById('cat-bar');
-  bar.innerHTML = '';
-  // Pre-compute si hay productos shorts cargados (evita mostrar pill vacía antes de cargar datos)
+  const bar        = document.getElementById('cat-bar');
+  const sidebarNav = document.getElementById('sidebar-nav');
+  bar.innerHTML        = '';
+  sidebarNav.innerHTML = '';
+
+  // Pre-compute si hay productos shorts cargados
   const hasShorts = allProducts.length > 0 && allProducts.some(isShortProduct);
+
   for (const cat of CAT_ORDER) {
     if (!socioMode && SOCIO_ONLY_CATS.has(cat)) continue;
     if (!socioMode && HIDDEN_NORMAL_CATS.has(cat)) continue;
-    // Ocultar 'shorts' mientras no haya productos de esa categoría cargados
     if (cat === 'shorts' && !hasShorts) continue;
+
+    const label   = t().cats[cat];
+    const isMundi = cat === 'mundial2026';
+    const isActive = cat === activeCat;
+
+    // ── Pill desktop ────────────────────────────────────────────────────
     const btn = document.createElement('button');
     btn.className = 'cat-btn'
-      + (cat === 'mundial2026' ? ' cat-mundial2026' : '')
-      + (cat === activeCat ? ' active' : '');
-    btn.textContent = t().cats[cat];
-    btn.dataset.cat = cat;
+      + (isMundi   ? ' cat-mundial2026' : '')
+      + (isActive  ? ' active'          : '');
+    btn.textContent  = label;
+    btn.dataset.cat  = cat;
     btn.onclick = () => setCategory(cat);
     bar.appendChild(btn);
+
+    // ── Ítem sidebar móvil ──────────────────────────────────────────────
+    const li  = document.createElement('li');
+    const sb  = document.createElement('button');
+    sb.className = (isMundi  ? 'cat-mundial2026' : '')
+                 + (isActive ? ' active'          : '');
+    sb.textContent = label;
+    sb.dataset.cat = cat;
+    sb.onclick = () => { setCategory(cat); closeSidebar(); };
+    li.appendChild(sb);
+    sidebarNav.appendChild(li);
   }
 }
 
