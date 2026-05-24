@@ -17,7 +17,8 @@
       "Bash(ls data/products.json.bak)",
       "Bash(node -e \"require\\('@aws-sdk/client-s3'\\)\")",
       "Bash(cd \"C:\\\\Users\\\\Alfonso\\\\Documents\\\\KitZone\" && ls -la | grep -i \"image\\\\|imagen\\\\|webp\\\\|camis\\\\|backup\" && echo \"---\" && ls \"C:\\\\Users\\\\Alfonso\" | grep -i \"image\\\\|imagen\\\\|webp\\\\|camis\\\\|backup\" 2>/dev/null)",
-      "Bash(node r2-upload.js)"
+      "Bash(node r2-upload.js)",
+      "Read(//h/Camis_Optimizadas/**)"
     ]
   }
 }
