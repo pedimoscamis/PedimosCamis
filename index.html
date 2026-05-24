@@ -783,6 +783,40 @@
     }
     .modal-price-sub { font-size: 13px; color: var(--muted); }
 
+    /* ─── Super Admin: editor de categorías ──── */
+    #admin-cat-editor {
+      margin-top: 16px;
+      padding: 13px 14px;
+      background: rgba(255,60,0,.05);
+      border: 1px solid rgba(255,80,20,.3);
+      border-radius: 10px;
+      display: none;
+    }
+    #admin-cat-editor h4 {
+      font-size: 10px; font-weight: 800; letter-spacing: 2px;
+      color: #ff7040; text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+    .admin-cat-pill {
+      display: inline-block; padding: 4px 10px;
+      border-radius: 20px; font-size: 11px; font-weight: 700;
+      cursor: pointer; user-select: none; margin: 3px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04); color: var(--muted);
+      transition: background .14s, color .14s, border-color .14s;
+    }
+    .admin-cat-pill.active {
+      background: rgba(255,70,20,.22); color: #ff9070;
+      border-color: rgba(255,70,20,.55);
+    }
+    #admin-copy-json {
+      margin-top: 10px; padding: 6px 14px; border-radius: 6px;
+      background: rgba(255,60,0,.12); border: 1px solid rgba(255,70,20,.35);
+      color: #ff8060; font-size: 11px; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+    }
+    #admin-copy-json:hover { background: rgba(255,60,0,.28); }
+
     .section-label {
       font-size: 11px; text-transform: uppercase;
       letter-spacing: .8px; color: var(--muted);
@@ -2244,6 +2278,8 @@
         </div>
       </div>
       <button id="add-to-cart-btn" onclick="addToCart()"></button>
+      <!-- Super Admin: editor de categorías — solo visible en adminMode -->
+      <div id="admin-cat-editor"></div>
     </div>
   </div>
 </div>
@@ -2355,6 +2391,8 @@
         <label for="form-metodo-pago">Método de pago *</label>
         <select id="form-metodo-pago" name="metodoPago" required>
           <option value="Bizum" selected>Bizum</option>
+          <option value="PayPal">PayPal</option>
+          <option value="Revolut">Revolut</option>
           <option value="Efectivo">Efectivo</option>
         </select>
       </div>
@@ -3797,6 +3835,12 @@ function getMundialItems(maxExtra = Infinity) {
              && !/kids|16[-–]28|long\s*sleeve|manga\s*larga|goalkeeper/i.test(p.nameEn)),
   };
 
+  // Overrides para el slot 3 (Player): predicate por índice de selección.
+  // índice 0 = España → Away Player (camiseta visitante versión jugador) en lugar de Home Player
+  const PLAYER_SLOT_FILTER = {
+    0: p => isMundialAway(p.nameEn),
+  };
+
   for (let si = 0; si < MUNDIAL_PRIORITY.length; si++) {
     const keywords = MUNDIAL_PRIORITY[si];
     const matchTeam     = p => keywords.some(k => p.nameEn.toLowerCase().includes(k));
@@ -3814,9 +3858,18 @@ function getMundialItems(maxExtra = Infinity) {
     for (const p of teamFan) {
       if (!addedAway && !picked.has(p.id) && isMundialAway(p.nameEn)) { items.push(p); picked.add(p.id); addedAway = true; break; }
     }
-    // 3. Player Version Home
-    for (const p of teamPlayer) {
-      if (!addedPlayerHome && !picked.has(p.id) && isMundialHome(p.nameEn)) { items.push(p); picked.add(p.id); addedPlayerHome = true; break; }
+    // 3. Player Version — override por selección si existe (ej: España → Away Player)
+    const playerFilter = PLAYER_SLOT_FILTER[si];
+    if (playerFilter) {
+      for (const p of teamPlayer) {
+        if (!addedPlayerHome && !picked.has(p.id) && playerFilter(p)) { items.push(p); picked.add(p.id); addedPlayerHome = true; break; }
+      }
+    }
+    // Fallback: Home Player genérico si no hay override o no encontró nada
+    if (!addedPlayerHome) {
+      for (const p of teamPlayer) {
+        if (!picked.has(p.id) && isMundialHome(p.nameEn)) { items.push(p); picked.add(p.id); addedPlayerHome = true; break; }
+      }
     }
     // 4. Retro Home — con override por selección si existe
     const retroFilter = RETRO_SLOT_FILTER[si];
@@ -4518,6 +4571,53 @@ function createCard(p, idx = 0) {
 // ═══════════════════════════════════════════════════════════════════════════
 // MODAL
 // ═══════════════════════════════════════════════════════════════════════════
+function renderAdminCatEditor(p) {
+  const editor = document.getElementById('admin-cat-editor');
+  if (!editor) return;
+  if (!adminMode) { editor.style.display = 'none'; return; }
+
+  // Copia local mutable de categorías del producto (no modifica allProducts)
+  let editCats = [...(p.cats || [])];
+
+  function refresh() {
+    const availableCats = CAT_ORDER.filter(c => c !== 'all' && c !== 'gallery');
+    editor.innerHTML = `
+      <h4>🔑 Super Admin — Editar Categorías</h4>
+      <div>
+        ${availableCats.map(c =>
+          `<span class="admin-cat-pill${editCats.includes(c) ? ' active' : ''}" data-cat="${c}">${c}</span>`
+        ).join('')}
+      </div>
+      <button id="admin-copy-json">📋 Copiar JSON al portapapeles</button>
+    `;
+    editor.style.display = 'block';
+
+    editor.querySelectorAll('.admin-cat-pill').forEach(pill => {
+      pill.onclick = () => {
+        const cat = pill.dataset.cat;
+        const idx = editCats.indexOf(cat);
+        if (idx === -1) editCats.push(cat);
+        else editCats.splice(idx, 1);
+        refresh();
+      };
+    });
+
+    document.getElementById('admin-copy-json').onclick = () => {
+      const modified = { ...p, cats: editCats };
+      const json = JSON.stringify(modified, null, 2);
+      console.log('%c PedimosCamis Admin — Producto:', 'color:#ff7040;font-weight:bold', modified);
+      console.log(json);
+      navigator.clipboard.writeText(json).then(() => {
+        showToast('✓ JSON copiado al portapapeles');
+      }).catch(() => {
+        showToast('✓ JSON en consola (F12)');
+      });
+    };
+  }
+
+  refresh();
+}
+
 function openModal(p) {
   currentProduct = p;
   selectedSize = null;
@@ -4580,6 +4680,9 @@ function openModal(p) {
   buildSizeGrid(p.sizes || []);
 
   updateModalPrice();
+
+  // Super Admin: editor de categorías (solo si adminMode)
+  renderAdminCatEditor(p);
 
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
