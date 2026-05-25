@@ -2930,6 +2930,23 @@ function getKitVersion(name) {
   return '-';
 }
 
+/**
+ * Versión del artículo para Google Sheets y el resumen de pedido.
+ * Soporta las 4 categorías que espera la base de datos:
+ *   'Player' | 'Retro' | 'Fan Woman' | 'Fan'
+ *
+ * Recibe el objeto cart-item completo (con .name y .cats) para poder
+ * detectar retro y mujer tanto por nombre como por categoría.
+ */
+function getCartVersion(item) {
+  const name = item.name || '';
+  const cats = item.cats || [];
+  if (PLAYER_RE.test(name))                                        return 'Player';
+  if (cats.includes('retro') || /\bretro\b/i.test(name))          return 'Retro';
+  if (WOMEN_RE.test(name)    || cats.includes('women'))           return 'Fan Woman';
+  return 'Fan';
+}
+
 // ── Paginación ─────────────────────────────────────────────────────────────
 const PAGE_SIZE     = 48;
 let currentFiltered = [];   // lista filtrada completa
@@ -5165,7 +5182,7 @@ function openCheckout() {
     const patch    = item.customizations.find(c => c.type === 'patch');
     const eurPrice = socioMode ? Math.round(item.priceUsd * EUR_RATE * 100) / 100 : item.priceUsd;
     const nameNum  = dorsal ? `${dorsal.name} #${dorsal.number}` : 'N/A';
-    const version  = getKitVersion(item.name);
+    const version  = getCartVersion(item);
     const patchStr = patch ? patch.label : 'None';
     pedidoStr += `${item.name}${qty > 1 ? ` (×${qty})` : ''}\n`;
     pedidoStr += `SIZE: ${item.size}\n`;
@@ -5258,7 +5275,7 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
 
     const row = {
       jersey:   item.name,
-      version:  PLAYER_RE.test(item.name) ? 'Player' : 'Fan',
+      version:  getCartVersion(item),
       name:     dorsal ? [dorsal.name, dorsal.number].filter(Boolean).join(' ') : '',
       patches:  patch ? patch.label : '',
       size:     item.size,
