@@ -1152,8 +1152,8 @@
     #sizes-modal-overlay {
       display: none;
       position: fixed; inset: 0;
-      background: rgba(0,0,0,.72);
-      z-index: 2100;
+      background: rgba(0,0,0,.78);
+      z-index: 9300;
       align-items: center;
       justify-content: center;
       padding: 16px;
@@ -1223,16 +1223,21 @@
       font-size: 11px; color: var(--muted);
       margin-top: 5px; margin-left: 2px;
     }
-    /* Botón "📏 Guía de tallas" bajo el grid de tallas en el modal */
-    #size-guide-link {
-      display: inline-block;
-      margin-top: 6px;
-      font-size: 11px; color: var(--muted);
-      cursor: pointer; text-decoration: underline;
-      text-underline-offset: 3px;
-      transition: color .2s;
+    /* Fila label + icono ⓘ de tallas */
+    .section-label-row {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 8px;
     }
-    #size-guide-link:hover { color: var(--accent); }
+    .section-label-row .section-label { margin: 0; }
+    .size-info-btn {
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: none; padding: 2px;
+      color: var(--muted); cursor: pointer;
+      transition: color .2s; line-height: 1;
+      flex-shrink: 0;
+    }
+    .size-info-btn:hover { color: var(--accent); }
+    .size-info-btn svg { display: block; }
     @media (max-width: 520px) {
       #sizes-modal { padding: 24px 16px 20px; border-radius: 12px; }
       #sizes-modal h2 { font-size: 22px; }
@@ -2338,9 +2343,17 @@
         <div class="modal-price-sub" id="modal-price-sub"></div>
       </div>
       <div>
-        <p class="section-label" data-i18n="sizes">Tallas</p>
+        <div class="section-label-row">
+          <p class="section-label" data-i18n="sizes">Tallas</p>
+          <button class="size-info-btn" onclick="openSizesGuide()" aria-label="Guía de tallas" title="Guía de tallas">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="8.5" stroke="currentColor" stroke-width="1.5"/>
+              <line x1="10" y1="9" x2="10" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="10" cy="6.5" r="0.9" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
         <div id="size-grid"></div>
-        <span id="size-guide-link" onclick="openSizesGuide()" data-i18n="size_guide">📏 Guía de tallas</span>
       </div>
       <div id="custom-section">
         <p class="section-label" data-i18n="personalization">Personalización</p>
