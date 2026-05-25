@@ -4117,7 +4117,11 @@ function renderFeatured() {
     return;
   }
 
-  const items = getMundialItems(2); // bloque prioritario + hasta 2 extras
+  // bloque prioritario + hasta 2 extras; la primera pasa a ser la tercera
+  const rawMundial = getMundialItems(2);
+  const items = rawMundial.length >= 3
+    ? [rawMundial[1], rawMundial[2], rawMundial[0], ...rawMundial.slice(3)]
+    : rawMundial;
 
   if (items.length === 0) {
     section.style.display = 'none';
