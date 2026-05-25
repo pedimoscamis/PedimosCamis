@@ -1147,6 +1147,97 @@
       font-size: 11px; color: #555; margin-top: 14px;
       max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.5;
     }
+
+    /* ─── Guía de Tallas Modal ───────────────────────────────────────────── */
+    #sizes-modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.72);
+      z-index: 2100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    #sizes-modal-overlay.open { display: flex; }
+    #sizes-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%; max-width: 700px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px 28px 28px;
+      position: relative;
+    }
+    #sizes-modal-close {
+      position: absolute; top: 14px; right: 16px;
+      background: none; border: none;
+      color: var(--muted); font-size: 22px;
+      cursor: pointer; line-height: 1;
+      transition: color .2s;
+    }
+    #sizes-modal-close:hover { color: var(--accent); }
+    #sizes-modal h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px; letter-spacing: 1px;
+      color: var(--text); margin: 0 0 6px;
+    }
+    #sizes-modal .sizes-modal-subtitle {
+      font-size: 12px; color: var(--muted);
+      margin-bottom: 28px;
+    }
+    .sizes-section { margin-bottom: 28px; }
+    .sizes-section-title {
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 10px;
+    }
+    .sizes-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .sizes-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 13px; white-space: nowrap;
+    }
+    .sizes-table th {
+      background: var(--card);
+      color: var(--text); font-weight: 700;
+      padding: 9px 14px; text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .sizes-table th:first-child { text-align: left; }
+    .sizes-table td {
+      padding: 8px 14px; text-align: center;
+      color: var(--muted); border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .sizes-table td:first-child {
+      text-align: left; color: var(--text);
+      font-weight: 600;
+    }
+    .sizes-table tr:last-child td { border-bottom: none; }
+    .sizes-table tr:hover td { background: rgba(255,255,255,.03); }
+    .sizes-unit {
+      font-size: 11px; color: var(--muted);
+      margin-top: 5px; margin-left: 2px;
+    }
+    /* Botón "📏 Guía de tallas" bajo el grid de tallas en el modal */
+    #size-guide-link {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 11px; color: var(--muted);
+      cursor: pointer; text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color .2s;
+    }
+    #size-guide-link:hover { color: var(--accent); }
+    @media (max-width: 520px) {
+      #sizes-modal { padding: 24px 16px 20px; border-radius: 12px; }
+      #sizes-modal h2 { font-size: 22px; }
+      .sizes-table th, .sizes-table td { padding: 8px 10px; font-size: 12px; }
+    }
     /* ─── Fav header button ──────────────────────────────────── */
     #fav-btn {
       position: relative; background: none; border: none;
@@ -2249,6 +2340,7 @@
       <div>
         <p class="section-label" data-i18n="sizes">Tallas</p>
         <div id="size-grid"></div>
+        <span id="size-guide-link" onclick="openSizesGuide()" data-i18n="size_guide">📏 Guía de tallas</span>
       </div>
       <div id="custom-section">
         <p class="section-label" data-i18n="personalization">Personalización</p>
@@ -2439,11 +2531,83 @@
   <img id="gallery-lightbox-img" src="" alt="Foto de galería">
 </div>
 
+<!-- ─── Guía de Tallas Modal ─────────────────────────────────────────────── -->
+<div id="sizes-modal-overlay" onclick="closeSizesGuideOnOverlay(event)">
+  <div id="sizes-modal">
+    <button id="sizes-modal-close" onclick="closeSizesGuide()" aria-label="Cerrar">✕</button>
+    <h2 data-i18n="size_guide_title">GUÍA DE TALLAS</h2>
+    <p class="sizes-modal-subtitle" data-i18n="size_guide_subtitle">Medidas orientativas en centímetros. Ante la duda, sube una talla.</p>
+
+    <!-- Versión Fan -->
+    <div class="sizes-section">
+      <p class="sizes-section-title" data-i18n="version_fan">Versión Fan</p>
+      <div class="sizes-table-wrap">
+        <table class="sizes-table">
+          <thead>
+            <tr>
+              <th>Talla</th>
+              <th>S</th><th>M</th><th>L</th><th>XL</th><th>2XL</th><th>3XL</th><th>4XL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Largo (cm)</td><td>69–71</td><td>71–73</td><td>73–75</td><td>75–78</td><td>78–81</td><td>81–83</td><td>83–85</td></tr>
+            <tr><td>Ancho (cm)</td><td>53–55</td><td>55–57</td><td>57–58</td><td>58–60</td><td>60–62</td><td>62–64</td><td>64–65</td></tr>
+            <tr><td>Estatura (cm)</td><td>162–170</td><td>170–176</td><td>176–182</td><td>182–190</td><td>190–195</td><td>192–197</td><td>197–200</td></tr>
+            <tr><td>Peso (kg)</td><td>50–62</td><td>62–78</td><td>78–83</td><td>83–90</td><td>90–97</td><td>97–104</td><td>104–110</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Versión Player -->
+    <div class="sizes-section">
+      <p class="sizes-section-title" data-i18n="version_player">Versión Player</p>
+      <div class="sizes-table-wrap">
+        <table class="sizes-table">
+          <thead>
+            <tr>
+              <th>Talla</th>
+              <th>S</th><th>M</th><th>L</th><th>XL</th><th>2XL</th><th>3XL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Largo (cm)</td><td>67–69</td><td>69–71</td><td>71–73</td><td>73–76</td><td>76–78</td><td>78–79</td></tr>
+            <tr><td>Ancho (cm)</td><td>49–51</td><td>51–53</td><td>53–55</td><td>55–57</td><td>57–60</td><td>60–63</td></tr>
+            <tr><td>Estatura (cm)</td><td>162–170</td><td>170–175</td><td>175–180</td><td>180–185</td><td>185–190</td><td>190–195</td></tr>
+            <tr><td>Peso (kg)</td><td>50–62</td><td>62–75</td><td>75–80</td><td>80–85</td><td>85–90</td><td>90–95</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Versión Mujer -->
+    <div class="sizes-section">
+      <p class="sizes-section-title" data-i18n="version_women">Versión Mujer</p>
+      <div class="sizes-table-wrap">
+        <table class="sizes-table">
+          <thead>
+            <tr>
+              <th>Talla</th>
+              <th>S</th><th>M</th><th>L</th><th>XL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Largo (cm)</td><td>61–63</td><td>63–66</td><td>66–69</td><td>69–71</td></tr>
+            <tr><td>Ancho (cm)</td><td>40–41</td><td>41–44</td><td>44–47</td><td>47–50</td></tr>
+            <tr><td>Estatura (cm)</td><td>150–160</td><td>160–165</td><td>165–170</td><td>170–175</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ─── Footer ─────────────────────────────────────────────────────────── -->
 <footer id="footer">
   <div id="footer-logo">PEDIMOS<span>CAMIS?</span></div>
   <div class="footer-links">
     <span>Email: pedimoscamis@gmail.com</span>
+    <span onclick="openSizesGuide()" style="cursor:pointer;text-decoration:underline;text-underline-offset:3px;" data-i18n="size_guide">📏 Guía de tallas</span>
     <span>© <span id="footer-year"></span> PedimosCamis?</span>
   </div>
   <p id="footer-disclaimer">Este sitio es un proyecto personal sin fines comerciales. No representa ninguna marca, empresa u organización oficial.</p>
@@ -4810,6 +4974,22 @@ function closeModal() {
 
 function closeModalOnOverlay(e) {
   if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+// ─── Guía de Tallas ───────────────────────────────────────────────────────────
+
+function openSizesGuide() {
+  document.getElementById('sizes-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSizesGuide() {
+  document.getElementById('sizes-modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeSizesGuideOnOverlay(e) {
+  if (e.target === document.getElementById('sizes-modal-overlay')) closeSizesGuide();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
