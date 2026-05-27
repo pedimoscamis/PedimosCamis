@@ -2437,10 +2437,6 @@
       </div>
     </div>
     <form id="order-form" onsubmit="submitOrderForm(event)">
-      <input type="hidden" name="_subject" value="Nuevo pedido PedimosCamis?" />
-      <input type="hidden" name="pedido" id="form-pedido" />
-      <input type="hidden" name="total"  id="form-total" />
-      <input type="hidden" name="codigo_socio" id="form-codigo-socio" />
 
       <div class="form-group">
         <label for="form-nombre">Nombre completo *</label>
@@ -5411,17 +5407,6 @@ function openCheckout() {
   document.getElementById('direccion-group').style.display     = 'none';
   document.getElementById('form-direccion').required           = false;
   document.getElementById('shipping-upsell').style.display     = 'none';
-  // Restaurar campos ocultos tras reset (el reset los vacía)
-  document.getElementById('form-pedido').value = pedidoStr;
-  document.getElementById('form-total').value  = fmtEur(cartTotalEur());
-  // Identificar el código usado para que sea visible en el email recibido
-  const codigoSocioEl = document.getElementById('form-codigo-socio');
-  if (codigoSocioEl) {
-    if (socioMode && activeSocioCode)                   codigoSocioEl.value = activeSocioCode;
-    else if (discountMode && activeDiscountCode)        codigoSocioEl.value = `33%: ${activeDiscountCode}`;
-    else if (variableCouponMode && activeCouponCode)    codigoSocioEl.value = `${Math.round(variableCouponPct*100)}%: ${activeCouponCode}`;
-    else                                                codigoSocioEl.value = '';
-  }
   document.getElementById('order-success').style.display   = 'none';
   const submitBtn = document.getElementById('order-submit-btn');
   submitBtn.disabled    = false;
@@ -5517,12 +5502,12 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
 
 async function submitOrderForm(e) {
   e.preventDefault();
-  const btn       = document.getElementById('order-submit-btn');
-  const phoneErr  = document.getElementById('form-contacto-error');
-  const emailErr  = document.getElementById('form-correo-error');
-  const dirErr    = document.getElementById('form-direccion-error');
+  const btn      = document.getElementById('order-submit-btn');
+  const phoneErr = document.getElementById('form-contacto-error');
+  const emailErr = document.getElementById('form-correo-error');
+  const dirErr   = document.getElementById('form-direccion-error');
 
-  // Validar teléfono: al menos 9 dígitos
+  // ── Validar teléfono: al menos 9 dígitos ──────────────────────────────────
   const contactoVal = document.getElementById('form-contacto').value;
   const digits = contactoVal.replace(/\D/g, '');
   if (digits.length < 9) {
@@ -5532,7 +5517,7 @@ async function submitOrderForm(e) {
   }
   phoneErr.style.display = 'none';
 
-  // Validar email
+  // ── Validar email ─────────────────────────────────────────────────────────
   const correoVal = document.getElementById('form-correo').value.trim();
   const emailRe   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRe.test(correoVal)) {
@@ -5542,9 +5527,9 @@ async function submitOrderForm(e) {
   }
   emailErr.style.display = 'none';
 
-  // Validar dirección si es envío a domicilio
-  const esDomicilio   = document.getElementById('envio-domicilio').checked;
-  const direccionVal  = (document.getElementById('form-direccion').value || '').trim();
+  // ── Validar dirección si es envío a domicilio ─────────────────────────────
+  const esDomicilio  = document.getElementById('envio-domicilio').checked;
+  const direccionVal = (document.getElementById('form-direccion').value || '').trim();
   if (esDomicilio && !direccionVal) {
     dirErr.style.display = 'block';
     document.getElementById('form-direccion').focus();
@@ -5552,21 +5537,21 @@ async function submitOrderForm(e) {
   }
   if (dirErr) dirErr.style.display = 'none';
 
-  btn.disabled = true;
+  btn.disabled    = true;
   btn.textContent = 'Enviando…';
 
-  // ── Fire-and-forget → Google Sheets webhook ──────────────────────────────
+  // ── Construir payload para Google Apps Script ─────────────────────────────
   const shippingCost = getShippingCost();
-  const _whPayload = buildWebhookPayload(
+  const payload = buildWebhookPayload(
     document.getElementById('form-nombre').value.trim(),
     contactoVal,
     correoVal,
     esDomicilio ? direccionVal : 'Entrega en mano (Rivas)',
     document.getElementById('form-metodo-pago').value
   );
-  // Inyectar gastos de envío como artículo extra si procede
+  // Añadir gastos de envío como fila extra si procede
   if (shippingCost > 0) {
-    _whPayload.carrito.push({
+    payload.carrito.push({
       jersey:  'Gastos de envío',
       picture: '',
       version: '-',
@@ -5577,49 +5562,28 @@ async function submitOrderForm(e) {
       cobro:   shippingCost,
     });
   }
-  fetch(WEBHOOK_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(_whPayload),
-  }).catch(() => {}); // silencioso — no bloquea al usuario
-  // ─────────────────────────────────────────────────────────────────────────
 
-  const form = document.getElementById('order-form');
-  // Re-set codigo_socio right before serialising so the exact active code is captured
-  const codigoSocioEl2 = document.getElementById('form-codigo-socio');
-  if (codigoSocioEl2) {
-    if (socioMode && activeSocioCode)             codigoSocioEl2.value = activeSocioCode;
-    else if (discountMode && activeDiscountCode)  codigoSocioEl2.value = '33%: ' + activeDiscountCode;
-    else                                          codigoSocioEl2.value = '';
-  }
-  // Actualizar form-total con el total real (carrito + envío)
-  const totalConEnvio = Math.round((cartTotalEur() + shippingCost) * 100) / 100;
-  document.getElementById('form-total').value = fmtEur(totalConEnvio);
-  const data = new FormData(form);
-
+  // ── Enviar únicamente al webhook de Google Apps Script ───────────────────
+  // no-cors: GAS no devuelve headers CORS → no podemos leer la respuesta,
+  // pero el fetch resuelve en cuanto el servidor acepta la conexión.
   try {
-    const res = await fetch('https://formspree.io/f/maqkjnjo', {
-      method: 'POST',
-      body: data,
-      headers: { 'Accept': 'application/json' },
+    await fetch(WEBHOOK_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body:    JSON.stringify(payload),
     });
-    if (res.ok) {
-      // ── Registrar uso del cupón en localStorage (solo al completar compra) ──
-      if (variableCouponMode && activeCouponCode) incrementCouponUses(activeCouponCode);
-      else if (discountMode && activeDiscountCode) incrementCouponUses(activeDiscountCode);
 
-      form.style.display = 'none';
-      document.getElementById('order-success').style.display = 'block';
-      cart = [];
-      saveCart();
-    } else {
-      btn.disabled = false;
-      btn.textContent = 'ENVIAR PEDIDO';
-      showToast('Error al enviar. Inténtalo de nuevo.');
-    }
+    // Registrar uso del cupón en localStorage (solo al completar la compra)
+    if (variableCouponMode && activeCouponCode)    incrementCouponUses(activeCouponCode);
+    else if (discountMode && activeDiscountCode)   incrementCouponUses(activeDiscountCode);
+
+    document.getElementById('order-form').style.display = 'none';
+    document.getElementById('order-success').style.display = 'block';
+    cart = [];
+    saveCart();
   } catch {
-    btn.disabled = false;
+    btn.disabled    = false;
     btn.textContent = 'ENVIAR PEDIDO';
     showToast('Error de conexión. Inténtalo de nuevo.');
   }
