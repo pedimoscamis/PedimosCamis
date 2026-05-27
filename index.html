@@ -3201,6 +3201,7 @@ async function init() {
     }
 
     searchQuery = raw.trim().toLowerCase();
+    buildFilterBar(); // actualizar filtros para los nuevos resultados de búsqueda
     renderAll();
   });
 }
@@ -3704,11 +3705,7 @@ function makeSelectRow(label, group, items, placeholder) {
 function getProductsForSeasonFilter() {
   return allProducts.filter(p => {
     if (activeCat !== 'all' && !(activeCat === 'shorts' ? isShortProduct(p) : (p.cats || []).includes(activeCat))) return false;
-    if (searchQuery) {
-      const pc = primaryCat(p);
-      const haystack = (p.nameEn + ' ' + p.nameEs + ' ' + (t().cat_labels[pc] || '')).toLowerCase();
-      if (!haystack.includes(searchQuery)) return false;
-    }
+    if (!matchesSearch(p)) return false;
     const f = activeFilters;
     if (f.teams.size > 0) {
       const team = detectTeam(p.nameEn);
@@ -3729,19 +3726,25 @@ function buildFilterBar() {
   const pillRows = document.getElementById('filter-pill-rows'); // pills scrollables
   const selects  = document.getElementById('filter-selects');   // selects compactos
 
-  if (activeCat === 'all' || activeCat === 'favoritos' || activeCat === 'gallery' || allProducts.length === 0) {
+  // Ocultar cuando no hay nada que filtrar
+  const isSearchMode = activeCat === 'all' && !!searchQuery;
+  if ((!isSearchMode && activeCat === 'all') ||
+      activeCat === 'favoritos' || activeCat === 'gallery' ||
+      allProducts.length === 0) {
     bar.style.display = 'none';
     return;
   }
 
   // Mundial 2026: solo equipaciones 2026 (sin retros del escaparate)
   const mundialBase = p => isMundial2026(p) && !(p.cats || []).includes('retro');
-  // Shorts: no tienen 'shorts' en cats[] — se detectan por nombre con isShortProduct()
-  const catProducts = activeCat === 'mundial2026'
-    ? allProducts.filter(mundialBase)
-    : activeCat === 'shorts'
-      ? allProducts.filter(isShortProduct)
-      : allProducts.filter(p => (p.cats || []).includes(activeCat));
+  // En modo búsqueda: base = resultados ya filtrados por matchesSearch
+  const catProducts = isSearchMode
+    ? getFiltered()
+    : activeCat === 'mundial2026'
+      ? allProducts.filter(mundialBase)
+      : activeCat === 'shorts'
+        ? allProducts.filter(isShortProduct)
+        : allProducts.filter(p => (p.cats || []).includes(activeCat));
   if (catProducts.length === 0) { bar.style.display = 'none'; return; }
 
   // En vistas temáticas (Mundial 2026 y Nueva Temp) → ocultar Temporada y Ordenar
@@ -3756,9 +3759,9 @@ function buildFilterBar() {
 
   const isEs = lang === 'es';
 
-  // ── 0. Liga — select → #filter-pill-rows (solo en categorías multi-liga) ──
+  // ── 0. Liga — select → #filter-pill-rows (categorías multi-liga + búsqueda) ──
   const LIGA_FILTER_CATS = new Set(['women','retro','kids','nuevatemporada','shorts']);
-  if (LIGA_FILTER_CATS.has(activeCat)) {
+  if (LIGA_FILTER_CATS.has(activeCat) || isSearchMode) {
     const LIGA_LIST = [
       { cat: 'laliga',     es: 'LaLiga',        en: 'LaLiga' },
       { cat: 'premier',    es: 'Premier',        en: 'Premier' },
@@ -3898,6 +3901,24 @@ function buildFilterBar() {
 // ═══════════════════════════════════════════════════════════════════════════
 // FILTERING
 // ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Comprueba si un producto satisface la búsqueda actual (multi-término, AND).
+ * Divide el searchQuery por espacios → cada token debe aparecer en el haystack.
+ * El haystack incluye nameEn, nameEs, la etiqueta de categoría principal y
+ * las cats[] del producto para que "spain women" o "2026 player" funcionen.
+ */
+function matchesSearch(p) {
+  if (!searchQuery) return true;
+  const pc      = primaryCat(p);
+  const catStr  = (p.cats || []).join(' ');
+  const haystack = (
+    p.nameEn + ' ' + (p.nameEs || '') + ' ' +
+    (t().cat_labels[pc] || '') + ' ' + catStr
+  ).toLowerCase();
+  return searchQuery.split(/\s+/).filter(Boolean).every(tok => haystack.includes(tok));
+}
+
 function getFiltered() {
   // Vista Galería: sin productos — la galería tiene su propio render
   if (activeCat === 'gallery') return [];
@@ -3909,11 +3930,7 @@ function getFiltered() {
 
   // Vista Shorts: usa isShortProduct() para máxima flexibilidad
   if (activeCat === 'shorts') {
-    let base = allProducts.filter(isShortProduct);
-    if (searchQuery) {
-      const sq = searchQuery;
-      base = base.filter(p => (p.nameEn + ' ' + (p.nameEs || '')).toLowerCase().includes(sq));
-    }
+    let base = allProducts.filter(isShortProduct).filter(matchesSearch);
     const filtered = hasActiveFilters() ? base.filter(matchesFilter) : base;
     return filtered.slice().sort((a, b) => {
       const ya = seasonStartYear(extractSeason(a.nameEn) || '') ?? 0;
@@ -3935,12 +3952,9 @@ function getFiltered() {
       const cats = p.cats || [];
       if (cats.includes('streetwear') || cats.includes('windbreaker') || cats.includes('nba')) return false;
     }
-    if (searchQuery) {
-      const pc = primaryCat(p);
-      const haystack = (p.nameEn + ' ' + p.nameEs + ' ' + (t().cat_labels[pc] || '')).toLowerCase();
-      if (!haystack.includes(searchQuery)) return false;
-    }
-    if (activeCat !== 'all' && hasActiveFilters() && !matchesFilter(p)) return false;
+    if (!matchesSearch(p)) return false;
+    // Aplicar filtros activos tanto en categorías como en resultados de búsqueda
+    if ((activeCat !== 'all' || searchQuery) && hasActiveFilters() && !matchesFilter(p)) return false;
     return true;
   });
 
