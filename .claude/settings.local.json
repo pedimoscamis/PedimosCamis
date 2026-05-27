@@ -18,7 +18,8 @@
       "Bash(node -e \"require\\('@aws-sdk/client-s3'\\)\")",
       "Bash(cd \"C:\\\\Users\\\\Alfonso\\\\Documents\\\\KitZone\" && ls -la | grep -i \"image\\\\|imagen\\\\|webp\\\\|camis\\\\|backup\" && echo \"---\" && ls \"C:\\\\Users\\\\Alfonso\" | grep -i \"image\\\\|imagen\\\\|webp\\\\|camis\\\\|backup\" 2>/dev/null)",
       "Bash(node r2-upload.js)",
-      "Read(//h/Camis_Optimizadas/**)"
+      "Read(//h/Camis_Optimizadas/**)",
+      "Bash(node -e \"const p=require\\('./data/products.json'\\); const w=p.filter\\(x=>\\(x.cats||[]\\).some\\(c=>c.toLowerCase\\(\\).includes\\('wom'\\)||c.toLowerCase\\(\\).includes\\('muj'\\)\\)\\); console.log\\('Total:', w.length\\); console.log\\('Cats usadas:', [...new Set\\(w.flatMap\\(x=>x.cats||[]\\).filter\\(c=>c.toLowerCase\\(\\).includes\\('wom'\\)||c.toLowerCase\\(\\).includes\\('muj'\\)\\)\\)]\\); console.log\\('Ejemplo:', JSON.stringify\\(w[0]?.cats\\)\\)\")"
     ]
   }
 }
