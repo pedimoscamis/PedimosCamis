@@ -1243,6 +1243,80 @@
       #sizes-modal h2 { font-size: 22px; }
       .sizes-table th, .sizes-table td { padding: 8px 10px; font-size: 12px; }
     }
+    /* ─── Súper Flash Section ───────────────────────────────── */
+    #super-flash-section {
+      display: none;
+      background: linear-gradient(160deg, #130000 0%, #2a0000 50%, #130000 100%);
+      border-top: 1px solid #5c0000;
+      border-bottom: 1px solid #5c0000;
+      padding: 40px 20px 44px;
+      position: relative; overflow: hidden;
+    }
+    #super-flash-section::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg,
+        rgba(196,17,17,.07) 0px, rgba(196,17,17,.07) 33.3%,
+        rgba(255,200,0,.04) 33.3%, rgba(255,200,0,.04) 66.6%,
+        rgba(196,17,17,.07) 66.6%, rgba(196,17,17,.07) 100%);
+    }
+    #super-flash-inner {
+      max-width: 860px; margin: 0 auto; position: relative;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center;
+    }
+    #super-flash-eyebrow { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .sf-badge-eyebrow {
+      font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+      color: #111; background: #ffd700; padding: 3px 11px; border-radius: 20px;
+      animation: sfPulse 1.8s ease-in-out infinite;
+    }
+    .sf-badge-stock {
+      font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #fff; background: #c41111; border: 1px solid #ff4444;
+      padding: 3px 11px; border-radius: 20px;
+    }
+    @keyframes sfPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,215,0,.45); }
+      50%      { box-shadow: 0 0 0 9px rgba(255,215,0,0); }
+    }
+    #super-flash-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 38px;
+      letter-spacing: 2px; color: #fff; line-height: 1.08; margin: 0 0 14px;
+    }
+    #super-flash-title span { color: #ffd700; }
+    #super-flash-copy { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,.75); margin-bottom: 20px; }
+    #super-flash-price { display: flex; align-items: baseline; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+    .sf-price-original { font-size: 17px; color: rgba(255,255,255,.4); text-decoration: line-through; }
+    .sf-price-final    { font-size: 30px; font-weight: 800; color: #ffd700; }
+    .sf-badge-discount {
+      font-size: 12px; font-weight: 800; color: #111;
+      background: #ffd700; padding: 3px 9px; border-radius: 12px;
+    }
+    #super-flash-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, #c41111, #ff2020);
+      color: #fff; border: none; border-radius: 10px;
+      font-size: 14px; font-weight: 800; letter-spacing: 1px;
+      padding: 14px 28px; cursor: pointer; text-transform: uppercase;
+      box-shadow: 0 4px 22px rgba(196,17,17,.55);
+      transition: transform .15s, box-shadow .15s;
+    }
+    #super-flash-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(196,17,17,.75); }
+    #super-flash-img-wrap { position: relative; }
+    #super-flash-img {
+      width: 100%; max-width: 300px; display: block; margin: 0 auto;
+      border-radius: 16px; filter: drop-shadow(0 14px 40px rgba(196,17,17,.45));
+    }
+    .sf-flag-ribbon {
+      position: absolute; top: 10px; right: 10px;
+      font-size: 30px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
+    }
+    @media (max-width: 680px) {
+      #super-flash-inner { grid-template-columns: 1fr; }
+      #super-flash-img-wrap { order: -1; }
+      #super-flash-img { max-width: 200px; }
+      #super-flash-title { font-size: 28px; }
+    }
+
     /* ─── Fav header button ──────────────────────────────────── */
     #fav-btn {
       position: relative; background: none; border: none;
@@ -2100,6 +2174,33 @@
       <button id="featured-see-all" onclick="setCategory('mundial2026')">Ver todas →</button>
     </div>
     <div id="featured-scroll"></div>
+  </div>
+</section>
+
+<!-- ─── Súper Flash Event ────────────────────────────────────────────── -->
+<!-- Para retirar el evento: SUPER_FLASH_ACTIVE = false en el JS. La estructura CSS queda intacta para reutilizarla. -->
+<section id="super-flash-section">
+  <div id="super-flash-inner">
+    <!-- Texto / Copy -->
+    <div id="super-flash-text">
+      <div id="super-flash-eyebrow">
+        <span class="sf-badge-eyebrow">⚡ Súper Flash</span>
+        <span class="sf-badge-stock">🔥 1/1 disponible</span>
+      </div>
+      <h2 id="super-flash-title">LA ARMADURA<br><span>DE LOS CAMPEONES</span></h2>
+      <p id="super-flash-copy">¡La Roja nos necesita! 🇪🇸 Revive la gloria del 2012 y empuja a España hacia su segunda estrella en este Mundial. ¡Solo 1 unidad disponible! Hazte con la armadura de los campeones antes de que vuele.</p>
+      <div id="super-flash-price">
+        <span class="sf-price-original" id="sf-price-original"></span>
+        <span class="sf-price-final"    id="sf-price-final"></span>
+        <span class="sf-badge-discount">-10%</span>
+      </div>
+      <button id="super-flash-cta">🇪🇸 QUIERO ESTA CAMISETA</button>
+    </div>
+    <!-- Imagen -->
+    <div id="super-flash-img-wrap">
+      <img id="super-flash-img" src="" alt="Retro 2012 Spain Home S-XXL" loading="lazy">
+      <span class="sf-flag-ribbon">🇪🇸</span>
+    </div>
   </div>
 </section>
 
@@ -4272,8 +4373,54 @@ function filterToTeam(cat, teamName) {
   if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+// ─── Flash Events ────────────────────────────────────────────────────────
+const UCL_DISCOUNT   = 0.10; // 10 %
+// Todas las fuentes de descuento flash — usada para unificar la lógica del carrito
+const FLASH_SOURCES  = new Set(['ucl-flash', 'super-flash']);
+
+// ── Súper Flash ───────────────────────────────────────────────────────────
+// Para retirar el evento basta con: SUPER_FLASH_ACTIVE = false
+const SUPER_FLASH_ACTIVE = true;
+const SUPER_FLASH_ID     = '231537722'; // Retro 2012 Spain Home S-XXL
+const SUPER_FLASH_DISC   = 0.10;        // 10 % de descuento
+
+function renderSuperFlash() {
+  const section = document.getElementById('super-flash-section');
+  if (!section) return;
+
+  const isHome = activeCat === 'all' && !searchQuery;
+  if (!isHome || !SUPER_FLASH_ACTIVE || allProducts.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  const kit = allProducts.find(p => p.id === SUPER_FLASH_ID);
+  if (!kit) { section.style.display = 'none'; return; }
+
+  const basePrice  = getBasePrice(kit);
+  const finalPrice = Math.round(basePrice * (1 - SUPER_FLASH_DISC) * 100) / 100;
+
+  // Imagen
+  const imgEl = document.getElementById('super-flash-img');
+  if (imgEl && kit.img) imgEl.src = kit.img;
+
+  // Precios
+  document.getElementById('sf-price-original').textContent = fmtEur(basePrice);
+  document.getElementById('sf-price-final').textContent    = fmtEur(finalPrice);
+
+  // CTA: abre el modal con el 10% ya aplicado en priceUsd
+  document.getElementById('super-flash-cta').onclick = () => {
+    openModal({
+      ...kit,
+      priceUsd:     finalPrice,
+      discountInfo: { originalBase: basePrice, source: 'super-flash' },
+    });
+  };
+
+  section.style.display = '';
+}
+
 // ─── Render UCL Flash Event ──────────────────────────────────────────────
-const UCL_DISCOUNT = 0.10; // 10 %
 
 function renderUclFlash() {
   const section = document.getElementById('ucl-section');
@@ -4447,6 +4594,7 @@ function renderAll() {
 
   renderGallery();
   renderFeatured();
+  renderSuperFlash();
   renderUclFlash();
   renderHomeRow('row-nuevatemporada', 'scroll-nuevatemporada', 'nuevatemporada', 12);
   renderHomeRow('row-retro',          'scroll-retro',          'retro',          12);
@@ -4925,8 +5073,8 @@ function buildSizeGrid(sizes) {
 function getModalPriceBase() {
   if (!currentProduct) return 0;
   let base;
-  if (currentProduct.discountInfo?.source === 'ucl-flash') {
-    // Precio ya rebajado un 10% — inyectado directamente desde renderUclFlash()
+  if (FLASH_SOURCES.has(currentProduct.discountInfo?.source)) {
+    // Precio ya rebajado un 10% — inyectado directamente desde el módulo flash
     base = currentProduct.priceUsd;
   } else if (discountMode) {
     base = getDiscountedPrice(getBasePrice(currentProduct));
@@ -4952,7 +5100,7 @@ function updateModalPrice() {
   const priceMainEl = document.getElementById('modal-price-main');
   const priceSubEl  = document.getElementById('modal-price-sub');
 
-  if (currentProduct?.discountInfo?.source === 'ucl-flash') {
+  if (FLASH_SOURCES.has(currentProduct?.discountInfo?.source)) {
     const origBase = currentProduct.discountInfo.originalBase;
     priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origBase)}</span>${fmtEur(price)}<span class="badge-discount" style="font-size:12px;padding:3px 7px;">-10%</span>`;
     priceSubEl.textContent = '';
@@ -5057,8 +5205,8 @@ function addToCart() {
     customizations.push({ type: 'patch', label: patchLabel, extraUsd: 1 });
   }
 
-  const discountInfo = currentProduct.discountInfo?.source === 'ucl-flash'
-    ? currentProduct.discountInfo   // descuento UCL Flash (10%, precio ya aplicado)
+  const discountInfo = FLASH_SOURCES.has(currentProduct.discountInfo?.source)
+    ? currentProduct.discountInfo   // descuento Flash -10% (precio ya aplicado)
     : discountMode
       ? { pct: 33, originalBase: getBasePrice(currentProduct) }
       : variableCouponMode
@@ -5333,7 +5481,7 @@ function openCheckout() {
       const discountedBase = getVariableCouponPrice(item.discountInfo.originalBase);
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
       bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(item.discountInfo.originalBase)}</del>${fmtEur(discountedBase)}</span>`;
-    } else if (item.discountInfo?.source === 'ucl-flash') {
+    } else if (FLASH_SOURCES.has(item.discountInfo?.source)) {
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
       bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(item.discountInfo.originalBase)}</del>${fmtEur(base)}</span>`;
     } else {
@@ -5496,10 +5644,11 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
                   : '';
 
   // Código de descuento para la columna L de Google Sheets
-  const hasUclFlash = cart.some(i => i.discountInfo?.source === 'ucl-flash');
+  const flashItem  = cart.find(i => FLASH_SOURCES.has(i.discountInfo?.source));
+  const flashLabel = flashItem?.discountInfo?.source === 'super-flash' ? 'Súper Flash (-10%)' : 'UCL Flash (-10%)';
   const codigoDescuento = discountMode       ? `${activeDiscountCode} (-33%)`
                         : variableCouponMode ? `${activeCouponCode} (-${Math.round(variableCouponPct*100)}%)`
-                        : hasUclFlash        ? 'UCL Flash (-10%)'
+                        : flashItem          ? flashLabel
                         : '';
 
   return {
