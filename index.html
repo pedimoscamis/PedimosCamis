@@ -4437,8 +4437,7 @@ function renderSuperFlash() {
   if (imgEl && kit.img) imgEl.src = kit.img;
 
   // Precio: un único valor, sin tachado ni badge de descuento
-  document.getElementById('sf-price-original').textContent = '';
-  document.getElementById('sf-price-final').textContent    = fmtEur(basePrice);
+  document.getElementById('sf-price-final').textContent = fmtEur(basePrice);
 
   // CTA: abre el modal al precio normal y pre-rellena el dorsal de Pedri
   document.getElementById('super-flash-cta').onclick = () => {
