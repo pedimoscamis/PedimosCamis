@@ -837,6 +837,35 @@
     .size-btn.selected {
       background: var(--accent); border-color: var(--accent); color: #fff;
     }
+    /* Estado bloqueado del modal para eventos flash con talla única */
+    .sf-modal-locked .size-btn {
+      pointer-events: none;
+      opacity: 0.35;
+    }
+    .sf-modal-locked .size-btn.selected {
+      opacity: 1;
+    }
+    .sf-modal-locked .size-btn.selected::after {
+      content: ' 🔒';
+      font-size: 10px;
+    }
+    .sf-modal-locked #opt-dorsal-wrap {
+      pointer-events: none;
+      opacity: 0.85;
+      cursor: default;
+    }
+    .sf-modal-locked #opt-patch-wrap {
+      display: none !important;
+    }
+    .sf-modal-locked #input-name,
+    .sf-modal-locked #input-number {
+      pointer-events: none;
+      background: #1a1a1a;
+      color: var(--muted);
+    }
+    .sf-modal-locked .custom-option-price {
+      display: none; /* el dorsal ya está incluido en el precio flash */
+    }
 
     #custom-section { border-top: 1px solid var(--border); padding-top: 14px; }
     .custom-option {
@@ -2193,8 +2222,8 @@
         <span class="sf-badge-stock">🔥 1/1 disponible</span>
         <span class="sf-badge-shipping">🚀 Envío &lt;1 semana</span>
       </div>
-      <h2 id="super-flash-title">VISTE A PEDRI<br><span>EN EL MUNDIAL</span></h2>
-      <p id="super-flash-copy">La camiseta Away de España 2026 🇪🇸 versión jugador, con el dorsal de Pedri (nº20) ya incluido. ¡Solo 1 unidad disponible! Llévate la equipación con la que La Roja va a conquistar el mundo.</p>
+      <h2 id="super-flash-title">¡MAGIA CANARIA<br><span>PARA EL MUNDIAL!</span></h2>
+      <p id="super-flash-copy">¡Magia canaria para el Mundial 2026! 🇪🇸 La camiseta Away de España con el dorsal de Pedri (nº20) ya incluido. Talla M · ¡Solo 1 unidad disponible! Hazte con ella antes de que vuele.</p>
       <div id="super-flash-price">
         <span class="sf-price-original" id="sf-price-original"></span>
         <span class="sf-price-final"    id="sf-price-final"></span>
@@ -2204,7 +2233,7 @@
     </div>
     <!-- Imagen -->
     <div id="super-flash-img-wrap">
-      <img id="super-flash-img" src="" alt="Spain 2026 Away Player Version con dorsal Pedri 20" loading="lazy">
+      <img id="super-flash-img" src="" alt="Spain 2026 Away con dorsal Pedri 20 talla M" loading="lazy">
       <span class="sf-flag-ribbon">🇪🇸</span>
     </div>
   </div>
@@ -4387,7 +4416,7 @@ const FLASH_SOURCES  = new Set(['ucl-flash', 'super-flash']);
 // ── Súper Flash ───────────────────────────────────────────────────────────
 // Para retirar el evento basta con: SUPER_FLASH_ACTIVE = false
 const SUPER_FLASH_ACTIVE = true;
-const SUPER_FLASH_ID     = '231559476'; // Spain 2026 World Cup Away jersey Player Version
+const SUPER_FLASH_ID     = '231561715'; // Spain 2026 World Cup Away jersey S-4XL (fan version)
 const SUPER_FLASH_BASE   = 18;          // Precio all-in (camiseta + dorsal Pedri incluido)
 const SUPER_FLASH_DISC   = 0.10;        // 10 % de descuento
 
@@ -4423,8 +4452,24 @@ function renderSuperFlash() {
       priceUsd:     finalPrice,
       discountInfo: { originalBase: basePrice, source: 'super-flash' },
     });
-    // Pre-rellenar dorsal PEDRI 20 (dorsal ya incluido en el precio flash)
+    // Bloquear modal: talla M única, dorsal fijo, sin parche
     requestAnimationFrame(() => {
+      // 1. Marcar clase de bloqueo en el overlay del modal
+      document.getElementById('modal-overlay').classList.add('sf-modal-locked');
+
+      // 2. Seleccionar talla M y deshabilitar el resto
+      const sizeGrid = document.getElementById('size-grid');
+      if (sizeGrid) {
+        sizeGrid.querySelectorAll('.size-btn').forEach(btn => {
+          btn.disabled = true;
+          if (btn.textContent.trim() === 'M') {
+            btn.classList.add('selected');
+            selectedSize = 'M';
+          }
+        });
+      }
+
+      // 3. Pre-rellenar dorsal PEDRI 20 (incluido en precio flash, no editable)
       const dorsalChk = document.getElementById('opt-dorsal');
       const nameInp   = document.getElementById('input-name');
       const numInp    = document.getElementById('input-number');
@@ -5068,7 +5113,9 @@ function openModal(p) {
   // Super Admin: editor de categorías (solo si adminMode)
   renderAdminCatEditor(p);
 
-  document.getElementById('modal-overlay').classList.add('open');
+  const modalOverlay = document.getElementById('modal-overlay');
+  modalOverlay.classList.remove('sf-modal-locked'); // limpiar estado bloqueado previo
+  modalOverlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
@@ -5171,7 +5218,9 @@ document.getElementById('patch-type').addEventListener('change', function() {
 });
 
 function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('open');
+  overlay.classList.remove('sf-modal-locked'); // limpiar estado bloqueado del Súper Flash
   document.body.style.overflow = '';
   currentProduct = null;
   selectedSize = null;
