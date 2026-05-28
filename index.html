@@ -4417,7 +4417,7 @@ function renderSuperFlash() {
     });
   };
 
-  section.style.display = '';
+  section.style.display = 'block';
 }
 
 // ─── Render UCL Flash Event ──────────────────────────────────────────────
@@ -4579,7 +4579,7 @@ function renderAll() {
     if (mainGrid)  mainGrid.style.display  = 'none';
     // Ocultar todas las secciones del home que renderHomeRow/renderFeatured
     // normalmente gestionan — como hacemos return early, debemos hacerlo aquí.
-    document.querySelectorAll('.home-row-section, #featured-section, #ucl-section')
+    document.querySelectorAll('.home-row-section, #featured-section, #super-flash-section, #ucl-section')
       .forEach(s => { s.style.display = 'none'; });
     renderGallery();     // idempotente: construye el grid solo la primera vez
     window.scrollTo({ top: 0, behavior: 'smooth' });
