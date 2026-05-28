@@ -2193,8 +2193,8 @@
         <span class="sf-badge-stock">🔥 1/1 disponible</span>
         <span class="sf-badge-shipping">🚀 Envío &lt;1 semana</span>
       </div>
-      <h2 id="super-flash-title">LA ARMADURA<br><span>DE LOS CAMPEONES</span></h2>
-      <p id="super-flash-copy">¡La Roja nos necesita! 🇪🇸 Revive la gloria del 2012 y empuja a España hacia su segunda estrella en este Mundial. ¡Solo 1 unidad disponible! Hazte con la armadura de los campeones antes de que vuele.</p>
+      <h2 id="super-flash-title">VISTE A PEDRI<br><span>EN EL MUNDIAL</span></h2>
+      <p id="super-flash-copy">La camiseta Away de España 2026 🇪🇸 versión jugador, con el dorsal de Pedri (nº20) ya incluido. ¡Solo 1 unidad disponible! Llévate la equipación con la que La Roja va a conquistar el mundo.</p>
       <div id="super-flash-price">
         <span class="sf-price-original" id="sf-price-original"></span>
         <span class="sf-price-final"    id="sf-price-final"></span>
@@ -2204,7 +2204,7 @@
     </div>
     <!-- Imagen -->
     <div id="super-flash-img-wrap">
-      <img id="super-flash-img" src="" alt="Retro 2012 Spain Home S-XXL" loading="lazy">
+      <img id="super-flash-img" src="" alt="Spain 2026 Away Player Version con dorsal Pedri 20" loading="lazy">
       <span class="sf-flag-ribbon">🇪🇸</span>
     </div>
   </div>
@@ -4386,8 +4386,9 @@ const FLASH_SOURCES  = new Set(['ucl-flash', 'super-flash']);
 
 // ── Súper Flash ───────────────────────────────────────────────────────────
 // Para retirar el evento basta con: SUPER_FLASH_ACTIVE = false
-const SUPER_FLASH_ACTIVE = false;
-const SUPER_FLASH_ID     = '231537722'; // Retro 2012 Spain Home S-XXL
+const SUPER_FLASH_ACTIVE = true;
+const SUPER_FLASH_ID     = '231559476'; // Spain 2026 World Cup Away jersey Player Version
+const SUPER_FLASH_BASE   = 18;          // Precio all-in (camiseta + dorsal Pedri incluido)
 const SUPER_FLASH_DISC   = 0.10;        // 10 % de descuento
 
 function renderSuperFlash() {
@@ -4403,8 +4404,9 @@ function renderSuperFlash() {
   const kit = allProducts.find(p => p.id === SUPER_FLASH_ID);
   if (!kit) { section.style.display = 'none'; return; }
 
-  const basePrice  = getBasePrice(kit);
-  const finalPrice = Math.round(basePrice * (1 - SUPER_FLASH_DISC) * 100) / 100;
+  // Precio all-in fijo (camiseta + dorsal Pedri incluido)
+  const basePrice  = SUPER_FLASH_BASE; // 18 €
+  const finalPrice = Math.round(basePrice * (1 - SUPER_FLASH_DISC) * 100) / 100; // 16.20 €
 
   // Imagen
   const imgEl = document.getElementById('super-flash-img');
@@ -4414,12 +4416,25 @@ function renderSuperFlash() {
   document.getElementById('sf-price-original').textContent = fmtEur(basePrice);
   document.getElementById('sf-price-final').textContent    = fmtEur(finalPrice);
 
-  // CTA: abre el modal con el 10% ya aplicado en priceUsd
+  // CTA: abre el modal con el 10% ya aplicado y pre-rellena el dorsal de Pedri
   document.getElementById('super-flash-cta').onclick = () => {
     openModal({
       ...kit,
       priceUsd:     finalPrice,
       discountInfo: { originalBase: basePrice, source: 'super-flash' },
+    });
+    // Pre-rellenar dorsal PEDRI 20 (dorsal ya incluido en el precio flash)
+    requestAnimationFrame(() => {
+      const dorsalChk = document.getElementById('opt-dorsal');
+      const nameInp   = document.getElementById('input-name');
+      const numInp    = document.getElementById('input-number');
+      if (dorsalChk && nameInp && numInp) {
+        dorsalChk.checked = true;
+        nameInp.value     = 'PEDRI';
+        numInp.value      = '20';
+        document.getElementById('dorsal-inputs').classList.add('visible');
+        updateModalPrice();
+      }
     });
   };
 
@@ -5090,7 +5105,9 @@ function getModalPriceBase() {
     base = getBasePrice(currentProduct);
   }
   let total = base;
-  if (document.getElementById('opt-dorsal').checked) total += 3;
+  // Para Súper Flash el dorsal ya está incluido en el precio all-in → no sumar +3
+  const isSuperFlash = currentProduct?.discountInfo?.source === 'super-flash';
+  if (document.getElementById('opt-dorsal').checked && !isSuperFlash) total += 3;
   if (document.getElementById('opt-patch').checked)  total += 1;
   return total;
 }
@@ -5202,7 +5219,9 @@ function addToCart() {
   if (document.getElementById('opt-dorsal').checked) {
     const name   = document.getElementById('input-name').value.trim();
     const number = document.getElementById('input-number').value.trim();
-    customizations.push({ type: 'dorsal', name, number, extraUsd: 3 });
+    // Para Súper Flash el dorsal ya está incluido en el precio all-in → extraUsd 0
+    const isSuperFlash = currentProduct?.discountInfo?.source === 'super-flash';
+    customizations.push({ type: 'dorsal', name, number, extraUsd: isSuperFlash ? 0 : 3 });
   }
   if (document.getElementById('opt-patch').checked) {
     const patchType  = document.getElementById('patch-type').value;
