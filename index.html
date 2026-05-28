@@ -2223,7 +2223,7 @@
         <span class="sf-badge-shipping">🚀 Envío &lt;1 semana</span>
       </div>
       <h2 id="super-flash-title">¡MAGIA CANARIA<br><span>PARA EL MUNDIAL!</span></h2>
-      <p id="super-flash-copy">¡Magia canaria para el Mundial 2026! 🇪🇸 La camiseta Away de España con el dorsal de Pedri (nº20) ya incluido. Talla M · ¡Solo 1 unidad disponible! Hazte con ella antes de que vuele.</p>
+      <p id="super-flash-copy">¡Magia canaria para el Mundial 2026! 🇪🇸 La camiseta Away de España con el dorsal de Pedri (nº20) ya incluido. Talla M · Hazte con ella antes de que vuele.</p>
       <div id="super-flash-price">
         <span class="sf-price-final" id="sf-price-final"></span>
       </div>
@@ -4429,8 +4429,8 @@ function renderSuperFlash() {
   const kit = allProducts.find(p => p.id === SUPER_FLASH_ID);
   if (!kit) { section.style.display = 'none'; return; }
 
-  // Precio normal (camiseta + dorsal Pedri incluido, sin descuento)
-  const basePrice = getBasePrice(kit);
+  // Precio fijo all-in: camiseta fan + dorsal Pedri incluido
+  const basePrice = 18;
 
   // Imagen
   const imgEl = document.getElementById('super-flash-img');
