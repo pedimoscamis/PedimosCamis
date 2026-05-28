@@ -2225,9 +2225,7 @@
       <h2 id="super-flash-title">¡MAGIA CANARIA<br><span>PARA EL MUNDIAL!</span></h2>
       <p id="super-flash-copy">¡Magia canaria para el Mundial 2026! 🇪🇸 La camiseta Away de España con el dorsal de Pedri (nº20) ya incluido. Talla M · ¡Solo 1 unidad disponible! Hazte con ella antes de que vuele.</p>
       <div id="super-flash-price">
-        <span class="sf-price-original" id="sf-price-original"></span>
-        <span class="sf-price-final"    id="sf-price-final"></span>
-        <span class="sf-badge-discount">-10%</span>
+        <span class="sf-price-final" id="sf-price-final"></span>
       </div>
       <button id="super-flash-cta">🇪🇸 QUIERO ESTA CAMISETA</button>
     </div>
@@ -4417,8 +4415,6 @@ const FLASH_SOURCES  = new Set(['ucl-flash', 'super-flash']);
 // Para retirar el evento basta con: SUPER_FLASH_ACTIVE = false
 const SUPER_FLASH_ACTIVE = true;
 const SUPER_FLASH_ID     = '231561715'; // Spain 2026 World Cup Away jersey S-4XL (fan version)
-const SUPER_FLASH_BASE   = 18;          // Precio all-in (camiseta + dorsal Pedri incluido)
-const SUPER_FLASH_DISC   = 0.10;        // 10 % de descuento
 
 function renderSuperFlash() {
   const section = document.getElementById('super-flash-section');
@@ -4433,24 +4429,23 @@ function renderSuperFlash() {
   const kit = allProducts.find(p => p.id === SUPER_FLASH_ID);
   if (!kit) { section.style.display = 'none'; return; }
 
-  // Precio all-in fijo (camiseta + dorsal Pedri incluido)
-  const basePrice  = SUPER_FLASH_BASE; // 18 €
-  const finalPrice = Math.round(basePrice * (1 - SUPER_FLASH_DISC) * 100) / 100; // 16.20 €
+  // Precio normal (camiseta + dorsal Pedri incluido, sin descuento)
+  const basePrice = getBasePrice(kit);
 
   // Imagen
   const imgEl = document.getElementById('super-flash-img');
   if (imgEl && kit.img) imgEl.src = kit.img;
 
-  // Precios
-  document.getElementById('sf-price-original').textContent = fmtEur(basePrice);
-  document.getElementById('sf-price-final').textContent    = fmtEur(finalPrice);
+  // Precio: un único valor, sin tachado ni badge de descuento
+  document.getElementById('sf-price-original').textContent = '';
+  document.getElementById('sf-price-final').textContent    = fmtEur(basePrice);
 
-  // CTA: abre el modal con el 10% ya aplicado y pre-rellena el dorsal de Pedri
+  // CTA: abre el modal al precio normal y pre-rellena el dorsal de Pedri
   document.getElementById('super-flash-cta').onclick = () => {
     openModal({
       ...kit,
-      priceUsd:     finalPrice,
-      discountInfo: { originalBase: basePrice, source: 'super-flash' },
+      priceUsd:     basePrice,
+      discountInfo: { source: 'super-flash' }, // marca para dorsal incluido, sin descuento
     });
     // Bloquear modal: talla M única, dorsal fijo, sin parche
     requestAnimationFrame(() => {
@@ -5170,10 +5165,16 @@ function updateModalPrice() {
   const priceMainEl = document.getElementById('modal-price-main');
   const priceSubEl  = document.getElementById('modal-price-sub');
 
-  if (FLASH_SOURCES.has(currentProduct?.discountInfo?.source)) {
+  if (currentProduct?.discountInfo?.source === 'ucl-flash') {
+    // UCL Flash: precio tachado + badge descuento
     const origBase = currentProduct.discountInfo.originalBase;
     priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origBase)}</span>${fmtEur(price)}<span class="badge-discount" style="font-size:12px;padding:3px 7px;">-10%</span>`;
     priceSubEl.textContent = '';
+  } else if (currentProduct?.discountInfo?.source === 'super-flash') {
+    // Súper Flash: precio normal sin descuento (el valor añadido es la entrega rápida)
+    const { main, sub } = t().price_fmt(price);
+    priceMainEl.textContent = main;
+    priceSubEl.textContent  = sub;
   } else if (discountMode) {
     const origBase   = getModalOriginalBase();
     priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origBase)}</span>${fmtEur(price)}<span class="badge-discount" style="font-size:12px;padding:3px 7px;">-33%</span>`;
