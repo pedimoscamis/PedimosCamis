@@ -227,7 +227,9 @@ async function main() {
       const ext      = extMatch ? extMatch[1].toLowerCase() : 'jpg';
       const filename = `${p.id}_photo${j + 2}.${ext}`; // foto 2, 3 y 4 (la 1 es la portada)
       const destPath = path.join(DOWNLOAD_DIR, filename);
-      const r2Url    = `${R2_BASE}/${filename}`;
+      // Las imágenes se convertirán a webp antes de subir a R2 (igual que las portadas)
+      const r2Filename = `${p.id}_photo${j + 2}.webp`;
+      const r2Url      = `${R2_BASE}/${r2Filename}`;
 
       // Si ya existe el archivo en disco, reutilizar
       if (fs.existsSync(destPath)) {

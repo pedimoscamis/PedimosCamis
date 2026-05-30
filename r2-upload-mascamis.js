@@ -84,7 +84,7 @@ async function main() {
   }
 
   const allFiles = fs.readdirSync(IMAGES_DIR)
-    .filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f));
+    .filter(f => /\.webp$/i.test(f));
   const total = allFiles.length;
 
   if (total === 0) {
