@@ -2908,6 +2908,8 @@ const PLAYER_RE      = /\bplayer\b/i;
 const WINDBREAKER_RE = /windbreaker|jacket/i;
 // Detecta camisetas de mujer por nombre
 const WOMEN_RE  = /\bwomens?\b|\bwoman\b|\bwomen's?\b|\bfemenin|\bfemale\b/i;
+// Detecta camisetas de manga larga (recargo +3€ sobre el precio base)
+const LONG_SLEEVE_RE = /\blong\s*sleeves?\b/i;
 const PATCH_CATS = new Set(['laliga','premier','seriea','bundesliga','ligue1','selecciones','sudamerica','retro','europa','nuevatemporada']);
 
 // ── Mundial 2026 ─────────────────────────────────────────────────────────────
@@ -4814,13 +4816,13 @@ function primaryCat(p) {
 }
 
 function getBasePrice(p) {
-  // ① Pantalón corto → precio fijo según versión
+  // ① Pantalón corto → precio fijo según versión (sin recargo manga larga)
   if (isShortProduct(p)) {
     if (PLAYER_RE.test(p.nameEn)) return socioMode ? SOCIO_SHORTS_PLAYER : NORMAL_SHORTS_PLAYER;
     return socioMode ? SOCIO_SHORTS_FAN : NORMAL_SHORTS_FAN;
   }
 
-  // ② Windbreaker / jacket → precio fijo 60€ normal / 34.20€ socio
+  // ② Windbreaker / jacket → precio fijo (sin recargo manga larga)
   // 38$ × EUR_RATE(0.90) = 34.20€ — precio de coste fijo para socioMode
   if (WINDBREAKER_RE.test(p.nameEn))
     return socioMode ? 38 : NORMAL_PRICES.windbreaker;
@@ -4832,22 +4834,24 @@ function getBasePrice(p) {
     return isRetro ? 28 : 25;  // Retro → 28€, Normal → 25€
   }
 
+  // Recargo manga larga: +3€ sobre el precio base de cualquier camiseta
+  const ls    = LONG_SLEEVE_RE.test(p.nameEn) ? 3 : 0;
   const pc    = primaryCat(p);
   const table = socioMode ? SOCIO_PRICES : NORMAL_PRICES;
 
   // ④ Categoría con precio propio (nba, kids, women, streetwear…)
-  if (table[pc] !== undefined) return table[pc];
+  if (table[pc] !== undefined) return table[pc] + ls;
 
   // ⑤ Versión Player (precio especial)
   if (PLAYER_RE.test(p.nameEn))
-    return socioMode ? SOCIO_PLAYER : NORMAL_PLAYER;
+    return (socioMode ? SOCIO_PLAYER : NORMAL_PLAYER) + ls;
 
   // ⑥ Retro
   if ((p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn))
-    return socioMode ? SOCIO_RETRO : NORMAL_RETRO;
+    return (socioMode ? SOCIO_RETRO : NORMAL_RETRO) + ls;
 
   // ⑦ Camiseta estándar
-  return socioMode ? SOCIO_JERSEY : NORMAL_JERSEY;
+  return (socioMode ? SOCIO_JERSEY : NORMAL_JERSEY) + ls;
 }
 
 function isPlayerVersion(p) {
