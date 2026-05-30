@@ -32,7 +32,7 @@ const path    = require('path');
 const PRODUCTS_FILE    = path.join(__dirname, 'data', 'products.json');
 const DOWNLOAD_DIR     = 'H:\\mascamis';
 const R2_BASE          = 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis';
-const PHOTOS_PER_ALBUM = 3;
+const PHOTOS_PER_ALBUM = 4;  // extraemos 4 y luego descartamos la 1ª (igual a portada)
 const DELAY_MS         = 1200; // ms entre álbumes para no saturar el servidor
 
 // ─── Argumentos CLI ───────────────────────────────────────────────────────────
@@ -210,7 +210,8 @@ async function main() {
     }
 
     // 2. Extraer URLs de imagen
-    const imgUrls = extractAlbumImages(html, PHOTOS_PER_ALBUM);
+    // Extraemos 4 fotos y saltamos la primera (suele ser idéntica a la portada)
+    const imgUrls = extractAlbumImages(html, PHOTOS_PER_ALBUM).slice(1);
     if (imgUrls.length === 0) {
       console.log('  ⚠️  Sin imágenes detectadas en el álbum → omitido\n');
       noPhotos++;
@@ -223,7 +224,7 @@ async function main() {
     for (let j = 0; j < imgUrls.length; j++) {
       const extMatch = imgUrls[j].match(/\.(jpg|jpeg|png|webp)$/i);
       const ext      = extMatch ? extMatch[1].toLowerCase() : 'jpg';
-      const filename = `${p.id}_photo${j + 1}.${ext}`;
+      const filename = `${p.id}_photo${j + 2}.${ext}`; // foto 2, 3 y 4 (la 1 es la portada)
       const destPath = path.join(DOWNLOAD_DIR, filename);
       const r2Url    = `${R2_BASE}/${filename}`;
 
