@@ -31,7 +31,7 @@ const path    = require('path');
 
 const PRODUCTS_FILE    = path.join(__dirname, 'data', 'products.json');
 const DOWNLOAD_DIR     = 'H:\\mascamis';
-const R2_BASE          = 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/galeria';
+const R2_BASE          = 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis';
 const PHOTOS_PER_ALBUM = 3;
 const DELAY_MS         = 1200; // ms entre álbumes para no saturar el servidor
 
