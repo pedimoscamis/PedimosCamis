@@ -9,6 +9,7 @@
     "categorize": "node categorize.js",
     "build:catalog": "node scraper.js && node categorize.js",
     "download-images": "node download-images.js",
+    "download-gallery": "node download_gallery.js",
     "upload-cloudinary": "node upload-cloudinary.js",
     "apply-cloudinary": "node apply-cloudinary.js"
   },

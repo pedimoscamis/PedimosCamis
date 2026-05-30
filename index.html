@@ -740,6 +740,50 @@
       width: 100%; height: 100%;
       object-fit: cover;
     }
+
+    /* ─── Modal Carousel ──────────────────────────────────────────── */
+    .modal-carousel {
+      position: absolute; inset: 0;
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .modal-carousel-track {
+      display: flex;
+      width: 100%; height: 100%;
+      transition: transform 0.32s cubic-bezier(.4,0,.2,1);
+      will-change: transform;
+    }
+    .modal-carousel-track img {
+      min-width: 100%; width: 100%; height: 100%;
+      object-fit: cover;
+      flex-shrink: 0;
+      pointer-events: none;
+    }
+    .modal-carousel-dots {
+      position: absolute;
+      bottom: 44px; /* por encima del botón Yupoo */
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      z-index: 3;
+    }
+    .modal-carousel-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.30);
+      border: 1.5px solid rgba(255,255,255,0.55);
+      padding: 0; cursor: pointer;
+      transition: background .2s, transform .2s, border-color .2s;
+    }
+    .modal-carousel-dot.active {
+      background: #fff;
+      border-color: #fff;
+      transform: scale(1.4);
+    }
+
     #modal-yupoo-btn {
       position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
       background: rgba(0,0,0,0.7);
@@ -5024,27 +5068,8 @@ function openModal(p) {
   currentProduct = p;
   selectedSize = null;
 
-  // Image
-  const imgCol = document.getElementById('modal-img-col');
-  // Remove old img if exists
-  const oldImg = imgCol.querySelector('img');
-  if (oldImg) oldImg.remove();
-  const oldPh = imgCol.querySelector('.card-placeholder');
-  if (oldPh) oldPh.remove();
-
-  if (p.img) {
-    const img = document.createElement('img');
-    img.src = p.img;
-    img.alt = p.nameEn;
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0';
-    imgCol.insertBefore(img, imgCol.firstChild);
-  } else {
-    const ph = document.createElement('div');
-    ph.className = 'card-placeholder';
-    ph.style.cssText = 'position:absolute;inset:0';
-    ph.innerHTML = jerseyIcon(72);
-    imgCol.insertBefore(ph, imgCol.firstChild);
-  }
+  // Image — carousel si hay gallery, imagen única si no
+  buildModalCarousel(p);
 
   const yupooBtn = document.getElementById('modal-yupoo-btn');
   yupooBtn.href = p.yupooUrl;
@@ -5193,6 +5218,106 @@ document.getElementById('opt-patch').addEventListener('change', function() {
 document.getElementById('patch-type').addEventListener('change', function() {
   document.getElementById('patch-other').style.display = this.value === 'Otro' ? '' : 'none';
 });
+
+// ─── Modal Carousel ──────────────────────────────────────────────────────────
+/**
+ * Construye el carrusel de imágenes en #modal-img-col.
+ * Slides = imagen principal (p.img) + hasta 3 fotos de p.gallery.
+ * Si solo hay una imagen, muestra un <img> simple sin controles.
+ * El carrito sigue usando p.img (imagen original) — no se toca.
+ */
+function buildModalCarousel(p) {
+  const imgCol = document.getElementById('modal-img-col');
+
+  // Limpiar contenido anterior (carousel, img suelta, placeholder)
+  ['modal-carousel', 'card-placeholder'].forEach(cls => {
+    const el = imgCol.querySelector('.' + cls);
+    if (el) el.remove();
+  });
+  const oldImg = imgCol.querySelector('img');
+  if (oldImg) oldImg.remove();
+
+  // Construir lista de slides: img principal + gallery (deduplicada)
+  const slides = [];
+  if (p.img) slides.push(p.img);
+  if (Array.isArray(p.gallery)) {
+    for (const url of p.gallery) {
+      if (url && !slides.includes(url)) slides.push(url);
+    }
+  }
+
+  // Sin imagen: placeholder
+  if (slides.length === 0) {
+    const ph = document.createElement('div');
+    ph.className = 'card-placeholder';
+    ph.style.cssText = 'position:absolute;inset:0';
+    ph.innerHTML = jerseyIcon(72);
+    imgCol.insertBefore(ph, imgCol.firstChild);
+    return;
+  }
+
+  // Una sola imagen: sin carrusel
+  if (slides.length === 1) {
+    const img = document.createElement('img');
+    img.src = slides[0];
+    img.alt = p.nameEn;
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0';
+    imgCol.insertBefore(img, imgCol.firstChild);
+    return;
+  }
+
+  // Múltiples slides: carrusel completo
+  let current = 0;
+
+  const carousel = document.createElement('div');
+  carousel.className = 'modal-carousel';
+
+  const track = document.createElement('div');
+  track.className = 'modal-carousel-track';
+  slides.forEach((url, i) => {
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = p.nameEn + (i > 0 ? ` — foto ${i + 1}` : '');
+    img.loading = i === 0 ? 'eager' : 'lazy';
+    track.appendChild(img);
+  });
+  carousel.appendChild(track);
+
+  // Puntos indicadores
+  const dots = document.createElement('div');
+  dots.className = 'modal-carousel-dots';
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'modal-carousel-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', `Foto ${i + 1}`);
+    dot.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); });
+    dots.appendChild(dot);
+  });
+  carousel.appendChild(dots);
+
+  function goTo(n) {
+    current = (n + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.querySelectorAll('.modal-carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  // Click en la imagen → avanzar al siguiente slide
+  carousel.addEventListener('click', () => goTo(current + 1));
+
+  // Soporte swipe táctil
+  let touchX = 0;
+  carousel.addEventListener('touchstart', e => {
+    touchX = e.touches[0].clientX;
+  }, { passive: true });
+  carousel.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+
+  imgCol.insertBefore(carousel, imgCol.firstChild);
+}
 
 function closeModal() {
   const overlay = document.getElementById('modal-overlay');
