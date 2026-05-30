@@ -181,6 +181,7 @@ async function main() {
   let pending = products.filter(p => {
     if (!p.yupooUrl) return false;
     if (FILTER_ID)   return p.id === FILTER_ID;
+    if ((p.cats || []).includes('nba')) return false; // omitir NBA por ahora
     return !p.gallery || p.gallery.length === 0;
   });
 
