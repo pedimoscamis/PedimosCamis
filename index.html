@@ -783,6 +783,31 @@
       border-color: #fff;
       transform: scale(1.4);
     }
+    /* Flechas de navegación — solo escritorio */
+    .modal-carousel-arrow {
+      display: none; /* ocultas por defecto (móvil usa swipe) */
+    }
+    @media (pointer: fine) {
+      .modal-carousel-arrow {
+        display: flex;
+        align-items: center; justify-content: center;
+        position: absolute; top: 50%; transform: translateY(-50%);
+        width: 34px; height: 34px;
+        background: rgba(0,0,0,0.55);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 50%;
+        color: #fff; font-size: 16px;
+        cursor: pointer; z-index: 4;
+        transition: background .18s, opacity .18s;
+        opacity: 0;
+        user-select: none;
+      }
+      .modal-carousel:hover .modal-carousel-arrow { opacity: 1; }
+      .modal-carousel-arrow:hover { background: rgba(0,0,0,0.82); }
+      .modal-carousel-arrow.prev { left: 10px; }
+      .modal-carousel-arrow.next { right: 10px; }
+      .modal-carousel-arrow:disabled { opacity: 0 !important; pointer-events: none; }
+    }
 
     #modal-yupoo-btn {
       position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
@@ -5290,21 +5315,41 @@ function buildModalCarousel(p) {
     const dot = document.createElement('button');
     dot.className = 'modal-carousel-dot' + (i === 0 ? ' active' : '');
     dot.setAttribute('aria-label', `Foto ${i + 1}`);
-    dot.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); });
     dots.appendChild(dot);
   });
   carousel.appendChild(dots);
 
+  // Flechas prev / next — CSS pointer:fine las muestra solo en escritorio
+  const prevBtn = document.createElement('button');
+  prevBtn.className = 'modal-carousel-arrow prev';
+  prevBtn.innerHTML = '&#8249;';
+  prevBtn.setAttribute('aria-label', 'Foto anterior');
+  prevBtn.disabled = true;
+  carousel.appendChild(prevBtn);
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'modal-carousel-arrow next';
+  nextBtn.innerHTML = '&#8250;';
+  nextBtn.setAttribute('aria-label', 'Foto siguiente');
+  carousel.appendChild(nextBtn);
+
+  // goTo definido después de buttons para poder actualizarlos en cada cambio
   function goTo(n) {
-    current = (n + slides.length) % slides.length;
+    current = Math.max(0, Math.min(n, slides.length - 1));
     track.style.transform = `translateX(-${current * 100}%)`;
     dots.querySelectorAll('.modal-carousel-dot').forEach((d, i) => {
       d.classList.toggle('active', i === current);
     });
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
   }
 
-  // Click en la imagen → avanzar al siguiente slide
-  carousel.addEventListener('click', () => goTo(current + 1));
+  // Conectar listeners ahora que goTo existe
+  dots.querySelectorAll('.modal-carousel-dot').forEach((dot, i) => {
+    dot.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); });
+  });
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); goTo(current - 1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); goTo(current + 1); });
 
   // Soporte swipe táctil
   let touchX = 0;
