@@ -849,22 +849,10 @@
       content: ' 🔒';
       font-size: 10px;
     }
-    .sf-modal-locked #opt-dorsal-wrap {
-      pointer-events: none;
-      opacity: 0.85;
-      cursor: default;
-    }
+    .sf-modal-locked #opt-dorsal-wrap,
+    .sf-modal-locked #dorsal-inputs,
     .sf-modal-locked #opt-patch-wrap {
       display: none !important;
-    }
-    .sf-modal-locked #input-name,
-    .sf-modal-locked #input-number {
-      pointer-events: none;
-      background: #1a1a1a;
-      color: var(--muted);
-    }
-    .sf-modal-locked .custom-option-price {
-      display: none; /* el dorsal ya está incluido en el precio flash */
     }
 
     #custom-section { border-top: 1px solid var(--border); padding-top: 14px; }
@@ -2222,8 +2210,8 @@
         <span class="sf-badge-stock">🔥 1/1 disponible</span>
         <span class="sf-badge-shipping">🚀 Envío &lt;1 semana</span>
       </div>
-      <h2 id="super-flash-title">¡MAGIA CANARIA<br><span>PARA EL MUNDIAL!</span></h2>
-      <p id="super-flash-copy">¡Magia canaria para el Mundial 2026! 🇪🇸 La camiseta Away de España con el dorsal de Pedri (nº20) ya incluido. Talla M · Hazte con ella antes de que vuele.</p>
+      <h2 id="super-flash-title">LA ARMADURA<br><span>DE LOS CAMPEONES</span></h2>
+      <p id="super-flash-copy">Revive la gloria del 2012 🇪🇸 La camiseta con la que España se coronó campeona del mundo. Edición retro, talla L. ¡Hazte con ella antes de que vuele!</p>
       <div id="super-flash-price">
         <span class="sf-price-final" id="sf-price-final"></span>
       </div>
@@ -2231,7 +2219,7 @@
     </div>
     <!-- Imagen -->
     <div id="super-flash-img-wrap">
-      <img id="super-flash-img" src="" alt="Spain 2026 Away con dorsal Pedri 20 talla M" loading="lazy">
+      <img id="super-flash-img" src="" alt="Retro 2012 Spain Home talla L" loading="lazy">
       <span class="sf-flag-ribbon">🇪🇸</span>
     </div>
   </div>
@@ -4416,7 +4404,7 @@ const FLASH_SOURCES  = new Set(['ucl-flash', 'super-flash']);
 // ── Súper Flash ───────────────────────────────────────────────────────────
 // Para retirar el evento basta con: SUPER_FLASH_ACTIVE = false
 const SUPER_FLASH_ACTIVE = true;
-const SUPER_FLASH_ID     = '231561715'; // Spain 2026 World Cup Away jersey S-4XL (fan version)
+const SUPER_FLASH_ID     = '231537722'; // Retro 2012 Spain Home S-XXL
 
 function renderSuperFlash() {
   const section = document.getElementById('super-flash-section');
@@ -4431,50 +4419,37 @@ function renderSuperFlash() {
   const kit = allProducts.find(p => p.id === SUPER_FLASH_ID);
   if (!kit) { section.style.display = 'none'; return; }
 
-  // Precio fijo all-in: camiseta fan + dorsal Pedri incluido
-  const basePrice = 18;
+  // Precio normal (sin descuento, sin dorsal)
+  const basePrice = getBasePrice(kit);
 
   // Imagen
   const imgEl = document.getElementById('super-flash-img');
   if (imgEl && kit.img) imgEl.src = kit.img;
 
-  // Precio: un único valor, sin tachado ni badge de descuento
+  // Precio único, sin tachado
   document.getElementById('sf-price-final').textContent = fmtEur(basePrice);
 
-  // CTA: abre el modal al precio normal y pre-rellena el dorsal de Pedri
+  // CTA: abre el modal bloqueado a talla L, sin opción de dorsal
   document.getElementById('super-flash-cta').onclick = () => {
     openModal({
       ...kit,
       priceUsd:     basePrice,
-      discountInfo: { source: 'super-flash' }, // marca para dorsal incluido, sin descuento
+      discountInfo: { source: 'super-flash' },
     });
-    // Bloquear modal: talla M única, dorsal fijo, sin parche
+    // Bloquear modal: talla L única, sin dorsal, sin parche
     requestAnimationFrame(() => {
-      // 1. Marcar clase de bloqueo en el overlay del modal
       document.getElementById('modal-overlay').classList.add('sf-modal-locked');
 
-      // 2. Seleccionar talla M y deshabilitar el resto
+      // Seleccionar talla L y deshabilitar el resto
       const sizeGrid = document.getElementById('size-grid');
       if (sizeGrid) {
         sizeGrid.querySelectorAll('.size-btn').forEach(btn => {
           btn.disabled = true;
-          if (btn.textContent.trim() === 'M') {
+          if (btn.textContent.trim() === 'L') {
             btn.classList.add('selected');
-            selectedSize = 'M';
+            selectedSize = 'L';
           }
         });
-      }
-
-      // 3. Pre-rellenar dorsal PEDRI 20 (incluido en precio flash, no editable)
-      const dorsalChk = document.getElementById('opt-dorsal');
-      const nameInp   = document.getElementById('input-name');
-      const numInp    = document.getElementById('input-number');
-      if (dorsalChk && nameInp && numInp) {
-        dorsalChk.checked = true;
-        nameInp.value     = 'PEDRI';
-        numInp.value      = '20';
-        document.getElementById('dorsal-inputs').classList.add('visible');
-        updateModalPrice();
       }
     });
   };
@@ -5150,9 +5125,7 @@ function getModalPriceBase() {
     base = getBasePrice(currentProduct);
   }
   let total = base;
-  // Para Súper Flash el dorsal ya está incluido en el precio all-in → no sumar +3
-  const isSuperFlash = currentProduct?.discountInfo?.source === 'super-flash';
-  if (document.getElementById('opt-dorsal').checked && !isSuperFlash) total += 3;
+  if (document.getElementById('opt-dorsal').checked) total += 3;
   if (document.getElementById('opt-patch').checked)  total += 1;
   return total;
 }
@@ -5272,9 +5245,7 @@ function addToCart() {
   if (document.getElementById('opt-dorsal').checked) {
     const name   = document.getElementById('input-name').value.trim();
     const number = document.getElementById('input-number').value.trim();
-    // Para Súper Flash el dorsal ya está incluido en el precio all-in → extraUsd 0
-    const isSuperFlash = currentProduct?.discountInfo?.source === 'super-flash';
-    customizations.push({ type: 'dorsal', name, number, extraUsd: isSuperFlash ? 0 : 3 });
+    customizations.push({ type: 'dorsal', name, number, extraUsd: 3 });
   }
   if (document.getElementById('opt-patch').checked) {
     const patchType  = document.getElementById('patch-type').value;
