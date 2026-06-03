@@ -2572,6 +2572,15 @@
           </select>
           <input class="custom-input" id="patch-other" type="text" placeholder="Especificar…" maxlength="30" style="display:none" />
         </div>
+        <!-- Parches específicos Mundial 2026 (select directo, sin checkbox) -->
+        <div id="mundial-patch-wrap" style="display:none">
+          <select class="custom-select" id="mundial-patch-type" onchange="updateModalPrice()">
+            <option value="" data-price="0">Sin parche</option>
+            <option value="Mundial 2 parches" data-price="2">Mundial 2 parches (+2€)</option>
+            <option value="Mundial parche derecho" data-price="1">Mundial parche derecho (+1€)</option>
+            <option value="Mundial parche izquierdo" data-price="1">Mundial parche izquierdo (+1€)</option>
+          </select>
+        </div>
       </div>
       <button id="add-to-cart-btn" onclick="addToCart()"></button>
       <!-- Super Admin: editor de categorías — solo visible en adminMode -->
@@ -5113,8 +5122,10 @@ function openModal(p) {
   document.getElementById('modal-name').textContent = p.nameEn;
 
   // Patches
-  const showPatches = (p.cats || []).some(c => PATCH_CATS.has(c));
-  document.getElementById('opt-patch-wrap').style.display = showPatches ? '' : 'none';
+  const isMundialPatch = isMundial2026(p);
+  const showPatches    = isMundialPatch || (p.cats || []).some(c => PATCH_CATS.has(c));
+  document.getElementById('opt-patch-wrap').style.display     = (showPatches && !isMundialPatch) ? '' : 'none';
+  document.getElementById('mundial-patch-wrap').style.display = isMundialPatch ? '' : 'none';
 
   // Reset checkboxes y patch
   document.getElementById('opt-dorsal').checked = false;
@@ -5123,9 +5134,10 @@ function openModal(p) {
   document.getElementById('patch-inputs').classList.remove('visible');
   document.getElementById('input-name').value   = '';
   document.getElementById('input-number').value = '';
-  document.getElementById('patch-type').value   = '';
-  document.getElementById('patch-other').value  = '';
+  document.getElementById('patch-type').value         = '';
+  document.getElementById('patch-other').value        = '';
   document.getElementById('patch-other').style.display = 'none';
+  document.getElementById('mundial-patch-type').value = '';
 
   // Sizes
   buildSizeGrid(p.sizes || []);
@@ -5175,7 +5187,14 @@ function getModalPriceBase() {
   }
   let total = base;
   if (document.getElementById('opt-dorsal').checked) total += 3;
-  if (document.getElementById('opt-patch').checked)  total += 1;
+  // Parche mundial2026: precio variable según opción elegida
+  const mundialSel = document.getElementById('mundial-patch-type');
+  if (mundialSel && mundialSel.closest('#mundial-patch-wrap').style.display !== 'none' && mundialSel.value) {
+    const opt = mundialSel.options[mundialSel.selectedIndex];
+    total += parseFloat(opt.dataset.price || 0);
+  } else if (document.getElementById('opt-patch').checked) {
+    total += 1;
+  }
   return total;
 }
 
@@ -5416,7 +5435,12 @@ function addToCart() {
     const number = document.getElementById('input-number').value.trim();
     customizations.push({ type: 'dorsal', name, number, extraUsd: 3 });
   }
-  if (document.getElementById('opt-patch').checked) {
+  const mundialSel = document.getElementById('mundial-patch-type');
+  const mundialVisible = mundialSel && mundialSel.closest('#mundial-patch-wrap').style.display !== 'none';
+  if (mundialVisible && mundialSel.value) {
+    const opt = mundialSel.options[mundialSel.selectedIndex];
+    customizations.push({ type: 'patch', label: mundialSel.value, extraUsd: parseFloat(opt.dataset.price || 0) });
+  } else if (document.getElementById('opt-patch').checked) {
     const patchType  = document.getElementById('patch-type').value;
     const patchOther = document.getElementById('patch-other').value.trim();
     const patchLabel = patchType === 'Otro' ? (patchOther || 'Otro') : patchType;
