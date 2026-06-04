@@ -1468,11 +1468,32 @@
       border-top: 1px solid var(--border); padding-top: 18px;
     }
     #tracker-result.visible { display: block; }
-    .tracker-status-label {
-      font-size: 22px; font-weight: 700; margin-bottom: 6px;
+    .tracker-orders-title {
+      font-size: 12px; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .tracker-order-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .tracker-order-card:last-child { margin-bottom: 0; }
+    .tracker-order-meta {
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap;
+      gap: 8px; margin-bottom: 10px;
+    }
+    .tracker-order-date {
+      font-size: 12px; color: var(--muted);
+    }
+    .tracker-order-status {
+      font-size: 15px; font-weight: 700; color: var(--text);
     }
     .tracker-tracking-code {
-      font-size: 13px; color: var(--muted); margin-bottom: 12px;
+      font-size: 12px; color: var(--muted); margin-bottom: 10px;
     }
     .tracker-ctt-btn {
       display: inline-block; background: #005ea6;
@@ -5700,7 +5721,8 @@ function closeSizesGuideOnOverlay(e) {
 
 const TRACKER_ESTADOS = {
   'Pending':   '⏳ En preparación',
-  'Shipped':   '🚚 Enviado',
+  'Ordered':   '⚙️ Fabricando camis',
+  'Shipped':   '🚚 En camino',
   'Arrived':   '📦 En nuestro almacén',
   'Delivered': '✨ Entregado',
 };
@@ -5751,29 +5773,44 @@ async function submitTracker() {
 
     console.log('Respuesta del Tracker:', resultado);
 
-    // La estructura devuelta es { status, data: { estado, tracking, fecha } }
-    if (resultado.status === 'not_found' || resultado.error || !resultado.data) {
+    // La estructura devuelta es { status, data: [ { fecha, estado, tracking }, ... ] }
+    const pedidos = Array.isArray(resultado.data)
+      ? resultado.data
+      : resultado.data ? [resultado.data] : []; // compatibilidad si algún día vuelve objeto
+
+    if (resultado.status === 'not_found' || resultado.error || pedidos.length === 0) {
       resultEl.innerHTML = `<div class="tracker-error">⚠️ No se ha encontrado ningún pedido reciente asociado a este correo electrónico.</div>`;
     } else {
-      const pedido       = resultado.data;
-      const estadoRaw    = pedido.estado || '';
-      const estadoLabel  = TRACKER_ESTADOS[estadoRaw] || estadoRaw || '—';
-      const trackingCode = (pedido.tracking || '').trim();
-      const showTracking = TRACKER_SHIPPED_STATES.has(estadoRaw) && trackingCode;
+      const cards = pedidos.map((pedido, idx) => {
+        const estadoRaw    = pedido.estado || '';
+        const estadoLabel  = TRACKER_ESTADOS[estadoRaw] || estadoRaw || '—';
+        const trackingCode = (pedido.tracking || '').trim();
+        const showTracking = TRACKER_SHIPPED_STATES.has(estadoRaw) && trackingCode;
+        const fecha        = pedido.fecha ? escHtml(pedido.fecha) : '—';
+        const btnId        = `ctt-btn-${idx}`;
 
-      let html = `<div class="tracker-status-label">${escHtml(estadoLabel)}</div>`;
+        let cttHtml = '';
+        if (showTracking) {
+          cttHtml = `
+            <div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(trackingCode)}</strong></div>
+            <button id="${btnId}" class="tracker-ctt-btn" onclick="openCttExpress('${escHtml(trackingCode)}', '${btnId}')">
+              🔍 Rastrear en CTT Express →
+            </button>`;
+        }
 
-      if (showTracking) {
-        // ID único para poder referenciar el botón desde el onclick inline
-        const btnId = 'ctt-track-btn';
-        html += `
-          <div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(trackingCode)}</strong></div>
-          <button id="${btnId}" class="tracker-ctt-btn" onclick="openCttExpress('${escHtml(trackingCode)}', '${btnId}')">
-            🔍 Rastrear en CTT Express →
-          </button>`;
-      }
+        return `
+          <div class="tracker-order-card">
+            <div class="tracker-order-meta">
+              <span class="tracker-order-date">📅 ${fecha}</span>
+              <span class="tracker-order-status">${escHtml(estadoLabel)}</span>
+            </div>
+            ${cttHtml}
+          </div>`;
+      }).join('');
 
-      resultEl.innerHTML = html;
+      resultEl.innerHTML = `
+        <div class="tracker-orders-title">${pedidos.length === 1 ? '1 pedido encontrado' : `${pedidos.length} pedidos encontrados`}</div>
+        ${cards}`;
     }
   } catch (err) {
     resultEl.innerHTML = `<div class="tracker-error">⚠️ Error de conexión. Inténtalo de nuevo en unos segundos.</div>`;
