@@ -29,7 +29,8 @@
       --radius:    10px;
     }
 
-    body.modal-open { overflow: hidden; }
+    body.modal-open,
+    html.modal-open { overflow: hidden; }
 
     html {
       scroll-behavior: smooth;
@@ -3436,12 +3437,12 @@ const HIDDEN_NORMAL_CATS = new Set(['otros']);
 function openSidebar() {
   document.getElementById('mobile-sidebar').classList.add('sidebar-open');
   document.getElementById('mobile-overlay').classList.add('overlay-open');
-  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');   // evitar scroll del fondo
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');   // evitar scroll del fondo
 }
 function closeSidebar() {
   document.getElementById('mobile-sidebar').classList.remove('sidebar-open');
   document.getElementById('mobile-overlay').classList.remove('overlay-open');
-  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
 }
 
 function buildCatBar() {
@@ -4681,13 +4682,13 @@ function openGalleryLightbox(idx) {
   const img = document.getElementById('gallery-lightbox-img');
   img.src = GALLERY_IMAGES[idx];
   lb.classList.add('open');
-  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
 }
 
 function closeGalleryLightbox(e) {
   if (e && e.target.id === 'gallery-lightbox-img') return; // clic en la imagen → no cerrar
   document.getElementById('gallery-lightbox').classList.remove('open');
-  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -5199,7 +5200,7 @@ function openModal(p) {
   const modalOverlay = document.getElementById('modal-overlay');
   modalOverlay.classList.remove('sf-modal-locked'); // limpiar estado bloqueado previo
   modalOverlay.classList.add('open');
-  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
 }
 
 function buildSizeGrid(sizes) {
@@ -5450,7 +5451,7 @@ function closeModal() {
   const overlay = document.getElementById('modal-overlay');
   overlay.classList.remove('open');
   overlay.classList.remove('sf-modal-locked'); // limpiar estado bloqueado del Súper Flash
-  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
   currentProduct = null;
   selectedSize = null;
 }
@@ -5463,12 +5464,12 @@ function closeModalOnOverlay(e) {
 
 function openSizesGuide() {
   document.getElementById('sizes-modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
 }
 
 function closeSizesGuide() {
   document.getElementById('sizes-modal-overlay').classList.remove('open');
-  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
 }
 
 function closeSizesGuideOnOverlay(e) {
@@ -5581,13 +5582,13 @@ function openCart() {
   renderCartItems();
   document.getElementById('cart-overlay').classList.add('open');
   document.getElementById('cart-drawer').classList.add('open');
-  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
 }
 
 function closeCart() {
   document.getElementById('cart-overlay').classList.remove('open');
   document.getElementById('cart-drawer').classList.remove('open');
-  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
 }
 
 function renderCartItems() {
@@ -5880,12 +5881,12 @@ function openCheckout() {
   submitBtn.textContent = 'ENVIAR PEDIDO';
 
   document.getElementById('checkout-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
 }
 
 function closeCheckout() {
   document.getElementById('checkout-overlay').classList.remove('open');
-  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
 }
 
 function closeCheckoutOnOverlay(e) {
