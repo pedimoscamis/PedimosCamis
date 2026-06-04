@@ -29,6 +29,8 @@
       --radius:    10px;
     }
 
+    body.modal-open { overflow: hidden; }
+
     html {
       scroll-behavior: smooth;
       overflow-x: clip;
@@ -752,14 +754,19 @@
     .modal-carousel-track {
       display: flex;
       width: 100%; height: 100%;
-      transition: transform 0.32s cubic-bezier(.4,0,.2,1);
-      will-change: transform;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
+    .modal-carousel-track::-webkit-scrollbar { display: none; }
     .modal-carousel-track img {
       min-width: 100%; width: 100%; height: 100%;
       object-fit: cover;
       flex-shrink: 0;
       pointer-events: none;
+      scroll-snap-align: center;
     }
     .modal-carousel-dots {
       position: absolute;
@@ -950,6 +957,7 @@
       transition: border-color .2s;
     }
     .custom-input:focus { border-color: var(--accent); }
+    #input-name { text-transform: uppercase; }
 
     #add-to-cart-btn {
       background: var(--accent); color: #fff;
@@ -3428,12 +3436,12 @@ const HIDDEN_NORMAL_CATS = new Set(['otros']);
 function openSidebar() {
   document.getElementById('mobile-sidebar').classList.add('sidebar-open');
   document.getElementById('mobile-overlay').classList.add('overlay-open');
-  document.body.style.overflow = 'hidden';   // evitar scroll del fondo
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');   // evitar scroll del fondo
 }
 function closeSidebar() {
   document.getElementById('mobile-sidebar').classList.remove('sidebar-open');
   document.getElementById('mobile-overlay').classList.remove('overlay-open');
-  document.body.style.overflow = '';
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
 }
 
 function buildCatBar() {
@@ -4376,7 +4384,7 @@ function renderFeatured() {
         ${isRetroKit ? '<span class="featured-badge-retro">RETRO</span>' : ''}
       </div>
       <div class="featured-card-body">
-        <div class="featured-card-name">${escHtml(p.nameEn)}</div>
+        <div class="featured-card-name">${escHtml(traducirNombre(p.nameEn))}</div>
         <div class="featured-card-price">
           ${priceHtml}
           ${isPlayer ? '<span class="badge-player">PLAYER</span>' : ''}
@@ -4447,7 +4455,7 @@ function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
         ${isRetroKit ? '<span class="featured-badge-retro">RETRO</span>' : ''}
       </div>
       <div class="featured-card-body">
-        <div class="featured-card-name">${escHtml(p.nameEn)}</div>
+        <div class="featured-card-name">${escHtml(traducirNombre(p.nameEn))}</div>
         <div class="featured-card-price">
           ${priceHtml}
           ${isPlayer ? '<span class="badge-player">PLAYER</span>' : ''}
@@ -4673,13 +4681,13 @@ function openGalleryLightbox(idx) {
   const img = document.getElementById('gallery-lightbox-img');
   img.src = GALLERY_IMAGES[idx];
   lb.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');
 }
 
 function closeGalleryLightbox(e) {
   if (e && e.target.id === 'gallery-lightbox-img') return; // clic en la imagen → no cerrar
   document.getElementById('gallery-lightbox').classList.remove('open');
-  document.body.style.overflow = '';
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -4846,6 +4854,37 @@ const NORMAL_PRICES = {
 };
 const NORMAL_JERSEY        = 15;
 const NORMAL_RETRO         = 22;
+
+// ─── Diccionario de traducción visual ────────────────────────────────────────
+// Solo se usa para mostrar nombres al usuario. El nameEn original nunca se toca.
+const NOMBRE_TRANSLATIONS = [
+  [/\bPlayer Version\b/gi, 'Versión Jugador'],
+  [/\bFan Version\b/gi,    'Versión Fan'],
+  [/\bHome\b/g,            'Local'],
+  [/\bAway\b/g,            'Visitante'],
+  [/\bThird\b/g,           'Tercera'],
+  [/\bFourth\b|\b4th\b/g,  'Cuarta'],
+  [/\bGoalkeeper\b/gi,     'Portero'],
+  [/\bSpain\b/g,           'España'],
+  [/\bFrance\b/g,          'Francia'],
+  [/\bGermany\b/g,         'Alemania'],
+  [/\bEngland\b/g,         'Inglaterra'],
+  [/\bItaly\b/g,           'Italia'],
+  [/\bPortugal\b/g,        'Portugal'],
+  [/\bBrazil\b/g,          'Brasil'],
+  [/\bArgentina\b/g,       'Argentina'],
+  [/\bNetherlands\b/g,     'Países Bajos'],
+  [/\bRetro\b/g,           'Retro'],
+];
+
+function traducirNombre(name) {
+  if (!name) return name;
+  let result = name;
+  for (const [re, replacement] of NOMBRE_TRANSLATIONS) {
+    result = result.replace(re, replacement);
+  }
+  return result;
+}
 const NORMAL_PLAYER        = 20;
 const NORMAL_SHORTS_FAN    = 13;
 const NORMAL_SHORTS_PLAYER = 18;
@@ -5032,7 +5071,7 @@ function createCard(p, idx = 0) {
     </div>
     <div class="card-body">
       <span class="card-cat">${escHtml(catLabel)}</span>
-      <span class="card-name">${escHtml(p.nameEn)}</span>
+      <span class="card-name">${escHtml(traducirNombre(p.nameEn))}</span>
       <div class="card-price-row">
         <div class="price-main">${priceHtml}${player ? '<span class="badge-player">PLAYER</span>' : ''}</div>
         <div class="price-sub">${priceSubHtml}</div>
@@ -5127,7 +5166,7 @@ function openModal(p) {
 
   const mpc = primaryCat(p);
   document.getElementById('modal-cat').textContent = buildKitLabel(p.nameEn) || t().cat_labels[mpc] || mpc;
-  document.getElementById('modal-name').textContent = p.nameEn;
+  document.getElementById('modal-name').textContent = traducirNombre(p.nameEn);
 
   // Patches
   const isMundialPatch = isMundial2026(p);
@@ -5160,7 +5199,7 @@ function openModal(p) {
   const modalOverlay = document.getElementById('modal-overlay');
   modalOverlay.classList.remove('sf-modal-locked'); // limpiar estado bloqueado previo
   modalOverlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');
 }
 
 function buildSizeGrid(sizes) {
@@ -5375,10 +5414,8 @@ function buildModalCarousel(p) {
   nextBtn.setAttribute('aria-label', 'Foto siguiente');
   carousel.appendChild(nextBtn);
 
-  // goTo definido después de buttons para poder actualizarlos en cada cambio
-  function goTo(n) {
-    current = Math.max(0, Math.min(n, slides.length - 1));
-    track.style.transform = `translateX(-${current * 100}%)`;
+  // Sincroniza dots y flechas con el slide actual
+  function syncUI() {
     dots.querySelectorAll('.modal-carousel-dot').forEach((d, i) => {
       d.classList.toggle('active', i === current);
     });
@@ -5386,22 +5423,25 @@ function buildModalCarousel(p) {
     nextBtn.disabled = current === slides.length - 1;
   }
 
-  // Conectar listeners ahora que goTo existe
+  // goTo: scroll nativo — el CSS scroll-snap centra la foto automáticamente
+  function goTo(n) {
+    current = Math.max(0, Math.min(n, slides.length - 1));
+    track.scrollTo({ left: current * track.clientWidth, behavior: 'smooth' });
+    syncUI();
+  }
+
+  // Cuando el usuario desliza nativamente en móvil, sincronizar current con los dots
+  track.addEventListener('scroll', () => {
+    const n = Math.round(track.scrollLeft / (track.clientWidth || 1));
+    if (n !== current && n >= 0 && n < slides.length) { current = n; syncUI(); }
+  }, { passive: true });
+
+  // Conectar listeners
   dots.querySelectorAll('.modal-carousel-dot').forEach((dot, i) => {
     dot.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); });
   });
   prevBtn.addEventListener('click', (e) => { e.stopPropagation(); goTo(current - 1); });
   nextBtn.addEventListener('click', (e) => { e.stopPropagation(); goTo(current + 1); });
-
-  // Soporte swipe táctil
-  let touchX = 0;
-  carousel.addEventListener('touchstart', e => {
-    touchX = e.touches[0].clientX;
-  }, { passive: true });
-  carousel.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchX;
-    if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
-  }, { passive: true });
 
   imgCol.insertBefore(carousel, imgCol.firstChild);
 }
@@ -5410,7 +5450,7 @@ function closeModal() {
   const overlay = document.getElementById('modal-overlay');
   overlay.classList.remove('open');
   overlay.classList.remove('sf-modal-locked'); // limpiar estado bloqueado del Súper Flash
-  document.body.style.overflow = '';
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
   currentProduct = null;
   selectedSize = null;
 }
@@ -5423,12 +5463,12 @@ function closeModalOnOverlay(e) {
 
 function openSizesGuide() {
   document.getElementById('sizes-modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');
 }
 
 function closeSizesGuide() {
   document.getElementById('sizes-modal-overlay').classList.remove('open');
-  document.body.style.overflow = '';
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
 }
 
 function closeSizesGuideOnOverlay(e) {
@@ -5455,7 +5495,7 @@ function addToCart() {
   const usd = getModalPriceBase();
   const customizations = [];
   if (document.getElementById('opt-dorsal').checked) {
-    const name   = document.getElementById('input-name').value.trim();
+    const name   = document.getElementById('input-name').value.trim().toUpperCase();
     const number = document.getElementById('input-number').value.trim();
     customizations.push({ type: 'dorsal', name, number, extraUsd: 3 });
   }
@@ -5541,13 +5581,13 @@ function openCart() {
   renderCartItems();
   document.getElementById('cart-overlay').classList.add('open');
   document.getElementById('cart-drawer').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');
 }
 
 function closeCart() {
   document.getElementById('cart-overlay').classList.remove('open');
   document.getElementById('cart-drawer').classList.remove('open');
-  document.body.style.overflow = '';
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
 }
 
 function renderCartItems() {
@@ -5576,7 +5616,7 @@ function renderCartItems() {
         ? `<img class="cart-item-img" src="${item.img}" alt="${escHtml(item.name)}" loading="lazy">`
         : `<div class="cart-item-img" style="display:flex;align-items:center;justify-content:center;">${jerseyIcon(28)}</div>`}
       <div class="cart-item-info">
-        <div class="cart-item-name">${escHtml(item.name)}</div>
+        <div class="cart-item-name">${escHtml(traducirNombre(item.name))}</div>
         <div class="cart-item-meta">
           Talla: ${escHtml(item.size)}${customMeta ? '<br>' + customMeta : ''}
         </div>
@@ -5783,7 +5823,7 @@ function openCheckout() {
         : ''}
       <div class="checkout-item-img-placeholder"${item.img ? ' style="display:none"' : ''}>${jerseyIcon(28)}</div>
       <div class="checkout-item-body">
-        <div class="checkout-item-name">${escHtml(item.name)}${qty > 1 ? ` <span style="font-size:12px;color:var(--muted)">×${qty}</span>` : ''}</div>
+        <div class="checkout-item-name">${escHtml(traducirNombre(item.name))}${qty > 1 ? ` <span style="font-size:12px;color:var(--muted)">×${qty}</span>` : ''}</div>
         <div class="checkout-item-size">${isEs ? 'Talla' : 'Size'}: ${escHtml(item.size)}</div>
         ${bdHtml}
       </div>
@@ -5840,12 +5880,12 @@ function openCheckout() {
   submitBtn.textContent = 'ENVIAR PEDIDO';
 
   document.getElementById('checkout-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open');
 }
 
 function closeCheckout() {
   document.getElementById('checkout-overlay').classList.remove('open');
-  document.body.style.overflow = '';
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open');
 }
 
 function closeCheckoutOnOverlay(e) {
