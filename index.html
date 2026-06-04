@@ -1412,6 +1412,92 @@
       #sizes-modal h2 { font-size: 22px; }
       .sizes-table th, .sizes-table td { padding: 8px 10px; font-size: 12px; }
     }
+    /* ─── Tracker de Pedidos Modal ──────────────────────────── */
+    #tracker-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.78);
+      z-index: 9400;
+      align-items: center; justify-content: center;
+      padding: 16px;
+    }
+    #tracker-overlay.open { display: flex; }
+    #tracker-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%; max-width: 460px;
+      padding: 32px 28px 28px;
+      position: relative;
+    }
+    #tracker-close {
+      position: absolute; top: 14px; right: 16px;
+      background: none; border: none;
+      color: var(--muted); font-size: 22px;
+      cursor: pointer; line-height: 1;
+      transition: color .2s;
+    }
+    #tracker-close:hover { color: var(--accent); }
+    #tracker-modal h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px; letter-spacing: 1px;
+      color: var(--text); margin: 0 0 6px;
+    }
+    #tracker-modal .tracker-sub {
+      font-size: 13px; color: var(--muted); margin-bottom: 24px;
+    }
+    #tracker-email-input {
+      width: 100%; background: var(--card);
+      border: 1px solid var(--border); color: var(--text);
+      padding: 11px 14px; border-radius: 8px;
+      font-family: 'Barlow', sans-serif; font-size: 14px;
+      margin-bottom: 12px; box-sizing: border-box;
+      transition: border-color .2s;
+    }
+    #tracker-email-input:focus { outline: none; border-color: var(--accent); }
+    #tracker-submit {
+      width: 100%; background: var(--accent);
+      border: none; color: #fff;
+      padding: 12px; border-radius: 8px;
+      font-family: 'Barlow', sans-serif; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: background .18s;
+    }
+    #tracker-submit:hover  { background: var(--accent-dk); }
+    #tracker-submit:disabled { background: #555; cursor: not-allowed; }
+    #tracker-result {
+      margin-top: 20px; display: none;
+      border-top: 1px solid var(--border); padding-top: 18px;
+    }
+    #tracker-result.visible { display: block; }
+    .tracker-status-label {
+      font-size: 22px; font-weight: 700; margin-bottom: 6px;
+    }
+    .tracker-tracking-code {
+      font-size: 13px; color: var(--muted); margin-bottom: 12px;
+    }
+    .tracker-ctt-btn {
+      display: inline-block; background: #005ea6;
+      color: #fff; padding: 10px 22px; border-radius: 8px;
+      font-family: 'Barlow', sans-serif; font-size: 14px; font-weight: 700;
+      text-decoration: none; transition: background .18s;
+    }
+    .tracker-ctt-btn:hover { background: #004a88; }
+    .tracker-error {
+      color: #e05; font-size: 14px; margin-top: 8px;
+    }
+
+    /* Botón "Sigue tu pedido" en el header */
+    #tracker-btn {
+      display: flex; align-items: center; gap: 5px;
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); font-family: 'Barlow', sans-serif;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 12px; border-radius: 20px;
+      cursor: pointer; white-space: nowrap;
+      transition: border-color .18s, color .18s;
+    }
+    #tracker-btn:hover { border-color: var(--accent); color: var(--text); }
+    @media (max-width: 500px) { #tracker-btn .tracker-btn-text { display: none; } }
+
     /* ─── Súper Flash Section ───────────────────────────────── */
     #super-flash-section {
       display: none;
@@ -2278,6 +2364,9 @@
         </div>
       </div>
     </div>
+    <button id="tracker-btn" onclick="openTracker()" title="Sigue tu pedido">
+      📦 <span class="tracker-btn-text">Sigue tu pedido</span>
+    </button>
     <button id="fav-btn" onclick="goFavorites()" title="Favoritos">
       <span id="fav-icon">♡</span>
       <span id="fav-badge">0</span>
@@ -2376,6 +2465,19 @@
     </div>
   </div>
 </section>
+
+<!-- ─── Tracker de Pedidos Modal ─────────────────────────────────────── -->
+<div id="tracker-overlay" onclick="closeTrackerOnOverlay(event)">
+  <div id="tracker-modal">
+    <button id="tracker-close" onclick="closeTracker()" aria-label="Cerrar">✕</button>
+    <h2>📦 SIGUE TU PEDIDO</h2>
+    <p class="tracker-sub">Introduce el email con el que realizaste tu compra.</p>
+    <input id="tracker-email-input" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email"
+           onkeydown="if(event.key==='Enter') submitTracker()" />
+    <button id="tracker-submit" onclick="submitTracker()">Rastrear Pedido</button>
+    <div id="tracker-result"></div>
+  </div>
+</div>
 
 <!-- ─── UCL Flash Event ─────────────────────────────────────────────── -->
 <section id="ucl-section">
@@ -5591,6 +5693,88 @@ function closeSizesGuide() {
 
 function closeSizesGuideOnOverlay(e) {
   if (e.target === document.getElementById('sizes-modal-overlay')) closeSizesGuide();
+}
+
+// ─── Tracker de Pedidos ───────────────────────────────────────────────────────
+
+const TRACKER_ESTADOS = {
+  'Pending':   '⏳ En preparación',
+  'Shipped':   '🚚 Enviado',
+  'Arrived':   '📦 En nuestro almacén',
+  'Delivered': '✨ Entregado',
+};
+const TRACKER_SHIPPED_STATES = new Set(['Shipped', 'Arrived', 'Delivered']);
+
+function openTracker() {
+  document.getElementById('tracker-email-input').value = '';
+  document.getElementById('tracker-result').className  = '';
+  document.getElementById('tracker-result').innerHTML  = '';
+  document.getElementById('tracker-submit').textContent = 'Rastrear Pedido';
+  document.getElementById('tracker-submit').disabled    = false;
+  document.getElementById('tracker-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
+  setTimeout(() => document.getElementById('tracker-email-input').focus(), 80);
+}
+
+function closeTracker() {
+  document.getElementById('tracker-overlay').classList.remove('open');
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
+}
+
+function closeTrackerOnOverlay(e) {
+  if (e.target === document.getElementById('tracker-overlay')) closeTracker();
+}
+
+async function submitTracker() {
+  const emailEl  = document.getElementById('tracker-email-input');
+  const submitEl = document.getElementById('tracker-submit');
+  const resultEl = document.getElementById('tracker-result');
+  const email    = emailEl.value.trim();
+
+  if (!email || !email.includes('@')) {
+    emailEl.style.borderColor = 'var(--accent)';
+    emailEl.focus();
+    return;
+  }
+  emailEl.style.borderColor = '';
+
+  submitEl.textContent = 'Buscando...';
+  submitEl.disabled    = true;
+  resultEl.className   = '';
+  resultEl.innerHTML   = '';
+
+  try {
+    const res  = await fetch(`${WEBHOOK_URL}?email=${encodeURIComponent(email)}`, { method: 'GET' });
+    const data = await res.json();
+
+    if (data.status === 'not_found' || data.error) {
+      resultEl.innerHTML = `<div class="tracker-error">⚠️ No se ha encontrado ningún pedido reciente asociado a este correo electrónico.</div>`;
+    } else {
+      const estadoRaw    = data.estado || '';
+      const estadoLabel  = TRACKER_ESTADOS[estadoRaw] || estadoRaw || '—';
+      const trackingCode = (data.tracking || '').trim();
+      const showTracking = TRACKER_SHIPPED_STATES.has(estadoRaw) && trackingCode;
+
+      let html = `<div class="tracker-status-label">${escHtml(estadoLabel)}</div>`;
+
+      if (showTracking) {
+        const cttUrl = `https://www.ctt.pt/feapl_2/app/open/objectSearch/objectSearch.jspx?objects=${encodeURIComponent(trackingCode)}`;
+        html += `
+          <div class="tracker-tracking-code">Tracking CTT: <strong>${escHtml(trackingCode)}</strong></div>
+          <a class="tracker-ctt-btn" href="${escHtml(cttUrl)}" target="_blank" rel="noopener">
+            🔍 Rastrear en CTT →
+          </a>`;
+      }
+
+      resultEl.innerHTML = html;
+    }
+  } catch (err) {
+    resultEl.innerHTML = `<div class="tracker-error">⚠️ Error de conexión. Inténtalo de nuevo en unos segundos.</div>`;
+  }
+
+  resultEl.classList.add('visible');
+  submitEl.textContent = 'Rastrear Pedido';
+  submitEl.disabled    = false;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
