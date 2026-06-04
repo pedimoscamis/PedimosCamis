@@ -608,6 +608,80 @@
     #load-more-btn:hover { border-color: var(--accent); color: var(--text); }
     #load-more-sentinel { height: 1px; }
 
+    /* ─── Banner "¿No encuentras lo que buscas?" ──────────────────────────── */
+    #request-banner {
+      display: none;
+      margin: 28px 0 8px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    #request-banner.visible { display: block; }
+
+    /* Modo compacto: al final del catálogo con resultados */
+    #request-banner .rbanner-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px 28px;
+      background: var(--surface);
+    }
+    #request-banner .rbanner-text { flex: 1; min-width: 0; }
+    #request-banner .rbanner-icon { font-size: 28px; flex-shrink: 0; }
+    #request-banner .rbanner-title {
+      font-size: 15px; font-weight: 700;
+      color: var(--text); line-height: 1.4;
+      margin-bottom: 3px;
+    }
+    #request-banner .rbanner-sub {
+      font-size: 13px; color: var(--muted); line-height: 1.4;
+    }
+    #request-banner .rbanner-btn {
+      flex-shrink: 0;
+      display: inline-block;
+      background: var(--accent); color: #fff;
+      padding: 10px 22px; border-radius: 24px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px; font-weight: 700;
+      text-decoration: none; white-space: nowrap;
+      transition: background .18s, transform .15s;
+    }
+    #request-banner .rbanner-btn:hover {
+      background: var(--accent-dk); transform: translateY(-1px);
+    }
+
+    /* Modo prominente: 0 resultados en búsqueda */
+    #request-banner.prominent {
+      border-color: var(--accent);
+      margin: 0;
+    }
+    #request-banner.prominent .rbanner-inner {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 48px 32px;
+      gap: 16px;
+      background: linear-gradient(160deg, #1a0a0d 0%, var(--surface) 100%);
+    }
+    #request-banner.prominent .rbanner-icon { font-size: 48px; }
+    #request-banner.prominent .rbanner-title {
+      font-size: 20px;
+    }
+    #request-banner.prominent .rbanner-sub { font-size: 14px; max-width: 420px; }
+    #request-banner.prominent .rbanner-btn {
+      padding: 13px 32px; font-size: 15px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 600px) {
+      #request-banner .rbanner-inner {
+        flex-direction: column; align-items: flex-start;
+        padding: 18px 20px; gap: 14px;
+      }
+      #request-banner .rbanner-btn { width: 100%; text-align: center; }
+    }
+
     #grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
@@ -2520,6 +2594,21 @@
   <div id="load-more-wrap">
     <button id="load-more-btn" onclick="loadMoreClick()" style="display:none">Cargar más</button>
     <div id="load-more-sentinel"></div>
+  </div>
+
+  <!-- ¿No encuentras lo que buscas? -->
+  <div id="request-banner">
+    <div class="rbanner-inner">
+      <span class="rbanner-icon">🔍</span>
+      <div class="rbanner-text">
+        <div class="rbanner-title">¿No encuentras la joya retro o la equipación que buscas?</div>
+        <div class="rbanner-sub">¡Pídenosla y nosotros la buscamos para ti!</div>
+      </div>
+      <a class="rbanner-btn"
+         href="mailto:pedimoscamis@gmail.com?subject=Petición%20de%20nueva%20camiseta&body=Hola%2C%20estoy%20buscando%20esta%20equipación%3A%0D%0A%0D%0A-%20Equipo%2FSelección%3A%20%0D%0A-%20Año%2FTemporada%3A%20%0D%0A%0D%0A(Por%20favor%2C%20adjunta%20la%20foto%20de%20la%20camiseta%20que%20buscas%20a%20este%20correo%20para%20que%20podamos%20encontrarla%20rápidamente).">
+        ✉️ Preguntarnos por Email
+      </a>
+    </div>
   </div>
 </main>
 
@@ -4753,17 +4842,27 @@ function renderAll() {
   grid.innerHTML = '';
 
   if (currentFiltered.length === 0) {
-    const msg = activeCat === 'favoritos'
+    const isFav = activeCat === 'favoritos';
+    const msg   = isFav
       ? (lang === 'es' ? 'Aún no tienes favoritos. Pulsa ♡ en cualquier camiseta para guardarla.' : 'No favourites yet. Tap ♡ on any jersey to save it.')
       : t().no_results;
-    grid.innerHTML = `<div id="empty">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <p>${msg}</p>
-    </div>`;
+    // En búsqueda sin resultados: solo mostrar el banner prominente, sin el div vacío
+    if (searchQuery && !isFav) {
+      grid.innerHTML = '';
+      setRequestBanner(true);
+    } else {
+      grid.innerHTML = `<div id="empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <p>${msg}</p>
+      </div>`;
+      setRequestBanner(false);
+    }
     setLoadMoreVisible(false);
     updateResultsInfo();
     return;
   }
+  // Con resultados: ocultar el banner prominente (se mostrará compacto al final en appendCards)
+  setRequestBanner(false);
 
   appendCards(PAGE_SIZE);
 }
@@ -4800,7 +4899,13 @@ function appendCards(n) {
   }
 
   displayedCount = to;
-  setLoadMoreVisible(displayedCount < currentFiltered.length);
+  const allLoaded = displayedCount >= currentFiltered.length;
+  setLoadMoreVisible(!allLoaded);
+  // Mostrar el banner compacto cuando se han cargado todas las tarjetas
+  // (búsqueda activa o cualquier categoría filtrada)
+  const isHome = activeCat === 'all' && !searchQuery;
+  if (allLoaded && !isHome) setRequestBanner(true, false);
+  else if (isHome) setRequestBanner(false);
   updateResultsInfo();
 }
 
@@ -4811,6 +4916,18 @@ function loadMoreClick() {
 function setLoadMoreVisible(show) {
   const btn = document.getElementById('load-more-btn');
   if (btn) btn.style.display = show ? '' : 'none';
+}
+
+/**
+ * Muestra u oculta el banner de petición por email.
+ * @param {boolean} show      - true para mostrar, false para ocultar
+ * @param {boolean} prominent - true = sin resultados (grande), false = al final del catálogo (compacto)
+ */
+function setRequestBanner(show, prominent = true) {
+  const banner = document.getElementById('request-banner');
+  if (!banner) return;
+  banner.classList.toggle('visible',   show);
+  banner.classList.toggle('prominent', show && prominent);
 }
 
 function updateResultsInfo() {
