@@ -4131,7 +4131,7 @@ function matchesSearch(p) {
   const pc      = primaryCat(p);
   const catStr  = (p.cats || []).join(' ');
   const haystack = (
-    p.nameEn + ' ' + (p.nameEs || '') + ' ' +
+    p.nameEn + ' ' + traducirNombre(p.nameEn) + ' ' + (p.nameEs || '') + ' ' +
     (t().cat_labels[pc] || '') + ' ' + catStr
   ).toLowerCase();
   return searchQuery.split(/\s+/).filter(Boolean).every(tok => haystack.includes(tok));
