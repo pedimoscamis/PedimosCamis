@@ -5786,7 +5786,10 @@ async function submitTracker() {
         const estadoLabel  = TRACKER_ESTADOS[estadoRaw] || estadoRaw || '—';
         const trackingCode = (pedido.tracking || '').trim();
         const showTracking = TRACKER_SHIPPED_STATES.has(estadoRaw) && trackingCode;
-        const fecha        = pedido.fecha ? escHtml(pedido.fecha) : '—';
+        const fechaRaw     = pedido.fecha ? new Date(pedido.fecha) : null;
+        const fecha        = (fechaRaw && !isNaN(fechaRaw))
+          ? fechaRaw.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+          : (pedido.fecha || '—');
         const btnId        = `ctt-btn-${idx}`;
 
         let cttHtml = '';
