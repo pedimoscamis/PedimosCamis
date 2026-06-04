@@ -5797,7 +5797,7 @@ async function submitTracker() {
           cttHtml = `
             <div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(trackingCode)}</strong></div>
             <button id="${btnId}" class="tracker-ctt-btn" onclick="openCttExpress('${escHtml(trackingCode)}', '${btnId}')">
-              🔍 Rastrear en CTT Express →
+              📋 Copiar y rastrear en CTT Express →
             </button>`;
         }
 
@@ -5834,7 +5834,7 @@ function openCttExpress(trackingCode, btnId) {
       btn.textContent = '✅ ¡Código copiado! Abriendo web...';
       btn.disabled = true;
       setTimeout(() => {
-        btn.textContent = '🔍 Rastrear en CTT Express →';
+        btn.textContent = '📋 Copiar y rastrear en CTT Express →';
         btn.disabled = false;
       }, 3000);
     }
