@@ -1478,9 +1478,10 @@
       display: inline-block; background: #005ea6;
       color: #fff; padding: 10px 22px; border-radius: 8px;
       font-family: 'Barlow', sans-serif; font-size: 14px; font-weight: 700;
-      text-decoration: none; transition: background .18s;
+      border: none; cursor: pointer; transition: background .18s;
     }
-    .tracker-ctt-btn:hover { background: #004a88; }
+    .tracker-ctt-btn:hover  { background: #004a88; }
+    .tracker-ctt-btn:disabled { background: #2a6a9a; cursor: default; }
     .tracker-error {
       color: #e05; font-size: 14px; margin-top: 8px;
     }
@@ -5763,12 +5764,13 @@ async function submitTracker() {
       let html = `<div class="tracker-status-label">${escHtml(estadoLabel)}</div>`;
 
       if (showTracking) {
-        const cttUrl = `https://www.ctt.pt/feapl_2/app/open/objectSearch/objectSearch.jspx?objects=${encodeURIComponent(trackingCode)}`;
+        // ID único para poder referenciar el botón desde el onclick inline
+        const btnId = 'ctt-track-btn';
         html += `
-          <div class="tracker-tracking-code">Tracking CTT: <strong>${escHtml(trackingCode)}</strong></div>
-          <a class="tracker-ctt-btn" href="${cttUrl}" target="_blank" rel="noopener">
-            🔍 Rastrear en CTT →
-          </a>`;
+          <div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(trackingCode)}</strong></div>
+          <button id="${btnId}" class="tracker-ctt-btn" onclick="openCttExpress('${escHtml(trackingCode)}', '${btnId}')">
+            🔍 Rastrear en CTT Express →
+          </button>`;
       }
 
       resultEl.innerHTML = html;
@@ -5780,6 +5782,30 @@ async function submitTracker() {
   resultEl.classList.add('visible');
   submitEl.textContent = 'Rastrear Pedido';
   submitEl.disabled    = false;
+}
+
+function openCttExpress(trackingCode, btnId) {
+  const btn = document.getElementById(btnId);
+
+  // 1. Copiar al portapapeles
+  navigator.clipboard.writeText(trackingCode).then(() => {
+    // 2. Feedback visual en el botón
+    if (btn) {
+      btn.textContent = '✅ ¡Código copiado! Abriendo web...';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = '🔍 Rastrear en CTT Express →';
+        btn.disabled = false;
+      }, 3000);
+    }
+    showToast('📋 Código copiado al portapapeles. Pégalo en la web de CTT Express.');
+  }).catch(() => {
+    // Fallback si el portapapeles falla (ej. http sin permisos)
+    showToast(`📋 Código de seguimiento: ${trackingCode} — Cópialo manualmente en la web de CTT Express.`);
+  });
+
+  // 3. Abrir CTT Express España en nueva pestaña
+  window.open('https://www.cttexpress.com/localizador-de-envios/', '_blank', 'noopener');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
