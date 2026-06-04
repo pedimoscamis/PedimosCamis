@@ -5744,15 +5744,20 @@ async function submitTracker() {
   resultEl.innerHTML   = '';
 
   try {
-    const res  = await fetch(`${WEBHOOK_URL}?email=${encodeURIComponent(email)}`, { method: 'GET' });
-    const data = await res.json();
+    // GET estándar sin mode:'no-cors' para recibir la respuesta legible
+    const res      = await fetch(`${WEBHOOK_URL}?email=${encodeURIComponent(email)}`);
+    const resultado = await res.json();
 
-    if (data.status === 'not_found' || data.error) {
+    console.log('Respuesta del Tracker:', resultado);
+
+    // La estructura devuelta es { status, data: { estado, tracking, fecha } }
+    if (resultado.status === 'not_found' || resultado.error || !resultado.data) {
       resultEl.innerHTML = `<div class="tracker-error">⚠️ No se ha encontrado ningún pedido reciente asociado a este correo electrónico.</div>`;
     } else {
-      const estadoRaw    = data.estado || '';
+      const pedido       = resultado.data;
+      const estadoRaw    = pedido.estado || '';
       const estadoLabel  = TRACKER_ESTADOS[estadoRaw] || estadoRaw || '—';
-      const trackingCode = (data.tracking || '').trim();
+      const trackingCode = (pedido.tracking || '').trim();
       const showTracking = TRACKER_SHIPPED_STATES.has(estadoRaw) && trackingCode;
 
       let html = `<div class="tracker-status-label">${escHtml(estadoLabel)}</div>`;
@@ -5761,7 +5766,7 @@ async function submitTracker() {
         const cttUrl = `https://www.ctt.pt/feapl_2/app/open/objectSearch/objectSearch.jspx?objects=${encodeURIComponent(trackingCode)}`;
         html += `
           <div class="tracker-tracking-code">Tracking CTT: <strong>${escHtml(trackingCode)}</strong></div>
-          <a class="tracker-ctt-btn" href="${escHtml(cttUrl)}" target="_blank" rel="noopener">
+          <a class="tracker-ctt-btn" href="${cttUrl}" target="_blank" rel="noopener">
             🔍 Rastrear en CTT →
           </a>`;
       }
