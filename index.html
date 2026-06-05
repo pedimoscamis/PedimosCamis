@@ -1000,11 +1000,16 @@
       content: ' 🔒';
       font-size: 10px;
     }
-    .sf-modal-locked #opt-dorsal-wrap,
-    .sf-modal-locked #dorsal-inputs,
-    .sf-modal-locked #opt-patch-wrap {
+    /* Parche oculto en super-flash */
+    .sf-modal-locked #opt-patch-wrap,
+    .sf-modal-locked #mundial-patch-wrap {
       display: none !important;
     }
+    /* Dorsal visible pero completamente bloqueado (pre-rellenado, no editable) */
+    .sf-modal-locked #opt-dorsal-wrap { pointer-events: none; opacity: 0.8; }
+    .sf-modal-locked #opt-dorsal-wrap .custom-option-price { display: none; }
+    .sf-modal-locked #input-name,
+    .sf-modal-locked #input-number { pointer-events: none; color: var(--muted); }
 
     #custom-section { border-top: 1px solid var(--border); padding-top: 14px; }
     .custom-option {
@@ -4726,8 +4731,8 @@ function renderSuperFlash() {
   const kit = allProducts.find(p => p.id === SUPER_FLASH_ID);
   if (!kit) { section.style.display = 'none'; return; }
 
-  // Precio normal (sin descuento, sin dorsal)
-  const basePrice = getBasePrice(kit);
+  // Precio fijo all-in: camiseta + dorsal PEDRI incluido
+  const basePrice = 18;
 
   // Imagen
   const imgEl = document.getElementById('super-flash-img');
@@ -4736,18 +4741,17 @@ function renderSuperFlash() {
   // Precio único, sin tachado
   document.getElementById('sf-price-final').textContent = fmtEur(basePrice);
 
-  // CTA: abre el modal bloqueado a talla L, sin opción de dorsal
+  // CTA: abre el modal bloqueado a talla M, dorsal PEDRI/20 fijo, sin parche
   document.getElementById('super-flash-cta').onclick = () => {
     openModal({
       ...kit,
       priceUsd:     basePrice,
       discountInfo: { source: 'super-flash' },
     });
-    // Bloquear modal: talla M única, sin dorsal, sin parche
     requestAnimationFrame(() => {
       document.getElementById('modal-overlay').classList.add('sf-modal-locked');
 
-      // Seleccionar talla M y deshabilitar el resto
+      // Talla M bloqueada
       const sizeGrid = document.getElementById('size-grid');
       if (sizeGrid) {
         sizeGrid.querySelectorAll('.size-btn').forEach(btn => {
@@ -4757,6 +4761,16 @@ function renderSuperFlash() {
             selectedSize = 'M';
           }
         });
+      }
+
+      // Dorsal PEDRI/20 pre-rellenado y bloqueado
+      const dorsalChk = document.getElementById('opt-dorsal');
+      if (dorsalChk) {
+        dorsalChk.checked = true;
+        document.getElementById('input-name').value   = 'PEDRI';
+        document.getElementById('input-number').value = '20';
+        document.getElementById('dorsal-inputs').classList.add('visible');
+        updateModalPrice();
       }
     });
   };
@@ -5480,7 +5494,9 @@ function getModalPriceBase() {
     base = getBasePrice(currentProduct);
   }
   let total = base;
-  if (document.getElementById('opt-dorsal').checked) total += 3;
+  // En super-flash el dorsal está incluido en el precio fijo → no sumar +3
+  const isSuperFlash = currentProduct?.discountInfo?.source === 'super-flash';
+  if (document.getElementById('opt-dorsal').checked && !isSuperFlash) total += 3;
   // Parche mundial2026: precio variable según opción elegida
   if (document.getElementById('opt-mundial-patch')?.checked) {
     const mundialSel = document.getElementById('mundial-patch-type');
@@ -5873,7 +5889,8 @@ function addToCart() {
   if (document.getElementById('opt-dorsal').checked) {
     const name   = document.getElementById('input-name').value.trim().toUpperCase();
     const number = document.getElementById('input-number').value.trim();
-    customizations.push({ type: 'dorsal', name, number, extraUsd: 3 });
+    const isSuperFlash = currentProduct?.discountInfo?.source === 'super-flash';
+    customizations.push({ type: 'dorsal', name, number, extraUsd: isSuperFlash ? 0 : 3 });
   }
   if (document.getElementById('opt-mundial-patch')?.checked) {
     const mundialSel = document.getElementById('mundial-patch-type');
