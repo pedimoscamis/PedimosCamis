@@ -6841,6 +6841,7 @@ function toggleMobUserMenu() {
     if (err) { err.style.display = 'none'; }
     updateMobUserState();
     dropdown.classList.add('open');
+    _mobMenuScrollY = window.scrollY; // guardar posición actual para el guard de scroll
   }
 }
 
@@ -6860,10 +6861,18 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Cerrar dropdown al hacer scroll (en móvil la barra no es sticky)
+// Cerrar dropdown al hacer scroll real (ignorar el desplazamiento del teclado virtual en móvil)
+let _mobMenuScrollY = 0;
 window.addEventListener('scroll', () => {
-  closeMobUserMenu();
+  const dropdown = document.getElementById('mob-user-dropdown');
+  if (!dropdown || !dropdown.classList.contains('open')) return;
+  // Solo cerrar si el desplazamiento vertical supera 40px (descarta el resize del teclado)
+  if (Math.abs(window.scrollY - _mobMenuScrollY) > 40) {
+    closeMobUserMenu();
+  }
 }, { passive: true });
+// Guardar posición al abrir el menú (se sobreescribe en toggleMobUserMenu)
+function _saveMobScrollPos() { _mobMenuScrollY = window.scrollY; }
 
 function submitMobCode() {
   const mobInput = document.getElementById('mob-code-input');
