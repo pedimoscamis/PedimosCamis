@@ -2353,6 +2353,9 @@
     #modal-fav-btn.active { color: var(--accent); border-color: var(--accent); }
 
     /* ─── Mobile User Dropdown ───────────────────────────────── */
+    /* En desktop: el mob-user-wrap siempre oculto */
+    #mob-user-wrap { display: none; position: relative; }
+
     /* Solo en móvil: ocultar elementos del header que van al dropdown */
     @media (max-width: 768px) {
       #lang-toggle,
@@ -2362,9 +2365,6 @@
 
       #mob-user-wrap { display: block; }
     }
-
-    /* En desktop: el mob-user-wrap siempre oculto */
-    #mob-user-wrap { display: none; position: relative; }
 
     /* Botón icono de usuario (móvil) */
     #mob-user-btn {
