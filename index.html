@@ -6500,30 +6500,25 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
       ? Math.round(item.priceUsd * EUR_RATE * 100) / 100
       : item.priceUsd;
 
-    // ── Coste: precio de fábrica/socio (número puro en €) ────────────────────
-    const cats   = item.cats || [];
-    const pc     = cats.find(c => c !== 'nuevatemporada') || cats[0] || 'otros';
-    const extras = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
-    const extrasEur = Math.round(extras * EUR_RATE * 100) / 100;
-
-    let costeBase; // precio base en € (sin extras)
-    if (WINDBREAKER_RE.test(item.name)) {
-      costeBase = 34.2;                                          // 38 $ → 34.2 € fijo
-    } else if (isKidKit(item)) {
-      costeBase = 12.6;                                          // 14 $ → 12.6 € fijo
+    // ── Coste nuevo proveedor (valores internos en €) ─────────────────────────
+    const cats = item.cats || [];
+    // Base según tipo/versión de producto
+    let costeBase;
+    if (cats.includes('nba')) {
+      costeBase = 15;                           // NBA: 15€
     } else if (isShortProduct(item)) {
-      costeBase = PLAYER_RE.test(item.name) ? 9 : 6.3;          // Player 10$ / Fan 7$ → en €
+      costeBase = 6;                            // Shorts: 6€
+    } else if (PLAYER_RE.test(item.name)) {
+      costeBase = 10;                           // Player Version: 10€
+    } else if (cats.includes('retro') || /\bretro\b/i.test(item.name)) {
+      costeBase = 10;                           // Retro: 10€
     } else {
-      const socioBase = SOCIO_PRICES[pc] !== undefined
-                      ? SOCIO_PRICES[pc]
-                      : PLAYER_RE.test(item.name)
-                        ? SOCIO_PLAYER
-                        : (cats.includes('retro') || /\bretro\b/i.test(item.name))
-                          ? SOCIO_RETRO
-                          : SOCIO_JERSEY;
-      costeBase = Math.round(socioBase * EUR_RATE * 100) / 100;
+      costeBase = 6;                            // Fan / por defecto: 6€
     }
-    const coste = Math.round((costeBase + extrasEur) * 100) / 100;
+    // Extras de personalización
+    const hasDorsal = dorsal && (dorsal.name || dorsal.number);
+    const hasPatch  = patch && patch.label && patch.label !== 'Sin parches';
+    const coste     = costeBase + (hasDorsal ? 2.5 : 0) + (hasPatch ? 1 : 0);
 
     const row = {
       jersey:   item.name,
@@ -6622,7 +6617,7 @@ async function submitOrderForm(e) {
       name:    '-',
       patches: '-',
       size:    '-',
-      coste:   4.5,
+      coste:   5,
       cobro:   shippingCost,
     });
   }
