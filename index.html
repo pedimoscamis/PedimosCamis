@@ -2351,6 +2351,150 @@
     }
     #modal-fav-btn:hover { border-color: var(--accent); color: var(--accent); }
     #modal-fav-btn.active { color: var(--accent); border-color: var(--accent); }
+
+    /* ─── Mobile User Dropdown ───────────────────────────────── */
+    /* Solo en móvil: ocultar elementos del header que van al dropdown */
+    @media (max-width: 768px) {
+      #lang-toggle,
+      #tracker-btn,
+      #fav-btn,
+      #user-btn-wrap { display: none !important; }
+
+      #mob-user-wrap { display: block; }
+    }
+
+    /* En desktop: el mob-user-wrap siempre oculto */
+    #mob-user-wrap { display: none; position: relative; }
+
+    /* Botón icono de usuario (móvil) */
+    #mob-user-btn {
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: none;
+      color: var(--muted); cursor: pointer; padding: 8px;
+      border-radius: 8px; transition: background .2s, color .2s;
+      position: relative;
+    }
+    #mob-user-btn:hover { background: var(--surface); color: var(--text); }
+    #mob-user-btn.active { color: var(--accent); }
+
+    /* Punto indicador de modo activo */
+    #mob-user-dot {
+      position: absolute; top: 5px; right: 5px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); display: none;
+      border: 1.5px solid var(--bg);
+    }
+    #mob-user-btn.active #mob-user-dot { display: block; }
+
+    /* Dropdown flotante */
+    #mob-user-dropdown {
+      display: none;
+      position: fixed;
+      right: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: 268px;
+      z-index: 9999;
+      box-shadow: 0 10px 40px rgba(0,0,0,.75);
+      overflow: hidden;
+    }
+    #mob-user-dropdown.open {
+      display: block;
+      animation: mob-dd-in .16s cubic-bezier(.2,.8,.3,1) both;
+    }
+    @keyframes mob-dd-in {
+      from { opacity: 0; transform: translateY(-8px) scale(.96); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+
+    /* Items del menú */
+    .mob-menu-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 15px 18px;
+      background: none; border: none; width: 100%;
+      color: var(--text); font-family: 'Barlow', sans-serif;
+      font-size: 15px; font-weight: 500;
+      cursor: pointer; text-align: left;
+      transition: background .12s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mob-menu-item:active { background: rgba(255,255,255,.07); }
+    .mob-menu-item-icon { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
+    .mob-menu-item-label { flex: 1; }
+    .mob-menu-item-arrow { color: var(--muted); font-size: 16px; font-weight: 300; }
+
+    /* Badge favoritos en el menú móvil */
+    #mob-fav-badge {
+      background: var(--accent); color: #fff;
+      font-size: 10px; font-weight: 700;
+      border-radius: 99px; padding: 2px 7px;
+      display: none;
+    }
+    #mob-fav-badge.visible { display: inline-block; }
+
+    /* Separador */
+    .mob-menu-divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* Fila idioma */
+    .mob-menu-lang-wrap {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 18px;
+    }
+    .mob-menu-lang-icon { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
+    .mob-menu-lang-label { flex: 1; font-size: 15px; font-weight: 500; color: var(--text); }
+    #mob-lang-toggle {
+      background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 5px 13px; border-radius: 6px;
+      cursor: pointer; font-family: 'Barlow', sans-serif;
+      font-size: 13px; font-weight: 700; transition: border-color .2s;
+      flex-shrink: 0;
+    }
+    #mob-lang-toggle:hover { border-color: var(--accent); }
+
+    /* Sección código de acceso */
+    .mob-menu-code-section { padding: 12px 18px 16px; }
+    .mob-menu-code-title {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .8px;
+      color: var(--muted); margin-bottom: 10px;
+    }
+    #mob-code-input {
+      width: 100%; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text); padding: 10px 12px;
+      font-family: 'Barlow', sans-serif; font-size: 14px;
+      outline: none; margin-bottom: 8px;
+      -webkit-text-fill-color: var(--text);
+    }
+    #mob-code-input:focus { border-color: var(--accent); }
+    #mob-code-submit {
+      width: 100%; background: var(--accent); color: #fff;
+      border: none; border-radius: 6px; padding: 10px;
+      font-family: 'Barlow', sans-serif; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+    }
+    #mob-code-submit:hover { background: var(--accent-dk); }
+    #mob-code-error {
+      font-size: 12px; color: var(--accent);
+      margin-top: 6px; display: none;
+    }
+    /* Estado activo (socio/cupón) */
+    #mob-user-menu-active { display: none; }
+    #mob-socio-active-label {
+      font-size: 14px; font-weight: 600; color: #4caf50;
+      margin-bottom: 10px;
+    }
+    #mob-user-logout-btn {
+      width: 100%; background: none;
+      border: 1px solid var(--border); color: var(--muted);
+      border-radius: 6px; padding: 9px;
+      font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+    }
+    #mob-user-logout-btn:hover { border-color: var(--accent); color: var(--text); }
   </style>
 </head>
 <body>
@@ -2375,7 +2519,7 @@
   </div>
   <div class="header-actions">
     <button id="lang-toggle" onclick="toggleLang()">EN</button>
-    <div style="position:relative">
+    <div id="user-btn-wrap" style="position:relative">
       <button id="user-btn" onclick="toggleUserMenu()" title="Acceso socio">👤</button>
       <div id="user-menu">
         <div id="user-menu-login">
@@ -2398,6 +2542,52 @@
       <span id="fav-icon">♡</span>
       <span id="fav-badge">0</span>
     </button>
+    <!-- ─── Mobile user dropdown (solo móvil) ─────────────── -->
+    <div id="mob-user-wrap">
+      <button id="mob-user-btn" onclick="toggleMobUserMenu()" title="Menú">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span id="mob-user-dot"></span>
+      </button>
+      <div id="mob-user-dropdown">
+        <!-- Tracker -->
+        <button class="mob-menu-item" onclick="openTracker(); closeMobUserMenu()">
+          <span class="mob-menu-item-icon">📦</span>
+          <span class="mob-menu-item-label">Sigue tu pedido</span>
+          <span class="mob-menu-item-arrow">›</span>
+        </button>
+        <!-- Favoritos -->
+        <button class="mob-menu-item" onclick="goFavorites(); closeMobUserMenu()">
+          <span class="mob-menu-item-icon">❤️</span>
+          <span class="mob-menu-item-label">Favoritos</span>
+          <span id="mob-fav-badge">0</span>
+        </button>
+        <hr class="mob-menu-divider">
+        <!-- Idioma -->
+        <div class="mob-menu-lang-wrap">
+          <span class="mob-menu-lang-icon">🌍</span>
+          <span class="mob-menu-lang-label">Idioma</span>
+          <button id="mob-lang-toggle" onclick="toggleLang()">EN</button>
+        </div>
+        <hr class="mob-menu-divider">
+        <!-- Código de acceso -->
+        <div class="mob-menu-code-section">
+          <div class="mob-menu-code-title">🔑 Código de acceso</div>
+          <div id="mob-user-menu-login">
+            <input type="text" id="mob-code-input" placeholder="Introduce tu código" autocomplete="off" />
+            <button id="mob-code-submit" onclick="submitMobCode()">Entrar</button>
+            <div id="mob-code-error"></div>
+          </div>
+          <div id="mob-user-menu-active">
+            <div id="mob-socio-active-label">✓ Modo socio activo</div>
+            <button id="mob-user-logout-btn" onclick="deactivateSocio()">Cerrar sesión</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <button id="cart-btn" onclick="openCart()">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
@@ -3490,6 +3680,12 @@ function updateFavBadge() {
   badge.style.display = favorites.size ? 'flex' : 'none';
   badge.textContent   = favorites.size;
   icon.textContent    = favorites.size ? '♥' : '♡';
+  // Sincronizar badge en el menú móvil
+  const mobBadge = document.getElementById('mob-fav-badge');
+  if (mobBadge) {
+    mobBadge.textContent = favorites.size;
+    mobBadge.classList.toggle('visible', favorites.size > 0);
+  }
 }
 
 function toggleFav(nameEn) {
@@ -6522,6 +6718,8 @@ function updateUserBtn() {
             : variableCouponMode ? `Descuento ${Math.round(variableCouponPct*100)}% activo`
             : socioMode          ? 'Modo socio activo'
             :                      'Acceso socio';
+  // Sincronizar también el dropdown móvil
+  updateMobUserState();
 }
 
 function submitUserCode() {
@@ -6608,6 +6806,7 @@ function deactivateUser() {
   variableCouponMode = false;  variableCouponPct  = 0;  activeCouponCode = null;
   localStorage.removeItem('kz-socio-code'); // borrar persistencia al cerrar sesión explícitamente
   document.getElementById('user-menu').classList.remove('open');
+  closeMobUserMenu();
   updateUserBtn();
   updateUserMenuState();
   // Si estaba en una categoría restringida de socio, volver a Todos
@@ -6620,6 +6819,101 @@ function deactivateUser() {
 }
 // Alias para compatibilidad
 function deactivateSocio() { deactivateUser(); }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MOBILE USER DROPDOWN
+// ═══════════════════════════════════════════════════════════════════════════
+
+function toggleMobUserMenu() {
+  const dropdown = document.getElementById('mob-user-dropdown');
+  if (dropdown.classList.contains('open')) {
+    closeMobUserMenu();
+  } else {
+    // Posicionar debajo del sticky-wrapper completo (header + cat-bar)
+    const sticky = document.getElementById('sticky-wrapper');
+    const rect   = sticky.getBoundingClientRect();
+    dropdown.style.top = (rect.bottom + 4) + 'px';
+    // Resetear formulario y sincronizar estado
+    const inp = document.getElementById('mob-code-input');
+    if (inp) { inp.value = ''; }
+    const err = document.getElementById('mob-code-error');
+    if (err) { err.style.display = 'none'; }
+    updateMobUserState();
+    dropdown.classList.add('open');
+  }
+}
+
+function closeMobUserMenu() {
+  const dropdown = document.getElementById('mob-user-dropdown');
+  if (dropdown) dropdown.classList.remove('open');
+}
+
+// Cerrar dropdown al hacer clic fuera
+document.addEventListener('click', (e) => {
+  const dropdown = document.getElementById('mob-user-dropdown');
+  const btn      = document.getElementById('mob-user-btn');
+  if (dropdown && dropdown.classList.contains('open')
+      && !dropdown.contains(e.target)
+      && btn && !btn.contains(e.target)) {
+    closeMobUserMenu();
+  }
+});
+
+// Cerrar dropdown al hacer scroll (en móvil la barra no es sticky)
+window.addEventListener('scroll', () => {
+  closeMobUserMenu();
+}, { passive: true });
+
+function submitMobCode() {
+  const mobInput = document.getElementById('mob-code-input');
+  const mobError = document.getElementById('mob-code-error');
+  // Inyectamos el valor en el input del desktop para reutilizar submitUserCode()
+  document.getElementById('user-code-input').value = mobInput.value;
+  submitUserCode();
+  // Reflejar el error (si lo hay) en el panel móvil
+  const desktopErr = document.getElementById('user-code-error');
+  if (desktopErr.style.display !== 'none') {
+    mobError.textContent  = desktopErr.textContent;
+    mobError.style.display = 'block';
+    mobInput.value = '';
+    mobInput.focus();
+  } else {
+    mobError.style.display = 'none';
+    updateMobUserState();
+    // Cerrar el dropdown tras éxito con un pequeño retardo visual
+    setTimeout(closeMobUserMenu, 900);
+  }
+}
+
+function updateMobUserState() {
+  const loginPanel  = document.getElementById('mob-user-menu-login');
+  const activePanel = document.getElementById('mob-user-menu-active');
+  if (!loginPanel || !activePanel) return;
+  const anyActive = socioMode || discountMode || variableCouponMode;
+  loginPanel.style.display  = anyActive ? 'none'  : 'block';
+  activePanel.style.display = anyActive ? 'block' : 'none';
+  // Actualizar etiqueta de modo activo
+  const label = document.getElementById('mob-socio-active-label');
+  if (label) {
+    label.textContent = discountMode
+      ? '✓ Descuento 33% activo'
+      : variableCouponMode
+        ? `✓ Descuento ${Math.round(variableCouponPct * 100)}% activo`
+        : socioMode
+          ? '✓ Modo socio activo — 10% dto.'
+          : '';
+  }
+  // Actualizar indicador en el botón
+  const mobBtn = document.getElementById('mob-user-btn');
+  if (mobBtn) mobBtn.classList.toggle('active', anyActive);
+  // Sincronizar badge favoritos
+  const mobFavBadge = document.getElementById('mob-fav-badge');
+  if (mobFavBadge) {
+    const count = favorites ? favorites.size : 0;
+    mobFavBadge.textContent = count;
+    mobFavBadge.classList.toggle('visible', count > 0);
+  }
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // LANGUAGE
@@ -6638,6 +6932,8 @@ function toggleLang() {
 
 function updateLangUI() {
   document.getElementById('lang-toggle').textContent = lang === 'es' ? 'EN' : 'ES';
+  const mobLang = document.getElementById('mob-lang-toggle');
+  if (mobLang) mobLang.textContent = lang === 'es' ? 'EN' : 'ES';
   document.getElementById('search').placeholder = t().search_placeholder;
   const lmBtn = document.getElementById('load-more-btn');
   if (lmBtn) lmBtn.textContent = lang === 'es' ? 'Cargar más' : 'Load more';
