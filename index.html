@@ -5997,6 +5997,12 @@ async function submitTracker() {
     if (resultado.status === 'not_found' || resultado.error || pedidos.length === 0) {
       resultEl.innerHTML = `<div class="tracker-error">⚠️ No se ha encontrado ningún pedido reciente asociado a este correo electrónico.</div>`;
     } else {
+      // Ordenar de más reciente a más antiguo
+      pedidos.sort((a, b) => {
+        const da = a.fecha ? new Date(a.fecha) : new Date(0);
+        const db = b.fecha ? new Date(b.fecha) : new Date(0);
+        return db - da;
+      });
       const cards = pedidos.map((pedido, idx) => {
         const estadoRaw    = pedido.estado || '';
         const estadoLabel  = TRACKER_ESTADOS[estadoRaw] || estadoRaw || '—';
