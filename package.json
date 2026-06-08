@@ -9,6 +9,8 @@
     "categorize": "node categorize.js",
     "build:catalog": "node scraper.js && node categorize.js",
     "download-images": "node download-images.js",
+    "scrape-xie": "node scraper-xie.js",
+    "scrape-xie:dry": "node scraper-xie.js --dry-run",
     "download-gallery": "node download_gallery.js",
     "upload-mascamis": "node r2-upload-mascamis.js",
     "upload-cloudinary": "node upload-cloudinary.js",
