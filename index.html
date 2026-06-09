@@ -3042,7 +3042,7 @@
       <span id="cart-total-label" data-i18n="total">Total</span>
       <span id="cart-total-val">0€</span>
     </div>
-    <button id="checkout-btn" onclick="openCheckout()" data-i18n="finish_order">FINALIZAR PEDIDO</button>
+    <button id="checkout-btn" onclick="openCheckout(event)" data-i18n="finish_order">FINALIZAR PEDIDO</button>
   </div>
 </div>
 
@@ -6371,7 +6371,8 @@ function updateCheckoutTotals() {
   document.getElementById('co-total-eur').textContent = fmtEur(totalEur);
 }
 
-function openCheckout() {
+function openCheckout(e) {
+  if (e) { e.stopPropagation(); e.preventDefault(); }
   if (cart.length === 0) return;
   closeCart();
 
@@ -6494,8 +6495,14 @@ function openCheckout() {
   submitBtn.disabled    = false;
   submitBtn.textContent = 'ENVIAR PEDIDO';
 
-  document.getElementById('checkout-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
+  // Pequeño delay para que el evento del click anterior quede completamente
+  // procesado antes de mostrar el overlay (evita ghost-click / click-through)
+  setTimeout(() => {
+    document.getElementById('checkout-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
+    document.documentElement.classList.add('modal-open');
+  }, 30);
 }
 
 function closeCheckout() {
