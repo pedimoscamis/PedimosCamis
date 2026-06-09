@@ -254654,7 +254654,7 @@
       "seriea"
     ],
     "type": "retro",
-    "priceUsd": 13,
+    "priceUsd": 22,
     "yupooCategory": "retro",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/231532820?uid=1",
     "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/231532820_resultado.webp",
@@ -254665,7 +254665,8 @@
       "L",
       "XL",
       "2XL"
-    ]
+    ],
+    "avisoStock": false
   },
   {
     "id": "231532817",
