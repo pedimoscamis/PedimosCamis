@@ -28069,9 +28069,9 @@
     "type": "normal",
     "priceUsd": 8,
     "yupooCategory": "selecciones",
-    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/231559476?uid=1",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/231559476_resultado.webp",
-    "photos": 25,
+    "yupooUrl": "https://jerseyxie.x.yupoo.com/albums/232605696?uid=1",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/231559476_resultado.jpg",
+    "photos": 13,
     "sizes": [
       "S",
       "M",
@@ -28082,9 +28082,18 @@
       "4XL"
     ],
     "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo4_resultado.webp"
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo2_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo3_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo4_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo5_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo6_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo7_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo8_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo9_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo10_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo11_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo12_resultado.jpg",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/231559476_photo13_resultado.jpg"
     ]
   },
   {
@@ -254655,6 +254664,7 @@
     ],
     "type": "retro",
     "priceUsd": 22,
+    "priceOverride": true,
     "yupooCategory": "retro",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/231532820?uid=1",
     "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/231532820_resultado.webp",

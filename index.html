@@ -2355,14 +2355,16 @@
     /* ─── Mobile User Dropdown ───────────────────────────────── */
     /* ─── Banner aviso de stock ──────────────────────────────── */
     #modal-stock-warning {
-      background: #fff3cd;
-      border: 1px solid #ffc107;
-      border-radius: 8px;
-      color: #856404;
-      font-size: 12.5px;
-      line-height: 1.5;
-      padding: 9px 13px;
+      border-left: 3px solid #c8a000;
+      background: transparent;
+      border-radius: 0 4px 4px 0;
+      color: var(--muted, #888);
+      font-size: 11.5px;
+      font-style: italic;
+      line-height: 1.45;
+      padding: 4px 10px;
       margin-bottom: 10px;
+      opacity: 0.82;
     }
 
     /* En desktop: el mob-user-wrap siempre oculto */
@@ -5366,7 +5368,7 @@ const SOCIO_PRICES = {
   streetwear:  67.5,
   kids:        12,
   women:        8,
-  nba:         18,
+  nba:         15 / EUR_RATE,  // → 15.00€
 };
 const SOCIO_JERSEY        = 8;
 const SOCIO_RETRO         = 13;
@@ -5386,6 +5388,11 @@ function primaryCat(p) {
 }
 
 function getBasePrice(p) {
+  // ⓪ Precio manual explícito (priceOverride:true en products.json)
+  if (p.priceOverride && p.priceUsd != null) {
+    return socioMode ? p.priceUsd * (10 / 9) : p.priceUsd;
+  }
+
   // ① Pantalón corto → precio fijo según versión (sin recargo manga larga)
   if (isShortProduct(p)) {
     if (PLAYER_RE.test(p.nameEn)) return socioMode ? SOCIO_SHORTS_PLAYER : NORMAL_SHORTS_PLAYER;
@@ -5397,9 +5404,9 @@ function getBasePrice(p) {
   if (WINDBREAKER_RE.test(p.nameEn))
     return socioMode ? 38 : NORMAL_PRICES.windbreaker;
 
-  // ③ Kid Kit → precio fijo según si es retro o normal; mismo coste socio (14$)
+  // ③ Kid Kit → precio fijo según si es retro o normal; mismo coste socio
   if (isKidKit(p)) {
-    if (socioMode) return 14;  // 14$ × 0.90 = 12.60€ para todos los Kid Kits
+    if (socioMode) return 8.5 / EUR_RATE;  // → 8.50€ para todos los Kid Kits
     const isRetro = (p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn || '');
     return isRetro ? 28 : 25;  // Retro → 28€, Normal → 25€
   }
