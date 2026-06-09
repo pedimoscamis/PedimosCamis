@@ -6266,9 +6266,11 @@ function getVersion(name) {
 // CHECKOUT
 // ═══════════════════════════════════════════════════════════════════════════
 function fmtEur(n) {
+  if (n == null || isNaN(n)) return '—€';
   return (Number.isInteger(n) ? n : n.toFixed(2).replace('.', ',')) + '€';
 }
 function fmtUsd(n) {
+  if (n == null || isNaN(n)) return '$—';
   return '$' + (Number.isInteger(n) ? n : n.toFixed(2));
 }
 // Devuelve el total del carrito siempre en euros
@@ -6394,17 +6396,20 @@ function openCheckout(e) {
     let bdHtml = `<div class="checkout-item-breakdown">`;
     if (discountMode && item.discountInfo) {
       // Mostrar precio original tachado + precio rebajado (33%)
-      const discountedBase = getDiscountedPrice(item.discountInfo.originalBase);
+      const origBase = item.discountInfo.originalBase ?? base;
+      const discountedBase = getDiscountedPrice(origBase);
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
-      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(item.discountInfo.originalBase)}</del>${fmtEur(discountedBase)}</span>`;
+      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(origBase)}</del>${fmtEur(discountedBase)}</span>`;
     } else if (variableCouponMode && item.discountInfo) {
       // Mostrar precio original tachado + precio rebajado (cupón variable)
-      const discountedBase = getVariableCouponPrice(item.discountInfo.originalBase);
+      const origBase = item.discountInfo.originalBase ?? base;
+      const discountedBase = getVariableCouponPrice(origBase);
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
-      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(item.discountInfo.originalBase)}</del>${fmtEur(discountedBase)}</span>`;
+      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(origBase)}</del>${fmtEur(discountedBase)}</span>`;
     } else if (FLASH_SOURCES.has(item.discountInfo?.source)) {
+      const origBase = item.discountInfo.originalBase ?? base;
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
-      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(item.discountInfo.originalBase)}</del>${fmtEur(base)}</span>`;
+      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(origBase)}</del>${fmtEur(base)}</span>`;
     } else {
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>${base}${sym}</span>`;
     }
