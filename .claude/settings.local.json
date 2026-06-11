@@ -32,7 +32,20 @@
       "Bash(python -c \"import sys,json; p=json.load\\(sys.stdin\\); c=[x for x in p if x.get\\('gallery'\\)]; print\\('Con gallery:',len\\(c\\)\\); print\\('Ejemplo:', c[0]['gallery']\\)\")",
       "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const p=JSON.parse\\(d\\);const c=p.filter\\(x=>x.gallery&&x.gallery.length\\);console.log\\('Con gallery:',c.length\\);console.log\\('Ejemplo:',c[0].gallery\\);}\\)\")",
       "Bash(curl -o /dev/null -s -w \"%{http_code}\" \"https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/235302248_photo2_resultado.webp\")",
-      "Bash(curl -o /dev/null -s -w \"%{http_code}\" \"https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/235302248_photo1_resultado.webp\")"
+      "Bash(curl -o /dev/null -s -w \"%{http_code}\" \"https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/235302248_photo1_resultado.webp\")",
+      "Bash(grep -v \"//\\\\|data-\\\\|placeholder\\\\|alt=\\\\|aria\\\\|yupoo\\\\|nameEn.*yupoo\\\\|buildKitLabel\\\\|matchesSearch\\\\|haystack\\\\|buildWebhook\\\\|customMeta\")",
+      "Bash(grep -v \"//\\\\|data-\\\\|alt=\\\\|aria\\\\|yupoo\\\\|matchesSearch\\\\|haystack\\\\|webhook\\\\|detectTeam\\\\|extractSeason\\\\|matchesSeason\\\\|MUNDIAL\\\\|PLAYER_RE\\\\|WOMEN_RE\\\\|isMundial\\\\|isKid\\\\|isShort\\\\|isPlayer\\\\|tipo =\\\\|equip =\\\\|cats\\\\|favorites\\\\|RETRO\\\\|filter\\\\|sort\\\\|pool\\\\|keyword\\\\|season\\\\|picked\\\\|added\\\\|team\\\\|buildKit\")",
+      "Bash(git stash *)",
+      "Bash(git pull *)",
+      "Bash(del \"C:\\\\Users\\\\Alfonso\\\\Documents\\\\KitZone\\\\scraper-xie.js\")",
+      "Bash(del \"C:\\\\Users\\\\Alfonso\\\\Documents\\\\KitZone\\\\cleanup-xie.js\")",
+      "WebFetch(domain:jerseyxie.x.yupoo.com)",
+      "Bash(wrangler --version)",
+      "Bash(rclone version *)",
+      "Bash(node -e \"const fs=require\\('fs'\\); const p=process.env.APPDATA; const dirs=['wrangler','npm','npm-global']; dirs.forEach\\(d=>{try{console.log\\(d+':',fs.readdirSync\\(require\\('path'\\).join\\(p,d\\)\\).join\\(','\\)\\)}catch{}}\\);\")",
+      "Bash(npx wrangler *)",
+      "Bash(node upload-spain-away-photos.js)",
+      "Bash(ls \"H:/LaGaleria/\" | head -50)"
     ]
   }
 }
