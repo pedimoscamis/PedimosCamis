@@ -6275,7 +6275,15 @@ function updateCartBadge() {
 }
 
 function cartTotalUsd() {
-  return cart.reduce((s, i) => s + i.priceUsd * (i.qty || 1), 0);
+  return cart.reduce((s, i) => s + effectiveCartPrice(i) * (i.qty || 1), 0);
+}
+
+/** Precio efectivo de un ítem aplicando el descuento activo si el ítem no tenía uno ya. */
+function effectiveCartPrice(item) {
+  if (item.discountInfo) return item.priceUsd; // precio ya guardado con su descuento
+  if (discountMode)       return getDiscountedPrice(item.priceUsd);
+  if (variableCouponMode) return getVariableCouponPrice(item.priceUsd);
+  return item.priceUsd;
 }
 
 function openCart() {
@@ -6307,10 +6315,18 @@ function renderCartItems() {
   container.innerHTML = '';
   for (const item of cart) {
     const qty        = item.qty || 1;
-    const lineTotal  = item.priceUsd * qty;
+    const effPrice   = effectiveCartPrice(item);
+    const lineTotal  = effPrice * qty;
     const el         = document.createElement('div');
     el.className     = 'cart-item';
     const customMeta = buildCustomMeta(item.customizations);
+
+    // Mostrar tachado si hay descuento activo sobre este ítem (sin discountInfo propio)
+    const showStrike = !item.discountInfo && (discountMode || variableCouponMode);
+    const origLine   = item.priceUsd * qty;
+    const priceHtml  = showStrike
+      ? `<span class="price-original" style="font-size:11px">${t().cart_item_price(origLine)}</span> ${t().cart_item_price(lineTotal)}`
+      : t().cart_item_price(lineTotal);
 
     el.innerHTML = `
       ${item.img
@@ -6328,7 +6344,7 @@ function renderCartItems() {
         </div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <span class="cart-item-price">${t().cart_item_price(lineTotal)}</span>
+        <span class="cart-item-price">${priceHtml}</span>
         <button class="cart-remove-btn" onclick="removeFromCart(${item.id})">×</button>
       </div>`;
     container.appendChild(el);
