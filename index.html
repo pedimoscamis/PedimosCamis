@@ -3107,10 +3107,10 @@
       <div class="form-group">
         <label>Tipo de entrega *</label>
         <div class="shipping-selector">
-          <input type="radio" name="tipoEnvio" id="envio-mano" value="mano" checked onchange="onShippingChange()" />
-          <label for="envio-mano"><span>🤝 Entrega en mano</span></label>
-          <input type="radio" name="tipoEnvio" id="envio-domicilio" value="domicilio" onchange="onShippingChange()" />
+          <input type="radio" name="tipoEnvio" id="envio-domicilio" value="domicilio" checked onchange="onShippingChange()" />
           <label for="envio-domicilio">📦 Envío a domicilio</label>
+          <input type="radio" name="tipoEnvio" id="envio-mano" value="mano" onchange="onShippingChange()" />
+          <label for="envio-mano"><span>🤝 Entrega en mano</span></label>
         </div>
         <div class="shipping-note" id="shipping-note-mano">
           📱 Quedaremos contigo por WhatsApp para la entrega en mano.
@@ -6554,13 +6554,12 @@ function openCheckout(e) {
     itemsEl.appendChild(row);
   }
 
-  // Resetear el selector de envío a "Entrega en mano" ANTES de calcular totales
-  // para garantizar que getShippingCost() devuelva 0 en el estado inicial.
-  document.getElementById('envio-mano').checked                = true;
-  document.getElementById('shipping-note-mano').style.display  = 'block';
-  document.getElementById('direccion-group').style.display     = 'none';
-  document.getElementById('form-direccion').required           = false;
-  document.getElementById('shipping-upsell').style.display     = 'none';
+  // Resetear el selector de envío a "Envío a domicilio" ANTES de calcular totales.
+  document.getElementById('envio-domicilio').checked           = true;
+  document.getElementById('shipping-note-mano').style.display  = 'none';
+  document.getElementById('direccion-group').style.display     = '';
+  document.getElementById('form-direccion').required           = true;
+  document.getElementById('shipping-upsell').style.display     = '';
 
   updateCheckoutTotals();
 
