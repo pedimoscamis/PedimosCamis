@@ -6595,7 +6595,7 @@ function openCheckout(e) {
   document.getElementById('shipping-note-mano').style.display  = 'none';
   document.getElementById('direccion-group').style.display     = '';
   document.getElementById('form-direccion').required           = true;
-  document.getElementById('shipping-upsell').style.display     = '';
+  updateShippingUpsell();
   document.getElementById('order-success').style.display   = 'none';
   const submitBtn = document.getElementById('order-submit-btn');
   submitBtn.disabled    = false;
