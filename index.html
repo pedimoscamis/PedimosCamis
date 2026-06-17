@@ -6178,11 +6178,17 @@ async function submitTracker() {
 
         let cttHtml = '';
         if (showTracking) {
+          const cttId = `ctt2-btn-${idx}`;
           cttHtml = `
             <div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(trackingCode)}</strong></div>
-            <button id="${btnId}" class="tracker-ctt-btn" onclick="fetchTracking('${escHtml(trackingCode)}', '${btnId}')">
-              📦 Rastrear envío
-            </button>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button id="${btnId}" class="tracker-ctt-btn" onclick="fetchTracking('${escHtml(trackingCode)}', '${btnId}')">
+                📦 Rastrear envío
+              </button>
+              <button id="${cttId}" class="tracker-ctt-btn" style="background:#2a6a4a;" onclick="openCttExpress('${escHtml(trackingCode)}', '${cttId}')">
+                🔗 Gestionar en CTT
+              </button>
+            </div>
             <div id="tl-${btnId}"></div>`;
         }
 
@@ -6207,6 +6213,18 @@ async function submitTracker() {
   resultEl.classList.add('visible');
   submitEl.textContent = 'Rastrear Pedido';
   submitEl.disabled    = false;
+}
+
+function openCttExpress(trackingCode, btnId) {
+  const btn = document.getElementById(btnId);
+  navigator.clipboard.writeText(trackingCode).then(() => {
+    if (btn) { btn.textContent = '✅ Código copiado'; btn.disabled = true; }
+    showToast('📋 Código copiado. Pégalo en CTT Express.');
+    setTimeout(() => { if (btn) { btn.textContent = '🔗 Gestionar en CTT'; btn.disabled = false; } }, 3000);
+  }).catch(() => {
+    showToast(`Código: ${trackingCode} — cópialo manualmente.`);
+  });
+  window.open('https://www.cttexpress.com/localizador-de-envios/', '_blank', 'noopener');
 }
 
 async function fetchTracking(trackingCode, btnId) {
