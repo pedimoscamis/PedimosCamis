@@ -6243,8 +6243,8 @@ async function fetchTracking(trackingCode, btnId) {
 
     if (!json.html) throw new Error('empty');
 
-    const { events, textoPuro } = extractTrackingEvents(json.html);
-    tlEl.innerHTML = renderTimeline(events, textoPuro);
+    const { events } = extractTrackingEvents(json.html);
+    tlEl.innerHTML = renderTimeline(events);
   } catch (_) {
     tlEl.innerHTML = renderTimeline([]);
   }
@@ -6254,43 +6254,31 @@ async function fetchTracking(trackingCode, btnId) {
 }
 
 function extractTrackingEvents(rawHtml) {
-  // 1. Texto puro sin cargar recursos externos
   const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
   const textoPuro = doc.body.textContent || '';
 
-  console.log('TEXTO PURO COMPLETO:', textoPuro);
-
-  // 2. Split con fecha como separador capturador
   const regexFecha = /(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})/;
   const trozos = textoPuro.split(regexFecha);
 
   const trackingData = [];
-
-  // 3. Emparejar: índices impares = fecha, pares siguientes = detalle
   for (let i = 1; i < trozos.length; i += 2) {
-    if (trozos[i] && trozos[i + 1]) {
-      const fechaStr   = trozos[i].trim();
-      const detalleStr = trozos[i + 1].trim().replace(/\s+/g, ' ');
-      if (detalleStr.length > 0) {
-        trackingData.push({ fecha: fechaStr, detalle: detalleStr });
-      }
+    const fechaStr   = (trozos[i]     || '').trim();
+    const detalleStr = (trozos[i + 1] || '').trim().replace(/\s+/g, ' ');
+    if (fechaStr && detalleStr) {
+      trackingData.push({ fecha: fechaStr, detalle: detalleStr });
     }
   }
 
-  // 4. Deduplicar
   const events = trackingData.filter((val, idx, arr) =>
     idx === arr.findIndex(t => t.fecha === val.fecha && t.detalle === val.detalle)
   );
 
-  return { events, textoPuro };
+  return { events };
 }
 
-function renderTimeline(events, textoPuro) {
+function renderTimeline(events) {
   if (!events || events.length === 0) {
-    const debugBlock = textoPuro
-      ? `<pre style="max-height:200px;overflow:auto;background:#111;color:#0f0;font-size:10px;padding:8px;border-radius:6px;white-space:pre-wrap;word-break:break-all;margin-top:10px">${escHtml(textoPuro)}</pre>`
-      : '';
-    return `<div class="tracker-tl-empty">⚠️ No se encontraron eventos. Texto recibido del servidor:${debugBlock}</div>`;
+    return `<div class="tracker-tl-empty">📬 Información logística registrándose en el sistema central. Por favor, vuelve a consultar en unas horas.</div>`;
   }
   const items = events.map(ev => `
     <li class="tl-item">
