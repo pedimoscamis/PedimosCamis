@@ -1512,6 +1512,63 @@
       color: #e05; font-size: 14px; margin-top: 8px;
     }
 
+    /* ─── Timeline de rastreo logístico ──────────────────────── */
+    .tracker-timeline {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .tracker-timeline-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .tl-list {
+      position: relative;
+      padding-left: 22px;
+      list-style: none;
+      margin: 0; padding-left: 0;
+    }
+    .tl-item {
+      display: flex; gap: 14px;
+      position: relative;
+      padding-bottom: 18px;
+    }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-dot-col {
+      display: flex; flex-direction: column; align-items: center;
+      flex-shrink: 0; width: 16px;
+    }
+    .tl-dot {
+      width: 11px; height: 11px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
+      margin-top: 3px;
+      box-shadow: 0 0 0 2px rgba(232,23,60,.22);
+    }
+    .tl-item:last-child .tl-dot {
+      background: #444; box-shadow: none;
+    }
+    .tl-line {
+      flex: 1; width: 1px; background: var(--border);
+      margin-top: 4px;
+    }
+    .tl-item:last-child .tl-line { display: none; }
+    .tl-body { flex: 1; min-width: 0; }
+    .tl-date {
+      font-size: 11px; color: var(--muted); margin-bottom: 2px;
+    }
+    .tl-detail {
+      font-size: 13px; color: var(--text); line-height: 1.4;
+      font-weight: 600;
+    }
+    .tl-location {
+      font-size: 11.5px; color: var(--muted); margin-top: 1px;
+    }
+    .tracker-tl-empty {
+      font-size: 13px; color: var(--muted); font-style: italic;
+      padding: 8px 0;
+    }
+
     /* Botón "Sigue tu pedido" en el header */
     #tracker-btn {
       display: flex; align-items: center; gap: 5px;
@@ -6123,9 +6180,10 @@ async function submitTracker() {
         if (showTracking) {
           cttHtml = `
             <div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(trackingCode)}</strong></div>
-            <button id="${btnId}" class="tracker-ctt-btn" onclick="openCttExpress('${escHtml(trackingCode)}', '${btnId}')">
-              📋 Copiar y rastrear en CTT Express →
-            </button>`;
+            <button id="${btnId}" class="tracker-ctt-btn" onclick="fetchTracking('${escHtml(trackingCode)}', '${btnId}')">
+              📦 Rastrear envío
+            </button>
+            <div id="tl-${btnId}"></div>`;
         }
 
         return `
@@ -6151,28 +6209,94 @@ async function submitTracker() {
   submitEl.disabled    = false;
 }
 
-function openCttExpress(trackingCode, btnId) {
+async function fetchTracking(trackingCode, btnId) {
   const btn = document.getElementById(btnId);
+  const tlEl = document.getElementById(`tl-${btnId}`);
+  if (!btn || !tlEl) return;
 
-  // 1. Copiar al portapapeles
-  navigator.clipboard.writeText(trackingCode).then(() => {
-    // 2. Feedback visual en el botón
-    if (btn) {
-      btn.textContent = '✅ ¡Código copiado! Abriendo web...';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.textContent = '📋 Copiar y rastrear en CTT Express →';
-        btn.disabled = false;
-      }, 3000);
+  btn.textContent = '⏳ Cargando...';
+  btn.disabled    = true;
+  tlEl.innerHTML  = '';
+
+  try {
+    const url = `${WEBHOOK_URL}?action=proxyTrack&tracking=${encodeURIComponent(trackingCode)}`;
+    const res  = await fetch(url);
+    const json = await res.json();
+
+    if (json.status !== 'success' || !json.html) throw new Error('empty');
+
+    // Parsear el HTML devuelto por el proxy
+    const doc   = new DOMParser().parseFromString(json.html, 'text/html');
+    const events = extractTrackingEvents(doc);
+
+    tlEl.innerHTML = renderTimeline(events);
+  } catch (_) {
+    tlEl.innerHTML = `<div class="tracker-tl-empty">⚠️ Todavía no hay actualizaciones logísticas para este código. Vuelve a intentarlo en unos días.</div>`;
+  }
+
+  btn.textContent = '📦 Rastrear envío';
+  btn.disabled    = false;
+}
+
+function extractTrackingEvents(doc) {
+  const events = [];
+  // Buscar todas las filas de tabla con fecha en formato YYYY-MM-DD
+  const dateRe = /\d{4}-\d{2}-\d{2}/;
+  const rows   = doc.querySelectorAll('tr');
+
+  for (const tr of rows) {
+    const cells = tr.querySelectorAll('td');
+    if (cells.length < 2) continue;
+    const texts = Array.from(cells).map(c => c.textContent.trim());
+    // La fila de cabecera y filas vacías
+    if (!texts.some(t => dateRe.test(t))) continue;
+
+    // Localizar qué celda tiene la fecha
+    let fecha = '', ubicacion = '', detalle = '';
+    for (const text of texts) {
+      if (dateRe.test(text) && !fecha) { fecha = text; continue; }
+      if (!detalle) { detalle = text; continue; }
+      if (!ubicacion) { ubicacion = text; }
     }
-    showToast('📋 Código copiado al portapapeles. Pégalo en la web de CTT Express.');
-  }).catch(() => {
-    // Fallback si el portapapeles falla (ej. http sin permisos)
-    showToast(`📋 Código de seguimiento: ${trackingCode} — Cópialo manualmente en la web de CTT Express.`);
-  });
+    if (fecha || detalle) events.push({ fecha, ubicacion, detalle });
+  }
 
-  // 3. Abrir CTT Express España en nueva pestaña
-  window.open('https://www.cttexpress.com/localizador-de-envios/', '_blank', 'noopener');
+  // Fallback: buscar párrafos o divs con fecha si no hubo tabla
+  if (events.length === 0) {
+    doc.querySelectorAll('[class*="track"], [class*="event"], [class*="detail"]').forEach(el => {
+      const text = el.textContent.trim();
+      if (dateRe.test(text)) {
+        const match = text.match(/(\d{4}-\d{2}-\d{2}[\s\d:]*)(.*)/s);
+        events.push({ fecha: match?.[1]?.trim() || '', ubicacion: '', detalle: match?.[2]?.trim() || text });
+      }
+    });
+  }
+
+  return events;
+}
+
+function renderTimeline(events) {
+  if (events.length === 0) {
+    return `<div class="tracker-tl-empty">⚠️ Todavía no hay actualizaciones logísticas para este código. Vuelve a intentarlo en unos días.</div>`;
+  }
+  const items = events.map(ev => `
+    <li class="tl-item">
+      <div class="tl-dot-col">
+        <div class="tl-dot"></div>
+        <div class="tl-line"></div>
+      </div>
+      <div class="tl-body">
+        ${ev.fecha    ? `<div class="tl-date">${escHtml(ev.fecha)}</div>` : ''}
+        <div class="tl-detail">${escHtml(ev.detalle)}</div>
+        ${ev.ubicacion ? `<div class="tl-location">📍 ${escHtml(ev.ubicacion)}</div>` : ''}
+      </div>
+    </li>`).join('');
+
+  return `
+    <div class="tracker-timeline">
+      <div class="tracker-timeline-title">Historial del envío</div>
+      <ul class="tl-list">${items}</ul>
+    </div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
