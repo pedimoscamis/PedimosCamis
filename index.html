@@ -6294,9 +6294,8 @@ function extractTrackingEvents(rawHtml) {
   }
 
   // ── Método 3: regex sobre texto plano (fallback universal)
-  const div = document.createElement('div');
-  div.innerHTML = rawHtml;
-  const texto   = div.innerText || div.textContent || '';
+  // Usamos el doc ya parseado por DOMParser — no lanza peticiones de red
+  const texto = doc.body?.textContent || '';
   const DATE_RE = /\d{4}[-/]\d{2}[-/]\d{2}[\s\T]\d{2}:\d{2}(?::\d{2})?/g;
   const matches = [...texto.matchAll(DATE_RE)];
   return matches.map((m, i) => {
