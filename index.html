@@ -6210,7 +6210,7 @@ async function submitTracker() {
 }
 
 async function fetchTracking(trackingCode, btnId) {
-  const btn = document.getElementById(btnId);
+  const btn  = document.getElementById(btnId);
   const tlEl = document.getElementById(`tl-${btnId}`);
   if (!btn || !tlEl) return;
 
@@ -6219,65 +6219,48 @@ async function fetchTracking(trackingCode, btnId) {
   tlEl.innerHTML  = '';
 
   try {
-    const url = `${WEBHOOK_URL}?action=proxyTrack&tracking=${encodeURIComponent(trackingCode)}`;
+    const url  = `${WEBHOOK_URL}?action=proxyTrack&tracking=${encodeURIComponent(trackingCode)}`;
     const res  = await fetch(url);
     const json = await res.json();
 
+    console.log('HTML bruto recibido del proxy:', json.html);
+
     if (json.status !== 'success' || !json.html) throw new Error('empty');
 
-    // Parsear el HTML devuelto por el proxy
-    const doc   = new DOMParser().parseFromString(json.html, 'text/html');
-    const events = extractTrackingEvents(doc);
+    // Convertir HTML a texto plano
+    const div       = document.createElement('div');
+    div.innerHTML   = json.html;
+    const textoPuro = div.innerText || div.textContent || '';
 
+    const events = extractTrackingEvents(textoPuro);
     tlEl.innerHTML = renderTimeline(events);
   } catch (_) {
-    tlEl.innerHTML = `<div class="tracker-tl-empty">⚠️ Todavía no hay actualizaciones logísticas para este código. Vuelve a intentarlo en unos días.</div>`;
+    tlEl.innerHTML = renderTimeline([]);
   }
 
   btn.textContent = '📦 Rastrear envío';
   btn.disabled    = false;
 }
 
-function extractTrackingEvents(doc) {
-  const events = [];
-  // Buscar todas las filas de tabla con fecha en formato YYYY-MM-DD
-  const dateRe = /\d{4}-\d{2}-\d{2}/;
-  const rows   = doc.querySelectorAll('tr');
+function extractTrackingEvents(textoPuro) {
+  // Localiza todas las fechas con hora en formato YYYY-MM-DD HH:MM:SS
+  const DATE_RE = /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/g;
+  const matches = [...textoPuro.matchAll(DATE_RE)];
+  if (matches.length === 0) return [];
 
-  for (const tr of rows) {
-    const cells = tr.querySelectorAll('td');
-    if (cells.length < 2) continue;
-    const texts = Array.from(cells).map(c => c.textContent.trim());
-    // La fila de cabecera y filas vacías
-    if (!texts.some(t => dateRe.test(t))) continue;
-
-    // Localizar qué celda tiene la fecha
-    let fecha = '', ubicacion = '', detalle = '';
-    for (const text of texts) {
-      if (dateRe.test(text) && !fecha) { fecha = text; continue; }
-      if (!detalle) { detalle = text; continue; }
-      if (!ubicacion) { ubicacion = text; }
-    }
-    if (fecha || detalle) events.push({ fecha, ubicacion, detalle });
-  }
-
-  // Fallback: buscar párrafos o divs con fecha si no hubo tabla
-  if (events.length === 0) {
-    doc.querySelectorAll('[class*="track"], [class*="event"], [class*="detail"]').forEach(el => {
-      const text = el.textContent.trim();
-      if (dateRe.test(text)) {
-        const match = text.match(/(\d{4}-\d{2}-\d{2}[\s\d:]*)(.*)/s);
-        events.push({ fecha: match?.[1]?.trim() || '', ubicacion: '', detalle: match?.[2]?.trim() || text });
-      }
-    });
-  }
-
-  return events;
+  return matches.map((m, i) => {
+    const fecha  = m[0];
+    const desde  = m.index + fecha.length;
+    const hasta  = matches[i + 1] ? matches[i + 1].index : textoPuro.length;
+    // Todo lo que hay entre esta fecha y la siguiente es el detalle del evento
+    const detalle = textoPuro.slice(desde, hasta).replace(/\s+/g, ' ').trim();
+    return { fecha, detalle };
+  });
 }
 
 function renderTimeline(events) {
   if (events.length === 0) {
-    return `<div class="tracker-tl-empty">⚠️ Todavía no hay actualizaciones logísticas para este código. Vuelve a intentarlo en unos días.</div>`;
+    return `<div class="tracker-tl-empty">📬 Código registrado. Las actualizaciones logísticas pueden tardar entre 24/48h en aparecer.</div>`;
   }
   const items = events.map(ev => `
     <li class="tl-item">
@@ -6286,9 +6269,8 @@ function renderTimeline(events) {
         <div class="tl-line"></div>
       </div>
       <div class="tl-body">
-        ${ev.fecha    ? `<div class="tl-date">${escHtml(ev.fecha)}</div>` : ''}
+        <div class="tl-date">${escHtml(ev.fecha)}</div>
         <div class="tl-detail">${escHtml(ev.detalle)}</div>
-        ${ev.ubicacion ? `<div class="tl-location">📍 ${escHtml(ev.ubicacion)}</div>` : ''}
       </div>
     </li>`).join('');
 
