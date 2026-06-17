@@ -6223,13 +6223,15 @@ async function fetchTracking(trackingCode, btnId) {
     const res  = await fetch(url);
     const json = await res.json();
 
-    console.log('HTML bruto recibido del proxy:', json.html);
+    console.log('Objeto JSON completo recibido del Webhook:', json);
 
-    if (json.status !== 'success' || !json.html) throw new Error('empty');
+    // La propiedad con el HTML puede venir con distinto nombre según el GAS
+    const rawHtml = json.html ?? json.data ?? json.result ?? json.content ?? json.body ?? '';
+    if (!rawHtml) throw new Error('empty');
 
     // Convertir HTML a texto plano
     const div       = document.createElement('div');
-    div.innerHTML   = json.html;
+    div.innerHTML   = rawHtml;
     const textoPuro = div.innerText || div.textContent || '';
 
     const events = extractTrackingEvents(textoPuro);
