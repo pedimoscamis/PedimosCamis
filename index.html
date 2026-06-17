@@ -6223,18 +6223,11 @@ async function fetchTracking(trackingCode, btnId) {
     const res  = await fetch(url);
     const json = await res.json();
 
-    console.log('Objeto JSON completo recibido del Webhook:', JSON.stringify(json).slice(0, 3000));
-
-    // La propiedad con el HTML puede venir con distinto nombre según el GAS
     const rawHtml = json.html ?? json.data ?? json.result ?? json.content ?? json.body ?? '';
+    console.log('HTML bruto del proxy (primeros 8000 chars):', rawHtml.slice(0, 8000));
     if (!rawHtml) throw new Error('empty');
 
-    // Convertir HTML a texto plano
-    const div       = document.createElement('div');
-    div.innerHTML   = rawHtml;
-    const textoPuro = div.innerText || div.textContent || '';
-
-    const events = extractTrackingEvents(textoPuro);
+    const events = extractTrackingEvents(rawHtml);
     tlEl.innerHTML = renderTimeline(events);
   } catch (_) {
     tlEl.innerHTML = renderTimeline([]);
@@ -6244,19 +6237,36 @@ async function fetchTracking(trackingCode, btnId) {
   btn.disabled    = false;
 }
 
-function extractTrackingEvents(textoPuro) {
-  // Localiza todas las fechas con hora en formato YYYY-MM-DD HH:MM:SS
-  const DATE_RE = /\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/g;
-  const matches = [...textoPuro.matchAll(DATE_RE)];
-  if (matches.length === 0) return [];
+function extractTrackingEvents(rawHtml) {
+  // ── Método 1: selectores DOM sobre las clases conocidas del sistema logístico
+  // La página usa .men_li ul li con divs .tabli1 (fecha) .tabli2 (ubicación) .tabli3 (detalle)
+  const doc  = new DOMParser().parseFromString(rawHtml, 'text/html');
+  const rows = doc.querySelectorAll('.men_li li, .menu_ li');
+  if (rows.length > 0) {
+    const events = [];
+    for (const li of rows) {
+      const t1 = li.querySelector('.tabli1, .div_li1')?.textContent.trim() || '';
+      const t2 = li.querySelector('.tabli2, .div_li2')?.textContent.trim() || '';
+      const t3 = li.querySelector('.tabli3, .div_li3, .div_li4')?.textContent.trim() || '';
+      // Ignorar filas de cabecera (sin fecha numérica)
+      if (!t1 || !/\d{4}/.test(t1)) continue;
+      events.push({ fecha: t1, ubicacion: t2, detalle: t3 || t2 });
+    }
+    if (events.length > 0) return events;
+  }
 
+  // ── Método 2: regex sobre texto plano (fallback)
+  const div   = document.createElement('div');
+  div.innerHTML = rawHtml;
+  const texto = div.innerText || div.textContent || '';
+  const DATE_RE = /\d{4}[-/]\d{2}[-/]\d{2}[\s\T]\d{2}:\d{2}(?::\d{2})?/g;
+  const matches = [...texto.matchAll(DATE_RE)];
   return matches.map((m, i) => {
     const fecha  = m[0];
     const desde  = m.index + fecha.length;
-    const hasta  = matches[i + 1] ? matches[i + 1].index : textoPuro.length;
-    // Todo lo que hay entre esta fecha y la siguiente es el detalle del evento
-    const detalle = textoPuro.slice(desde, hasta).replace(/\s+/g, ' ').trim();
-    return { fecha, detalle };
+    const hasta  = matches[i + 1] ? matches[i + 1].index : texto.length;
+    const detalle = texto.slice(desde, hasta).replace(/\s+/g, ' ').trim();
+    return { fecha, ubicacion: '', detalle };
   });
 }
 
