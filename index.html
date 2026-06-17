@@ -1568,6 +1568,27 @@
       font-size: 13px; color: var(--muted); font-style: italic;
       padding: 8px 0;
     }
+    .tracker-iframe-hint {
+      background: linear-gradient(135deg, #1a2e1a, #1e3a1e);
+      border: 1px solid #2e5c2e;
+      border-radius: 8px;
+      color: #c8f0c8;
+      font-size: 12.5px;
+      line-height: 1.5;
+      padding: 10px 14px;
+      margin: 10px 0 8px;
+    }
+    .tracker-iframe-hint strong { color: #7dda7d; }
+    .tracker-iframe-hint em     { color: #a8e6a8; font-style: normal; font-weight: 600; }
+    .tracker-logistics-frame {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      background: #fff;
+      display: block;
+    }
 
     /* Botón "Sigue tu pedido" en el header */
     #tracker-btn {
@@ -6182,7 +6203,7 @@ async function submitTracker() {
           cttHtml = `
             <div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(trackingCode)}</strong></div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button id="${btnId}" class="tracker-ctt-btn" onclick="fetchTracking('${escHtml(trackingCode)}', '${btnId}')">
+              <button id="${btnId}" class="tracker-ctt-btn" onclick="openTrackingIframe('${escHtml(trackingCode)}', '${btnId}')">
                 📦 Rastrear envío
               </button>
               <button id="${cttId}" class="tracker-ctt-btn" style="background:#2a6a4a;" onclick="openCttExpress('${escHtml(trackingCode)}', '${cttId}')">
@@ -6227,76 +6248,33 @@ function openCttExpress(trackingCode, btnId) {
   window.open('https://www.cttexpress.com/localizador-de-envios/', '_blank', 'noopener');
 }
 
-async function fetchTracking(trackingCode, btnId) {
+function openTrackingIframe(trackingCode, btnId) {
   const btn  = document.getElementById(btnId);
   const tlEl = document.getElementById(`tl-${btnId}`);
-  if (!btn || !tlEl) return;
+  if (!tlEl) return;
 
-  btn.textContent = '⏳ Cargando...';
-  btn.disabled    = true;
-  tlEl.innerHTML  = '';
-
-  try {
-    const url  = `${WEBHOOK_URL}?action=proxyTrack&tracking=${encodeURIComponent(trackingCode)}`;
-    const res  = await fetch(url);
-    const json = await res.json();
-
-    if (!json.html) throw new Error('empty');
-
-    const { events } = extractTrackingEvents(json.html);
-    tlEl.innerHTML = renderTimeline(events);
-  } catch (_) {
-    tlEl.innerHTML = renderTimeline([]);
+  if (tlEl.dataset.open === '1') {
+    tlEl.innerHTML     = '';
+    tlEl.dataset.open  = '0';
+    if (btn) btn.textContent = '📦 Rastrear envío';
+    return;
   }
 
-  btn.textContent = '📦 Rastrear envío';
-  btn.disabled    = false;
-}
+  navigator.clipboard.writeText(trackingCode).catch(() => {});
 
-function extractTrackingEvents(rawHtml) {
-  const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
-  const textoPuro = doc.body.textContent || '';
+  tlEl.innerHTML = `
+    <div class="tracker-iframe-hint">
+      📋 <strong>¡Código copiado automáticamente!</strong> Solo tienes que hacer clic en el cuadro blanco del buscador, pulsar <em>Ctrl+V</em> (o clic derecho → Pegar) y darle a <em>Search</em> para ver el estado en tiempo real.
+    </div>
+    <iframe
+      src="http://111.230.53.56:8082/en/trackIndex.htm"
+      class="tracker-logistics-frame"
+      title="Seguimiento logístico"
+      loading="lazy"
+    ></iframe>`;
 
-  const regexFecha = /(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})/;
-  const trozos = textoPuro.split(regexFecha);
-
-  const trackingData = [];
-  for (let i = 1; i < trozos.length; i += 2) {
-    const fechaStr   = (trozos[i]     || '').trim();
-    const detalleStr = (trozos[i + 1] || '').trim().replace(/\s+/g, ' ');
-    if (fechaStr && detalleStr) {
-      trackingData.push({ fecha: fechaStr, detalle: detalleStr });
-    }
-  }
-
-  const events = trackingData.filter((val, idx, arr) =>
-    idx === arr.findIndex(t => t.fecha === val.fecha && t.detalle === val.detalle)
-  );
-
-  return { events };
-}
-
-function renderTimeline(events) {
-  if (!events || events.length === 0) {
-    return `<div class="tracker-tl-empty">📬 Información logística registrándose en el sistema central. Por favor, vuelve a consultar en unas horas.</div>`;
-  }
-  const items = events.map(ev => `
-    <li class="tl-item">
-      <div class="tl-dot-col">
-        <div class="tl-dot"></div>
-        <div class="tl-line"></div>
-      </div>
-      <div class="tl-body">
-        <div class="tl-date">${escHtml(ev.fecha)}</div>
-        <div class="tl-detail">${escHtml(ev.detalle)}</div>
-      </div>
-    </li>`).join('');
-
-  return `
-    <div class="tracker-timeline">
-      <div class="tracker-timeline-title">Historial del envío</div>
-      <ul class="tl-list">${items}</ul>
-    </div>`;
+  tlEl.dataset.open = '1';
+  if (btn) btn.textContent = '✕ Cerrar seguimiento';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
