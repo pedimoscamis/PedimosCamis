@@ -6241,10 +6241,9 @@ async function fetchTracking(trackingCode, btnId) {
     const res  = await fetch(url);
     const json = await res.json();
 
-    const rawHtml = json.html ?? json.data ?? json.result ?? json.content ?? json.body ?? '';
-    if (!rawHtml) throw new Error('empty');
+    if (!json.html) throw new Error('empty');
 
-    const events = extractTrackingEvents(rawHtml);
+    const events = extractTrackingEvents(json.html);
     tlEl.innerHTML = renderTimeline(events);
   } catch (_) {
     tlEl.innerHTML = renderTimeline([]);
@@ -6255,56 +6254,31 @@ async function fetchTracking(trackingCode, btnId) {
 }
 
 function extractTrackingEvents(rawHtml) {
+  // 1. Extraemos todo el texto puro sin cargar recursos
   const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
+  const textoPuro = doc.body.textContent || '';
 
-  // ── Método 1: <tr><td> dentro de .men_li table (formato con datos reales)
-  const trs = doc.querySelectorAll('.men_li table tr');
-  if (trs.length > 0) {
-    const events = [];
-    for (const tr of trs) {
-      const cells = tr.querySelectorAll('td');
-      if (cells.length < 2) continue;
-      const fecha     = cells[0]?.textContent.trim() || '';
-      const ubicacion = cells[1]?.textContent.trim() || '';
-      const detalle   = cells[2]?.textContent.trim() || '';
-      if (!fecha || !/\d{4}/.test(fecha)) continue; // ignorar cabeceras
-      events.push({ fecha, ubicacion, detalle });
+  // 2. Troceamos usando la fecha como separador (paréntesis capturador preserva la fecha en el array)
+  const regexFecha = /(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})/;
+  const trozos = textoPuro.split(regexFecha);
+
+  const trackingData = [];
+
+  // 3. Emparejamos: trozos[1]=fecha, trozos[2]=detalle, trozos[3]=fecha, trozos[4]=detalle...
+  for (let i = 1; i < trozos.length; i += 2) {
+    if (trozos[i] && trozos[i + 1]) {
+      const fechaStr   = trozos[i].trim();
+      const detalleStr = trozos[i + 1].trim().replace(/\s+/g, ' ');
+      if (detalleStr.length > 0) {
+        trackingData.push({ fecha: fechaStr, detalle: detalleStr });
+      }
     }
-    if (events.length > 0) return events;
   }
 
-  // ── Método 2: <li class="tabli1/2/3"> dentro de .men_li (formato alternativo)
-  const uls = doc.querySelectorAll('.men_li ul');
-  for (const ul of uls) {
-    const t1els = ul.querySelectorAll('.tabli1');
-    if (t1els.length === 0) continue;
-    const events = [];
-    for (const t1 of t1els) {
-      const fecha = t1.textContent.trim();
-      if (!/\d{4}/.test(fecha)) continue; // ignorar cabecera "date"
-      const t2 = t1.nextElementSibling;
-      const t3 = t2?.nextElementSibling;
-      events.push({
-        fecha,
-        ubicacion: t2?.textContent.trim() || '',
-        detalle:   t3?.textContent.trim() || '',
-      });
-    }
-    if (events.length > 0) return events;
-  }
-
-  // ── Método 3: regex sobre texto plano (fallback universal)
-  // Usamos el doc ya parseado por DOMParser — no lanza peticiones de red
-  const texto = doc.body?.textContent || '';
-  const DATE_RE = /\d{4}[-/]\d{2}[-/]\d{2}[\s\T]\d{2}:\d{2}(?::\d{2})?/g;
-  const matches = [...texto.matchAll(DATE_RE)];
-  return matches.map((m, i) => {
-    const fecha  = m[0];
-    const desde  = m.index + fecha.length;
-    const hasta  = matches[i + 1] ? matches[i + 1].index : texto.length;
-    const detalle = texto.slice(desde, hasta).replace(/\s+/g, ' ').trim();
-    return { fecha, ubicacion: '', detalle };
-  });
+  // 4. Eliminar duplicados exactos
+  return trackingData.filter((val, idx, arr) =>
+    idx === arr.findIndex(t => t.fecha === val.fecha && t.detalle === val.detalle)
+  );
 }
 
 function renderTimeline(events) {
