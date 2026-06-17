@@ -6223,7 +6223,7 @@ async function fetchTracking(trackingCode, btnId) {
     const res  = await fetch(url);
     const json = await res.json();
 
-    console.log('Objeto JSON completo recibido del Webhook:', json);
+    console.log('Objeto JSON completo recibido del Webhook:', JSON.stringify(json).slice(0, 3000));
 
     // La propiedad con el HTML puede venir con distinto nombre según el GAS
     const rawHtml = json.html ?? json.data ?? json.result ?? json.content ?? json.body ?? '';
