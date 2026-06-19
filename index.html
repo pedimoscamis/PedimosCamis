@@ -195,21 +195,34 @@
     }
     #lang-toggle:hover { border-color: var(--accent); }
 
-    #cart-btn {
-      position: relative; background: none; border: none;
-      color: var(--text); cursor: pointer; padding: 8px;
-      border-radius: 8px; transition: background .2s;
-      display: flex; align-items: center; gap: 8px;
-    }
-    #cart-btn:hover { background: var(--surface); }
-    #cart-badge {
-      position: absolute; top: 2px; right: 2px;
+    /* ─── FAB Carrito flotante ──────────────────────────────── */
+    #fab-cart {
+      position: fixed; bottom: 20px; right: 20px;
+      width: 56px; height: 56px; border-radius: 50%;
       background: var(--accent); color: #fff;
-      font-size: 10px; font-weight: 700;
-      border-radius: 50%; width: 18px; height: 18px;
+      border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      display: none;
+      box-shadow: 0 4px 22px rgba(232,23,60,.5), 0 1px 6px rgba(0,0,0,.25);
+      z-index: 9998;
+      transition: transform .2s, box-shadow .2s;
     }
+    #fab-cart:hover { transform: scale(1.08); box-shadow: 0 6px 30px rgba(232,23,60,.65); }
+    #cart-badge {
+      position: absolute; top: -5px; right: -5px;
+      background: #fff; color: var(--accent);
+      font-size: 11px; font-weight: 800;
+      border-radius: 50%; min-width: 20px; height: 20px;
+      display: none; align-items: center; justify-content: center;
+      box-shadow: 0 1px 5px rgba(0,0,0,.3);
+      padding: 0 3px;
+    }
+    @keyframes fabCartPulse {
+      0%   { transform: scale(1); }
+      35%  { transform: scale(1.3); }
+      65%  { transform: scale(0.88); }
+      100% { transform: scale(1); }
+    }
+    #fab-cart.pulse { animation: fabCartPulse .45s ease; }
 
     /* ─── User / Socio button ────────────────────────────────── */
     #user-btn {
@@ -406,7 +419,7 @@
 
     /* ─── FAB "Volver arriba" ────────────────────────────────── */
     #fab-top {
-      position: fixed; bottom: 28px; right: 20px;
+      position: fixed; bottom: 20px; left: 20px;
       width: 46px; height: 46px; border-radius: 50%;
       background: var(--accent); color: #fff;
       border: none; font-size: 22px; font-weight: 700; line-height: 1;
@@ -2683,13 +2696,6 @@
       </div>
     </div>
 
-    <button id="cart-btn" onclick="openCart()">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
-        <path d="M16 10a4 4 0 01-8 0"/>
-      </svg>
-      <span id="cart-badge">0</span>
-    </button>
   </div>
 </header>
 
@@ -3350,6 +3356,16 @@
 
 <!-- ─── FAB "Volver arriba" ──────────────────────────────────────────────── -->
 <button id="fab-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">↑</button>
+
+<!-- ─── FAB Carrito flotante ─────────────────────────────────────────────── -->
+<button id="fab-cart" onclick="openCart()" aria-label="Abrir carrito">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+    <line x1="3" y1="6" x2="21" y2="6"/>
+    <path d="M16 10a4 4 0 01-8 0"/>
+  </svg>
+  <span id="cart-badge">0</span>
+</button>
 
 <!-- ─── Toast ──────────────────────────────────────────────────────────── -->
 <div id="toast"></div>
@@ -6421,9 +6437,61 @@ function addToCart() {
     cart.push(newItem);
   }
 
+  flyToCart();
   saveCart();
   closeModal();
   showToast(t().added_cart);
+}
+
+function flyToCart() {
+  const fabCart = document.getElementById('fab-cart');
+  const srcImg  = document.querySelector('#modal-img-col .modal-carousel-track img');
+  if (!fabCart) return;
+  if (!srcImg)  { pulseFabCart(); return; }
+
+  const srcRect = srcImg.getBoundingClientRect();
+  const dstRect = fabCart.getBoundingClientRect();
+  const dstCx   = dstRect.left + dstRect.width  / 2;
+  const dstCy   = dstRect.top  + dstRect.height / 2;
+  const endSize  = 32;
+
+  const clone = document.createElement('img');
+  clone.src = srcImg.src;
+  clone.style.cssText = `
+    position:fixed;
+    left:${srcRect.left}px; top:${srcRect.top}px;
+    width:${srcRect.width}px; height:${srcRect.height}px;
+    object-fit:cover; border-radius:8px;
+    pointer-events:none; z-index:99999;
+    transition:left .6s cubic-bezier(.4,0,.2,1),
+               top .6s cubic-bezier(.4,0,.2,1),
+               width .6s cubic-bezier(.4,0,.2,1),
+               height .6s cubic-bezier(.4,0,.2,1),
+               border-radius .6s ease,
+               opacity .4s ease .25s;
+  `;
+  document.body.appendChild(clone);
+  clone.getBoundingClientRect(); // force reflow
+
+  clone.style.left         = `${dstCx - endSize / 2}px`;
+  clone.style.top          = `${dstCy - endSize / 2}px`;
+  clone.style.width        = `${endSize}px`;
+  clone.style.height       = `${endSize}px`;
+  clone.style.borderRadius = '50%';
+  clone.style.opacity      = '0';
+
+  clone.addEventListener('transitionend', () => {
+    clone.remove();
+    pulseFabCart();
+  }, { once: true });
+}
+
+function pulseFabCart() {
+  const fab = document.getElementById('fab-cart');
+  if (!fab) return;
+  fab.classList.remove('pulse');
+  void fab.offsetWidth;
+  fab.classList.add('pulse');
 }
 
 function removeFromCart(id) {
