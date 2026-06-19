@@ -1433,6 +1433,9 @@
       width: 100%; max-width: 460px;
       padding: 32px 28px 28px;
       position: relative;
+      max-height: 88vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     #tracker-close {
       position: absolute; top: 14px; right: 16px;
@@ -2417,8 +2420,21 @@
     #modal-fav-btn.active { color: var(--accent); border-color: var(--accent); }
 
     /* ─── Mobile User Dropdown ───────────────────────────────── */
+    /* ─── Badges en el modal ─────────────────────────────────── */
+    #modal-badges { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 8px; }
+    #modal-badges .badge-player { font-size: 11px; padding: 3px 8px; }
+    #modal-badges .badge-retro-modal {
+      display: inline-block;
+      background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 800;
+      letter-spacing: .8px; padding: 3px 8px;
+      border-radius: 4px;
+    }
+
     /* ─── Banner aviso de stock ──────────────────────────────── */
-    #modal-stock-warning {
+    #modal-stock-warning,
+    #modal-longsleeve-warning,
+    #modal-special-warning {
       border-left: 3px solid #c8a000;
       background: transparent;
       border-radius: 0 4px 4px 0;
@@ -2430,6 +2446,8 @@
       margin-bottom: 10px;
       opacity: 0.82;
     }
+    #modal-longsleeve-warning { border-left-color: #5b9bd5; }
+    #modal-special-warning    { border-left-color: #9b5bd5; }
 
     /* En desktop: el mob-user-wrap siempre oculto */
     #mob-user-wrap { display: none; position: relative; }
@@ -3021,12 +3039,18 @@
         <div style="flex:1;min-width:0">
           <p id="modal-cat"></p>
           <h2 id="modal-name"></h2>
+          <div id="modal-badges"></div>
         </div>
         <button id="modal-fav-btn" title="Añadir a favoritos">♡</button>
       </div>
-      <!-- Banner de aviso de stock — visible solo si producto.avisoStock === true -->
       <div id="modal-stock-warning" style="display:none">
         ⚠️ Es posible que no nos quede stock de este artículo. En ese caso te contactaremos cuando realices tu pedido (no se te cobrará nada).
+      </div>
+      <div id="modal-longsleeve-warning" style="display:none">
+        🧥 Modelo de manga larga. El tiempo de producción puede ser ligeramente superior al habitual.
+      </div>
+      <div id="modal-special-warning" style="display:none">
+        ✨ Edición especial. Este modelo puede presentar características exclusivas respecto a la versión estándar.
       </div>
       <div class="modal-price-block">
         <div class="modal-price-main" id="modal-price-main"></div>
@@ -5791,8 +5815,17 @@ function openModal(p) {
   document.getElementById('modal-cat').textContent = buildKitLabel(p.nameEn) || t().cat_labels[mpc] || mpc;
   document.getElementById('modal-name').textContent = traducirNombre(p.nameEn);
 
-  // Banner aviso de stock
-  document.getElementById('modal-stock-warning').style.display = p.avisoStock ? '' : 'none';
+  // Badges Player Version / Retro
+  const isRetroKit = (p.cats || []).includes('retro');
+  document.getElementById('modal-badges').innerHTML = [
+    isPlayerVersion(p) ? '<span class="badge-player">PLAYER VERSION</span>' : '',
+    isRetroKit          ? '<span class="badge-retro-modal">RETRO</span>'     : '',
+  ].join('');
+
+  // Avisos
+  document.getElementById('modal-stock-warning').style.display      = p.avisoStock ? '' : 'none';
+  document.getElementById('modal-longsleeve-warning').style.display = LONG_SLEEVE_RE.test(p.nameEn) ? '' : 'none';
+  document.getElementById('modal-special-warning').style.display    = /especial|special/i.test(p.nameEn) ? '' : 'none';
 
   // Patches
   const isMundialPatch = isMundial2026(p);
