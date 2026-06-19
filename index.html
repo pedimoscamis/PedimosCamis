@@ -2421,7 +2421,7 @@
 
     /* ─── Mobile User Dropdown ───────────────────────────────── */
     /* ─── Badges en el modal ─────────────────────────────────── */
-    #modal-badges { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 8px; }
+    #modal-badges { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 4px; justify-content: flex-start; }
     #modal-badges .badge-player { font-size: 11px; padding: 3px 8px; }
     #modal-badges .badge-retro-modal {
       display: inline-block;
@@ -2446,8 +2446,7 @@
       margin-bottom: 10px;
       opacity: 0.82;
     }
-    #modal-longsleeve-warning,
-    #modal-special-warning    { border-left-color: #5b9bd5; }
+    #modal-special-warning { border-left-color: #5b9bd5; }
 
     /* En desktop: el mob-user-wrap siempre oculto */
     #mob-user-wrap { display: none; position: relative; }
@@ -3045,9 +3044,6 @@
       </div>
       <div id="modal-stock-warning" style="display:none">
         ⚠️ Es posible que no nos quede stock de este artículo. En ese caso te contactaremos cuando realices tu pedido (no se te cobrará nada).
-      </div>
-      <div id="modal-longsleeve-warning" style="display:none">
-        🧥 Modelo de manga larga. El tiempo de producción puede ser ligeramente superior al habitual.
       </div>
       <div id="modal-special-warning" style="display:none">
         ⚠️ Es posible que no nos quede stock de este artículo. En ese caso te contactaremos cuando realices tu pedido (no se te cobrará nada).
@@ -5823,9 +5819,8 @@ function openModal(p) {
   ].join('');
 
   // Avisos
-  document.getElementById('modal-stock-warning').style.display      = p.avisoStock ? '' : 'none';
-  document.getElementById('modal-longsleeve-warning').style.display = LONG_SLEEVE_RE.test(p.nameEn) ? '' : 'none';
-  document.getElementById('modal-special-warning').style.display    = /especial|special/i.test(p.nameEn) ? '' : 'none';
+  document.getElementById('modal-stock-warning').style.display   = p.avisoStock ? '' : 'none';
+  document.getElementById('modal-special-warning').style.display = /especial|special/i.test(p.nameEn) ? '' : 'none';
 
   // Patches
   const isMundialPatch = isMundial2026(p);
