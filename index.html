@@ -3212,13 +3212,34 @@
         </div>
       </div>
 
-      <div class="form-group" id="direccion-group" style="display:none">
-        <label for="form-direccion">Dirección completa *</label>
-        <input type="text" id="form-direccion" name="direccion"
-               placeholder="Calle, número, piso, ciudad, CP…" autocomplete="street-address" />
-        <div class="form-field-error" id="form-direccion-error">
-          Introduce tu dirección completa para el envío
-        </div>
+      <div class="form-group">
+        <label for="form-pais">País *</label>
+        <input type="text" id="form-pais" name="pais" required
+               placeholder="España" autocomplete="country-name" />
+      </div>
+
+      <div class="form-group">
+        <label for="form-region">Región / Estado *</label>
+        <input type="text" id="form-region" name="region" required
+               placeholder="Comunidad de Madrid" autocomplete="address-level1" />
+      </div>
+
+      <div class="form-group">
+        <label for="form-ciudad">Ciudad *</label>
+        <input type="text" id="form-ciudad" name="ciudad" required
+               placeholder="Madrid" autocomplete="address-level2" />
+      </div>
+
+      <div class="form-group">
+        <label for="form-camino">Dirección (calle y número) *</label>
+        <input type="text" id="form-camino" name="camino" required
+               placeholder="Calle Mayor, 12, 3.º A" autocomplete="street-address" />
+      </div>
+
+      <div class="form-group">
+        <label for="form-cp">Código Postal *</label>
+        <input type="text" id="form-cp" name="cp" required
+               placeholder="28001" autocomplete="postal-code" inputmode="numeric" />
       </div>
       <div class="form-group">
         <label for="form-metodo-pago">Método de pago *</label>
@@ -3499,15 +3520,11 @@ function updateShippingUpsell() {
   }
 }
 
-/** Muestra/oculta campos según el tipo de envío seleccionado y refresca totales. */
+/** Refresca totales al cambiar tipo de envío. */
 function onShippingChange() {
   const esMano   = document.getElementById('envio-mano').checked;
   const notaMano = document.getElementById('shipping-note-mano');
-  const dirGroup = document.getElementById('direccion-group');
-  const dirInput = document.getElementById('form-direccion');
   notaMano.style.display = esMano ? 'block' : 'none';
-  dirGroup.style.display = esMano ? 'none'  : '';
-  dirInput.required      = !esMano;
   updateShippingUpsell();
   updateCheckoutTotals();
 }
@@ -6944,7 +6961,6 @@ async function submitOrderForm(e) {
   const btn      = document.getElementById('order-submit-btn');
   const phoneErr = document.getElementById('form-contacto-error');
   const emailErr = document.getElementById('form-correo-error');
-  const dirErr   = document.getElementById('form-direccion-error');
 
   // ── Validar teléfono: al menos 9 dígitos ──────────────────────────────────
   const contactoVal = document.getElementById('form-contacto').value;
@@ -6966,26 +6982,26 @@ async function submitOrderForm(e) {
   }
   emailErr.style.display = 'none';
 
-  // ── Validar dirección si es envío a domicilio ─────────────────────────────
-  const esDomicilio  = document.getElementById('envio-domicilio').checked;
-  const direccionVal = (document.getElementById('form-direccion').value || '').trim();
-  if (esDomicilio && !direccionVal) {
-    dirErr.style.display = 'block';
-    document.getElementById('form-direccion').focus();
-    return;
-  }
-  if (dirErr) dirErr.style.display = 'none';
-
   btn.disabled    = true;
   btn.textContent = 'Enviando…';
+
+  // ── Construir dirección estructurada ──────────────────────────────────────
+  const paisVal    = document.getElementById('form-pais').value.trim();
+  const regionVal  = document.getElementById('form-region').value.trim();
+  const ciudadVal  = document.getElementById('form-ciudad').value.trim();
+  const caminoVal  = document.getElementById('form-camino').value.trim();
+  const cpVal      = document.getElementById('form-cp').value.trim();
+  const nombreVal  = document.getElementById('form-nombre').value.trim();
+  const formattedAddress =
+    `País: ${paisVal}\nRegión/Estado: ${regionVal}\nCiudad: ${ciudadVal}\nCamino: ${caminoVal}\nCódigo Postal: ${cpVal}\nNombre: ${nombreVal}\nTeléfono: ${contactoVal}`;
 
   // ── Construir payload para Google Apps Script ─────────────────────────────
   const shippingCost = getShippingCost();
   const payload = buildWebhookPayload(
-    document.getElementById('form-nombre').value.trim(),
+    nombreVal,
     contactoVal,
     correoVal,
-    esDomicilio ? direccionVal : 'Entrega en mano (Rivas)',
+    formattedAddress,
     document.getElementById('form-metodo-pago').value
   );
   // Añadir gastos de envío como fila extra si procede
