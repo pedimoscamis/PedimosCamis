@@ -6824,8 +6824,6 @@ function openCheckout(e) {
   // Resetear el selector de envío a "Envío a domicilio" ANTES de calcular totales.
   document.getElementById('envio-domicilio').checked           = true;
   document.getElementById('shipping-note-mano').style.display  = 'none';
-  document.getElementById('direccion-group').style.display     = '';
-  document.getElementById('form-direccion').required           = true;
   document.getElementById('shipping-upsell').style.display     = '';
 
   updateCheckoutTotals();
