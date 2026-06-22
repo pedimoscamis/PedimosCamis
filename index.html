@@ -6860,8 +6860,6 @@ function openCheckout(e) {
   // Re-aplicar el estado de envío tras el reset del formulario (reset() borra el checked)
   document.getElementById('envio-domicilio').checked           = true;
   document.getElementById('shipping-note-mano').style.display  = 'none';
-  document.getElementById('direccion-group').style.display     = '';
-  document.getElementById('form-direccion').required           = true;
   updateShippingUpsell();
   document.getElementById('order-success').style.display   = 'none';
   const submitBtn = document.getElementById('order-submit-btn');
