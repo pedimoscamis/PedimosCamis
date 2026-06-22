@@ -1715,14 +1715,14 @@
 
     /* ─── Toast ─────────────────────────────────────────────── */
     #toast {
-      position: fixed; bottom: 24px; right: 24px; z-index: 9500;
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); z-index: 99999;
       background: #222; border: 1px solid var(--border);
       color: var(--text); padding: 12px 20px; border-radius: 10px;
       font-size: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
       transform: translateY(20px); opacity: 0;
-      transition: all .3s; pointer-events: none;
+      transition: opacity .3s, transform .3s; pointer-events: none;
     }
-    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
     /* ─── Featured Section ───────────────────────────────────── */
     #featured-section {
