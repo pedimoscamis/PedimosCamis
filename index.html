@@ -6555,12 +6555,14 @@ function openCart() {
   renderCartItems();
   document.getElementById('cart-overlay').classList.add('open');
   document.getElementById('cart-drawer').classList.add('open');
+  document.getElementById('fab-cart').style.display = 'none';
   document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
 }
 
 function closeCart() {
   document.getElementById('cart-overlay').classList.remove('open');
   document.getElementById('cart-drawer').classList.remove('open');
+  document.getElementById('fab-cart').style.display = '';
   document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
 }
 
