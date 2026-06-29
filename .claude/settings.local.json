@@ -45,7 +45,13 @@
       "Bash(node -e \"const fs=require\\('fs'\\); const p=process.env.APPDATA; const dirs=['wrangler','npm','npm-global']; dirs.forEach\\(d=>{try{console.log\\(d+':',fs.readdirSync\\(require\\('path'\\).join\\(p,d\\)\\).join\\(','\\)\\)}catch{}}\\);\")",
       "Bash(npx wrangler *)",
       "Bash(node upload-spain-away-photos.js)",
-      "Bash(ls \"H:/LaGaleria/\" | head -50)"
+      "Bash(ls \"H:/LaGaleria/\" | head -50)",
+      "Bash(taskkill /F /FI \"IMAGENAME eq node.exe\")",
+      "PowerShell(Stop-Process -Name \"node\" -Force -ErrorAction SilentlyContinue)",
+      "Bash(del /Q \"H:\\\\26-27\\\\*\")",
+      "Bash(rm -f /H/26-27/*.jpg /H/26-27/*.jpeg /H/26-27/*.png /H/26-27/*.webp && echo \"Limpiado\" || echo \"Error o ya vacío\")",
+      "Bash(node scripts/download-2627.mjs)",
+      "PowerShell(node \"C:\\\\Users\\\\Alfonso\\\\Documents\\\\KitZone\\\\scripts\\\\download-2627.mjs\" 2>&1)"
     ]
   }
 }
