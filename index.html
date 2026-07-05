@@ -6298,6 +6298,40 @@ function openCttExpress(trackingCode, btnId) {
   window.open('https://www.cttexpress.com/localizador-de-envios/', '_blank', 'noopener');
 }
 
+// Traducción de los estados de la nueva web de rastreo (xxy819.github.io/track-website)
+const ESTADO_TRACKING_ES = {
+  '货物已揽收':              'Paquete recogido',
+  '货物到达操作中心/广州':   'Paquete llegó al centro logístico',
+  '货物离开操作中心/广州':   'Paquete salió del centro logístico',
+  '货物已入库/等待报关':     'Paquete almacenado, a la espera del despacho aduanero',
+  '出口报关完成':            'Despacho aduanero de exportación completado',
+  '等待航班/配载中':         'A la espera de vuelo, en proceso de carga',
+  '货物已出运/航班已离港':   'Paquete despachado, el vuelo ha salido',
+  '货物已出运/运输中':       'Paquete despachado, en tránsito',
+  '货物到达中转站/中转处理': 'Paquete llegó al centro de tránsito, en procesamiento',
+  '货物到达目的地/等待清关': 'Paquete llegó al país de destino, a la espera de aduana',
+  '清关中/等待海关查验':     'En trámite aduanero, a la espera de inspección',
+  '清关中/海关查验中':       'En trámite aduanero, inspección en curso',
+  '海关放行/清关完成':       'Aduana liberada, trámite completado',
+  '货物到达目的地处理中心':  'Paquete llegó al centro de procesamiento de destino',
+};
+
+// Ubicaciones en chino que necesitan traducción; el resto ya viene en formato occidental (Madrid, ES / Guangzhou…)
+const UBICACION_TRACKING_ES = {
+  '广州': 'Guangzhou',
+  '深圳': 'Shenzhen',
+};
+
+function translateEstadoTracking(desc) {
+  const limpio = (desc || '').trim();
+  return ESTADO_TRACKING_ES[limpio] || limpio || 'Estado desconocido';
+}
+
+function translateUbicacionTracking(loc) {
+  const limpio = (loc || '').trim();
+  return UBICACION_TRACKING_ES[limpio] || limpio;
+}
+
 async function fetchTracking(trackingCode, btnId) {
   const btn  = document.getElementById(btnId);
   const tlEl = document.getElementById(`tl-${btnId}`);
@@ -6312,9 +6346,12 @@ async function fetchTracking(trackingCode, btnId) {
     const res  = await fetch(url);
     const json = await res.json();
 
-    if (!json.html) throw new Error('empty');
+    if (!json.found || !json.data) throw new Error('empty');
 
-    const events = extractTrackingEvents(json.html);
+    const events = (json.data.records || []).map(r => ({
+      fecha:   r.time,
+      detalle: translateEstadoTracking(r.desc) + (r.location ? ` — ${translateUbicacionTracking(r.location)}` : ''),
+    }));
     tlEl.innerHTML = renderTimeline(events);
   } catch (_) {
     tlEl.innerHTML = renderTimeline([]);
@@ -6322,48 +6359,6 @@ async function fetchTracking(trackingCode, btnId) {
 
   btn.textContent = '📦 Rastrear envío';
   btn.disabled    = false;
-}
-
-function limpiarTraduccion(texto) {
-  if (texto.includes('function') || texto.includes('var code') || texto.includes('【') || texto.includes('X 查看附件')) return null;
-
-  let t = texto.toLowerCase();
-
-  if (t.includes('cleared at the destination port') || t.includes('目的地港清关')) return 'Aduanas completadas en destino';
-  if (t.includes('flight has arrived') || t.includes('航班已到'))                   return 'El paquete ha llegado al país de destino';
-  if (t.includes('flight departure') || t.includes('航班起飞'))                      return 'Vuelo internacional en tránsito';
-  if (t.includes('航班取消'))                                                          return 'Vuelo internacional reprogramado';
-  if (t.includes('国内清关完成'))                                                      return 'Aduanas completadas en origen';
-  if (t.includes('leave the operation center') || t.includes('离开操作中心'))        return 'El paquete ha salido del centro logístico';
-  if (t.includes('arrived at the operating center') || t.includes('到达收货点'))     return 'El paquete está siendo procesado en el centro logístico';
-  if (t.includes('manifestado') || t.includes('电子信息已经收到'))                   return 'Pedido registrado electrónicamente';
-
-  let limpio = texto.replace(/[一-龥]/g, '').replace(/(BCN|Guangzhou|\/)/ig, '').trim();
-  return limpio.length > 2 ? limpio.charAt(0).toUpperCase() + limpio.slice(1) : null;
-}
-
-function extractTrackingEvents(rawHtml) {
-  const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
-  const textoPuro = doc.body.textContent || '';
-
-  const regexFecha = /(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})/;
-  const trozos = textoPuro.split(regexFecha);
-  const trackingData = [];
-
-  for (let i = 1; i < trozos.length; i += 2) {
-    if (trozos[i] && trozos[i + 1]) {
-      const fechaStr   = trozos[i].trim();
-      const detalleRaw = trozos[i + 1].trim().replace(/\s+/g, ' ');
-      const detalle    = limpiarTraduccion(detalleRaw);
-      if (detalle) {
-        trackingData.push({ fecha: fechaStr, detalle });
-      }
-    }
-  }
-
-  return trackingData.filter((valor, indice, self) =>
-    indice === self.findIndex(t => t.fecha === valor.fecha && t.detalle === valor.detalle)
-  );
 }
 
 function renderTimeline(events) {
