@@ -6240,7 +6240,7 @@ async function submitTracker() {
         const estadoRaw    = pedido.estado || '';
         const estadoLabel  = TRACKER_ESTADOS[estadoRaw] || estadoRaw || '—';
         const trackingCode = (pedido.tracking || '').trim();
-        const showTracking = TRACKER_SHIPPED_STATES.has(estadoRaw) && trackingCode;
+        const showTracking = !!trackingCode;
         const fechaRaw     = pedido.fecha ? new Date(pedido.fecha) : null;
         const fecha        = (fechaRaw && !isNaN(fechaRaw))
           ? fechaRaw.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
