@@ -46,6 +46,13 @@
       "Bash(npx wrangler *)",
       "Bash(node upload-spain-away-photos.js)",
       "Bash(ls \"H:/LaGaleria/\" | head -50)",
+      "Bash(taskkill /F /FI \"IMAGENAME eq node.exe\")",
+      "PowerShell(Stop-Process -Name \"node\" -Force -ErrorAction SilentlyContinue)",
+      "Bash(del /Q \"H:\\\\26-27\\\\*\")",
+      "Bash(rm -f /H/26-27/*.jpg /H/26-27/*.jpeg /H/26-27/*.png /H/26-27/*.webp && echo \"Limpiado\" || echo \"Error o ya vacío\")",
+      "Bash(node scripts/download-2627.mjs)",
+      "PowerShell(node \"C:\\\\Users\\\\Alfonso\\\\Documents\\\\KitZone\\\\scripts\\\\download-2627.mjs\" 2>&1)"
+      "Bash(ls \"H:/LaGaleria/\" | head -50)",
       "WebFetch(domain:xxy819.github.io)",
       "Bash(curl -s https://xxy819.github.io/track-website/)"
     ]
