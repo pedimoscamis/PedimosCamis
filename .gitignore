@@ -1,4 +1,6 @@
 .env
+.DS_Store
 node_modules/
 data/products-raw.json
 images/
+images-nuevas-webp/
