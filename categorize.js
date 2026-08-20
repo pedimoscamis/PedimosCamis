@@ -281,20 +281,29 @@ function main() {
   }
   console.log(`Productos a procesar: ${raw.length}`);
 
-  // ── Cargar catálogo existente para preservar URLs de Cloudinary ───────────
-  // Si un producto ya tiene imagen en Cloudinary, se conserva aunque el scraper
-  // traiga null o una URL de Yupoo distinta. Solo se sobreescribe si la URL
-  // existente NO es de Cloudinary (producto nuevo o sin imagen previa).
+  // ── Cargar catálogo existente para preservar imágenes ya migradas ─────────
+  // Si un producto ya tiene imagen fuera de Yupoo (Cloudinary, R2, o cualquier
+  // otro CDN al que hayamos migrado), se conserva aunque el scraper traiga
+  // null o un hotlink de Yupoo distinto. Solo se sobreescribe si la imagen
+  // existente sigue apuntando a yupoo.com (producto nuevo o sin migrar aún).
+  //
+  // También se preservan íntegros los productos del catálogo anterior que no
+  // aparezcan en products-raw.json — vienen de otras fuentes (lotes manuales,
+  // scrapers de otros proveedores) y products-raw.json no los conoce, así que
+  // regenerar el catálogo solo a partir del raw los borraría por completo.
   const existingImgById = new Map();
+  const existingById     = new Map();
   if (fs.existsSync(OUT_FILE)) {
     try {
       const existing = JSON.parse(fs.readFileSync(OUT_FILE, 'utf-8'));
       for (const p of existing) {
-        if (p.id && p.img && p.img.includes('cloudinary.com')) {
+        if (!p.id) continue;
+        existingById.set(String(p.id), p);
+        if (p.img && !p.img.includes('yupoo.com')) {
           existingImgById.set(String(p.id), p.img);
         }
       }
-      console.log(`URLs Cloudinary preservadas del catálogo anterior: ${existingImgById.size}`);
+      console.log(`Imágenes ya migradas preservadas del catálogo anterior: ${existingImgById.size}`);
     } catch (e) {
       console.warn('No se pudo leer el catálogo anterior — se usarán las imágenes del scraper.');
     }
@@ -310,7 +319,7 @@ function main() {
     const priceUsd = getPrice(cats, p.name);
     const type = cats.includes('retro') ? 'retro' : 'normal';
 
-    // Imagen: prioridad → Cloudinary existente → lo que trajo el scraper → null
+    // Imagen: prioridad → CDN ya migrado → lo que trajo el scraper → null
     const img = existingImgById.get(String(p.id)) || p.img || null;
 
     return {
@@ -327,6 +336,22 @@ function main() {
       sizes,
     };
   });
+
+  // ── Reincorporar productos huérfanos ───────────────────────────────────────
+  // Productos del catálogo anterior cuyo id no aparece en products-raw.json
+  // (lotes manuales, otros scrapers). Se conservan tal cual, sin recategorizar,
+  // salvo que ya estén excluidos por no ser fútbol.
+  const rawIds = new Set(rawAll.map(p => String(p.id)));
+  let orphansRestored = 0;
+  for (const [id, p] of existingById) {
+    if (rawIds.has(id)) continue;
+    if ((p.cats || []).some(c => EXCLUDED_CATS.has(c))) continue;
+    products.push(p);
+    orphansRestored++;
+  }
+  if (orphansRestored > 0) {
+    console.log(`Productos huérfanos reincorporados (no vienen del scraper): ${orphansRestored}`);
+  }
 
   // Estadísticas — un producto puede contar en varias categorías
   const stats = {};
