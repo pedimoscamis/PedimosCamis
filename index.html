@@ -1724,30 +1724,30 @@
     }
     #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-    /* ─── Featured Section ───────────────────────────────────── */
-    #featured-section {
+    /* ─── Featured Section (Mundial 2026 + Nueva Temporada 26/27) ─── */
+    #featured-section, #featured-newseason-section {
       background: #131313;
       padding: 28px 0 32px;
       display: none;
       border-bottom: 1px solid var(--border);
     }
-    #featured-inner {
+    #featured-inner, #featured-newseason-inner {
       max-width: 1440px;
       margin: 0 auto;
       padding: 0 24px;
     }
-    #featured-header {
+    #featured-header, #featured-newseason-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 18px;
     }
-    #featured-title-wrap {
+    #featured-title-wrap, #featured-newseason-title-wrap {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    #featured-title {
+    #featured-title, #featured-newseason-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 26px;
       letter-spacing: 1px;
@@ -1763,7 +1763,7 @@
       vertical-align: middle;
       text-transform: uppercase;
     }
-    #featured-see-all {
+    #featured-see-all, #featured-newseason-see-all {
       background: none;
       border: 1px solid var(--border);
       color: var(--muted);
@@ -1776,8 +1776,8 @@
       white-space: nowrap;
       transition: border-color .2s, color .2s;
     }
-    #featured-see-all:hover { border-color: var(--accent); color: var(--text); }
-    #featured-scroll {
+    #featured-see-all:hover, #featured-newseason-see-all:hover { border-color: var(--accent); color: var(--text); }
+    #featured-scroll, #featured-newseason-scroll {
       display: flex;
       gap: 14px;
       overflow-x: auto;
@@ -1785,8 +1785,8 @@
       scrollbar-width: thin;
       scrollbar-color: #333 transparent;
     }
-    #featured-scroll::-webkit-scrollbar { height: 4px; }
-    #featured-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    #featured-scroll::-webkit-scrollbar, #featured-newseason-scroll::-webkit-scrollbar { height: 4px; }
+    #featured-scroll::-webkit-scrollbar-thumb, #featured-newseason-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
     .featured-card {
       flex: 0 0 168px;
       background: var(--card);
@@ -2729,18 +2729,32 @@
 
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
-  <h1 id="hero-title">PREPÁRATE PARA EL<span>MUNDIAL 2026</span></h1>
+  <h1 id="hero-title">NUEVA TEMPORADA<span>26/27</span></h1>
   <p id="hero-sub">Calidad premium, precios imbatibles.</p>
   <button id="hero-cta" onclick="scrollToGrid()">VER CATÁLOGO</button>
   <div id="hero-pills">
-    <span class="hero-pill" data-i18n="pill_mundial" onclick="setCategory('mundial2026')">⚽ Mundial 2026</span>
     <span class="hero-pill" data-i18n="pill_newseason" onclick="setCategory('nuevatemporada')">🆕 Nueva Temp</span>
+    <span class="hero-pill" data-i18n="pill_mundial" onclick="setCategory('mundial2026')">⚽ Mundial 2026</span>
     <span class="hero-pill" onclick="setCategory('retro')">⏪ Retro</span>
     <span class="hero-pill" onclick="setCategory('laliga')">🇪🇸 LaLiga</span>
     <span class="hero-pill" onclick="setCategory('premier')">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier</span>
     <span class="hero-pill" data-i18n="pill_nations" onclick="setCategory('selecciones')">🌍 Selecciones</span>
     <span class="hero-pill" onclick="setCategory('nba')">🏀 NBA</span>
     <span class="hero-pill" onclick="setCategory('gallery')">🖼️ Galería</span>
+  </div>
+</section>
+
+<!-- ─── Featured: Nueva Temporada 26/27 ────────────────────────────── -->
+<section id="featured-newseason-section">
+  <div id="featured-newseason-inner">
+    <div id="featured-newseason-header">
+      <div id="featured-newseason-title-wrap">
+        <span id="featured-newseason-title">NUEVA TEMPORADA 26/27</span>
+        <span class="badge-new">🆕 26/27</span>
+      </div>
+      <button id="featured-newseason-see-all" onclick="setCategory('nuevatemporada')">Ver todas →</button>
+    </div>
+    <div id="featured-newseason-scroll"></div>
   </div>
 </section>
 
@@ -2832,20 +2846,6 @@
         <button class="ucl-cta-btn arsenal-btn" id="ucl-btn-arsenal">¡ELIGE OTRA!</button>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ─── Home row: Nueva Temporada ───────────────────────────────────── -->
-<section class="home-row-section" id="row-nuevatemporada">
-  <div class="home-row-inner">
-    <div class="home-row-header">
-      <div class="home-row-title-wrap">
-        <span class="home-row-title">🆕 NUEVA TEMPORADA</span>
-        <span class="badge-new">26/27</span>
-      </div>
-      <button class="home-row-see-all" onclick="setCategory('nuevatemporada')">Ver todas →</button>
-    </div>
-    <div class="home-row-scroll" id="scroll-nuevatemporada"></div>
   </div>
 </section>
 
@@ -2971,17 +2971,6 @@
       <button class="home-row-see-all" onclick="setCategory('nba')">Ver todas →</button>
     </div>
     <div class="home-row-scroll" id="scroll-nba"></div>
-  </div>
-</section>
-
-<!-- ─── Home row: Cortavientos ───────────────────────────────────────── -->
-<section class="home-row-section" id="row-windbreaker">
-  <div class="home-row-inner">
-    <div class="home-row-header">
-      <div class="home-row-title-wrap"><span class="home-row-title">🧥 CORTAVIENTOS</span></div>
-      <button class="home-row-see-all" onclick="setCategory('windbreaker')">Ver todas →</button>
-    </div>
-    <div class="home-row-scroll" id="scroll-windbreaker"></div>
   </div>
 </section>
 
@@ -3652,12 +3641,13 @@ const T = {
     cart_empty: 'Tu carrito está vacío',
     order_summary: 'RESUMEN DEL PEDIDO',
     back_shopping: '← Seguir comprando',
-    hero_line1: 'PREPÁRATE PARA EL',
-    hero_line2: 'MUNDIAL 2026',
+    hero_line1: 'NUEVA TEMPORADA',
+    hero_line2: '26/27',
     pill_mundial: '⚽ Mundial 2026',
     pill_newseason: '🆕 Nueva Temp',
     pill_nations: '🌍 Selecciones',
     featured_title: 'MUNDIAL 2026',
+    featured_newseason_title: 'NUEVA TEMPORADA 26/27',
     featured_see_all: 'Ver todas →',
     upsell_shipping: (n) => `🚚 ¡Estás a solo <strong>${n} camiseta${n === 1 ? '' : 's'}</strong> del envío <strong>GRATIS</strong>!`,
     label_email: 'Correo electrónico *',
@@ -3698,7 +3688,6 @@ const T = {
       selecciones: '🌍 Selecciones', sudamerica: '🌎 Sudamérica',
       shorts: '🩳 Cortos',
       europa: '🏆 Europa', retro: '⏪ Retro', nba: '🏀 NBA',
-      streetwear: '👕 Streetwear', windbreaker: '💨 Cortavientos',
       kids: '👶 Niños', women: '♀️ Mujer', otros: 'Otros',
       favoritos: '❤️ Favoritos',
       gallery: '🖼️ Galería',
@@ -3709,8 +3698,8 @@ const T = {
       laliga: 'LaLiga', premier: 'Premier League', seriea: 'Serie A',
       bundesliga: 'Bundesliga', ligue1: 'Ligue 1', selecciones: 'Selecciones',
       sudamerica: 'Sudamérica', shorts: 'Cortos', europa: 'Europa', retro: 'Retro',
-      nba: 'NBA', streetwear: 'Streetwear',
-      windbreaker: 'Cortavientos', kids: 'Niños', women: 'Mujer', otros: 'Otros',
+      nba: 'NBA',
+      kids: 'Niños', women: 'Mujer', otros: 'Otros',
       favoritos: 'Favoritos', gallery: 'Galería',
     },
   },
@@ -3731,12 +3720,13 @@ const T = {
     cart_empty: 'Your cart is empty',
     order_summary: 'ORDER SUMMARY',
     back_shopping: '← Continue shopping',
-    hero_line1: 'GET READY FOR THE',
-    hero_line2: 'WORLD CUP 2026',
+    hero_line1: 'NEW SEASON',
+    hero_line2: '26/27',
     pill_mundial: '⚽ World Cup 2026',
     pill_newseason: '🆕 New Season',
     pill_nations: '🌍 National Teams',
     featured_title: 'WORLD CUP 2026',
+    featured_newseason_title: 'NEW SEASON 26/27',
     featured_see_all: 'View all →',
     upsell_shipping: (n) => `🚚 You're only <strong>${n} shirt${n === 1 ? '' : 's'}</strong> away from <strong>FREE</strong> shipping!`,
     label_email: 'Email *',
@@ -3777,7 +3767,6 @@ const T = {
       selecciones: '🌍 National Teams', sudamerica: '🌎 South America',
       shorts: '🩳 Shorts',
       europa: '🏆 Europe', retro: '⏪ Retro', nba: '🏀 NBA',
-      streetwear: '👕 Streetwear', windbreaker: '💨 Windbreaker',
       kids: '👶 Kids', women: '♀️ Women', otros: 'Others',
       favoritos: '❤️ Favourites',
       gallery: '🖼️ Gallery',
@@ -3788,8 +3777,8 @@ const T = {
       laliga: 'LaLiga', premier: 'Premier League', seriea: 'Serie A',
       bundesliga: 'Bundesliga', ligue1: 'Ligue 1', selecciones: 'National Teams',
       sudamerica: 'South America', shorts: 'Shorts', europa: 'Europe', retro: 'Retro',
-      nba: 'NBA', streetwear: 'Streetwear',
-      windbreaker: 'Windbreaker', kids: 'Kids', women: 'Women', otros: 'Others',
+      nba: 'NBA',
+      kids: 'Kids', women: 'Women', otros: 'Others',
       favoritos: 'Favourites', gallery: 'Gallery',
     },
   },
@@ -3980,9 +3969,9 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','mundial2026','nuevatemporada','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','shorts','nba','streetwear','windbreaker','kids','europa','otros','gallery'];
+const CAT_ORDER = ['all','mundial2026','nuevatemporada','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','shorts','nba','kids','europa','otros','gallery'];
 // Categorías que sólo se muestran en modo socio
-const SOCIO_ONLY_CATS = new Set(['streetwear']);
+const SOCIO_ONLY_CATS = new Set();
 // Categorías ocultas para usuarios normales (visibles en modo socio o si se accede directamente)
 const HIDDEN_NORMAL_CATS = new Set(['otros']);
 
@@ -4065,8 +4054,8 @@ function goHome() {
 
 function scrollToGrid() {
   // Destino: primer contenido real tras el hero (featured o primera home-row)
-  const dest   = document.getElementById('featured-section')
-              || document.getElementById('row-nuevatemporada')
+  const dest   = document.getElementById('featured-newseason-section')
+              || document.getElementById('featured-section')
               || document.getElementById('main');
   if (!dest) return;
 
@@ -4886,6 +4875,90 @@ function getMundialItems(maxExtra = Infinity) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// FEATURED SECTION — Nueva Temporada 26/27
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Selección provisional automática de destacados 26/27: prioriza álbumes con
+ * más fotos (proxy de calidad) y evita repetir el mismo equipo dos veces.
+ */
+function getNewSeasonFeaturedItems(limit = 12) {
+  const pool = allProducts.filter(p =>
+    (p.cats || []).includes('nuevatemporada') && !(p.cats || []).includes('kids')
+  );
+  const sorted = [...pool].sort((a, b) => (b.photos || 0) - (a.photos || 0));
+
+  const seenTeams = new Set();
+  const items = [];
+  for (const p of sorted) {
+    const team = detectTeam(p.nameEn) || p.id;
+    if (seenTeams.has(team)) continue;
+    seenTeams.add(team);
+    items.push(p);
+    if (items.length >= limit) break;
+  }
+  return items;
+}
+
+function renderFeaturedNewSeason() {
+  const section = document.getElementById('featured-newseason-section');
+  const scroll  = document.getElementById('featured-newseason-scroll');
+  const isHome  = activeCat === 'all' && !searchQuery;
+
+  if (!isHome || allProducts.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  const items = getNewSeasonFeaturedItems(12);
+  if (items.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  scroll.innerHTML = '';
+  for (const p of items) {
+    const price = getBasePrice(p);
+    let priceHtml;
+    if (discountMode) {
+      const discounted = getDiscountedPrice(price);
+      priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">-33%</span>`;
+    } else if (variableCouponMode) {
+      const discounted = getVariableCouponPrice(price);
+      const pctLabel   = `-${Math.round(variableCouponPct * 100)}%`;
+      priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">${pctLabel}</span>`;
+    } else {
+      const { main } = t().price_fmt(price);
+      priceHtml = main;
+    }
+    const isPlayer = PLAYER_RE.test(p.nameEn);
+    const card = document.createElement('div');
+    card.className = 'featured-card';
+    card.onclick   = () => openModal(p);
+    card.innerHTML = `
+      <div class="featured-card-img-wrap">
+        ${p.img
+          ? `<img class="featured-card-img lazy" data-src="${p.img}" alt="${escHtml(p.nameEn)}" loading="lazy" onerror="this.style.display='none'">`
+          : jerseyIcon(56)}
+      </div>
+      <div class="featured-card-body">
+        <div class="featured-card-name">${escHtml(traducirNombre(p.nameEn))}</div>
+        <div class="featured-card-price">
+          ${priceHtml}
+          ${isPlayer ? '<span class="badge-player">PLAYER</span>' : ''}
+        </div>
+      </div>`;
+    scroll.appendChild(card);
+  }
+
+  if (imgObserver) {
+    scroll.querySelectorAll('img.lazy[data-src]').forEach(img => imgObserver.observe(img));
+  }
+
+  section.style.display = 'block';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // FEATURED SECTION — Mundial 2026
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -5296,10 +5369,10 @@ function renderAll() {
   hero.style.display = (activeCat === 'all' && !searchQuery) ? 'block' : 'none';
 
   renderGallery();
+  renderFeaturedNewSeason();
   renderFeatured();
   renderSuperFlash();
   renderUclFlash();
-  renderHomeRow('row-nuevatemporada', 'scroll-nuevatemporada', 'nuevatemporada', 12);
   renderHomeRow('row-retro',          'scroll-retro',          'retro',          12);
   renderHomeRow('row-laliga',         'scroll-laliga',         'laliga',         12);
   renderHomeRow('row-premier',        'scroll-premier',        'premier',        12);
@@ -5311,7 +5384,6 @@ function renderAll() {
   renderHomeRow('row-sudamerica',     'scroll-sudamerica',     'sudamerica',     12);
   renderHomeRow('row-shorts',         'scroll-shorts',         'shorts',         12);
   renderHomeRow('row-nba',            'scroll-nba',            'nba',            12);
-  renderHomeRow('row-windbreaker',    'scroll-windbreaker',    'windbreaker',    12);
   renderHomeRow('row-kids',           'scroll-kids',           'kids',           12);
   renderHomeRow('row-europa',         'scroll-europa',         'europa',         12);
 
@@ -5448,7 +5520,6 @@ const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwRZxqgRX2hyWGffIiz
 // ── Precios modo NORMAL (en €) ─────────────────────────────────────────────
 const NORMAL_PRICES = {
   windbreaker: 60,   // también aplica a cualquier producto con "jacket" en el nombre
-  streetwear:  75,
   kids:        20,
   women:        6,
   nba:         25,
@@ -5493,7 +5564,6 @@ const NORMAL_SHORTS_PLAYER = 18;
 // ── Precios modo SOCIO (en $) ──────────────────────────────────────────────
 const SOCIO_PRICES = {
   windbreaker: 40,
-  streetwear:  67.5,
   kids:        12,
   women:        8,
   nba:         15 / EUR_RATE,  // → 15.00€
@@ -7348,6 +7418,10 @@ function updateLangUI() {
   if (featuredTitle) featuredTitle.textContent = t().featured_title;
   const featuredSeeAll = document.getElementById('featured-see-all');
   if (featuredSeeAll) featuredSeeAll.textContent = t().featured_see_all;
+  const featuredNewSeasonTitle = document.getElementById('featured-newseason-title');
+  if (featuredNewSeasonTitle) featuredNewSeasonTitle.textContent = t().featured_newseason_title;
+  const featuredNewSeasonSeeAll = document.getElementById('featured-newseason-see-all');
+  if (featuredNewSeasonSeeAll) featuredNewSeasonSeeAll.textContent = t().featured_see_all;
   document.querySelectorAll('[data-i18n="label_email"]').forEach(el => el.textContent = t().label_email);
   const emailErrEl = document.getElementById('form-correo-error');
   if (emailErrEl) emailErrEl.textContent = t().error_email;

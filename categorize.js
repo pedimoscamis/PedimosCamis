@@ -267,7 +267,18 @@ function main() {
     process.exit(1);
   }
 
-  const raw = JSON.parse(fs.readFileSync(RAW_FILE, 'utf-8'));
+  const rawAll = JSON.parse(fs.readFileSync(RAW_FILE, 'utf-8'));
+
+  // Excluir categorías que no son fútbol: NFL, Streetwear, Windbreaker.
+  const EXCLUDED_CATS = new Set(['nfl', 'streetwear', 'windbreaker']);
+  const raw = rawAll.filter(p => {
+    const cats = categorizeCats(p.name, p.yupooCategory);
+    return !cats.some(c => EXCLUDED_CATS.has(c));
+  });
+  const excludedCount = rawAll.length - raw.length;
+  if (excludedCount > 0) {
+    console.log(`Excluidos por no ser fútbol (NFL/Streetwear/Windbreaker): ${excludedCount}`);
+  }
   console.log(`Productos a procesar: ${raw.length}`);
 
   // ── Cargar catálogo existente para preservar URLs de Cloudinary ───────────

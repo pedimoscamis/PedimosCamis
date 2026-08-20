@@ -58,14 +58,15 @@ const YUPOO_CATEGORIES = [
   // ── Tipo de producto ───────────────────────────────────────────────────
   { id: '5179808', label: 'Retro',               kitzoneCat: 'retro'       },
   { id: '5179791', label: 'NBA',                 kitzoneCat: 'nba'         },
-  { id: '5179790', label: 'NFL',                 kitzoneCat: 'nfl'         },
+  // NFL, Streetwear y Windbreaker excluidos del catálogo: no son fútbol.
+  { id: null,      label: 'NFL',                 kitzoneCat: 'nfl'         },
   // Streetwear: 5 subcategorías (Gallery Dept, BAPE, AMIRI, etc.)
-  { id: '5179781', label: 'Streetwear A',        kitzoneCat: 'streetwear'  },
-  { id: '5179775', label: 'Streetwear B',        kitzoneCat: 'streetwear'  },
-  { id: '5179769', label: 'Streetwear C',        kitzoneCat: 'streetwear'  },
-  { id: '5179768', label: 'Streetwear D',        kitzoneCat: 'streetwear'  },
-  { id: '5179767', label: 'Streetwear E',        kitzoneCat: 'streetwear'  },
-  { id: '5179802', label: 'Windbreaker',         kitzoneCat: 'windbreaker' },
+  { id: null,      label: 'Streetwear A',        kitzoneCat: 'streetwear'  },
+  { id: null,      label: 'Streetwear B',        kitzoneCat: 'streetwear'  },
+  { id: null,      label: 'Streetwear C',        kitzoneCat: 'streetwear'  },
+  { id: null,      label: 'Streetwear D',        kitzoneCat: 'streetwear'  },
+  { id: null,      label: 'Streetwear E',        kitzoneCat: 'streetwear'  },
+  { id: null,      label: 'Windbreaker',         kitzoneCat: 'windbreaker' },
   { id: '5179800', label: 'Kids',                kitzoneCat: 'kids'        },
   { id: '5179801', label: 'Women',               kitzoneCat: 'women'       },
 ];
