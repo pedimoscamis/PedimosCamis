@@ -539,7 +539,7 @@
       background:
         repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0px, rgba(255,255,255,0.035) 2px, transparent 2px, transparent 34px),
         linear-gradient(135deg, #b5102d 0%, #7a0c1f 24%, #0a0a0d 62%, #0a0a0d 100%);
-      padding: 60px 24px 54px;
+      padding: 44px 24px 38px;
       text-align: center;
       position: relative; overflow: hidden;
     }
@@ -1727,30 +1727,30 @@
     }
     #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-    /* ─── Featured Section (Mundial 2026 + Nueva Temporada 26/27) ─── */
-    #featured-section, #featured-newseason-section {
+    /* ─── Featured Section (Mundial 2026 + Nueva Temporada 26/27 + Segunda Estrella) ─── */
+    #featured-section, #featured-newseason-section, #featured-secondstar-section {
       background: #131313;
       padding: 28px 0 32px;
       display: none;
       border-bottom: 1px solid var(--border);
     }
-    #featured-inner, #featured-newseason-inner {
+    #featured-inner, #featured-newseason-inner, #featured-secondstar-inner {
       max-width: 1440px;
       margin: 0 auto;
       padding: 0 24px;
     }
-    #featured-header, #featured-newseason-header {
+    #featured-header, #featured-newseason-header, #featured-secondstar-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 18px;
     }
-    #featured-title-wrap, #featured-newseason-title-wrap {
+    #featured-title-wrap, #featured-newseason-title-wrap, #featured-secondstar-title-wrap {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    #featured-title, #featured-newseason-title {
+    #featured-title, #featured-newseason-title, #featured-secondstar-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 26px;
       letter-spacing: 1px;
@@ -1766,7 +1766,7 @@
       vertical-align: middle;
       text-transform: uppercase;
     }
-    #featured-see-all, #featured-newseason-see-all {
+    #featured-see-all, #featured-newseason-see-all, #featured-secondstar-see-all {
       background: none;
       border: 1px solid var(--border);
       color: var(--muted);
@@ -1779,8 +1779,8 @@
       white-space: nowrap;
       transition: border-color .2s, color .2s;
     }
-    #featured-see-all:hover, #featured-newseason-see-all:hover { border-color: var(--accent); color: var(--text); }
-    #featured-scroll, #featured-newseason-scroll {
+    #featured-see-all:hover, #featured-newseason-see-all:hover, #featured-secondstar-see-all:hover { border-color: var(--accent); color: var(--text); }
+    #featured-scroll, #featured-newseason-scroll, #featured-secondstar-scroll {
       display: flex;
       gap: 14px;
       overflow-x: auto;
@@ -1788,8 +1788,8 @@
       scrollbar-width: thin;
       scrollbar-color: #333 transparent;
     }
-    #featured-scroll::-webkit-scrollbar, #featured-newseason-scroll::-webkit-scrollbar { height: 4px; }
-    #featured-scroll::-webkit-scrollbar-thumb, #featured-newseason-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    #featured-scroll::-webkit-scrollbar, #featured-newseason-scroll::-webkit-scrollbar, #featured-secondstar-scroll::-webkit-scrollbar { height: 4px; }
+    #featured-scroll::-webkit-scrollbar-thumb, #featured-newseason-scroll::-webkit-scrollbar-thumb, #featured-secondstar-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
     .featured-card {
       flex: 0 0 168px;
       background: var(--card);
@@ -2395,7 +2395,7 @@
       #search-wrap { max-width: none; }
       #cat-bar { padding: 8px 14px; }
       #main { padding: 20px 14px 60px; }
-      #hero { padding: 42px 14px 39px; }
+      #hero { padding: 30px 14px 26px; }
       #hero-title {
         font-weight: 900;
         -webkit-text-stroke: 1px currentColor;
@@ -2758,6 +2758,20 @@
       <button id="featured-newseason-see-all" onclick="setCategory('nuevatemporada')">Ver todas →</button>
     </div>
     <div id="featured-newseason-scroll"></div>
+  </div>
+</section>
+
+<!-- ─── Featured: Segunda Estrella (España 2 estrellas) ────────────── -->
+<section id="featured-secondstar-section">
+  <div id="featured-secondstar-inner">
+    <div id="featured-secondstar-header">
+      <div id="featured-secondstar-title-wrap">
+        <span id="featured-secondstar-title">SEGUNDA ESTRELLA</span>
+        <span class="badge-new" style="background:#c9a227;color:#111">⭐⭐ España</span>
+      </div>
+      <button id="featured-secondstar-see-all" onclick="setCategory('mundial2026')">Ver todas →</button>
+    </div>
+    <div id="featured-secondstar-scroll"></div>
   </div>
 </section>
 
@@ -3651,6 +3665,7 @@ const T = {
     pill_nations: '🌍 Selecciones',
     featured_title: 'MUNDIAL 2026',
     featured_newseason_title: 'NUEVA TEMPORADA 26/27',
+    featured_secondstar_title: 'SEGUNDA ESTRELLA',
     featured_see_all: 'Ver todas →',
     upsell_shipping: (n) => `🚚 ¡Estás a solo <strong>${n} camiseta${n === 1 ? '' : 's'}</strong> del envío <strong>GRATIS</strong>!`,
     label_email: 'Correo electrónico *',
@@ -3730,6 +3745,7 @@ const T = {
     pill_nations: '🌍 National Teams',
     featured_title: 'WORLD CUP 2026',
     featured_newseason_title: 'NEW SEASON 26/27',
+    featured_secondstar_title: 'SECOND STAR',
     featured_see_all: 'View all →',
     upsell_shipping: (n) => `🚚 You're only <strong>${n} shirt${n === 1 ? '' : 's'}</strong> away from <strong>FREE</strong> shipping!`,
     label_email: 'Email *',
@@ -3799,6 +3815,8 @@ let selectedSize = null;
 let cart = JSON.parse(localStorage.getItem('kz-cart') || '[]');
 let activeFilters  = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set(), liga: new Set() };
 let seasonSortDir  = 'desc'; // 'desc' = más reciente primero, 'asc' = más antiguo
+// Categorías con orden "Relevante" por defecto (equipos grandes / relevancia propia)
+const RELEVANCE_CATS = new Set(['retro', 'laliga', 'nuevatemporada']);
 let favorites      = new Set(JSON.parse(localStorage.getItem('kz-fav') || '[]'));
 
 function saveFavorites() {
@@ -4036,8 +4054,8 @@ function setCategory(cat) {
   searchQuery = '';
   clearActiveFilters();
   document.getElementById('search').value = '';
-  // Retro → default relevance; el resto → temporada más reciente primero
-  seasonSortDir = (cat === 'retro') ? 'relevance' : 'desc';
+  // Retro, LaLiga y Nueva Temporada → default relevance; el resto → temporada más reciente primero
+  seasonSortDir = RELEVANCE_CATS.has(cat) ? 'relevance' : 'desc';
   buildCatBar();
   buildFilterBar();
   renderAll();
@@ -4640,7 +4658,7 @@ function buildFilterBar() {
   sortWrap.appendChild(sortLbl);
   const sortSel = document.createElement('select');
   sortSel.className = 'filter-select';
-  const sortOpts = activeCat === 'retro'
+  const sortOpts = RELEVANCE_CATS.has(activeCat)
     ? [
         { value: 'relevance', label: isEs ? 'Relevante'  : 'Relevant'  },
         { value: 'desc',      label: isEs ? 'Reciente ↓' : 'Newest ↓'  },
@@ -4702,10 +4720,14 @@ function getFiltered() {
     });
   }
 
-  // Vista Mundial 2026: equipaciones 2026 en orden canónico, sin retros del escaparate
+  // Vista Mundial 2026: equipaciones 2026 en orden canónico, sin retros del escaparate,
+  // con España "2 estrellas" siempre primero.
   if (activeCat === 'mundial2026') {
     const base = getMundialItems().filter(p => !(p.cats || []).includes('retro'));
-    return hasActiveFilters() ? base.filter(matchesFilter) : base;
+    const filtered = hasActiveFilters() ? base.filter(matchesFilter) : base;
+    const twoStar = filtered.filter(isSpainTwoStar).sort((a, b) => homeAwayVariantTier(a.nameEn) - homeAwayVariantTier(b.nameEn));
+    const rest    = filtered.filter(p => !isSpainTwoStar(p));
+    return [...twoStar, ...rest];
   }
 
   let result = allProducts.filter(p => {
@@ -4740,6 +4762,9 @@ function getFiltered() {
         return seasonSortDir === 'desc' ? yb - ya : ya - yb;
       });
     }
+  } else if (seasonSortDir === 'relevance' && RELEVANCE_CATS.has(activeCat)) {
+    // Vista de categoría: orden "grandes primero" (LaLiga / Nueva Temporada)
+    result = result.slice().sort(bigClubsFirstComparator);
   } else {
     // Vista de categoría: ordenar por temporada según seasonSortDir
     result = result.slice().sort((a, b) => {
@@ -4767,6 +4792,53 @@ const MUNDIAL_EXCL_FAN  = /entrenamiento|training|especial|special|edition|edici
 
 const isMundialHome = n => /\bhome\b|\blocal\b/i.test(n);
 const isMundialAway = n => /\baway\b|\bvisitante\b/i.test(n);
+
+// España "2 estrellas" (segunda estrella de campeón del mundo) — celebra el
+// título; se muestran primero en Mundial 2026 y en su propio escaparate.
+const TWO_STAR_RE = /2\s*-?\s*stars?\b|2\s*estrellas?\b/i;
+const SPAIN_RE    = /\bspain\b|\bespaña\b|\bespana\b/i;
+const isSpainTwoStar = p => SPAIN_RE.test(p.nameEn) && TWO_STAR_RE.test(p.nameEn);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ORDEN "GRANDES PRIMERO" — LaLiga y Nueva Temporada
+// ═══════════════════════════════════════════════════════════════════════════
+// Real Madrid, Barça y Atleti muestran primero su local normal (sin manga
+// larga, sin player version, sin variantes), luego su visitante normal en el
+// mismo orden; el resto de equipos se agrupa por nombre y, dentro de cada
+// equipo, también local → visitante → variantes (player, manga larga, etc.).
+const BIG3_TEAMS = ['Real Madrid', 'Barcelona', 'Atlético Madrid'];
+
+function homeAwayVariantTier(name) {
+  // "Third Away" / "Tercera Visitante" etc. es una tercera equipación, no la
+  // visitante normal, aunque el nombre incluya la palabra "away"/"visitante".
+  if (/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b/i.test(name)) return 2;
+  if (isMundialHome(name) && !MUNDIAL_EXCL_FAN.test(name)) return 0;
+  if (isMundialAway(name) && !MUNDIAL_EXCL_FAN.test(name)) return 1;
+  return 2;
+}
+
+function bigClubsFirstComparator(a, b) {
+  const teamA = detectTeam(a.nameEn) || '';
+  const teamB = detectTeam(b.nameEn) || '';
+  const big3A = BIG3_TEAMS.indexOf(teamA);
+  const big3B = BIG3_TEAMS.indexOf(teamB);
+  const tierA = homeAwayVariantTier(a.nameEn);
+  const tierB = homeAwayVariantTier(b.nameEn);
+
+  // Slot especial: local/visitante normal de los 3 grandes, antes que nada
+  const specialA = (big3A !== -1 && tierA <= 1) ? tierA : null;
+  const specialB = (big3B !== -1 && tierB <= 1) ? tierB : null;
+
+  if (specialA !== null && specialB !== null) {
+    return specialA !== specialB ? specialA - specialB : big3A - big3B;
+  }
+  if (specialA !== null) return -1;
+  if (specialB !== null) return 1;
+
+  // Resto: agrupar por equipo, luego local → visitante → variantes
+  if (teamA !== teamB) return teamA.localeCompare(teamB);
+  return tierA - tierB;
+}
 
 /**
  * Devuelve el array de productos Mundial 2026 en el orden canónico:
@@ -4882,27 +4954,36 @@ function getMundialItems(maxExtra = Infinity) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Selección provisional automática de destacados 26/27: prioriza LaLiga
- * (Real Madrid, Barça, Atleti…) primero, luego el resto por nº de fotos
- * (proxy de calidad), evitando repetir el mismo equipo dos veces.
+ * Selección automática de destacados 26/27: local y visitante normales de
+ * Real Madrid, Barça y Atleti primero (2 slots cada uno), luego un artículo
+ * por cada uno del resto de equipos (su local si lo tiene, si no visitante
+ * u otra variante), en orden alfabético de equipo.
  */
 function getNewSeasonFeaturedItems(limit = 12) {
   const pool = allProducts.filter(p =>
     (p.cats || []).includes('nuevatemporada') && !(p.cats || []).includes('kids')
   );
-  const sorted = [...pool].sort((a, b) => {
-    const aLiga = (a.cats || []).includes('laliga') ? 1 : 0;
-    const bLiga = (b.cats || []).includes('laliga') ? 1 : 0;
-    if (aLiga !== bLiga) return bLiga - aLiga;
-    return (b.photos || 0) - (a.photos || 0);
-  });
+  const sorted = [...pool].sort(bigClubsFirstComparator);
 
-  const seenTeams = new Set();
+  const seenTeams   = new Set();          // 1 slot para el resto de equipos
+  const big3Tiers    = new Map();          // team → Set(tier) ya añadidos (hasta 2: local+visitante)
   const items = [];
   for (const p of sorted) {
-    const team = detectTeam(p.nameEn) || p.id;
-    if (seenTeams.has(team)) continue;
-    seenTeams.add(team);
+    const team  = detectTeam(p.nameEn) || p.id;
+    const isBig3 = BIG3_TEAMS.includes(team);
+
+    if (isBig3) {
+      const tier = homeAwayVariantTier(p.nameEn);
+      if (tier > 1) continue; // solo local/visitante normal para los 3 grandes
+      const tiersSeen = big3Tiers.get(team) || new Set();
+      if (tiersSeen.has(tier)) continue;
+      tiersSeen.add(tier);
+      big3Tiers.set(team, tiersSeen);
+    } else {
+      if (seenTeams.has(team)) continue;
+      seenTeams.add(team);
+    }
+
     items.push(p);
     if (items.length >= limit) break;
   }
@@ -4920,6 +5001,74 @@ function renderFeaturedNewSeason() {
   }
 
   const items = getNewSeasonFeaturedItems(12);
+  if (items.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  scroll.innerHTML = '';
+  for (const p of items) {
+    const price = getBasePrice(p);
+    let priceHtml;
+    if (discountMode) {
+      const discounted = getDiscountedPrice(price);
+      priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">-33%</span>`;
+    } else if (variableCouponMode) {
+      const discounted = getVariableCouponPrice(price);
+      const pctLabel   = `-${Math.round(variableCouponPct * 100)}%`;
+      priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">${pctLabel}</span>`;
+    } else {
+      const { main } = t().price_fmt(price);
+      priceHtml = main;
+    }
+    const isPlayer = PLAYER_RE.test(p.nameEn);
+    const card = document.createElement('div');
+    card.className = 'featured-card';
+    card.onclick   = () => openModal(p);
+    card.innerHTML = `
+      <div class="featured-card-img-wrap">
+        ${p.img
+          ? `<img class="featured-card-img lazy" data-src="${p.img}" alt="${escHtml(p.nameEn)}" loading="lazy" onerror="this.style.display='none'">`
+          : jerseyIcon(56)}
+      </div>
+      <div class="featured-card-body">
+        <div class="featured-card-name">${escHtml(traducirNombre(p.nameEn))}</div>
+        <div class="featured-card-price">
+          ${priceHtml}
+          ${isPlayer ? '<span class="badge-player">PLAYER</span>' : ''}
+        </div>
+      </div>`;
+    scroll.appendChild(card);
+  }
+
+  if (imgObserver) {
+    scroll.querySelectorAll('img.lazy[data-src]').forEach(img => imgObserver.observe(img));
+  }
+
+  section.style.display = 'block';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FEATURED SECTION — Segunda Estrella (España 2 estrellas)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function getSecondStarItems() {
+  return allProducts
+    .filter(p => isSpainTwoStar(p) && !(p.cats || []).includes('kids'))
+    .sort((a, b) => homeAwayVariantTier(a.nameEn) - homeAwayVariantTier(b.nameEn));
+}
+
+function renderFeaturedSecondStar() {
+  const section = document.getElementById('featured-secondstar-section');
+  const scroll  = document.getElementById('featured-secondstar-scroll');
+  const isHome  = activeCat === 'all' && !searchQuery;
+
+  if (!isHome || allProducts.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  const items = getSecondStarItems();
   if (items.length === 0) {
     section.style.display = 'none';
     return;
@@ -5379,6 +5528,7 @@ function renderAll() {
 
   renderGallery();
   renderFeaturedNewSeason();
+  renderFeaturedSecondStar();
   renderFeatured();
   renderSuperFlash();
   renderUclFlash();
@@ -7431,6 +7581,10 @@ function updateLangUI() {
   if (featuredNewSeasonTitle) featuredNewSeasonTitle.textContent = t().featured_newseason_title;
   const featuredNewSeasonSeeAll = document.getElementById('featured-newseason-see-all');
   if (featuredNewSeasonSeeAll) featuredNewSeasonSeeAll.textContent = t().featured_see_all;
+  const featuredSecondStarTitle = document.getElementById('featured-secondstar-title');
+  if (featuredSecondStarTitle) featuredSecondStarTitle.textContent = t().featured_secondstar_title;
+  const featuredSecondStarSeeAll = document.getElementById('featured-secondstar-see-all');
+  if (featuredSecondStarSeeAll) featuredSecondStarSeeAll.textContent = t().featured_see_all;
   document.querySelectorAll('[data-i18n="label_email"]').forEach(el => el.textContent = t().label_email);
   const emailErrEl = document.getElementById('form-correo-error');
   if (emailErrEl) emailErrEl.textContent = t().error_email;
