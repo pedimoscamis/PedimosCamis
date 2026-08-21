@@ -3816,7 +3816,10 @@ let cart = JSON.parse(localStorage.getItem('kz-cart') || '[]');
 let activeFilters  = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set(), liga: new Set() };
 let seasonSortDir  = 'desc'; // 'desc' = más reciente primero, 'asc' = más antiguo
 // Categorías con orden "Relevante" por defecto (equipos grandes / relevancia propia)
-const RELEVANCE_CATS = new Set(['retro', 'laliga', 'nuevatemporada']);
+const RELEVANCE_CATS = new Set([
+  'retro', 'nuevatemporada', 'laliga', 'premier', 'seriea', 'bundesliga', 'ligue1',
+  'selecciones', 'sudamerica', 'europa', 'women', 'kids', 'nba', 'otros', 'shorts',
+]);
 let favorites      = new Set(JSON.parse(localStorage.getItem('kz-fav') || '[]'));
 
 function saveFavorites() {
@@ -4713,6 +4716,9 @@ function getFiltered() {
   if (activeCat === 'shorts') {
     let base = allProducts.filter(isShortProduct).filter(matchesSearch);
     const filtered = hasActiveFilters() ? base.filter(matchesFilter) : base;
+    if (seasonSortDir === 'relevance') {
+      return filtered.slice().sort(bigClubsFirstComparator);
+    }
     return filtered.slice().sort((a, b) => {
       const ya = seasonStartYear(extractSeason(a.nameEn) || '') ?? 0;
       const yb = seasonStartYear(extractSeason(b.nameEn) || '') ?? 0;
@@ -4763,8 +4769,9 @@ function getFiltered() {
       });
     }
   } else if (seasonSortDir === 'relevance' && RELEVANCE_CATS.has(activeCat)) {
-    // Vista de categoría: orden "grandes primero" (LaLiga / Nueva Temporada)
-    result = result.slice().sort(bigClubsFirstComparator);
+    // Vista de categoría: orden "grandes primero" — por país en Selecciones,
+    // por club en el resto de categorías.
+    result = result.slice().sort(activeCat === 'selecciones' ? countriesFirstComparator : bigClubsFirstComparator);
   } else {
     // Vista de categoría: ordenar por temporada según seasonSortDir
     result = result.slice().sort((a, b) => {
@@ -4857,37 +4864,73 @@ function homeAwayVariantTier(name) {
   return 2;
 }
 
-function bigClubsFirstComparator(a, b) {
-  const teamA = detectTeam(a.nameEn) || '';
-  const teamB = detectTeam(b.nameEn) || '';
-  const big3A = BIG3_TEAMS.indexOf(teamA);
-  const big3B = BIG3_TEAMS.indexOf(teamB);
-  const tierA = homeAwayVariantTier(a.nameEn);
-  const tierB = homeAwayVariantTier(b.nameEn);
-
-  // Slot especial: local/visitante normal de los 3 grandes, antes que nada
-  const specialA = (big3A !== -1 && tierA <= 1) ? tierA : null;
-  const specialB = (big3B !== -1 && tierB <= 1) ? tierB : null;
-
-  if (specialA !== null && specialB !== null) {
-    return specialA !== specialB ? specialA - specialB : big3A - big3B;
-  }
-  if (specialA !== null) return -1;
-  if (specialB !== null) return 1;
-
-  // Resto: primero las locales de todos los equipos (por popularidad),
-  // luego el resto (visitantes/variantes), también por popularidad.
-  const homeA = tierA === 0 ? 0 : 1;
-  const homeB = tierB === 0 ? 0 : 1;
-  if (homeA !== homeB) return homeA - homeB;
-
-  const popA = popularityRank(teamA);
-  const popB = popularityRank(teamB);
-  if (popA !== popB) return popA - popB;
-
-  if (teamA !== teamB) return teamA.localeCompare(teamB);
-  return tierA - tierB;
+function isRetroItem(p) {
+  return (p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn || '');
 }
+
+// Ranking de popularidad de selecciones nacionales — para la categoría
+// "Selecciones" el criterio es país, no club (un club mal etiquetado como
+// selección por el scraper no debe subir por su popularidad de club).
+const POPULAR_COUNTRIES = [
+  'España', 'Brasil', 'Francia', 'Argentina', 'Alemania', 'Inglaterra', 'Italia',
+  'Portugal', 'Países Bajos', 'Bélgica', 'Uruguay', 'Croacia', 'México', 'USA',
+  'Japón', 'Marruecos', 'Colombia', 'Senegal', 'Suiza', 'Serbia', 'Corea del Sur',
+  'Polonia', 'Dinamarca', 'Austria', 'Gales', 'Escocia', 'Turquía', 'Suecia',
+  'Canadá', 'Australia', 'Costa de Marfil', 'Ghana', 'Nigeria', 'Egipto', 'Argelia',
+  'Túnez', 'Camerún', 'Hungría', 'Rumanía', 'Rep. Checa', 'Congo', 'Arabia Saudí',
+];
+function countryPopularityRank(team) {
+  const idx = POPULAR_COUNTRIES.indexOf(team);
+  return idx === -1 ? Infinity : idx;
+}
+
+/**
+ * @param {boolean} useCountries  true en la categoría Selecciones: ordena por
+ *   popularidad de país en vez de club (evita que un club mal etiquetado
+ *   como selección suba por su propia popularidad de club).
+ */
+function makeRelevanceComparator(useCountries = false) {
+  return function bigClubsFirstComparator(a, b) {
+    // Las retro quedan siempre detrás de la temporada actual, sea cual sea el
+    // equipo — en una vista de liga "relevante" no queremos que un retro del
+    // Bayern tape la camiseta actual del Sevilla.
+    const retroA = isRetroItem(a) ? 1 : 0;
+    const retroB = isRetroItem(b) ? 1 : 0;
+    if (retroA !== retroB) return retroA - retroB;
+
+    const teamA = detectTeam(a.nameEn) || '';
+    const teamB = detectTeam(b.nameEn) || '';
+    const tierA = homeAwayVariantTier(a.nameEn);
+    const tierB = homeAwayVariantTier(b.nameEn);
+
+    if (!useCountries) {
+      const big3A = BIG3_TEAMS.indexOf(teamA);
+      const big3B = BIG3_TEAMS.indexOf(teamB);
+      // Slot especial: local/visitante normal de los 3 grandes, antes que nada
+      const specialA = (big3A !== -1 && tierA <= 1) ? tierA : null;
+      const specialB = (big3B !== -1 && tierB <= 1) ? tierB : null;
+      if (specialA !== null && specialB !== null) {
+        return specialA !== specialB ? specialA - specialB : big3A - big3B;
+      }
+      if (specialA !== null) return -1;
+      if (specialB !== null) return 1;
+    }
+
+    // Resto: manda la popularidad (equipo o país según la vista) por encima
+    // de local/visitante — ej. la segunda equipación del Arsenal va antes
+    // que la primera del Everton. Dentro del mismo equipo, local →
+    // visitante → variantes.
+    const popA = useCountries ? countryPopularityRank(teamA) : popularityRank(teamA);
+    const popB = useCountries ? countryPopularityRank(teamB) : popularityRank(teamB);
+    if (popA !== popB) return popA - popB;
+
+    if (teamA !== teamB) return teamA.localeCompare(teamB);
+    return tierA - tierB;
+  };
+}
+
+const bigClubsFirstComparator = makeRelevanceComparator(false);
+const countriesFirstComparator = makeRelevanceComparator(true);
 
 /**
  * Devuelve el array de productos Mundial 2026 en el orden canónico:
