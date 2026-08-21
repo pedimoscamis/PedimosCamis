@@ -535,28 +535,31 @@
 
     /* ─── Hero — Mundial 2026 ───────────────────────────────── */
     #hero {
-      /* Bloque rojo (top-left) + fondo navy (resto): diagonal limpia */
-      background: linear-gradient(155deg, #D32F2F 0%, #C62828 30%, #0D1B2A 30%, #0D1B2A 100%);
+      /* Diagonal marca (acento rojo → carbón) + textura de rayas tipo jersey */
+      background:
+        repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0px, rgba(255,255,255,0.035) 2px, transparent 2px, transparent 34px),
+        linear-gradient(135deg, #b5102d 0%, #7a0c1f 24%, #0a0a0d 62%, #0a0a0d 100%);
       padding: 60px 24px 54px;
       text-align: center;
       position: relative; overflow: hidden;
     }
-    /* Triángulo azul esquina inferior-derecha */
+    /* "26/27" fantasma de fondo — profundidad tipográfica */
     #hero::before {
-      content: '';
-      position: absolute; bottom: 0; right: 0;
-      width: 0; height: 0;
-      border-style: solid;
-      border-width: 0 0 90px 200px;
-      border-color: transparent transparent #1976D2 transparent;
-      opacity: 0.55;
+      content: '26/27';
+      position: absolute; top: 50%; right: -14px;
+      transform: translateY(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(120px, 22vw, 260px);
+      line-height: 1; letter-spacing: -2px;
+      color: rgba(255,255,255,0.05);
+      pointer-events: none; white-space: nowrap;
     }
-    /* Franja verde césped — asienta visualmente el banner */
+    /* Franja dorada inferior — celebración de temporada nueva */
     #hero::after {
       content: '';
       position: absolute; bottom: 0; left: 0; right: 0;
-      height: 6px;
-      background: #43A047;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #FDD835 20%, #FDD835 80%, transparent);
     }
     #hero-title {
       font-family: 'Bebas Neue', sans-serif;
@@ -2729,7 +2732,7 @@
 
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
-  <h1 id="hero-title">NUEVA TEMPORADA<span>26/27</span></h1>
+  <h1 id="hero-title">LA TEMPORADA 26/27<span>YA ESTÁ AQUÍ</span></h1>
   <p id="hero-sub">Calidad premium, precios imbatibles.</p>
   <button id="hero-cta" onclick="scrollToGrid()">VER CATÁLOGO</button>
   <div id="hero-pills">
@@ -3641,8 +3644,8 @@ const T = {
     cart_empty: 'Tu carrito está vacío',
     order_summary: 'RESUMEN DEL PEDIDO',
     back_shopping: '← Seguir comprando',
-    hero_line1: 'NUEVA TEMPORADA',
-    hero_line2: '26/27',
+    hero_line1: 'LA TEMPORADA 26/27',
+    hero_line2: 'YA ESTÁ AQUÍ',
     pill_mundial: '⚽ Mundial 2026',
     pill_newseason: '🆕 Nueva Temp',
     pill_nations: '🌍 Selecciones',
@@ -3720,8 +3723,8 @@ const T = {
     cart_empty: 'Your cart is empty',
     order_summary: 'ORDER SUMMARY',
     back_shopping: '← Continue shopping',
-    hero_line1: 'NEW SEASON',
-    hero_line2: '26/27',
+    hero_line1: 'THE 26/27 SEASON',
+    hero_line2: 'IS HERE',
     pill_mundial: '⚽ World Cup 2026',
     pill_newseason: '🆕 New Season',
     pill_nations: '🌍 National Teams',
@@ -3969,7 +3972,7 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','mundial2026','nuevatemporada','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','shorts','nba','kids','europa','otros','gallery'];
+const CAT_ORDER = ['all','nuevatemporada','mundial2026','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','shorts','nba','kids','europa','otros','gallery'];
 // Categorías que sólo se muestran en modo socio
 const SOCIO_ONLY_CATS = new Set();
 // Categorías ocultas para usuarios normales (visibles en modo socio o si se accede directamente)
@@ -4879,14 +4882,20 @@ function getMundialItems(maxExtra = Infinity) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Selección provisional automática de destacados 26/27: prioriza álbumes con
- * más fotos (proxy de calidad) y evita repetir el mismo equipo dos veces.
+ * Selección provisional automática de destacados 26/27: prioriza LaLiga
+ * (Real Madrid, Barça, Atleti…) primero, luego el resto por nº de fotos
+ * (proxy de calidad), evitando repetir el mismo equipo dos veces.
  */
 function getNewSeasonFeaturedItems(limit = 12) {
   const pool = allProducts.filter(p =>
     (p.cats || []).includes('nuevatemporada') && !(p.cats || []).includes('kids')
   );
-  const sorted = [...pool].sort((a, b) => (b.photos || 0) - (a.photos || 0));
+  const sorted = [...pool].sort((a, b) => {
+    const aLiga = (a.cats || []).includes('laliga') ? 1 : 0;
+    const bLiga = (b.cats || []).includes('laliga') ? 1 : 0;
+    if (aLiga !== bLiga) return bLiga - aLiga;
+    return (b.photos || 0) - (a.photos || 0);
+  });
 
   const seenTeams = new Set();
   const items = [];
