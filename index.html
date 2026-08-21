@@ -4804,9 +4804,49 @@ const isSpainTwoStar = p => SPAIN_RE.test(p.nameEn) && TWO_STAR_RE.test(p.nameEn
 // ═══════════════════════════════════════════════════════════════════════════
 // Real Madrid, Barça y Atleti muestran primero su local normal (sin manga
 // larga, sin player version, sin variantes), luego su visitante normal en el
-// mismo orden; el resto de equipos se agrupa por nombre y, dentro de cada
-// equipo, también local → visitante → variantes (player, manga larga, etc.).
+// mismo orden; después, las locales del resto de equipos ordenadas por
+// popularidad; y por último el resto (visitantes/variantes), también por
+// popularidad y agrupadas por equipo.
 const BIG3_TEAMS = ['Real Madrid', 'Barcelona', 'Atlético Madrid'];
+
+// Ranking de popularidad de clubes (fuera de los 3 grandes) para ordenar
+// "Nueva Temporada" y LaLiga con criterio de relevancia/demanda habitual.
+const POPULAR_CLUBS = [
+  // Top mundial
+  'Manchester United', 'Manchester City', 'Liverpool', 'Bayern Munich', 'Chelsea',
+  'PSG', 'Arsenal', 'Juventus', 'AC Milan', 'Inter Milan', 'Tottenham', 'Borussia Dortmund',
+  // Resto de grandes europeos
+  'Napoli', 'Roma', 'Ajax', 'Benfica', 'Porto', 'Sporting CP', 'Celtic', 'Rangers',
+  // LaLiga (tras los 3 grandes)
+  'Sevilla', 'Real Betis', 'Valencia', 'Athletic Bilbao', 'Villarreal', 'Real Sociedad',
+  'Real Sociedad', 'Celta Vigo', 'Osasuna', 'Girona', 'Rayo Vallecano', 'Mallorca',
+  'Alavés', 'Espanyol', 'Las Palmas', 'Leganés', 'Valladolid', 'Getafe', 'Cádiz', 'Córdoba',
+  // Ligue 1
+  'Marseille', 'Lyon', 'Monaco', 'Lille', 'Nice', 'Rennes', 'Lens', 'Nantes',
+  'Saint-Étienne', 'Strasbourg',
+  // Premier League
+  'Newcastle', 'West Ham', 'Aston Villa', 'Everton', 'Brighton', 'Wolves', 'Leicester',
+  'Leeds', 'Sunderland', 'Crystal Palace', 'Brentford', 'Nottm Forest', 'Fulham',
+  'Southampton', 'Bournemouth', 'Burnley',
+  // Serie A
+  'Lazio', 'Atalanta', 'Fiorentina', 'Torino', 'Bologna', 'Sampdoria', 'Genoa',
+  'Udinese', 'Parma', 'Cagliari', 'Monza', 'Como', 'Venezia',
+  // Bundesliga
+  'Bayer Leverkusen', 'RB Leipzig', 'Eintracht Frankfurt', 'Wolfsburg', 'Schalke',
+  'Gladbach', 'Stuttgart', 'Union Berlin', 'Werder Bremen', 'Hoffenheim', 'Freiburg',
+  'Augsburg', 'Mainz',
+  // Europa
+  'PSV', 'Feyenoord', 'Red Star Belgrade', 'Galatasaray', 'Fenerbahçe', 'Besiktas',
+  // Sudamérica
+  'Flamengo', 'Boca Juniors', 'River Plate', 'Corinthians', 'Palmeiras', 'São Paulo',
+  'Santos', 'Grêmio', 'Internacional', 'Fluminense', 'Vasco', 'Atlético Mineiro',
+  'Racing Club', 'Independiente', 'San Lorenzo', 'Club América', 'Cruz Azul', 'Chivas',
+  'Tigres', 'Monterrey', 'Colo-Colo',
+];
+function popularityRank(team) {
+  const idx = POPULAR_CLUBS.indexOf(team);
+  return idx === -1 ? Infinity : idx;
+}
 
 function homeAwayVariantTier(name) {
   // "Third Away" / "Tercera Visitante" etc. es una tercera equipación, no la
@@ -4835,7 +4875,16 @@ function bigClubsFirstComparator(a, b) {
   if (specialA !== null) return -1;
   if (specialB !== null) return 1;
 
-  // Resto: agrupar por equipo, luego local → visitante → variantes
+  // Resto: primero las locales de todos los equipos (por popularidad),
+  // luego el resto (visitantes/variantes), también por popularidad.
+  const homeA = tierA === 0 ? 0 : 1;
+  const homeB = tierB === 0 ? 0 : 1;
+  if (homeA !== homeB) return homeA - homeB;
+
+  const popA = popularityRank(teamA);
+  const popB = popularityRank(teamB);
+  if (popA !== popB) return popA - popB;
+
   if (teamA !== teamB) return teamA.localeCompare(teamB);
   return tierA - tierB;
 }
