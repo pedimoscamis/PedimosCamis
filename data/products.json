@@ -258147,8 +258147,8 @@
   },
   {
     "id": "249544917",
-    "nameEs": "Spain 2026 World Cup Home Jersey 2 Stars S-4XL",
-    "nameEn": "Spain 2026 World Cup Home Jersey 2 Stars S-4XL",
+    "nameEs": "España 2026 World Cup Local Jersey Manga Larga 2 Stars S-4XL",
+    "nameEn": "Spain 2026 World Cup Home Jersey Long Sleeve 2 Stars S-4XL",
     "cats": [
       "selecciones"
     ],
@@ -267112,8 +267112,8 @@
   },
   {
     "id": "246538658",
-    "nameEs": "Spain 2026 World Cup Home Jersey 2 Stars S-4XL",
-    "nameEn": "Spain 2026 World Cup Home Jersey 2 Stars S-4XL",
+    "nameEs": "España 2026 World Cup Local Jersey Manga Larga 2 Stars S-4XL",
+    "nameEn": "Spain 2026 World Cup Home Jersey Long Sleeve 2 Stars S-4XL",
     "cats": [
       "selecciones"
     ],
@@ -276553,11 +276553,12 @@
   },
   {
     "id": "jxfc4dd9298f",
-    "nameEs": "Real Madrid Local 26/27",
-    "nameEn": "Real Madrid Home 26/27",
+    "nameEs": "Real Madrid Local Pantalón Corto 26/27",
+    "nameEn": "Real Madrid Home Shorts 26/27",
     "cats": [
       "laliga",
-      "nuevatemporada"
+      "nuevatemporada",
+      "shorts"
     ],
     "type": "normal",
     "priceUsd": 15,

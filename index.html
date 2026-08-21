@@ -588,16 +588,36 @@
     }
     #hero-cta:hover { background: #F9C900; transform: translateY(-2px); }
 
-    #hero-pills {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 8px; margin-top: 21px; position: relative;
+    #hero-teams {
+      margin-top: 24px; position: relative; max-width: 720px; margin-left: auto; margin-right: auto;
     }
-    .hero-pill {
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-      color: var(--muted); padding: 5px 14px; border-radius: 20px;
-      font-size: 13px; cursor: pointer; transition: all .2s;
+    #hero-teams-label {
+      display: block; font-size: 12px; font-weight: 700; letter-spacing: .04em;
+      color: rgba(255,255,255,0.65); text-transform: uppercase; margin-bottom: 10px;
     }
-    .hero-pill:hover { background: rgba(232,23,60,0.15); border-color: var(--accent); color: var(--text); }
+    #hero-teams-row {
+      display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px;
+      padding: 2px 2px 6px; justify-content: flex-start;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.25) transparent;
+      mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+    }
+    #hero-teams-row::-webkit-scrollbar { height: 4px; }
+    #hero-teams-row::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 2px; }
+    .hero-team-chip {
+      flex: 0 0 auto;
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14);
+      color: #fff; padding: 8px 16px 8px 12px; border-radius: 20px;
+      font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background .2s, border-color .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .hero-team-chip::before {
+      content: ''; width: 9px; height: 9px; border-radius: 50%;
+      background: var(--team-color, #999); flex: 0 0 auto;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.25);
+    }
+    .hero-team-chip:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.35); transform: translateY(-2px); }
 
     /* ─── Grid ──────────────────────────────────────────────── */
     #main {
@@ -2735,15 +2755,22 @@
   <h1 id="hero-title">LA TEMPORADA 26/27<span>YA ESTÁ AQUÍ</span></h1>
   <p id="hero-sub">Calidad premium, precios imbatibles.</p>
   <button id="hero-cta" onclick="scrollToGrid()">VER CATÁLOGO</button>
-  <div id="hero-pills">
-    <span class="hero-pill" data-i18n="pill_newseason" onclick="setCategory('nuevatemporada')">🆕 Nueva Temp</span>
-    <span class="hero-pill" data-i18n="pill_mundial" onclick="setCategory('mundial2026')">⚽ Mundial 2026</span>
-    <span class="hero-pill" onclick="setCategory('retro')">⏪ Retro</span>
-    <span class="hero-pill" onclick="setCategory('laliga')">🇪🇸 LaLiga</span>
-    <span class="hero-pill" onclick="setCategory('premier')">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier</span>
-    <span class="hero-pill" data-i18n="pill_nations" onclick="setCategory('selecciones')">🌍 Selecciones</span>
-    <span class="hero-pill" onclick="setCategory('nba')">🏀 NBA</span>
-    <span class="hero-pill" onclick="setCategory('gallery')">🖼️ Galería</span>
+  <div id="hero-teams">
+    <span id="hero-teams-label" data-i18n="hero_teams_label">⚡ Ve directo a tu equipo</span>
+    <div id="hero-teams-row">
+      <button class="hero-team-chip" style="--team-color:#FEBE10" onclick="filterToTeam('laliga','Real Madrid')">Real Madrid</button>
+      <button class="hero-team-chip" style="--team-color:#A50044" onclick="filterToTeam('laliga','Barcelona')">Barcelona</button>
+      <button class="hero-team-chip" style="--team-color:#CB3524" onclick="filterToTeam('laliga','Atlético Madrid')">Atlético Madrid</button>
+      <button class="hero-team-chip" style="--team-color:#DA020E" onclick="filterToTeam('premier','Manchester United')">Man. United</button>
+      <button class="hero-team-chip" style="--team-color:#6CABDD" onclick="filterToTeam('premier','Manchester City')">Man. City</button>
+      <button class="hero-team-chip" style="--team-color:#C8102E" onclick="filterToTeam('premier','Liverpool')">Liverpool</button>
+      <button class="hero-team-chip" style="--team-color:#EF0107" onclick="filterToTeam('premier','Arsenal')">Arsenal</button>
+      <button class="hero-team-chip" style="--team-color:#DC052D" onclick="filterToTeam('bundesliga','Bayern Munich')">Bayern</button>
+      <button class="hero-team-chip" style="--team-color:#004170" onclick="filterToTeam('ligue1','PSG')">PSG</button>
+      <button class="hero-team-chip" style="--team-color:#000000" onclick="filterToTeam('seriea','Juventus')">Juventus</button>
+      <button class="hero-team-chip" style="--team-color:#FB090B" onclick="filterToTeam('seriea','AC Milan')">AC Milan</button>
+      <button class="hero-team-chip" style="--team-color:#034694" onclick="filterToTeam('premier','Chelsea')">Chelsea</button>
+    </div>
   </div>
 </section>
 
@@ -3583,46 +3610,6 @@ function mundialPriority(p) {
   return MUNDIAL_PRIORITY.length;
 }
 
-// Orden de relevancia por defecto en la categoría Retro
-const RETRO_PRIORITY_TEAMS = [
-  ['spain','españa','espana'],
-  ['real madrid'],
-  ['barcelona','barça','barca'],
-  ['atletico','atlético','atleti'],
-  ['france','francia'],
-];
-function retroPriority(p) {
-  const n = p.nameEn.toLowerCase();
-  for (let i = 0; i < RETRO_PRIORITY_TEAMS.length; i++) {
-    if (RETRO_PRIORITY_TEAMS[i].some(k => n.includes(k))) return i;
-  }
-  return RETRO_PRIORITY_TEAMS.length;
-}
-
-/**
- * Reordena un array ya filtrado de productos Retro colocando
- * las 4 más relevantes de cada equipo prioritario al principio.
- * @param {Array} filtered  productos ya filtrados por categoría + activeFilters
- */
-function getRetroRelevanceItems(filtered) {
-  const picked = new Set();
-  const items  = [];
-
-  for (const keywords of RETRO_PRIORITY_TEAMS) {
-    const team = filtered.filter(p => keywords.some(k => p.nameEn.toLowerCase().includes(k)));
-    let count = 0;
-    for (const p of team) {
-      if (count >= 4) break;
-      items.push(p); picked.add(p.id); count++;
-    }
-  }
-  // Resto de retros (sin prioridad estricta)
-  for (const p of filtered) {
-    if (!picked.has(p.id)) items.push(p);
-  }
-  return items;
-}
-
 // Orden de categorías en el grid "Todos"
 const GRID_CAT_ORDER = ['nuevatemporada','laliga','premier','seriea','bundesliga','ligue1','selecciones'];
 function catPriority(p) {
@@ -3660,9 +3647,7 @@ const T = {
     back_shopping: '← Seguir comprando',
     hero_line1: 'LA TEMPORADA 26/27',
     hero_line2: 'YA ESTÁ AQUÍ',
-    pill_mundial: '⚽ Mundial 2026',
-    pill_newseason: '🆕 Nueva Temp',
-    pill_nations: '🌍 Selecciones',
+    hero_teams_label: '⚡ Ve directo a tu equipo',
     featured_title: 'MUNDIAL 2026',
     featured_newseason_title: 'NUEVA TEMPORADA 26/27',
     featured_secondstar_title: 'SEGUNDA ESTRELLA',
@@ -3740,9 +3725,7 @@ const T = {
     back_shopping: '← Continue shopping',
     hero_line1: 'THE 26/27 SEASON',
     hero_line2: 'IS HERE',
-    pill_mundial: '⚽ World Cup 2026',
-    pill_newseason: '🆕 New Season',
-    pill_nations: '🌍 National Teams',
+    hero_teams_label: '⚡ Jump straight to your team',
     featured_title: 'WORLD CUP 2026',
     featured_newseason_title: 'NEW SEASON 26/27',
     featured_secondstar_title: 'SECOND STAR',
@@ -4752,22 +4735,17 @@ function getFiltered() {
   if (activeCat === 'all') {
     // Vista "Todos": ordenar por categoría prioritaria
     result = result.slice().sort((a, b) => catPriority(a) - catPriority(b));
-  } else if (activeCat === 'retro') {
-    if (seasonSortDir === 'relevance') {
-      // Modo relevancia: 4 por equipo prioritario, resto al final
-      result = getRetroRelevanceItems(result);
-    } else {
-      // Modo libre: sort por temporada según elección del usuario
-      result = result.slice().sort((a, b) => {
-        const sa = extractSeason(a.nameEn), sb = extractSeason(b.nameEn);
-        const ya = sa ? (seasonStartYear(sa) ?? 0) : null;
-        const yb = sb ? (seasonStartYear(sb) ?? 0) : null;
-        if (ya === null && yb === null) return 0;
-        if (ya === null) return 1;
-        if (yb === null) return -1;
-        return seasonSortDir === 'desc' ? yb - ya : ya - yb;
-      });
-    }
+  } else if (activeCat === 'retro' && seasonSortDir !== 'relevance') {
+    // Modo libre: sort por temporada según elección del usuario
+    result = result.slice().sort((a, b) => {
+      const sa = extractSeason(a.nameEn), sb = extractSeason(b.nameEn);
+      const ya = sa ? (seasonStartYear(sa) ?? 0) : null;
+      const yb = sb ? (seasonStartYear(sb) ?? 0) : null;
+      if (ya === null && yb === null) return 0;
+      if (ya === null) return 1;
+      if (yb === null) return -1;
+      return seasonSortDir === 'desc' ? yb - ya : ya - yb;
+    });
   } else if (seasonSortDir === 'relevance' && RELEVANCE_CATS.has(activeCat)) {
     // Vista de categoría: orden "grandes primero" — por país en Selecciones,
     // por club en el resto de categorías.
@@ -4807,18 +4785,14 @@ const SPAIN_RE    = /\bspain\b|\bespaña\b|\bespana\b/i;
 const isSpainTwoStar = p => SPAIN_RE.test(p.nameEn) && TWO_STAR_RE.test(p.nameEn);
 
 // ═══════════════════════════════════════════════════════════════════════════
-// ORDEN "GRANDES PRIMERO" — LaLiga y Nueva Temporada
+// ORDEN DE RELEVANCIA — todas las categorías
 // ═══════════════════════════════════════════════════════════════════════════
-// Real Madrid, Barça y Atleti muestran primero su local normal (sin manga
-// larga, sin player version, sin variantes), luego su visitante normal en el
-// mismo orden; después, las locales del resto de equipos ordenadas por
-// popularidad; y por último el resto (visitantes/variantes), también por
-// popularidad y agrupadas por equipo.
-const BIG3_TEAMS = ['Real Madrid', 'Barcelona', 'Atlético Madrid'];
 
-// Ranking de popularidad de clubes (fuera de los 3 grandes) para ordenar
-// "Nueva Temporada" y LaLiga con criterio de relevancia/demanda habitual.
+// Ranking de popularidad de clubes para ordenar todas las categorías con
+// criterio de relevancia/demanda habitual. Real Madrid/Barça/Atleti van
+// primero por ser, con diferencia, los de mayor demanda del catálogo.
 const POPULAR_CLUBS = [
+  'Real Madrid', 'Barcelona', 'Atlético Madrid',
   // Top mundial
   'Manchester United', 'Manchester City', 'Liverpool', 'Bayern Munich', 'Chelsea',
   'PSG', 'Arsenal', 'Juventus', 'AC Milan', 'Inter Milan', 'Tottenham', 'Borussia Dortmund',
@@ -4856,16 +4830,13 @@ function popularityRank(team) {
 }
 
 function homeAwayVariantTier(name) {
-  // "Third Away" / "Tercera Visitante" etc. es una tercera equipación, no la
-  // visitante normal, aunque el nombre incluya la palabra "away"/"visitante".
+  // Shorts, terceras/cuartas equipaciones, etc. nunca ocupan el slot de
+  // local/visitante normal aunque el nombre diga "Home"/"Away".
+  if (/\bshort/i.test(name)) return 2;
   if (/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b/i.test(name)) return 2;
   if (isMundialHome(name) && !MUNDIAL_EXCL_FAN.test(name)) return 0;
   if (isMundialAway(name) && !MUNDIAL_EXCL_FAN.test(name)) return 1;
   return 2;
-}
-
-function isRetroItem(p) {
-  return (p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn || '');
 }
 
 // Ranking de popularidad de selecciones nacionales — para la categoría
@@ -4884,48 +4855,52 @@ function countryPopularityRank(team) {
   return idx === -1 ? Infinity : idx;
 }
 
+// Año de la temporada de un producto (para el orden "por temporada,
+// equipo, variante"); sin temporada detectable → se trata como la más
+// antigua posible, al final.
+function relevanceSeasonYear(p) {
+  const s = extractSeason(p.nameEn);
+  const y = s ? seasonStartYear(s) : null;
+  return y === null ? -Infinity : y;
+}
+
 /**
- * @param {boolean} useCountries  true en la categoría Selecciones: ordena por
- *   popularidad de país en vez de club (evita que un club mal etiquetado
- *   como selección suba por su propia popularidad de club).
+ * Criterio único de relevancia para todas las categorías (incluida Retro):
+ *   1. Local/visitante de cada equipo (nunca terceras/variantes) van antes
+ *      que el resto — dentro de este bloque, primero la temporada más
+ *      reciente, luego equipos por popularidad, y local antes que visitante.
+ *   2. El resto (versión jugador, manga larga, tercera equipación, portero,
+ *      entrenamiento…) va después, con el mismo criterio de temporada/equipo.
+ * Así, para la Serie A: local+visitante Juventus (temp. actual), local+
+ * visitante Inter (temp. actual), local+visitante Milan (temp. actual)…
+ * y al agotarse la temporada actual se repite con la anterior.
+ * @param {boolean} useCountries  true en Selecciones: popularidad de país en
+ *   vez de club (evita que un club mal etiquetado como selección suba por
+ *   su propia popularidad de club).
  */
 function makeRelevanceComparator(useCountries = false) {
-  return function bigClubsFirstComparator(a, b) {
-    // Las retro quedan siempre detrás de la temporada actual, sea cual sea el
-    // equipo — en una vista de liga "relevante" no queremos que un retro del
-    // Bayern tape la camiseta actual del Sevilla.
-    const retroA = isRetroItem(a) ? 1 : 0;
-    const retroB = isRetroItem(b) ? 1 : 0;
-    if (retroA !== retroB) return retroA - retroB;
-
-    const teamA = detectTeam(a.nameEn) || '';
-    const teamB = detectTeam(b.nameEn) || '';
+  return function relevanceComparator(a, b) {
     const tierA = homeAwayVariantTier(a.nameEn);
     const tierB = homeAwayVariantTier(b.nameEn);
 
-    if (!useCountries) {
-      const big3A = BIG3_TEAMS.indexOf(teamA);
-      const big3B = BIG3_TEAMS.indexOf(teamB);
-      // Slot especial: local/visitante normal de los 3 grandes, antes que nada
-      const specialA = (big3A !== -1 && tierA <= 1) ? tierA : null;
-      const specialB = (big3B !== -1 && tierB <= 1) ? tierB : null;
-      if (specialA !== null && specialB !== null) {
-        return specialA !== specialB ? specialA - specialB : big3A - big3B;
-      }
-      if (specialA !== null) return -1;
-      if (specialB !== null) return 1;
-    }
+    // Fase 1: solo local/visitante normales. Fase 2: todo lo demás.
+    const phaseA = tierA <= 1 ? 0 : 1;
+    const phaseB = tierB <= 1 ? 0 : 1;
+    if (phaseA !== phaseB) return phaseA - phaseB;
 
-    // Resto: manda la popularidad (equipo o país según la vista) por encima
-    // de local/visitante — ej. la segunda equipación del Arsenal va antes
-    // que la primera del Everton. Dentro del mismo equipo, local →
-    // visitante → variantes.
+    const seasonA = relevanceSeasonYear(a);
+    const seasonB = relevanceSeasonYear(b);
+    if (seasonA !== seasonB) return seasonB - seasonA; // temporada más reciente primero
+
+    const teamA = detectTeam(a.nameEn) || '';
+    const teamB = detectTeam(b.nameEn) || '';
     const popA = useCountries ? countryPopularityRank(teamA) : popularityRank(teamA);
     const popB = useCountries ? countryPopularityRank(teamB) : popularityRank(teamB);
     if (popA !== popB) return popA - popB;
 
+    if (tierA !== tierB) return tierA - tierB;
     if (teamA !== teamB) return teamA.localeCompare(teamB);
-    return tierA - tierB;
+    return 0;
   };
 }
 
@@ -5046,40 +5021,16 @@ function getMundialItems(maxExtra = Infinity) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Selección automática de destacados 26/27: local y visitante normales de
- * Real Madrid, Barça y Atleti primero (2 slots cada uno), luego un artículo
- * por cada uno del resto de equipos (su local si lo tiene, si no visitante
- * u otra variante), en orden alfabético de equipo.
+ * Selección automática de destacados 26/27: mismo criterio de relevancia
+ * que la categoría Nueva Temporada (equipo por popularidad, local antes que
+ * visitante, temporada más reciente primero), para que el escaparate de la
+ * home refleje exactamente el mismo orden que esa categoría.
  */
 function getNewSeasonFeaturedItems(limit = 12) {
   const pool = allProducts.filter(p =>
     (p.cats || []).includes('nuevatemporada') && !(p.cats || []).includes('kids')
   );
-  const sorted = [...pool].sort(bigClubsFirstComparator);
-
-  const seenTeams   = new Set();          // 1 slot para el resto de equipos
-  const big3Tiers    = new Map();          // team → Set(tier) ya añadidos (hasta 2: local+visitante)
-  const items = [];
-  for (const p of sorted) {
-    const team  = detectTeam(p.nameEn) || p.id;
-    const isBig3 = BIG3_TEAMS.includes(team);
-
-    if (isBig3) {
-      const tier = homeAwayVariantTier(p.nameEn);
-      if (tier > 1) continue; // solo local/visitante normal para los 3 grandes
-      const tiersSeen = big3Tiers.get(team) || new Set();
-      if (tiersSeen.has(tier)) continue;
-      tiersSeen.add(tier);
-      big3Tiers.set(team, tiersSeen);
-    } else {
-      if (seenTeams.has(team)) continue;
-      seenTeams.add(team);
-    }
-
-    items.push(p);
-    if (items.length >= limit) break;
-  }
-  return items;
+  return [...pool].sort(bigClubsFirstComparator).slice(0, limit);
 }
 
 function renderFeaturedNewSeason() {
@@ -5144,10 +5095,28 @@ function renderFeaturedNewSeason() {
 // FEATURED SECTION — Segunda Estrella (España 2 estrellas)
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Orden pedido para Segunda Estrella: local/visitante manga corta Fan,
+// luego las mismas 2 en versión jugador, luego mujer, y por último manga larga.
+function secondStarTier(name) {
+  const home = isMundialHome(name);
+  const longSleeve = /manga\s*larga/i.test(name) || (/\blong\b/i.test(name) && /\bsleeve\b/i.test(name));
+  const women = WOMEN_RE.test(name);
+  const player = PLAYER_RE.test(name);
+
+  if (longSleeve) return home ? 6 : 7;
+  if (women)      return home ? 4 : 5;
+  if (player)     return home ? 2 : 3;
+  return home ? 0 : 1;
+}
 function getSecondStarItems() {
   return allProducts
     .filter(p => isSpainTwoStar(p) && !(p.cats || []).includes('kids'))
-    .sort((a, b) => homeAwayVariantTier(a.nameEn) - homeAwayVariantTier(b.nameEn));
+    .sort((a, b) => {
+      const tierA = secondStarTier(a.nameEn);
+      const tierB = secondStarTier(b.nameEn);
+      if (tierA !== tierB) return tierA - tierB;
+      return (b.photos || 0) - (a.photos || 0);
+    });
 }
 
 function renderFeaturedSecondStar() {
@@ -5297,8 +5266,12 @@ function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
     return;
   }
 
+  // Mismo criterio de relevancia que la categoría, para que el expositor
+  // de la home refleje el mismo orden que se ve al entrar en esa categoría.
+  const comparator = cat === 'selecciones' ? countriesFirstComparator : bigClubsFirstComparator;
   const items = allProducts
     .filter(p => p.img && (cat === 'shorts' ? isShortProduct(p) : (p.cats || []).includes(cat)))
+    .sort(comparator)
     .slice(0, limit);
 
   if (items.length === 0) {
@@ -7662,9 +7635,7 @@ function updateLangUI() {
   document.querySelector('[data-i18n="back_shopping"]').textContent = t().back_shopping;
   const heroTitle = document.getElementById('hero-title');
   if (heroTitle) heroTitle.innerHTML = `${t().hero_line1}<span>${t().hero_line2}</span>`;
-  document.querySelectorAll('[data-i18n="pill_mundial"]').forEach(el => el.textContent = t().pill_mundial);
-  document.querySelectorAll('[data-i18n="pill_newseason"]').forEach(el => el.textContent = t().pill_newseason);
-  document.querySelectorAll('[data-i18n="pill_nations"]').forEach(el => el.textContent = t().pill_nations);
+  document.querySelectorAll('[data-i18n="hero_teams_label"]').forEach(el => el.textContent = t().hero_teams_label);
   const featuredTitle = document.getElementById('featured-title');
   if (featuredTitle) featuredTitle.textContent = t().featured_title;
   const featuredSeeAll = document.getElementById('featured-see-all');
