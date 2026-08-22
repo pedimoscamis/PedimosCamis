@@ -7164,7 +7164,8 @@ function addToCart() {
 
 function flyToCart() {
   const fabCart = document.getElementById('fab-cart');
-  const srcImg  = document.querySelector('#modal-img-col .modal-carousel-track img');
+  const srcImg  = document.querySelector('#modal-img-col .modal-carousel-track img')
+                || document.querySelector('#modal-img-col img');
   if (!fabCart) return;
   if (!srcImg)  { pulseFabCart(); return; }
 
