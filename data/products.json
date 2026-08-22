@@ -276544,11 +276544,12 @@
   },
   {
     "id": "jx6fdedafb71",
-    "nameEs": "Real Madrid Local Player Version 26/27",
-    "nameEn": "Real Madrid Home Player Version 26/27",
+    "nameEs": "Real Madrid Local Pantalón Corto Versión Jugador 26/27",
+    "nameEn": "Real Madrid Home Shorts Player Version 26/27",
     "cats": [
       "laliga",
-      "nuevatemporada"
+      "nuevatemporada",
+      "shorts"
     ],
     "type": "normal",
     "priceUsd": 20,
