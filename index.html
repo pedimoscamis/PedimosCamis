@@ -4222,29 +4222,29 @@ function scrollToGrid() {
 
 const SPOTLIGHT_DATA = [
   {
-    team: 'Real Madrid', season: 'Temporada 26/27', version: 'Versión Player',
-    img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249539127.webp',
-    productId: '249539127',
+    team: 'Real Madrid', season: 'Temporada 26/27', version: 'Versión Fan',
+    img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/231561209_resultado.webp',
+    productId: '231561209',
   },
   {
-    team: 'Barcelona', season: 'Temporada 26/27', version: 'Versión Player',
-    img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249540260.webp',
-    productId: '249540260',
+    team: 'Barcelona', season: 'Temporada 26/27', version: 'Versión Fan',
+    img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249539957.webp',
+    productId: '249539957',
   },
   {
-    team: 'Atlético Madrid', season: 'Temporada 26/27', version: 'Versión Player',
+    team: 'Atlético Madrid', season: 'Temporada 26/27', version: 'Versión Fan',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/26-27/26-27-Atletico-Madrid-Home-Cheap-Soccer-Jerseys-(1)_resultado.webp',
     productId: 'jx05db9736cf',
   },
   {
-    team: 'España · Visitante', season: 'World Cup 2026', version: 'Versión Jugador · 2 Stars',
-    img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544896.webp',
-    productId: '249544896',
+    team: 'España · Visitante', season: 'World Cup 2026', version: 'Versión Fan · 2 Stars',
+    img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544921.webp',
+    productId: '249544921',
   },
   {
-    team: 'España · Local', season: 'World Cup 2026', version: 'Versión Jugador · 2 Stars',
-    img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544913.webp',
-    productId: '249544913',
+    team: 'España · Local', season: 'World Cup 2026', version: 'Versión Fan · 2 Stars',
+    img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544864.webp',
+    productId: '249544864',
   },
 ];
 
@@ -6164,8 +6164,13 @@ function primaryCat(p) {
 
 function getBasePrice(p) {
   const price = computeBasePrice(p);
-  // Segunda Estrella: +2€ sobre el precio que le correspondería normalmente
-  return isSpainTwoStar(p) ? price + 2 : price;
+  // Segunda Estrella: +1€ sobre el precio que le correspondería normalmente
+  const withSpecials = isSpainTwoStar(p) ? price + 1 : price;
+  // Subida general de +1€ a todo el catálogo (artículos, no personalización
+  // ni envío, que se calculan aparte). En modo socio el valor está en $, así
+  // que se sube el equivalente a +1€ reales tras la conversión.
+  const surcharge = socioMode ? 1 / EUR_RATE : 1;
+  return withSpecials + surcharge;
 }
 
 function computeBasePrice(p) {
@@ -6220,24 +6225,42 @@ function isPlayerVersion(p) {
  * Busca la Versión Player del mismo kit (mismo equipo y local/visitante),
  * priorizando la misma temporada exacta si existe, para el botón cross-sell
  * del modal. Devuelve null si no hay ninguna equivalente en el catálogo.
+ *
+ * OJO: no se puede usar homeAwayVariantTier() para comparar local/visitante
+ * aquí — esa función trata a propósito cualquier "Player" como "variante"
+ * (tier 2, para que no ocupe el slot de local/visitante normal en el orden
+ * de relevancia), así que una Fan Home (tier 0) nunca cuadraría con su
+ * Player Home (tier 2). Aquí usamos isMundialHome/isMundialAway en crudo,
+ * que solo miran la palabra "home"/"away" sin ese descarte.
  */
 function findPlayerVersionCounterpart(p) {
   const team = detectTeam(p.nameEn);
   if (!team) return null;
-  const tier = homeAwayVariantTier(p.nameEn);
+  const isHome = isMundialHome(p.nameEn);
+  const isAway = isMundialAway(p.nameEn);
+  if (!isHome && !isAway) return null; // no está claro si es local o visitante → no arriesgar el match
   const season = extractSeason(p.nameEn);
 
+  if (!season) return null; // sin temporada detectable no podemos exigir que coincida exacta
+
+  // La temporada debe coincidir EXACTA — sin esto, un Retro de hace 20 años
+  // podría "engancharse" a la Player Version de la temporada actual solo
+  // por compartir equipo y local/visitante.
   const candidates = allProducts.filter(x =>
     x.id !== p.id &&
     isPlayerVersion(x) &&
     detectTeam(x.nameEn) === team &&
-    homeAwayVariantTier(x.nameEn) === tier
+    extractSeason(x.nameEn) === season &&
+    (isHome ? isMundialHome(x.nameEn) : isMundialAway(x.nameEn)) &&
+    !/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b|\bshort/i.test(x.nameEn)
   );
   if (candidates.length === 0) return null;
 
-  const sameSeason = candidates.filter(x => extractSeason(x.nameEn) === season);
-  const pool = sameSeason.length > 0 ? sameSeason : candidates;
-  return pool.sort((a, b) => (b.photos || 0) - (a.photos || 0))[0];
+  // Preferir manga corta (la variante "estándar") si hay alguna disponible
+  const shortSleevePool = candidates.filter(x => !/long\s*sleeve|manga\s*larga/i.test(x.nameEn));
+  const finalPool = shortSleevePool.length > 0 ? shortSleevePool : candidates;
+
+  return finalPool.sort((a, b) => (b.photos || 0) - (a.photos || 0))[0];
 }
 
 /** Botón "VERSIÓN PLAYER +5€" del modal: navega a la ficha real de esa versión. */
@@ -6545,11 +6568,10 @@ function openModal(p) {
   document.getElementById('opt-patch-wrap').style.display     = (showPatches && !isMundialPatch) ? '' : 'none';
   document.getElementById('mundial-patch-wrap').style.display = isMundialPatch ? '' : 'none';
 
-  // Botón "Versión Player +5€" — solo en la camiseta estándar (15€ / 8$
-  // socio) y solo si existe una versión jugador real del mismo kit a la
-  // que llevar al cliente (no es una personalización, es un enlace cruzado).
-  const standardPrice = socioMode ? SOCIO_JERSEY : NORMAL_JERSEY;
-  playerVersionTarget = (getBasePrice(p) === standardPrice) ? findPlayerVersionCounterpart(p) : null;
+  // Botón "Versión Player +5€" — se muestra si (y solo si) existe de verdad
+  // una versión jugador de este mismo kit (mismo equipo, local/visitante)
+  // en el catálogo; no es una personalización, es un enlace cruzado.
+  playerVersionTarget = isPlayerVersion(p) ? null : findPlayerVersionCounterpart(p);
   document.getElementById('opt-player-upgrade-wrap').style.display = playerVersionTarget ? '' : 'none';
 
   // Reset checkboxes y patch
