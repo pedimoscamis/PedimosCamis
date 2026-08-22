@@ -4251,14 +4251,11 @@ function buildSpotlightSlide(item, idx) {
   const slide = document.createElement('div');
   slide.className = 'spotlight-slide';
   slide.dataset.index = idx;
-  const product = allProducts.find(p => p.id === item.productId);
-  const hasPlayerVersion = product && findPlayerVersionCounterpart(product);
-  const versionText = hasPlayerVersion ? `${item.version} · Versión Player` : item.version;
   slide.innerHTML = `
     <div class="spotlight-content">
       <span class="spotlight-season">${escHtml(item.season)}</span>
       <h2 class="spotlight-team">${escHtml(item.team)}</h2>
-      <span class="spotlight-version">${escHtml(versionText)}</span>
+      <span class="spotlight-version">${escHtml(item.version)}</span>
       <button class="spotlight-cta">Ver Fichaje</button>
     </div>
     <div class="spotlight-media">
