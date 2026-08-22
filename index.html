@@ -557,60 +557,102 @@
     }
     #hero > * { position: relative; z-index: 2; }
 
-    #hero-main-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(30px, 5.5vw, 52px);
-      line-height: 1.05;
-      letter-spacing: 2px;
-      color: #fff;
-      margin-bottom: 10px;
+    /* ─── Hero Spotlight — una camiseta protagonista a la vez ───────── */
+    #spotlight {
+      position: relative;
+      min-height: 440px;
+      margin-bottom: 4px;
     }
-    #hero-main-title span { color: #FDD835; display: block; }
-    #ticker-kicker {
+    .spotlight-slide {
+      position: absolute; inset: 0;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      align-items: center;
+      gap: 20px;
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
+      pointer-events: none;
+    }
+    .spotlight-slide.active {
+      opacity: 1; transform: translateY(0);
+      pointer-events: auto; z-index: 2;
+    }
+    .spotlight-content { text-align: left; padding-left: clamp(4px, 3vw, 32px); }
+    .spotlight-season {
       display: block;
       font-family: 'Barlow', sans-serif;
-      font-size: 11px; font-weight: 800; letter-spacing: .12em;
-      text-transform: uppercase; color: rgba(255,255,255,.6);
-      margin-bottom: 14px;
+      font-size: 12px; font-weight: 700; letter-spacing: .16em;
+      text-transform: uppercase; color: rgba(255,255,255,.55);
+      margin-bottom: 8px;
+    }
+    .spotlight-team {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(38px, 6.4vw, 84px);
+      line-height: .96; letter-spacing: 1px;
+      color: #fff;
+      text-shadow: 0 6px 30px rgba(0,0,0,.6);
+      margin: 0 0 12px;
+    }
+    .spotlight-version {
+      display: block;
+      font-family: 'Barlow', sans-serif;
+      font-size: clamp(14px, 1.7vw, 18px); font-weight: 800; letter-spacing: .08em;
+      text-transform: uppercase; color: #FDD835;
+      margin-bottom: 24px;
+    }
+    .spotlight-cta {
+      background: var(--accent); color: #fff; border: none;
+      padding: 15px 40px; border-radius: 3px;
+      font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 800;
+      letter-spacing: .1em; text-transform: uppercase;
+      cursor: pointer; transition: background .2s, transform .15s;
+    }
+    .spotlight-cta:hover { background: var(--accent-dk); transform: translateY(-2px); }
+
+    .spotlight-media { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .spotlight-glow {
+      position: absolute; width: 68%; height: 68%; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      background: radial-gradient(circle, rgba(253,216,53,.32) 0%, rgba(253,216,53,0) 72%);
+      filter: blur(16px);
+      z-index: 1;
+    }
+    .spotlight-media img {
+      position: relative; z-index: 2;
+      max-height: clamp(240px, 38vw, 400px); max-width: 88%;
+      object-fit: contain;
+      filter: drop-shadow(0 28px 36px rgba(0,0,0,.55));
+      -webkit-mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 58%, transparent 100%);
+      mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 58%, transparent 100%);
     }
 
-    /* ─── Ticker infinito de Hot Picks ──────────────────────────────── */
-    #ticker-viewport {
-      width: 100%; overflow: hidden;
-      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
-      mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+    .spotlight-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      font-size: 34px; line-height: 1; font-family: Georgia, serif;
+      color: rgba(255,255,255,.32);
+      padding: 10px; z-index: 5;
+      transition: color .2s;
     }
-    #ticker-track {
-      display: flex; width: max-content; gap: 16px;
-      animation: ticker-scroll 26s linear infinite;
+    .spotlight-arrow:hover { color: rgba(255,255,255,.85); }
+    #spotlight-prev { left: -4px; }
+    #spotlight-next { right: -4px; }
+
+    #spotlight-progress {
+      position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+      width: min(50%, 340px);
+      display: flex; gap: 6px; z-index: 5;
     }
-    #ticker-track.paused,
-    #ticker-track:has(.ticker-card:hover) {
-      animation-play-state: paused;
+    .spotlight-bar {
+      flex: 1; height: 2px; border-radius: 1px;
+      background: rgba(255,255,255,.25);
+      cursor: pointer; overflow: hidden;
     }
-    @keyframes ticker-scroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-    .ticker-card {
-      flex: 0 0 auto;
-      width: 140px; height: 178px;
-      border-radius: 12px;
-      background: #fff;
-      overflow: hidden;
-      cursor: pointer;
-      box-shadow: 0 8px 22px rgba(0,0,0,.35);
-      transition: transform .25s ease, box-shadow .25s ease;
-    }
-    .ticker-card:hover {
-      transform: scale(1.08);
-      box-shadow: 0 14px 32px rgba(0,0,0,.5);
-      position: relative; z-index: 2;
-    }
-    .ticker-card img {
-      width: 100%; height: 100%; object-fit: cover;
-      pointer-events: none; -webkit-user-drag: none;
-    }
+    .spotlight-bar-fill { display: block; height: 100%; width: 0%; background: #fff; }
+    .spotlight-bar-fill.filling { animation: spotlight-fill 4.5s linear forwards; }
+    .spotlight-bar-fill.done { width: 100%; }
+    @keyframes spotlight-fill { from { width: 0%; } to { width: 100%; } }
 
     /* ─── "Ve directo a tu equipo" — restaurado debajo de Hot Picks ─── */
     #hero-teams { margin-top: 20px; position: relative; max-width: 720px; margin-left: auto; margin-right: auto; }
@@ -644,9 +686,18 @@
 
     @media (max-width: 700px) {
       #hero { padding: 16px 14px 14px; }
-      #hero-main-title { font-size: clamp(22px, 6.5vw, 32px); margin-bottom: 8px; }
-      .ticker-card { width: 100px; height: 128px; }
-      #ticker-track { gap: 11px; }
+      #spotlight { min-height: 460px; }
+      .spotlight-slide {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        text-align: center;
+        gap: 6px;
+      }
+      .spotlight-media { order: 1; height: auto; min-height: 200px; }
+      .spotlight-media img { max-height: 200px; }
+      .spotlight-content { order: 2; text-align: center; padding-left: 0; }
+      .spotlight-cta { padding: 13px 34px; }
+      .spotlight-arrow { display: none; }
       #hero-teams { margin-top: 14px; }
     }
 
@@ -2776,12 +2827,13 @@
 
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
-  <h1 id="hero-main-title">PREPÁRATE PARA EL<span>MUNDIAL 2026</span></h1>
-  <span id="ticker-kicker">HOT PICKS</span>
-  <div id="ticker-viewport">
-    <div id="ticker-track">
-      <!-- Las tarjetas (5 productos x2, para el loop infinito) se generan en JS: ver initTicker() -->
+  <div id="spotlight">
+    <div id="spotlight-slides">
+      <!-- Las 5 diapositivas se generan en JS: ver initSpotlight() -->
     </div>
+    <button id="spotlight-prev" class="spotlight-arrow" onclick="spotlightPrev()" aria-label="Anterior">‹</button>
+    <button id="spotlight-next" class="spotlight-arrow" onclick="spotlightNext()" aria-label="Siguiente">›</button>
+    <div id="spotlight-progress"></div>
   </div>
   <div id="hero-teams">
     <span id="hero-teams-label" data-i18n="hero_teams_label">⚡ Ve directo a tu equipo</span>
@@ -3658,9 +3710,6 @@ let lang = localStorage.getItem('kz-lang') || 'es';
 const T = {
   es: {
     search_placeholder: 'Buscar por camiseta, equipo...',
-    hero_line1: 'PREPÁRATE PARA EL',
-    hero_line2: 'MUNDIAL 2026',
-    ticker_kicker: 'HOT PICKS',
     hero_teams_label: '⚡ Ve directo a tu equipo',
     results: (n) => `${n} producto${n !== 1 ? 's' : ''}`,
     sizes: 'Tallas',
@@ -3735,9 +3784,6 @@ const T = {
   },
   en: {
     search_placeholder: 'Search jersey, team, player…',
-    hero_line1: 'GET READY FOR THE',
-    hero_line2: 'WORLD CUP 2026',
-    ticker_kicker: 'HOT PICKS',
     hero_teams_label: '⚡ Jump straight to your team',
     results: (n) => `${n} product${n !== 1 ? 's' : ''}`,
     sizes: 'Sizes',
@@ -3940,7 +3986,7 @@ async function init() {
   document.getElementById('results-info').textContent = t().loading;
   updateCartBadge();
   updateFavBadge();
-  initTicker();
+  initSpotlight();
 
   // ── Lazy loading de imágenes con IntersectionObserver ───────────────────
   imgObserver = new IntersectionObserver((entries, obs) => {
@@ -4103,90 +4149,124 @@ function scrollToGrid() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// HOT PICKS — ticker infinito con expansión y modal on-click (vanilla JS)
+// HERO SPOTLIGHT — una camiseta protagonista, rotación automática (vanilla JS)
 // ═══════════════════════════════════════════════════════════════════════════
 
-const TICKER_DATA = [
+const SPOTLIGHT_DATA = [
   {
-    title: '2026/27 Real Madrid Local',
+    team: 'Real Madrid', season: 'Temporada 26/27', version: 'Versión Player',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249539127.webp',
     productId: '249539127',
   },
   {
-    title: '2026/27 Barcelona Local',
+    team: 'Barcelona', season: 'Temporada 26/27', version: 'Versión Player',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249540260.webp',
     productId: '249540260',
   },
   {
-    title: 'Atletico Madrid Local 26/27',
+    team: 'Atlético Madrid', season: 'Temporada 26/27', version: 'Versión Player',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/26-27/26-27-Atletico-Madrid-Home-Cheap-Soccer-Jerseys-(1)_resultado.webp',
     productId: 'jx05db9736cf',
   },
   {
-    title: 'España 2026 World Cup Visitante',
+    team: 'España · Visitante', season: 'World Cup 2026', version: 'Versión Jugador · 2 Stars',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544896.webp',
     productId: '249544896',
   },
   {
-    title: 'España 2026 World Cup Local',
+    team: 'España · Local', season: 'World Cup 2026', version: 'Versión Jugador · 2 Stars',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544913.webp',
     productId: '249544913',
   },
 ];
 
-/**
- * UX del hover/toque: pausar + agrandar la tarjeta da el feedback "wow"
- * inmediatamente, pero abrir el modal ya con el simple hover sería
- * intrusivo (se abriría sin querer al pasar el ratón de camino a otra
- * cosa). El modal se abre al hacer click/tap, que es la acción explícita
- * de "quiero ver esta camiseta" — mismo patrón que el resto del catálogo.
- */
-function buildTickerCard(item, idx) {
-  const card = document.createElement('div');
-  card.className = 'ticker-card';
-  card.dataset.index = idx;
-  card.innerHTML = `<img src="${item.img}" alt="${escHtml(item.title)}" draggable="false">`;
-  card.addEventListener('mouseenter', tickerPause);
-  card.addEventListener('mouseleave', tickerResume);
-  card.addEventListener('touchstart', tickerPause, { passive: true });
-  card.addEventListener('touchend', tickerResume);
-  card.addEventListener('click', () => tickerOpenProduct(idx));
-  return card;
+const SPOTLIGHT_INTERVAL_MS = 4500;
+
+const spotlightState = {
+  active: 0,
+  timerId: null,
+  isPaused: false,
+};
+
+function buildSpotlightSlide(item, idx) {
+  const slide = document.createElement('div');
+  slide.className = 'spotlight-slide';
+  slide.dataset.index = idx;
+  slide.innerHTML = `
+    <div class="spotlight-content">
+      <span class="spotlight-season">${escHtml(item.season)}</span>
+      <h2 class="spotlight-team">${escHtml(item.team)}</h2>
+      <span class="spotlight-version">${escHtml(item.version)}</span>
+      <button class="spotlight-cta">Ver Fichaje</button>
+    </div>
+    <div class="spotlight-media">
+      <div class="spotlight-glow"></div>
+      <img src="${item.img}" alt="${escHtml(item.team)}" draggable="false">
+    </div>`;
+  slide.querySelector('.spotlight-cta').addEventListener('click', () => spotlightOpenProduct(idx));
+  return slide;
 }
 
-function initTicker() {
-  const track = document.getElementById('ticker-track');
-  if (!track) return; // el hero está oculto en categorías/búsqueda — nada que inicializar
+function initSpotlight() {
+  const slidesEl = document.getElementById('spotlight-slides');
+  const progressEl = document.getElementById('spotlight-progress');
+  if (!slidesEl || !progressEl) return; // el hero está oculto en categorías/búsqueda
 
-  track.innerHTML = '';
-  // Se duplica la lista completa una vez: el track mide 2x el ancho de un
-  // ciclo, y la animación CSS anima de translateX(0) a translateX(-50%),
-  // que al ser idéntico al primer tramo produce un loop perfectamente
-  // continuo sin salto visible.
-  for (let rep = 0; rep < 2; rep++) {
-    TICKER_DATA.forEach((item, idx) => track.appendChild(buildTickerCard(item, idx)));
-  }
+  slidesEl.innerHTML = '';
+  SPOTLIGHT_DATA.forEach((item, idx) => slidesEl.appendChild(buildSpotlightSlide(item, idx)));
+
+  progressEl.innerHTML = SPOTLIGHT_DATA.map((_, idx) =>
+    `<div class="spotlight-bar" onclick="spotlightGoTo(${idx})"><span class="spotlight-bar-fill"></span></div>`
+  ).join('');
+
+  const scene = document.getElementById('spotlight');
+  scene.addEventListener('mouseenter', () => { spotlightState.isPaused = true; });
+  scene.addEventListener('mouseleave', () => { spotlightState.isPaused = false; });
+
+  spotlightState.active = 0;
+  spotlightRender();
+  spotlightRestartTimer();
 }
 
-function tickerPause() {
-  const track = document.getElementById('ticker-track');
-  if (track) track.classList.add('paused');
+function spotlightRender() {
+  document.querySelectorAll('.spotlight-slide').forEach((slide, idx) => {
+    slide.classList.toggle('active', idx === spotlightState.active);
+  });
+  document.querySelectorAll('.spotlight-bar-fill').forEach((fill, idx) => {
+    fill.classList.remove('filling', 'done');
+    // Forzar reflow para poder relanzar la animación CSS desde cero
+    void fill.offsetWidth;
+    if (idx < spotlightState.active) fill.classList.add('done');
+    else if (idx === spotlightState.active) fill.classList.add('filling');
+  });
 }
 
-function tickerResume() {
-  const track = document.getElementById('ticker-track');
-  if (track) track.classList.remove('paused');
+function spotlightRestartTimer() {
+  if (spotlightState.timerId) clearInterval(spotlightState.timerId);
+  spotlightState.timerId = setInterval(() => {
+    if (spotlightState.isPaused) return;
+    spotlightGoTo((spotlightState.active + 1) % SPOTLIGHT_DATA.length);
+  }, SPOTLIGHT_INTERVAL_MS);
 }
 
-function tickerOpenProduct(idx) {
-  const item = TICKER_DATA[idx];
+function spotlightGoTo(idx) {
+  spotlightState.active = ((idx % SPOTLIGHT_DATA.length) + SPOTLIGHT_DATA.length) % SPOTLIGHT_DATA.length;
+  spotlightRender();
+  spotlightRestartTimer();
+}
+
+function spotlightNext() { spotlightGoTo(spotlightState.active + 1); }
+function spotlightPrev() { spotlightGoTo(spotlightState.active - 1); }
+
+function spotlightOpenProduct(idx) {
+  const item = SPOTLIGHT_DATA[idx];
   if (!item) return;
   const product = allProducts.find(p => p.id === item.productId);
   if (product) {
     openModal(product);
   } else {
-    document.getElementById('search').value = item.title;
-    searchQuery = item.title;
+    document.getElementById('search').value = item.team;
+    searchQuery = item.team;
     setCategory('all');
   }
 }
@@ -6597,7 +6677,6 @@ function closeModal() {
   document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
   currentProduct = null;
   selectedSize = null;
-  tickerResume(); // por si el modal se abrió desde el ticker de Hot Picks
 }
 
 function closeModalOnOverlay(e) {
@@ -7791,10 +7870,6 @@ function updateLangUI() {
   document.getElementById('input-name').placeholder = t().player_name;
   document.querySelector('[data-i18n="patch"]').textContent = t().patch;
   document.querySelector('[data-i18n="back_shopping"]').textContent = t().back_shopping;
-  const heroMainTitle = document.getElementById('hero-main-title');
-  if (heroMainTitle) heroMainTitle.innerHTML = `${t().hero_line1}<span>${t().hero_line2}</span>`;
-  const tickerKicker = document.getElementById('ticker-kicker');
-  if (tickerKicker) tickerKicker.textContent = t().ticker_kicker;
   document.querySelectorAll('[data-i18n="hero_teams_label"]').forEach(el => el.textContent = t().hero_teams_label);
   const featuredTitle = document.getElementById('featured-title');
   if (featuredTitle) featuredTitle.textContent = t().featured_title;
