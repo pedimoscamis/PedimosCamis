@@ -6237,12 +6237,14 @@ function findPlayerVersionCounterpart(p) {
   // La temporada debe coincidir EXACTA — sin esto, un Retro de hace 20 años
   // podría "engancharse" a la Player Version de la temporada actual solo
   // por compartir equipo y local/visitante.
+  const twoStar = isSpainTwoStar(p);
   const candidates = allProducts.filter(x =>
     x.id !== p.id &&
     isPlayerVersion(x) &&
     detectTeam(x.nameEn) === team &&
     extractSeason(x.nameEn) === season &&
     (isHome ? isMundialHome(x.nameEn) : isMundialAway(x.nameEn)) &&
+    isSpainTwoStar(x) === twoStar &&
     !/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b|\bshort/i.test(x.nameEn)
   );
   if (candidates.length === 0) return null;
