@@ -560,21 +560,12 @@
     /* ─── Título de temporada — limpio, sin adornos ──────────────────── */
     #hero-season-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(24px, 4vw, 40px);
+      font-size: clamp(27px, 4.5vw, 45px);
       line-height: 1.2; letter-spacing: 1.5px;
       color: #fff; text-align: center;
-      margin: 0 0 10px;
+      margin: 0 0 4px;
     }
     #hero-season-title span { color: #FDD835; }
-
-    /* ─── Kicker "Hot Sales" — pequeño, justo encima del showcase ────── */
-    #spotlight-kicker {
-      display: block; text-align: center;
-      font-family: 'Barlow', sans-serif;
-      font-size: 10px; font-weight: 800; letter-spacing: .12em;
-      text-transform: uppercase; color: rgba(255,255,255,.45);
-      margin-bottom: 10px;
-    }
 
     /* ─── Hero Spotlight — una camiseta protagonista a la vez ───────── */
     #spotlight {
@@ -715,7 +706,6 @@
     @media (max-width: 700px) {
       #hero { padding: 16px 14px 14px; }
       #hero-season-title { margin-bottom: 2px; }
-      #spotlight-kicker { font-size: 10px; margin-bottom: 8px; }
       #spotlight { min-height: 460px; }
       .spotlight-slide {
         grid-template-columns: 1fr;
@@ -2887,7 +2877,6 @@
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
   <h1 id="hero-season-title">LA TEMPORADA <span>26/27</span> YA ESTÁ AQUÍ</h1>
-  <span id="spotlight-kicker">🔥 HOT SALES</span>
   <div id="spotlight">
     <div id="spotlight-slides">
       <!-- Las 5 diapositivas se generan en JS: ver initSpotlight() -->
@@ -4055,7 +4044,6 @@ async function init() {
   document.getElementById('results-info').textContent = t().loading;
   updateCartBadge();
   updateFavBadge();
-  initSpotlight();
 
   // ── Lazy loading de imágenes con IntersectionObserver ───────────────────
   imgObserver = new IntersectionObserver((entries, obs) => {
@@ -4087,9 +4075,11 @@ async function init() {
     buildCatBar();     // reconstruir tras cargar datos (ej. la pill 'shorts' depende de allProducts)
     buildFilterBar();
     renderAll();
+    initSpotlight();
   } catch (e) {
     document.getElementById('results-info').textContent = t().error_load;
     console.error(e);
+    initSpotlight();
   }
 
   // Search — con intercepción de contraseña de Modo Admin
@@ -4261,11 +4251,14 @@ function buildSpotlightSlide(item, idx) {
   const slide = document.createElement('div');
   slide.className = 'spotlight-slide';
   slide.dataset.index = idx;
+  const product = allProducts.find(p => p.id === item.productId);
+  const hasPlayerVersion = product && findPlayerVersionCounterpart(product);
+  const versionText = hasPlayerVersion ? `${item.version} · Versión Player` : item.version;
   slide.innerHTML = `
     <div class="spotlight-content">
       <span class="spotlight-season">${escHtml(item.season)}</span>
       <h2 class="spotlight-team">${escHtml(item.team)}</h2>
-      <span class="spotlight-version">${escHtml(item.version)}</span>
+      <span class="spotlight-version">${escHtml(versionText)}</span>
       <button class="spotlight-cta">Ver Fichaje</button>
     </div>
     <div class="spotlight-media">
