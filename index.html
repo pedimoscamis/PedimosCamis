@@ -563,9 +563,10 @@
       font-size: clamp(27px, 4.5vw, 45px);
       line-height: 1.2; letter-spacing: 1.5px;
       color: #fff; text-align: center;
-      margin: 0 0 14px;
+      margin: 0 0 -22px;
     }
     #hero-season-title span { color: var(--accent); }
+    .hero-title-break { display: none; }
 
     /* ─── Hero Spotlight — una camiseta protagonista a la vez ───────── */
     #spotlight {
@@ -698,13 +699,19 @@
 
     @media (max-width: 700px) {
       #hero { padding: 20px 14px 14px; }
-      #hero-season-title { margin-bottom: 10px; }
-      #spotlight { min-height: 460px; }
+      #hero-season-title {
+        margin-bottom: 8px;
+        padding: 0 20px;
+        font-size: clamp(22px, 6.5vw, 32px);
+      }
+      .hero-title-break { display: block; }
+      #spotlight { min-height: 380px; }
       .spotlight-slide {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto;
+        align-content: start;
         text-align: center;
-        gap: 6px;
+        gap: 10px;
       }
       .spotlight-media { order: 1; height: auto; min-height: 200px; }
       .spotlight-media img { max-height: 200px; }
@@ -2869,7 +2876,7 @@
 
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
-  <h1 id="hero-season-title">LA TEMPORADA <span>26/27</span> YA ESTÁ AQUÍ</h1>
+  <h1 id="hero-season-title">LA TEMPORADA <span>26/27</span><br class="hero-title-break"> YA ESTÁ AQUÍ</h1>
   <div id="spotlight">
     <div id="spotlight-slides">
       <!-- Las 5 diapositivas se generan en JS: ver initSpotlight() -->
@@ -3756,7 +3763,7 @@ let lang = localStorage.getItem('kz-lang') || 'es';
 const T = {
   es: {
     search_placeholder: 'Buscar por camiseta, equipo...',
-    hero_season_title: 'LA TEMPORADA <span>26/27</span> YA ESTÁ AQUÍ',
+    hero_season_title: 'LA TEMPORADA <span>26/27</span><br class="hero-title-break"> YA ESTÁ AQUÍ',
     spotlight_kicker: '🔥 HOT SALES',
     hero_teams_label: '⚡ Ve directo a tu equipo',
     results: (n) => `${n} producto${n !== 1 ? 's' : ''}`,
@@ -3832,7 +3839,7 @@ const T = {
   },
   en: {
     search_placeholder: 'Search jersey, team, player…',
-    hero_season_title: 'THE <span>26/27</span> SEASON IS HERE',
+    hero_season_title: 'THE <span>26/27</span><br class="hero-title-break"> SEASON IS HERE',
     spotlight_kicker: '🔥 HOT SALES',
     hero_teams_label: '⚡ Jump straight to your team',
     results: (n) => `${n} product${n !== 1 ? 's' : ''}`,
