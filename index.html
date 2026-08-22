@@ -387,13 +387,13 @@
       background: var(--accent); border-color: var(--accent);
       color: #fff; font-weight: 700;
     }
-    /* Mundial 2026 — destacado en dorado (primera posición) */
-    .cat-btn.cat-mundial2026 {
-      border-color: #c9a227; color: #c9a227; font-weight: 700;
+    /* Nueva Temporada 26/27 — destacada con borde y resalto rojo de marca */
+    .cat-btn.cat-nuevatemporada {
+      border-color: var(--accent); color: var(--accent); font-weight: 700;
     }
-    .cat-btn.cat-mundial2026:hover,
-    .cat-btn.cat-mundial2026.active {
-      background: #c9a227; border-color: #c9a227; color: #111;
+    .cat-btn.cat-nuevatemporada:hover,
+    .cat-btn.cat-nuevatemporada.active {
+      background: var(--accent); border-color: var(--accent); color: #fff;
     }
 
     /* ─── Filter Bar ───────────────────────────────────────── */
@@ -2272,9 +2272,9 @@
       font-weight: 700;
     }
     /* Mundial dorado también en sidebar */
-    #sidebar-nav li button.cat-mundial2026 { color: #c9a227; }
-    #sidebar-nav li button.cat-mundial2026:hover,
-    #sidebar-nav li button.cat-mundial2026.active { background: rgba(201,162,39,.12); color: #c9a227; }
+    #sidebar-nav li button.cat-nuevatemporada { color: var(--accent); }
+    #sidebar-nav li button.cat-nuevatemporada:hover,
+    #sidebar-nav li button.cat-nuevatemporada.active { background: rgba(232,23,60,.12); color: var(--accent); }
 
     /* En móvil: ocultar cat-bar horizontal, mostrar hamburguesa */
     @media (max-width: 768px) {
@@ -4108,7 +4108,7 @@ async function init() {
 // ═══════════════════════════════════════════════════════════════════════════
 // CATEGORIES
 // ═══════════════════════════════════════════════════════════════════════════
-const CAT_ORDER = ['all','nuevatemporada','mundial2026','retro','laliga','premier','seriea','bundesliga','ligue1','selecciones','women','sudamerica','shorts','nba','kids','europa','otros','gallery'];
+const CAT_ORDER = ['all','nuevatemporada','selecciones','retro','laliga','premier','seriea','bundesliga','ligue1','women','sudamerica','shorts','nba','kids','europa','otros','mundial2026','gallery'];
 // Categorías que sólo se muestran en modo socio
 const SOCIO_ONLY_CATS = new Set();
 // Categorías ocultas para usuarios normales (visibles en modo socio o si se accede directamente)
@@ -4141,14 +4141,14 @@ function buildCatBar() {
     if (cat === 'shorts' && !hasShorts) continue;
 
     const label   = t().cats[cat];
-    const isMundi = cat === 'mundial2026';
+    const isNewSeason = cat === 'nuevatemporada';
     const isActive = cat === activeCat;
 
     // ── Pill desktop ────────────────────────────────────────────────────
     const btn = document.createElement('button');
     btn.className = 'cat-btn'
-      + (isMundi   ? ' cat-mundial2026' : '')
-      + (isActive  ? ' active'          : '');
+      + (isNewSeason ? ' cat-nuevatemporada' : '')
+      + (isActive    ? ' active'             : '');
     btn.textContent  = label;
     btn.dataset.cat  = cat;
     btn.onclick = () => setCategory(cat);
@@ -4157,8 +4157,8 @@ function buildCatBar() {
     // ── Ítem sidebar móvil ──────────────────────────────────────────────
     const li  = document.createElement('li');
     const sb  = document.createElement('button');
-    sb.className = (isMundi  ? 'cat-mundial2026' : '')
-                 + (isActive ? ' active'          : '');
+    sb.className = (isNewSeason ? ' cat-nuevatemporada' : '')
+                 + (isActive    ? ' active'             : '');
     sb.textContent = label;
     sb.dataset.cat = cat;
     sb.onclick = () => { setCategory(cat); closeSidebar(); };
