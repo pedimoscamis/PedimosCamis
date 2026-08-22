@@ -1078,6 +1078,21 @@
     }
     .modal-price-sub { font-size: 13px; color: var(--muted); }
 
+    /* ─── Botón cross-sell: ir a la Versión Player del mismo kit ─────── */
+    .player-upgrade-btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%;
+      background: #FDD835; color: #111;
+      border: none; border-radius: 8px;
+      padding: 11px 16px;
+      font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 800; letter-spacing: .04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .player-upgrade-btn strong { font-weight: 900; }
+    .player-upgrade-btn:hover { background: #F9C900; transform: translateY(-1px); }
+
     /* ─── Super Admin: editor de categorías ──── */
     #admin-cat-editor {
       margin-top: 16px;
@@ -2732,12 +2747,17 @@
     /* Al final de la hoja de estilos a propósito: gana cualquier empate de
        especificidad frente a las reglas base de #modal-img-col/#modal-name/etc. */
     @media (max-width: 620px) {
-      #modal { grid-template-columns: minmax(0, 1fr); max-height: 94vh; }
+      #modal-overlay { padding: 26px 18px; }
+      #modal { grid-template-columns: minmax(0, 1fr); max-height: 82vh; }
       #modal-img-col { aspect-ratio: 4/3; min-height: 0; }
-      #modal-content-col { padding: 18px 34px 18px 16px; gap: 10px; }
-      #modal-name { font-size: 15px; }
-      .modal-price-main { font-size: 28px; }
-      #custom-section { gap: 6px; }
+      #modal-content-col { padding: 16px 32px 16px 16px; gap: 8px; max-height: 74vh; }
+      #modal-name { font-size: 14px; }
+      #modal-cat { font-size: 10px; }
+      .modal-price-main { font-size: 26px; }
+      .modal-price-block { line-height: 1.15; }
+      #custom-section { gap: 4px; }
+      .custom-option { padding: 6px 0; }
+      .player-upgrade-btn { padding: 9px 14px; font-size: 12px; }
     }
   </style>
 </head>
@@ -3211,6 +3231,9 @@
         <div class="modal-price-main" id="modal-price-main"></div>
         <div class="modal-price-sub" id="modal-price-sub"></div>
       </div>
+      <button id="opt-player-upgrade-wrap" class="player-upgrade-btn" style="display:none" onclick="goToPlayerVersion()">
+        ⭐ VERSIÓN PLAYER <strong>+5€</strong>
+      </button>
       <div>
         <div class="section-label-row">
           <p class="section-label" data-i18n="sizes">Tallas</p>
@@ -3226,11 +3249,6 @@
       </div>
       <div id="custom-section">
         <p class="section-label" data-i18n="personalization">Personalización</p>
-        <label class="custom-option" id="opt-player-upgrade-wrap" style="display:none">
-          <input type="checkbox" id="opt-player-upgrade" onchange="updateModalPrice()" />
-          <span class="custom-option-label">Súbete a la Versión Player</span>
-          <span class="custom-option-price">+5€</span>
-        </label>
         <label class="custom-option" id="opt-dorsal-wrap">
           <input type="checkbox" id="opt-dorsal" />
           <span class="custom-option-label" data-i18n="name_number">Nombre + dorsal</span>
@@ -3916,6 +3934,7 @@ let activeCat = 'all';
 let searchQuery = '';
 let currentProduct = null;
 let selectedSize = null;
+let playerVersionTarget = null; // producto Versión Player al que lleva el botón cross-sell del modal
 let cart = JSON.parse(localStorage.getItem('kz-cart') || '[]');
 let activeFilters  = { teams: new Set(), tipos: new Set(), equipacion: new Set(), temporada: new Set(), liga: new Set() };
 let seasonSortDir  = 'desc'; // 'desc' = más reciente primero, 'asc' = más antiguo
@@ -4003,7 +4022,7 @@ function getKitVersion(name) {
 function getCartVersion(item) {
   const name = item.name || '';
   const cats = item.cats || [];
-  if (PLAYER_RE.test(name) || (item.customizations || []).some(c => c.type === 'playerUpgrade')) return 'Player';
+  if (PLAYER_RE.test(name)) return 'Player';
   if (cats.includes('retro') || /\bretro\b/i.test(name))          return 'Retro';
   if (WOMEN_RE.test(name)    || cats.includes('women'))           return 'Fan Woman';
   return 'Fan';
@@ -6197,6 +6216,35 @@ function isPlayerVersion(p) {
   return PLAYER_RE.test(p.nameEn);
 }
 
+/**
+ * Busca la Versión Player del mismo kit (mismo equipo y local/visitante),
+ * priorizando la misma temporada exacta si existe, para el botón cross-sell
+ * del modal. Devuelve null si no hay ninguna equivalente en el catálogo.
+ */
+function findPlayerVersionCounterpart(p) {
+  const team = detectTeam(p.nameEn);
+  if (!team) return null;
+  const tier = homeAwayVariantTier(p.nameEn);
+  const season = extractSeason(p.nameEn);
+
+  const candidates = allProducts.filter(x =>
+    x.id !== p.id &&
+    isPlayerVersion(x) &&
+    detectTeam(x.nameEn) === team &&
+    homeAwayVariantTier(x.nameEn) === tier
+  );
+  if (candidates.length === 0) return null;
+
+  const sameSeason = candidates.filter(x => extractSeason(x.nameEn) === season);
+  const pool = sameSeason.length > 0 ? sameSeason : candidates;
+  return pool.sort((a, b) => (b.photos || 0) - (a.photos || 0))[0];
+}
+
+/** Botón "VERSIÓN PLAYER +5€" del modal: navega a la ficha real de esa versión. */
+function goToPlayerVersion() {
+  if (playerVersionTarget) openModal(playerVersionTarget);
+}
+
 // Extrae la temporada del nombre y la normaliza a formato corto "YY/YY".
 // Soporta: "2025/26" → "25/26" | "26/27" → "26/27" | "98/99" → "98/99"
 //          "2026" (año solo) → "26/27" | "2025" → "25/26"
@@ -6497,13 +6545,12 @@ function openModal(p) {
   document.getElementById('opt-patch-wrap').style.display     = (showPatches && !isMundialPatch) ? '' : 'none';
   document.getElementById('mundial-patch-wrap').style.display = isMundialPatch ? '' : 'none';
 
-  // Upgrade a Versión Player (+5€) — solo en la camiseta estándar (15€ / 8$
-  // socio): descarta automáticamente shorts, retro, nba/kids/women/jacket,
-  // manga larga y lo que ya sea Player, comparando el precio base exacto.
+  // Botón "Versión Player +5€" — solo en la camiseta estándar (15€ / 8$
+  // socio) y solo si existe una versión jugador real del mismo kit a la
+  // que llevar al cliente (no es una personalización, es un enlace cruzado).
   const standardPrice = socioMode ? SOCIO_JERSEY : NORMAL_JERSEY;
-  const canUpgradeToPlayer = getBasePrice(p) === standardPrice;
-  document.getElementById('opt-player-upgrade-wrap').style.display = canUpgradeToPlayer ? '' : 'none';
-  document.getElementById('opt-player-upgrade').checked = false;
+  playerVersionTarget = (getBasePrice(p) === standardPrice) ? findPlayerVersionCounterpart(p) : null;
+  document.getElementById('opt-player-upgrade-wrap').style.display = playerVersionTarget ? '' : 'none';
 
   // Reset checkboxes y patch
   document.getElementById('opt-dorsal').checked = false;
@@ -6566,7 +6613,6 @@ function getModalPriceBase() {
     base = getBasePrice(currentProduct);
   }
   let total = base;
-  if (document.getElementById('opt-player-upgrade')?.checked) total += 5;
   // En super-flash el dorsal está incluido en el precio fijo → no sumar +3
   const isSuperFlash = currentProduct?.discountInfo?.source === 'super-flash';
   if (document.getElementById('opt-dorsal').checked && !isSuperFlash) total += 3;
@@ -7035,7 +7081,7 @@ function renderTimeline(events) {
 /** Clave de identidad para detectar artículos duplicados en el carrito. */
 function cartItemKey(item) {
   const customs = (item.customizations || [])
-    .map(c => c.type === 'dorsal' ? `d:${c.name}:${c.number}` : c.type === 'playerUpgrade' ? 'pu' : `p:${c.label}`)
+    .map(c => c.type === 'dorsal' ? `d:${c.name}:${c.number}` : `p:${c.label}`)
     .sort().join('|');
   return `${item.productId}|${item.size}|${customs}`;
 }
@@ -7047,9 +7093,6 @@ function addToCart() {
   }
   const usd = getModalPriceBase();
   const customizations = [];
-  if (document.getElementById('opt-player-upgrade')?.checked) {
-    customizations.push({ type: 'playerUpgrade', extraUsd: 5 });
-  }
   if (document.getElementById('opt-dorsal').checked) {
     const name   = document.getElementById('input-name').value.trim().toUpperCase();
     const number = document.getElementById('input-number').value.trim();
@@ -7265,7 +7308,6 @@ function buildCustomMeta(customizations) {
   return customizations.map(c => {
     if (c.type === 'dorsal') return `${c.name || '?'} #${c.number || '?'}`;
     if (c.type === 'patch')  return `Parche ${c.label}`;
-    if (c.type === 'playerUpgrade') return 'Versión Player';
     return '';
   }).filter(Boolean).join(', ');
 }
@@ -7430,7 +7472,6 @@ function openCheckout(e) {
       let lbl;
       if (c.type === 'dorsal') lbl = isEs ? 'Nombre + dorsal' : 'Name + number';
       else if (c.type === 'patch') lbl = `Parche: ${c.label}`;
-      else if (c.type === 'playerUpgrade') lbl = isEs ? 'Versión Player' : 'Player Version';
       else lbl = c.type;
       bdHtml += `<span class="extra">${escHtml(lbl)}</span><span class="extra">+${c.extraUsd}${sym}</span>`;
     }
