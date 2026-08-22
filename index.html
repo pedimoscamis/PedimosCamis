@@ -946,15 +946,6 @@
       grid-template-columns: 1fr 1fr;
       position: relative;
     }
-    @media (max-width: 620px) {
-      #modal { grid-template-columns: 1fr; max-height: 94vh; }
-      #modal-img-col { aspect-ratio: 4/3; min-height: 0; }
-      #modal-content-col { padding: 18px 34px 18px 16px; gap: 10px; }
-      #modal-name { font-size: 15px; }
-      .modal-price-main { font-size: 28px; }
-      #custom-section { gap: 6px; }
-    }
-
     #modal-img-col {
       background: #141414;
       display: flex; flex-direction: column;
@@ -969,6 +960,7 @@
       width: 100%; height: 100%;
       object-fit: cover;
     }
+
 
     /* ─── Modal Carousel ──────────────────────────────────────────── */
     .modal-carousel {
@@ -2735,6 +2727,18 @@
       cursor: pointer; transition: all .2s;
     }
     #mob-user-logout-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    /* ─── Modal de producto — compacto en móvil ──────────────────────── */
+    /* Al final de la hoja de estilos a propósito: gana cualquier empate de
+       especificidad frente a las reglas base de #modal-img-col/#modal-name/etc. */
+    @media (max-width: 620px) {
+      #modal { grid-template-columns: minmax(0, 1fr); max-height: 94vh; }
+      #modal-img-col { aspect-ratio: 4/3; min-height: 0; }
+      #modal-content-col { padding: 18px 34px 18px 16px; gap: 10px; }
+      #modal-name { font-size: 15px; }
+      .modal-price-main { font-size: 28px; }
+      #custom-section { gap: 6px; }
+    }
   </style>
 </head>
 <body>
@@ -6493,9 +6497,11 @@ function openModal(p) {
   document.getElementById('opt-patch-wrap').style.display     = (showPatches && !isMundialPatch) ? '' : 'none';
   document.getElementById('mundial-patch-wrap').style.display = isMundialPatch ? '' : 'none';
 
-  // Upgrade a Versión Player (+5€) — solo tiene sentido si el producto es una
-  // camiseta normal (Fan) que todavía no es ya la versión jugador.
-  const canUpgradeToPlayer = !isPlayerVersion(p) && !isShortProduct(p) && !isKidKit(p) && !WINDBREAKER_RE.test(p.nameEn);
+  // Upgrade a Versión Player (+5€) — solo en la camiseta estándar (15€ / 8$
+  // socio): descarta automáticamente shorts, retro, nba/kids/women/jacket,
+  // manga larga y lo que ya sea Player, comparando el precio base exacto.
+  const standardPrice = socioMode ? SOCIO_JERSEY : NORMAL_JERSEY;
+  const canUpgradeToPlayer = getBasePrice(p) === standardPrice;
   document.getElementById('opt-player-upgrade-wrap').style.display = canUpgradeToPlayer ? '' : 'none';
   document.getElementById('opt-player-upgrade').checked = false;
 
