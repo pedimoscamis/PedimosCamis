@@ -557,25 +557,23 @@
     }
     #hero > * { position: relative; z-index: 2; }
 
-    /* ─── Línea superior: temporada + "Hot Sales" ────────────────────── */
-    #hero-topline {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      max-width: 1100px; margin: 0 auto 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(255,255,255,.12);
-    }
-    #hero-season-line {
+    /* ─── Título de temporada — limpio, sin adornos ──────────────────── */
+    #hero-season-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(16px, 2.4vw, 23px);
-      letter-spacing: 1.2px; color: rgba(255,255,255,.85);
+      font-size: clamp(24px, 4vw, 40px);
+      line-height: 1.2; letter-spacing: 1.5px;
+      color: #fff; text-align: center;
+      margin: 0 0 10px;
     }
-    #hero-season-line strong { color: #FDD835; }
-    #hero-hotsales-badge {
-      display: inline-flex; align-items: center; gap: 4px;
+    #hero-season-title span { color: #FDD835; }
+
+    /* ─── Kicker "Hot Sales" — pequeño, justo encima del showcase ────── */
+    #spotlight-kicker {
+      display: block; text-align: center;
       font-family: 'Barlow', sans-serif;
-      font-size: 11px; font-weight: 800; letter-spacing: .1em;
-      text-transform: uppercase; color: rgba(255,255,255,.55);
-      white-space: nowrap;
+      font-size: 10px; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: rgba(255,255,255,.45);
+      margin-bottom: 10px;
     }
 
     /* ─── Hero Spotlight — una camiseta protagonista a la vez ───────── */
@@ -583,6 +581,8 @@
       position: relative;
       min-height: 440px;
       margin-bottom: 4px;
+      overflow: hidden;
+      touch-action: pan-y;
     }
     .spotlight-slide {
       position: absolute; inset: 0;
@@ -591,14 +591,21 @@
       align-items: center;
       gap: 20px;
       opacity: 0;
-      transform: translateY(26px);
-      transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
+      transform: translateX(0);
+      transition: opacity .55s ease, transform .55s ease;
       pointer-events: none;
     }
     .spotlight-slide.active {
-      opacity: 1; transform: translateY(0);
+      opacity: 1; transform: translateX(0);
       pointer-events: auto; z-index: 2;
     }
+    /* Punto de partida/llegada según la dirección del cambio — se asignan
+       justo antes de animar, sin transición, para que la entrante "llegue"
+       deslizando desde el lado correcto y la saliente "se vaya" al opuesto. */
+    .spotlight-slide.enter-right { transform: translateX(70px); }
+    .spotlight-slide.enter-left  { transform: translateX(-70px); }
+    .spotlight-slide.exit-left   { opacity: 0; transform: translateX(-70px); }
+    .spotlight-slide.exit-right  { opacity: 0; transform: translateX(70px); }
     .spotlight-content { text-align: left; padding-left: clamp(4px, 3vw, 32px); }
     .spotlight-season {
       display: block;
@@ -707,7 +714,8 @@
 
     @media (max-width: 700px) {
       #hero { padding: 16px 14px 14px; }
-      #hero-topline { flex-direction: column; gap: 6px; text-align: center; margin-bottom: 14px; padding-bottom: 10px; }
+      #hero-season-title { margin-bottom: 2px; }
+      #spotlight-kicker { font-size: 10px; margin-bottom: 8px; }
       #spotlight { min-height: 460px; }
       .spotlight-slide {
         grid-template-columns: 1fr;
@@ -939,8 +947,12 @@
       position: relative;
     }
     @media (max-width: 620px) {
-      #modal { grid-template-columns: 1fr; }
-      #modal-img-col { aspect-ratio: 1; }
+      #modal { grid-template-columns: 1fr; max-height: 94vh; }
+      #modal-img-col { aspect-ratio: 4/3; min-height: 0; }
+      #modal-content-col { padding: 18px 34px 18px 16px; gap: 10px; }
+      #modal-name { font-size: 15px; }
+      .modal-price-main { font-size: 28px; }
+      #custom-section { gap: 6px; }
     }
 
     #modal-img-col {
@@ -2849,10 +2861,8 @@
 
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
-  <div id="hero-topline">
-    <span id="hero-season-line">LA TEMPORADA <strong>26/27</strong> YA ESTÁ AQUÍ</span>
-    <span id="hero-hotsales-badge">🔥 HOT SALES</span>
-  </div>
+  <h1 id="hero-season-title">LA TEMPORADA <span>26/27</span> YA ESTÁ AQUÍ</h1>
+  <span id="spotlight-kicker">🔥 HOT SALES</span>
   <div id="spotlight">
     <div id="spotlight-slides">
       <!-- Las 5 diapositivas se generan en JS: ver initSpotlight() -->
@@ -3212,6 +3222,11 @@
       </div>
       <div id="custom-section">
         <p class="section-label" data-i18n="personalization">Personalización</p>
+        <label class="custom-option" id="opt-player-upgrade-wrap" style="display:none">
+          <input type="checkbox" id="opt-player-upgrade" onchange="updateModalPrice()" />
+          <span class="custom-option-label">Súbete a la Versión Player</span>
+          <span class="custom-option-price">+5€</span>
+        </label>
         <label class="custom-option" id="opt-dorsal-wrap">
           <input type="checkbox" id="opt-dorsal" />
           <span class="custom-option-label" data-i18n="name_number">Nombre + dorsal</span>
@@ -3736,8 +3751,8 @@ let lang = localStorage.getItem('kz-lang') || 'es';
 const T = {
   es: {
     search_placeholder: 'Buscar por camiseta, equipo...',
-    hero_season_line: 'LA TEMPORADA <strong>26/27</strong> YA ESTÁ AQUÍ',
-    hero_hotsales_badge: '🔥 HOT SALES',
+    hero_season_title: 'LA TEMPORADA <span>26/27</span> YA ESTÁ AQUÍ',
+    spotlight_kicker: '🔥 HOT SALES',
     hero_teams_label: '⚡ Ve directo a tu equipo',
     results: (n) => `${n} producto${n !== 1 ? 's' : ''}`,
     sizes: 'Tallas',
@@ -3812,8 +3827,8 @@ const T = {
   },
   en: {
     search_placeholder: 'Search jersey, team, player…',
-    hero_season_line: 'THE <strong>26/27</strong> SEASON IS HERE',
-    hero_hotsales_badge: '🔥 HOT SALES',
+    hero_season_title: 'THE <span>26/27</span> SEASON IS HERE',
+    spotlight_kicker: '🔥 HOT SALES',
     hero_teams_label: '⚡ Jump straight to your team',
     results: (n) => `${n} product${n !== 1 ? 's' : ''}`,
     sizes: 'Sizes',
@@ -3984,7 +3999,7 @@ function getKitVersion(name) {
 function getCartVersion(item) {
   const name = item.name || '';
   const cats = item.cats || [];
-  if (PLAYER_RE.test(name))                                        return 'Player';
+  if (PLAYER_RE.test(name) || (item.customizations || []).some(c => c.type === 'playerUpgrade')) return 'Player';
   if (cats.includes('retro') || /\bretro\b/i.test(name))          return 'Retro';
   if (WOMEN_RE.test(name)    || cats.includes('women'))           return 'Fan Woman';
   return 'Fan';
@@ -4253,15 +4268,64 @@ function initSpotlight() {
   scene.addEventListener('mouseenter', () => { spotlightState.isPaused = true; });
   scene.addEventListener('mouseleave', () => { spotlightState.isPaused = false; });
 
+  // ── Deslizar con el dedo (izquierda/derecha) ─────────────────────────────
+  // Solo se escucha inicio/fin (no cada movimiento): más que suficiente para
+  // detectar un swipe, y así el scroll vertical de la página no se bloquea.
+  const swipe = { startX: 0, startY: 0, active: false };
+  scene.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    swipe.startX = t.clientX;
+    swipe.startY = t.clientY;
+    swipe.active = true;
+  }, { passive: true });
+  scene.addEventListener('touchend', (e) => {
+    if (!swipe.active) return;
+    swipe.active = false;
+    const t = e.changedTouches[0];
+    const deltaX = t.clientX - swipe.startX;
+    const deltaY = t.clientY - swipe.startY;
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) spotlightNext(); else spotlightPrev();
+    }
+  });
+
   spotlightState.active = 0;
   spotlightRender();
   spotlightRestartTimer();
 }
 
-function spotlightRender() {
-  document.querySelectorAll('.spotlight-slide').forEach((slide, idx) => {
-    slide.classList.toggle('active', idx === spotlightState.active);
-  });
+/**
+ * @param {number} direction  0 = mostrar sin animar (carga inicial); 1 = la
+ *   entrante llega desde la derecha (avanzar); -1 = llega desde la izquierda
+ *   (retroceder). La saliente siempre se va hacia el lado opuesto.
+ * @param {number|null} prevActive  índice que estaba activo antes del cambio
+ */
+function spotlightRender(direction = 0, prevActive = null) {
+  const slides = document.querySelectorAll('.spotlight-slide');
+
+  if (direction !== 0 && prevActive !== null && prevActive !== spotlightState.active) {
+    const incoming = slides[spotlightState.active];
+    const outgoing = slides[prevActive];
+
+    // Colocar la entrante en su lado de origen sin transición (instantáneo),
+    // forzar reflow, y solo entonces activarla: la transición CSS anima el
+    // recorrido real desde ese lado hasta el centro.
+    incoming.style.transition = 'none';
+    incoming.classList.remove('active', 'enter-left', 'enter-right', 'exit-left', 'exit-right');
+    incoming.classList.add(direction > 0 ? 'enter-right' : 'enter-left');
+    void incoming.offsetWidth;
+    incoming.style.transition = '';
+
+    outgoing.classList.remove('active');
+    outgoing.classList.add(direction > 0 ? 'exit-left' : 'exit-right');
+    incoming.classList.remove('enter-left', 'enter-right');
+    incoming.classList.add('active');
+
+    setTimeout(() => outgoing.classList.remove('exit-left', 'exit-right'), 600);
+  } else {
+    slides.forEach((slide, idx) => slide.classList.toggle('active', idx === spotlightState.active));
+  }
+
   document.querySelectorAll('.spotlight-bar-fill').forEach((fill, idx) => {
     fill.classList.remove('filling', 'done');
     // Forzar reflow para poder relanzar la animación CSS desde cero
@@ -4275,18 +4339,21 @@ function spotlightRestartTimer() {
   if (spotlightState.timerId) clearInterval(spotlightState.timerId);
   spotlightState.timerId = setInterval(() => {
     if (spotlightState.isPaused) return;
-    spotlightGoTo((spotlightState.active + 1) % SPOTLIGHT_DATA.length);
+    spotlightGoTo(spotlightState.active + 1, 1);
   }, SPOTLIGHT_INTERVAL_MS);
 }
 
-function spotlightGoTo(idx) {
-  spotlightState.active = ((idx % SPOTLIGHT_DATA.length) + SPOTLIGHT_DATA.length) % SPOTLIGHT_DATA.length;
-  spotlightRender();
-  spotlightRestartTimer();
+function spotlightGoTo(idx, direction) {
+  const prevActive = spotlightState.active;
+  const newActive  = ((idx % SPOTLIGHT_DATA.length) + SPOTLIGHT_DATA.length) % SPOTLIGHT_DATA.length;
+  const dir = direction !== undefined ? direction : (newActive === prevActive ? 0 : (newActive > prevActive ? 1 : -1));
+  spotlightState.active = newActive;
+  spotlightRender(dir, prevActive);
+  spotlightRestartTimer(); // el auto-avance nunca se desactiva tras una navegación manual
 }
 
-function spotlightNext() { spotlightGoTo(spotlightState.active + 1); }
-function spotlightPrev() { spotlightGoTo(spotlightState.active - 1); }
+function spotlightNext() { spotlightGoTo(spotlightState.active + 1, 1); }
+function spotlightPrev() { spotlightGoTo(spotlightState.active - 1, -1); }
 
 function spotlightOpenProduct(idx) {
   const item = SPOTLIGHT_DATA[idx];
@@ -6426,6 +6493,12 @@ function openModal(p) {
   document.getElementById('opt-patch-wrap').style.display     = (showPatches && !isMundialPatch) ? '' : 'none';
   document.getElementById('mundial-patch-wrap').style.display = isMundialPatch ? '' : 'none';
 
+  // Upgrade a Versión Player (+5€) — solo tiene sentido si el producto es una
+  // camiseta normal (Fan) que todavía no es ya la versión jugador.
+  const canUpgradeToPlayer = !isPlayerVersion(p) && !isShortProduct(p) && !isKidKit(p) && !WINDBREAKER_RE.test(p.nameEn);
+  document.getElementById('opt-player-upgrade-wrap').style.display = canUpgradeToPlayer ? '' : 'none';
+  document.getElementById('opt-player-upgrade').checked = false;
+
   // Reset checkboxes y patch
   document.getElementById('opt-dorsal').checked = false;
   document.getElementById('opt-patch').checked  = false;
@@ -6487,6 +6560,7 @@ function getModalPriceBase() {
     base = getBasePrice(currentProduct);
   }
   let total = base;
+  if (document.getElementById('opt-player-upgrade')?.checked) total += 5;
   // En super-flash el dorsal está incluido en el precio fijo → no sumar +3
   const isSuperFlash = currentProduct?.discountInfo?.source === 'super-flash';
   if (document.getElementById('opt-dorsal').checked && !isSuperFlash) total += 3;
@@ -6955,7 +7029,7 @@ function renderTimeline(events) {
 /** Clave de identidad para detectar artículos duplicados en el carrito. */
 function cartItemKey(item) {
   const customs = (item.customizations || [])
-    .map(c => c.type === 'dorsal' ? `d:${c.name}:${c.number}` : `p:${c.label}`)
+    .map(c => c.type === 'dorsal' ? `d:${c.name}:${c.number}` : c.type === 'playerUpgrade' ? 'pu' : `p:${c.label}`)
     .sort().join('|');
   return `${item.productId}|${item.size}|${customs}`;
 }
@@ -6967,6 +7041,9 @@ function addToCart() {
   }
   const usd = getModalPriceBase();
   const customizations = [];
+  if (document.getElementById('opt-player-upgrade')?.checked) {
+    customizations.push({ type: 'playerUpgrade', extraUsd: 5 });
+  }
   if (document.getElementById('opt-dorsal').checked) {
     const name   = document.getElementById('input-name').value.trim().toUpperCase();
     const number = document.getElementById('input-number').value.trim();
@@ -7182,6 +7259,7 @@ function buildCustomMeta(customizations) {
   return customizations.map(c => {
     if (c.type === 'dorsal') return `${c.name || '?'} #${c.number || '?'}`;
     if (c.type === 'patch')  return `Parche ${c.label}`;
+    if (c.type === 'playerUpgrade') return 'Versión Player';
     return '';
   }).filter(Boolean).join(', ');
 }
@@ -7346,6 +7424,7 @@ function openCheckout(e) {
       let lbl;
       if (c.type === 'dorsal') lbl = isEs ? 'Nombre + dorsal' : 'Name + number';
       else if (c.type === 'patch') lbl = `Parche: ${c.label}`;
+      else if (c.type === 'playerUpgrade') lbl = isEs ? 'Versión Player' : 'Player Version';
       else lbl = c.type;
       bdHtml += `<span class="extra">${escHtml(lbl)}</span><span class="extra">+${c.extraUsd}${sym}</span>`;
     }
@@ -7901,10 +7980,10 @@ function updateLangUI() {
   document.querySelector('[data-i18n="patch"]').textContent = t().patch;
   document.querySelector('[data-i18n="back_shopping"]').textContent = t().back_shopping;
   document.querySelectorAll('[data-i18n="hero_teams_label"]').forEach(el => el.textContent = t().hero_teams_label);
-  const heroSeasonLine = document.getElementById('hero-season-line');
-  if (heroSeasonLine) heroSeasonLine.innerHTML = t().hero_season_line;
-  const heroHotsalesBadge = document.getElementById('hero-hotsales-badge');
-  if (heroHotsalesBadge) heroHotsalesBadge.textContent = t().hero_hotsales_badge;
+  const heroSeasonTitle = document.getElementById('hero-season-title');
+  if (heroSeasonTitle) heroSeasonTitle.innerHTML = t().hero_season_title;
+  const spotlightKicker = document.getElementById('spotlight-kicker');
+  if (spotlightKicker) spotlightKicker.textContent = t().spotlight_kicker;
   const featuredTitle = document.getElementById('featured-title');
   if (featuredTitle) featuredTitle.textContent = t().featured_title;
   const featuredSeeAll = document.getElementById('featured-see-all');
