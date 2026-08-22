@@ -2739,7 +2739,17 @@
        especificidad frente a las reglas base de #modal-img-col/#modal-name/etc. */
     @media (max-width: 620px) {
       #modal { grid-template-columns: minmax(0, 1fr); }
-      #modal-img-col { aspect-ratio: 4/3; min-height: 0; }
+      #modal-img-col {
+        aspect-ratio: 1/1; min-height: 0;
+        border-radius: 14px 14px 0 0;
+      }
+      #modal-img-col img { object-fit: contain; }
+      .modal-carousel-track img { object-fit: contain; }
+      #modal-content-col {
+        padding: 22px 22px 24px;
+        gap: 12px;
+        border-radius: 0 0 14px 14px;
+      }
     }
   </style>
 </head>
