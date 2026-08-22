@@ -4280,8 +4280,14 @@ function initSpotlight() {
   ).join('');
 
   const scene = document.getElementById('spotlight');
-  scene.addEventListener('mouseenter', () => { spotlightState.isPaused = true; });
-  scene.addEventListener('mouseleave', () => { spotlightState.isPaused = false; });
+  // Solo pausar al pasar el ratón en dispositivos con puntero real — en
+  // táctil, mouseenter puede dispararse sin un mouseleave posterior (no hay
+  // "salida" real del cursor), dejando isPaused atascado en true para
+  // siempre y el auto-avance parado de forma intermitente.
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    scene.addEventListener('mouseenter', () => { spotlightState.isPaused = true; });
+    scene.addEventListener('mouseleave', () => { spotlightState.isPaused = false; });
+  }
 
   // ── Deslizar con el dedo (izquierda/derecha) ─────────────────────────────
   // Solo se escucha inicio/fin (no cada movimiento): más que suficiente para
@@ -4294,6 +4300,7 @@ function initSpotlight() {
     swipe.active = true;
   }, { passive: true });
   scene.addEventListener('touchend', (e) => {
+    spotlightState.isPaused = false; // red de seguridad: nunca queda atascado en táctil
     if (!swipe.active) return;
     swipe.active = false;
     const t = e.changedTouches[0];
