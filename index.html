@@ -565,7 +565,7 @@
       color: #fff; text-align: center;
       margin: 0 0 4px;
     }
-    #hero-season-title span { color: #FDD835; }
+    #hero-season-title span { color: var(--accent); }
 
     /* ─── Hero Spotlight — una camiseta protagonista a la vez ───────── */
     #spotlight {
@@ -611,14 +611,7 @@
       line-height: .96; letter-spacing: 1px;
       color: #fff;
       text-shadow: 0 6px 30px rgba(0,0,0,.6);
-      margin: 0 0 12px;
-    }
-    .spotlight-version {
-      display: block;
-      font-family: 'Barlow', sans-serif;
-      font-size: clamp(14px, 1.7vw, 18px); font-weight: 800; letter-spacing: .08em;
-      text-transform: uppercase; color: #FDD835;
-      margin-bottom: 24px;
+      margin: 0 0 28px;
     }
     .spotlight-cta {
       background: var(--accent); color: #fff; border: none;
@@ -4255,7 +4248,6 @@ function buildSpotlightSlide(item, idx) {
     <div class="spotlight-content">
       <span class="spotlight-season">${escHtml(item.season)}</span>
       <h2 class="spotlight-team">${escHtml(item.team)}</h2>
-      <span class="spotlight-version">${escHtml(item.version)}</span>
       <button class="spotlight-cta">Ver Fichaje</button>
     </div>
     <div class="spotlight-media">
