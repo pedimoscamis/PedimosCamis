@@ -2774,20 +2774,6 @@
   </div>
 </section>
 
-<!-- ─── Featured: Nueva Temporada 26/27 ────────────────────────────── -->
-<section id="featured-newseason-section">
-  <div id="featured-newseason-inner">
-    <div id="featured-newseason-header">
-      <div id="featured-newseason-title-wrap">
-        <span id="featured-newseason-title">NUEVA TEMPORADA 26/27</span>
-        <span class="badge-new">🆕 26/27</span>
-      </div>
-      <button id="featured-newseason-see-all" onclick="setCategory('nuevatemporada')">Ver todas →</button>
-    </div>
-    <div id="featured-newseason-scroll"></div>
-  </div>
-</section>
-
 <!-- ─── Featured: Segunda Estrella (España 2 estrellas) ────────────── -->
 <section id="featured-secondstar-section">
   <div id="featured-secondstar-inner">
@@ -2799,6 +2785,20 @@
       <button id="featured-secondstar-see-all" onclick="setCategory('mundial2026')">Ver todas →</button>
     </div>
     <div id="featured-secondstar-scroll"></div>
+  </div>
+</section>
+
+<!-- ─── Featured: Nueva Temporada 26/27 ────────────────────────────── -->
+<section id="featured-newseason-section">
+  <div id="featured-newseason-inner">
+    <div id="featured-newseason-header">
+      <div id="featured-newseason-title-wrap">
+        <span id="featured-newseason-title">NUEVA TEMPORADA 26/27</span>
+        <span class="badge-new">🆕 26/27</span>
+      </div>
+      <button id="featured-newseason-see-all" onclick="setCategory('nuevatemporada')">Ver todas →</button>
+    </div>
+    <div id="featured-newseason-scroll"></div>
   </div>
 </section>
 
@@ -5592,8 +5592,8 @@ function renderAll() {
   hero.style.display = (activeCat === 'all' && !searchQuery) ? 'block' : 'none';
 
   renderGallery();
-  renderFeaturedNewSeason();
   renderFeaturedSecondStar();
+  renderFeaturedNewSeason();
   renderFeatured();
   renderSuperFlash();
   renderUclFlash();
@@ -5810,6 +5810,12 @@ function primaryCat(p) {
 }
 
 function getBasePrice(p) {
+  const price = computeBasePrice(p);
+  // Segunda Estrella: +2€ sobre el precio que le correspondería normalmente
+  return isSpainTwoStar(p) ? price + 2 : price;
+}
+
+function computeBasePrice(p) {
   // ⓪ Precio manual explícito (priceOverride:true en products.json)
   if (p.priceOverride && p.priceUsd != null) {
     return socioMode ? p.priceUsd * (10 / 9) : p.priceUsd;
