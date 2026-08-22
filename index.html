@@ -1072,8 +1072,8 @@
     .player-upgrade-btn {
       display: flex; align-items: center; justify-content: center; gap: 5px;
       width: 100%;
-      background: #FDD835; color: #111;
-      border: none; border-radius: 6px;
+      background: none; color: #FDD835;
+      border: 1px solid #FDD835; border-radius: 6px;
       padding: 6px 10px;
       margin-bottom: 6px;
       font-family: 'Barlow', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: .03em;
@@ -1082,7 +1082,7 @@
       transition: background .2s, transform .15s;
     }
     .player-upgrade-btn strong { font-weight: 900; }
-    .player-upgrade-btn:hover { background: #F9C900; transform: translateY(-1px); }
+    .player-upgrade-btn:hover { background: rgba(253,216,53,.12); transform: translateY(-1px); }
 
     /* ─── Super Admin: editor de categorías ──── */
     #admin-cat-editor {
@@ -2738,17 +2738,8 @@
     /* Al final de la hoja de estilos a propósito: gana cualquier empate de
        especificidad frente a las reglas base de #modal-img-col/#modal-name/etc. */
     @media (max-width: 620px) {
-      #modal-overlay { padding: 26px 18px; }
-      #modal { grid-template-columns: minmax(0, 1fr); max-height: 82vh; }
+      #modal { grid-template-columns: minmax(0, 1fr); }
       #modal-img-col { aspect-ratio: 4/3; min-height: 0; }
-      #modal-content-col { padding: 16px 32px 16px 16px; gap: 8px; max-height: 74vh; }
-      #modal-name { font-size: 14px; }
-      #modal-cat { font-size: 10px; }
-      .modal-price-main { font-size: 26px; }
-      .modal-price-block { line-height: 1.15; }
-      #custom-section { gap: 4px; }
-      .custom-option { padding: 6px 0; }
-      .player-upgrade-btn { padding: 5px 8px; font-size: 10px; }
     }
   </style>
 </head>
@@ -2932,20 +2923,6 @@
   </div>
 </section>
 
-<!-- ─── Featured: Mundial 2026 ─────────────────────────────────────── -->
-<section id="featured-section">
-  <div id="featured-inner">
-    <div id="featured-header">
-      <div id="featured-title-wrap">
-        <span id="featured-title">MUNDIAL 2026</span>
-        <span class="badge-new" style="background:#c9a227;color:#111">⚽ 2026</span>
-      </div>
-      <button id="featured-see-all" onclick="setCategory('mundial2026')">Ver todas →</button>
-    </div>
-    <div id="featured-scroll"></div>
-  </div>
-</section>
-
 <!-- ─── Súper Flash Event ────────────────────────────────────────────── -->
 <!-- Para retirar el evento: SUPER_FLASH_ACTIVE = false en el JS. La estructura CSS queda intacta para reutilizarla. -->
 <section id="super-flash-section">
@@ -3036,6 +3013,17 @@
   </div>
 </section>
 
+<!-- ─── Home row: Selecciones ─────────────────────────────────────────── -->
+<section class="home-row-section" id="row-selecciones">
+  <div class="home-row-inner">
+    <div class="home-row-header">
+      <div class="home-row-title-wrap"><span class="home-row-title">🌍 SELECCIONES</span></div>
+      <button class="home-row-see-all" onclick="setCategory('selecciones')">Ver todas →</button>
+    </div>
+    <div class="home-row-scroll" id="scroll-selecciones"></div>
+  </div>
+</section>
+
 <!-- ─── Home row: La Liga ────────────────────────────────────────────── -->
 <section class="home-row-section" id="row-laliga">
   <div class="home-row-inner">
@@ -3090,17 +3078,6 @@
       <button class="home-row-see-all" onclick="setCategory('ligue1')">Ver todas →</button>
     </div>
     <div class="home-row-scroll" id="scroll-ligue1"></div>
-  </div>
-</section>
-
-<!-- ─── Home row: Selecciones ─────────────────────────────────────────── -->
-<section class="home-row-section" id="row-selecciones">
-  <div class="home-row-inner">
-    <div class="home-row-header">
-      <div class="home-row-title-wrap"><span class="home-row-title">🌍 SELECCIONES</span></div>
-      <button class="home-row-see-all" onclick="setCategory('selecciones')">Ver todas →</button>
-    </div>
-    <div class="home-row-scroll" id="scroll-selecciones"></div>
   </div>
 </section>
 
@@ -3167,6 +3144,20 @@
       <button class="home-row-see-all" onclick="setCategory('europa')">Ver todas →</button>
     </div>
     <div class="home-row-scroll" id="scroll-europa"></div>
+  </div>
+</section>
+
+<!-- ─── Featured: Mundial 2026 ─────────────────────────────────────── -->
+<section id="featured-section">
+  <div id="featured-inner">
+    <div id="featured-header">
+      <div id="featured-title-wrap">
+        <span id="featured-title">MUNDIAL 2026</span>
+        <span class="badge-new" style="background:#c9a227;color:#111">⚽ 2026</span>
+      </div>
+      <button id="featured-see-all" onclick="setCategory('mundial2026')">Ver todas →</button>
+    </div>
+    <div id="featured-scroll"></div>
   </div>
 </section>
 
