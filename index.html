@@ -559,109 +559,95 @@
 
     #hero-main-title {
       font-family: 'Bebas Neue', sans-serif;
-      font-style: italic;
-      font-weight: 700;
-      font-size: clamp(24px, 4.5vw, 38px);
-      letter-spacing: 1px;
+      font-size: clamp(30px, 5.5vw, 52px);
+      line-height: 1.05;
+      letter-spacing: 2px;
       color: #fff;
-      text-shadow: 0 0 14px rgba(253,216,53,.5), 0 2px 6px rgba(0,0,0,.8);
-      margin-bottom: 6px;
+      margin-bottom: 10px;
     }
-    #wheel-kicker {
+    #hero-main-title span { color: #FDD835; display: block; }
+    #ticker-kicker {
       display: block;
       font-family: 'Barlow', sans-serif;
       font-size: 11px; font-weight: 800; letter-spacing: .12em;
       text-transform: uppercase; color: rgba(255,255,255,.6);
-      margin-bottom: 8px;
+      margin-bottom: 14px;
     }
-    #wheel-scene {
-      --wheel-perspective: 800px;
-      --card-w: 148px;
-      --card-h: 188px;
-      --radius: 130px;
-      perspective: var(--wheel-perspective);
-      width: 100%;
-      height: calc(var(--card-h) + 24px);
-      display: flex; align-items: center; justify-content: center;
-      cursor: grab;
-      touch-action: pan-y;
-      user-select: none;
-      -webkit-user-select: none;
+
+    /* ─── Ticker infinito de Hot Picks ──────────────────────────────── */
+    #ticker-viewport {
+      width: 100%; overflow: hidden;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
     }
-    #wheel-scene.dragging { cursor: grabbing; }
-    #wheel-viewport {
-      position: relative;
-      width: var(--card-w); height: var(--card-h);
-      transform-style: preserve-3d;
+    #ticker-track {
+      display: flex; width: max-content; gap: 16px;
+      animation: ticker-scroll 26s linear infinite;
     }
-    #wheel-ring {
-      position: absolute; inset: 0;
-      transform-style: preserve-3d;
-      will-change: transform;
+    #ticker-track.paused,
+    #ticker-track:has(.ticker-card:hover) {
+      animation-play-state: paused;
     }
-    .wheel-card {
-      position: absolute; inset: 0;
-      width: var(--card-w); height: var(--card-h);
-      border-radius: 14px;
+    @keyframes ticker-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .ticker-card {
+      flex: 0 0 auto;
+      width: 140px; height: 178px;
+      border-radius: 12px;
       background: #fff;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2);
-      display: flex; align-items: center; justify-content: center;
       overflow: hidden;
-      backface-visibility: hidden;
-      transition: opacity .3s, box-shadow .3s;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(0,0,0,.35);
+      transition: transform .25s ease, box-shadow .25s ease;
     }
-    .wheel-card img {
+    .ticker-card:hover {
+      transform: scale(1.08);
+      box-shadow: 0 14px 32px rgba(0,0,0,.5);
+      position: relative; z-index: 2;
+    }
+    .ticker-card img {
       width: 100%; height: 100%; object-fit: cover;
       pointer-events: none; -webkit-user-drag: none;
     }
-    .wheel-card.is-front { box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.25); }
 
-    #wheel-info { margin-top: 10px; position: relative; min-height: 80px; }
-    #wheel-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(20px, 3.6vw, 27px);
-      letter-spacing: 1px; color: #fff;
-      transition: opacity .2s;
+    /* ─── "Ve directo a tu equipo" — restaurado debajo de Hot Picks ─── */
+    #hero-teams { margin-top: 20px; position: relative; max-width: 720px; margin-left: auto; margin-right: auto; }
+    #hero-teams-label {
+      display: block; font-size: 12px; font-weight: 700; letter-spacing: .04em;
+      color: rgba(255,255,255,.65); text-transform: uppercase; margin-bottom: 10px;
     }
-    #wheel-subtitle {
-      font-family: 'Barlow', sans-serif;
-      font-size: 13px; color: rgba(255,255,255,.65);
-      margin: 3px 0 10px;
-      transition: opacity .2s;
+    #hero-teams-row {
+      display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px;
+      padding: 2px 2px 6px; justify-content: flex-start;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.25) transparent;
+      mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
     }
-    #wheel-cta {
-      display: inline-block;
-      background: var(--accent); color: #fff;
-      padding: 9px 28px; border-radius: 6px;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 16px; letter-spacing: 1px;
-      cursor: pointer; border: none;
-      transition: background .2s, transform .15s;
+    #hero-teams-row::-webkit-scrollbar { height: 4px; }
+    #hero-teams-row::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 2px; }
+    .hero-team-chip {
+      flex: 0 0 auto;
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.16);
+      color: #fff; padding: 8px 16px 8px 12px; border-radius: 20px;
+      font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background .2s, border-color .2s, transform .15s;
+      white-space: nowrap;
     }
-    #wheel-cta:hover { background: var(--accent-dk); transform: translateY(-2px); }
-
-    #wheel-dots {
-      display: flex; justify-content: center; gap: 7px;
-      margin-top: 10px; position: relative;
+    .hero-team-chip::before {
+      content: ''; width: 9px; height: 9px; border-radius: 50%;
+      background: var(--team-color, #999); flex: 0 0 auto;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
     }
-    .wheel-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: rgba(255,255,255,.3); border: none; padding: 0; cursor: pointer;
-      transition: background .2s, transform .2s;
-    }
-    .wheel-dot.active { background: var(--accent); transform: scale(1.3); }
+    .hero-team-chip:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.4); transform: translateY(-2px); }
 
     @media (max-width: 700px) {
       #hero { padding: 16px 14px 14px; }
-      #hero-main-title { font-size: clamp(19px, 5.5vw, 26px); margin-bottom: 4px; }
-      #wheel-scene {
-        --wheel-perspective: 550px;
-        --card-w: 92px;
-        --card-h: 118px;
-        --radius: 78px;
-      }
-      #wheel-kicker { font-size: 10px; margin-bottom: 6px; }
-      #wheel-info { margin-top: 8px; min-height: 70px; }
+      #hero-main-title { font-size: clamp(22px, 6.5vw, 32px); margin-bottom: 8px; }
+      .ticker-card { width: 100px; height: 128px; }
+      #ticker-track { gap: 11px; }
+      #hero-teams { margin-top: 14px; }
     }
 
     /* ─── Grid ──────────────────────────────────────────────── */
@@ -2790,21 +2776,30 @@
 
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
-  <h1 id="hero-main-title">¡LA TEMPORADA 26/27 YA ESTÁ AQUÍ!</h1>
-  <span id="wheel-kicker">🔥 HOT PICKS</span>
-  <div id="wheel-scene">
-    <div id="wheel-viewport">
-      <div id="wheel-ring">
-        <!-- Las 5 tarjetas se generan dinámicamente en JS (ver initWheel()) -->
-      </div>
+  <h1 id="hero-main-title">PREPÁRATE PARA EL<span>MUNDIAL 2026</span></h1>
+  <span id="ticker-kicker">HOT PICKS</span>
+  <div id="ticker-viewport">
+    <div id="ticker-track">
+      <!-- Las tarjetas (5 productos x2, para el loop infinito) se generan en JS: ver initTicker() -->
     </div>
   </div>
-  <div id="wheel-info">
-    <h2 id="wheel-title"></h2>
-    <p id="wheel-subtitle"></p>
-    <button id="wheel-cta" onclick="wheelGoToProduct()">VER FICHAJE</button>
+  <div id="hero-teams">
+    <span id="hero-teams-label" data-i18n="hero_teams_label">⚡ Ve directo a tu equipo</span>
+    <div id="hero-teams-row">
+      <button class="hero-team-chip" style="--team-color:#FEBE10" onclick="filterToTeam('laliga','Real Madrid')">Real Madrid</button>
+      <button class="hero-team-chip" style="--team-color:#A50044" onclick="filterToTeam('laliga','Barcelona')">Barcelona</button>
+      <button class="hero-team-chip" style="--team-color:#CB3524" onclick="filterToTeam('laliga','Atlético Madrid')">Atlético Madrid</button>
+      <button class="hero-team-chip" style="--team-color:#DA020E" onclick="filterToTeam('premier','Manchester United')">Man. United</button>
+      <button class="hero-team-chip" style="--team-color:#6CABDD" onclick="filterToTeam('premier','Manchester City')">Man. City</button>
+      <button class="hero-team-chip" style="--team-color:#C8102E" onclick="filterToTeam('premier','Liverpool')">Liverpool</button>
+      <button class="hero-team-chip" style="--team-color:#EF0107" onclick="filterToTeam('premier','Arsenal')">Arsenal</button>
+      <button class="hero-team-chip" style="--team-color:#DC052D" onclick="filterToTeam('bundesliga','Bayern Munich')">Bayern</button>
+      <button class="hero-team-chip" style="--team-color:#004170" onclick="filterToTeam('ligue1','PSG')">PSG</button>
+      <button class="hero-team-chip" style="--team-color:#000000" onclick="filterToTeam('seriea','Juventus')">Juventus</button>
+      <button class="hero-team-chip" style="--team-color:#FB090B" onclick="filterToTeam('seriea','AC Milan')">AC Milan</button>
+      <button class="hero-team-chip" style="--team-color:#034694" onclick="filterToTeam('premier','Chelsea')">Chelsea</button>
+    </div>
   </div>
-  <div id="wheel-dots"></div>
 </section>
 
 <!-- ─── Featured: Segunda Estrella (España 2 estrellas) ────────────── -->
@@ -3663,9 +3658,10 @@ let lang = localStorage.getItem('kz-lang') || 'es';
 const T = {
   es: {
     search_placeholder: 'Buscar por camiseta, equipo...',
-    hero_main_title: '¡LA TEMPORADA 26/27 YA ESTÁ AQUÍ!',
-    wheel_kicker: '🔥 HOT PICKS',
-    wheel_cta: 'VER FICHAJE',
+    hero_line1: 'PREPÁRATE PARA EL',
+    hero_line2: 'MUNDIAL 2026',
+    ticker_kicker: 'HOT PICKS',
+    hero_teams_label: '⚡ Ve directo a tu equipo',
     results: (n) => `${n} producto${n !== 1 ? 's' : ''}`,
     sizes: 'Tallas',
     personalization: 'Personalización',
@@ -3739,9 +3735,10 @@ const T = {
   },
   en: {
     search_placeholder: 'Search jersey, team, player…',
-    hero_main_title: 'THE 26/27 SEASON IS HERE!',
-    wheel_kicker: '🔥 HOT PICKS',
-    wheel_cta: 'VIEW SIGNING',
+    hero_line1: 'GET READY FOR THE',
+    hero_line2: 'WORLD CUP 2026',
+    ticker_kicker: 'HOT PICKS',
+    hero_teams_label: '⚡ Jump straight to your team',
     results: (n) => `${n} product${n !== 1 ? 's' : ''}`,
     sizes: 'Sizes',
     personalization: 'Customization',
@@ -3943,7 +3940,7 @@ async function init() {
   document.getElementById('results-info').textContent = t().loading;
   updateCartBadge();
   updateFavBadge();
-  initWheel();
+  initTicker();
 
   // ── Lazy loading de imágenes con IntersectionObserver ───────────────────
   imgObserver = new IntersectionObserver((entries, obs) => {
@@ -4106,213 +4103,83 @@ function scrollToGrid() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// LA RUEDA DE FICHAJES — carrusel 3D del hero (vanilla JS, sin librerías)
+// HOT PICKS — ticker infinito con expansión y modal on-click (vanilla JS)
 // ═══════════════════════════════════════════════════════════════════════════
 
-const WHEEL_DATA = [
+const TICKER_DATA = [
   {
     title: '2026/27 Real Madrid Local',
-    subtitle: 'Versión Player S-4XL',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249539127.webp',
     productId: '249539127',
   },
   {
     title: '2026/27 Barcelona Local',
-    subtitle: 'Versión Player S-4XL',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249540260.webp',
     productId: '249540260',
   },
   {
     title: 'Atletico Madrid Local 26/27',
-    subtitle: 'Versión Player S-4XL',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/26-27/26-27-Atletico-Madrid-Home-Cheap-Soccer-Jerseys-(1)_resultado.webp',
     productId: 'jx05db9736cf',
   },
   {
     title: 'España 2026 World Cup Visitante',
-    subtitle: 'Versión Jugador 2 Stars S-4XL',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544896.webp',
     productId: '249544896',
   },
   {
     title: 'España 2026 World Cup Local',
-    subtitle: 'Versión Jugador 2 Stars S-4XL',
     img: 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544913.webp',
     productId: '249544913',
   },
 ];
 
-const WHEEL_STEP = 360 / WHEEL_DATA.length;
-
-// Estado del carrusel — todo vive en este objeto para no ensuciar el scope global
-const wheelState = {
-  angle: 0,            // rotación actual del anillo, en grados
-  frontIndex: 0,        // índice de la tarjeta actualmente al frente
-  isDragging: false,
-  isPausedByPointer: false, // true mientras el ratón está encima o el dedo toca la rueda
-  dragStartX: 0,
-  dragStartAngle: 0,
-  lastFrameTime: null,
-  autoSpeedDegPerSec: 24,  // velocidad de auto-rotación
-};
-
-function wheelRadius() {
-  // Lee el radio actual desde la variable CSS (cambia en el media query móvil)
-  const raw = getComputedStyle(document.getElementById('wheel-scene')).getPropertyValue('--radius');
-  return parseFloat(raw) || 300;
+/**
+ * UX del hover/toque: pausar + agrandar la tarjeta da el feedback "wow"
+ * inmediatamente, pero abrir el modal ya con el simple hover sería
+ * intrusivo (se abriría sin querer al pasar el ratón de camino a otra
+ * cosa). El modal se abre al hacer click/tap, que es la acción explícita
+ * de "quiero ver esta camiseta" — mismo patrón que el resto del catálogo.
+ */
+function buildTickerCard(item, idx) {
+  const card = document.createElement('div');
+  card.className = 'ticker-card';
+  card.dataset.index = idx;
+  card.innerHTML = `<img src="${item.img}" alt="${escHtml(item.title)}" draggable="false">`;
+  card.addEventListener('mouseenter', tickerPause);
+  card.addEventListener('mouseleave', tickerResume);
+  card.addEventListener('touchstart', tickerPause, { passive: true });
+  card.addEventListener('touchend', tickerResume);
+  card.addEventListener('click', () => tickerOpenProduct(idx));
+  return card;
 }
 
-function initWheel() {
-  const ring = document.getElementById('wheel-ring');
-  if (!ring) return; // el hero está oculto en categorías/búsqueda — nada que inicializar
+function initTicker() {
+  const track = document.getElementById('ticker-track');
+  if (!track) return; // el hero está oculto en categorías/búsqueda — nada que inicializar
 
-  ring.innerHTML = '';
-  WHEEL_DATA.forEach((item, i) => {
-    const card = document.createElement('div');
-    card.className = 'wheel-card';
-    card.dataset.index = i;
-    card.innerHTML = `<img src="${item.img}" alt="${escHtml(item.title)}" draggable="false">`;
-    ring.appendChild(card);
-  });
-
-  wheelLayoutCards();
-  wheelUpdateInfo(true);
-
-  const scene = document.getElementById('wheel-scene');
-
-  // ── Pausa con hover (PC) / toque (móvil) ─────────────────────────────────
-  scene.addEventListener('mouseenter', () => { wheelState.isPausedByPointer = true; });
-  scene.addEventListener('mouseleave', () => {
-    wheelState.isPausedByPointer = false;
-    if (wheelState.isDragging) wheelEndDrag();
-  });
-
-  // ── Arrastre con ratón ────────────────────────────────────────────────────
-  scene.addEventListener('mousedown', (e) => wheelStartDrag(e.clientX));
-  window.addEventListener('mousemove', (e) => { if (wheelState.isDragging) wheelDragTo(e.clientX); });
-  window.addEventListener('mouseup', () => { if (wheelState.isDragging) wheelEndDrag(); });
-
-  // ── Arrastre táctil ───────────────────────────────────────────────────────
-  scene.addEventListener('touchstart', (e) => {
-    wheelState.isPausedByPointer = true;
-    wheelStartDrag(e.touches[0].clientX);
-  }, { passive: true });
-  scene.addEventListener('touchmove', (e) => {
-    if (wheelState.isDragging) wheelDragTo(e.touches[0].clientX);
-  }, { passive: true });
-  scene.addEventListener('touchend', () => {
-    wheelState.isPausedByPointer = false;
-    if (wheelState.isDragging) wheelEndDrag();
-  });
-
-  window.addEventListener('resize', wheelLayoutCards);
-
-  requestAnimationFrame(wheelTick);
-}
-
-// Coloca cada tarjeta en su posición fija alrededor del anillo (72° aparte)
-function wheelLayoutCards() {
-  const ring = document.getElementById('wheel-ring');
-  if (!ring) return;
-  const radius = wheelRadius();
-  [...ring.children].forEach((card, i) => {
-    card.style.transform = `rotateY(${i * WHEEL_STEP}deg) translateZ(${radius}px)`;
-  });
-  wheelRender();
-}
-
-function wheelRender() {
-  const ring = document.getElementById('wheel-ring');
-  if (!ring) return;
-  ring.style.transform = `rotateY(${wheelState.angle}deg)`;
-}
-
-// Índice de la tarjeta más cercana al frente (ángulo acumulado ≈ 0 mod 360)
-function wheelClosestIndex() {
-  const raw = ((-wheelState.angle / WHEEL_STEP) % WHEEL_DATA.length + WHEEL_DATA.length) % WHEEL_DATA.length;
-  return Math.round(raw) % WHEEL_DATA.length;
-}
-
-function wheelUpdateInfo(force = false) {
-  const idx = wheelClosestIndex();
-  if (!force && idx === wheelState.frontIndex) return;
-  wheelState.frontIndex = idx;
-
-  const item = WHEEL_DATA[idx];
-  const titleEl = document.getElementById('wheel-title');
-  const subEl   = document.getElementById('wheel-subtitle');
-  if (titleEl) titleEl.textContent = item.title;
-  if (subEl)   subEl.textContent   = item.subtitle;
-
-  document.querySelectorAll('.wheel-card').forEach((card, i) => {
-    card.classList.toggle('is-front', i === idx);
-  });
-
-  wheelRenderDots(idx);
-}
-
-function wheelRenderDots(activeIdx) {
-  const dotsEl = document.getElementById('wheel-dots');
-  if (!dotsEl) return;
-  if (dotsEl.children.length !== WHEEL_DATA.length) {
-    dotsEl.innerHTML = WHEEL_DATA.map((_, i) =>
-      `<button class="wheel-dot" onclick="wheelGoToIndex(${i})" aria-label="Ver ${i + 1}"></button>`
-    ).join('');
+  track.innerHTML = '';
+  // Se duplica la lista completa una vez: el track mide 2x el ancho de un
+  // ciclo, y la animación CSS anima de translateX(0) a translateX(-50%),
+  // que al ser idéntico al primer tramo produce un loop perfectamente
+  // continuo sin salto visible.
+  for (let rep = 0; rep < 2; rep++) {
+    TICKER_DATA.forEach((item, idx) => track.appendChild(buildTickerCard(item, idx)));
   }
-  [...dotsEl.children].forEach((dot, i) => dot.classList.toggle('active', i === activeIdx));
 }
 
-// Gira la rueda para dejar el índice dado justo al frente (usado por los puntos de navegación)
-function wheelGoToIndex(i) {
-  wheelState.angle = -i * WHEEL_STEP;
-  wheelRender();
-  wheelUpdateInfo();
+function tickerPause() {
+  const track = document.getElementById('ticker-track');
+  if (track) track.classList.add('paused');
 }
 
-function wheelStartDrag(clientX) {
-  wheelState.isDragging   = true;
-  wheelState.dragStartX   = clientX;
-  wheelState.dragStartAngle = wheelState.angle;
-  const scene = document.getElementById('wheel-scene');
-  if (scene) scene.classList.add('dragging');
+function tickerResume() {
+  const track = document.getElementById('ticker-track');
+  if (track) track.classList.remove('paused');
 }
 
-function wheelDragTo(clientX) {
-  const deltaX = clientX - wheelState.dragStartX;
-  const sensitivity = 0.7; // grados por píxel arrastrado
-  wheelState.angle = wheelState.dragStartAngle + deltaX * sensitivity;
-  wheelRender();
-  wheelUpdateInfo();
-}
-
-function wheelEndDrag() {
-  wheelState.isDragging = false;
-  const scene = document.getElementById('wheel-scene');
-  if (scene) scene.classList.remove('dragging');
-  // Snap: ajustar al múltiplo de WHEEL_STEP más cercano
-  const nearestStep = Math.round(wheelState.angle / WHEEL_STEP);
-  wheelState.angle = nearestStep * WHEEL_STEP;
-  wheelRender();
-  wheelUpdateInfo();
-}
-
-function wheelTick(timestamp) {
-  if (wheelState.lastFrameTime === null) wheelState.lastFrameTime = timestamp;
-  const dt = (timestamp - wheelState.lastFrameTime) / 1000;
-  wheelState.lastFrameTime = timestamp;
-
-  if (!wheelState.isDragging && !wheelState.isPausedByPointer) {
-    wheelState.angle -= wheelState.autoSpeedDegPerSec * dt;
-    wheelRender();
-    wheelUpdateInfo();
-  }
-  requestAnimationFrame(wheelTick);
-}
-
-// CTA "VER FICHAJE" — abre la ficha real del producto si ya existe en el
-// catálogo; si no, lanza una búsqueda por su nombre como último recurso.
-function wheelGoToProduct() {
-  const item = WHEEL_DATA[wheelState.frontIndex];
+function tickerOpenProduct(idx) {
+  const item = TICKER_DATA[idx];
   if (!item) return;
   const product = allProducts.find(p => p.id === item.productId);
   if (product) {
@@ -6730,6 +6597,7 @@ function closeModal() {
   document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
   currentProduct = null;
   selectedSize = null;
+  tickerResume(); // por si el modal se abrió desde el ticker de Hot Picks
 }
 
 function closeModalOnOverlay(e) {
@@ -7924,11 +7792,10 @@ function updateLangUI() {
   document.querySelector('[data-i18n="patch"]').textContent = t().patch;
   document.querySelector('[data-i18n="back_shopping"]').textContent = t().back_shopping;
   const heroMainTitle = document.getElementById('hero-main-title');
-  if (heroMainTitle) heroMainTitle.textContent = t().hero_main_title;
-  const wheelKicker = document.getElementById('wheel-kicker');
-  if (wheelKicker) wheelKicker.textContent = t().wheel_kicker;
-  const wheelCta = document.getElementById('wheel-cta');
-  if (wheelCta) wheelCta.textContent = t().wheel_cta;
+  if (heroMainTitle) heroMainTitle.innerHTML = `${t().hero_line1}<span>${t().hero_line2}</span>`;
+  const tickerKicker = document.getElementById('ticker-kicker');
+  if (tickerKicker) tickerKicker.textContent = t().ticker_kicker;
+  document.querySelectorAll('[data-i18n="hero_teams_label"]').forEach(el => el.textContent = t().hero_teams_label);
   const featuredTitle = document.getElementById('featured-title');
   if (featuredTitle) featuredTitle.textContent = t().featured_title;
   const featuredSeeAll = document.getElementById('featured-see-all');
