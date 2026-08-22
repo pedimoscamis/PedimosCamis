@@ -4735,17 +4735,23 @@ function getFiltered() {
   if (activeCat === 'all') {
     // Vista "Todos": ordenar por categoría prioritaria
     result = result.slice().sort((a, b) => catPriority(a) - catPriority(b));
-  } else if (activeCat === 'retro' && seasonSortDir !== 'relevance') {
-    // Modo libre: sort por temporada según elección del usuario
-    result = result.slice().sort((a, b) => {
-      const sa = extractSeason(a.nameEn), sb = extractSeason(b.nameEn);
-      const ya = sa ? (seasonStartYear(sa) ?? 0) : null;
-      const yb = sb ? (seasonStartYear(sb) ?? 0) : null;
-      if (ya === null && yb === null) return 0;
-      if (ya === null) return 1;
-      if (yb === null) return -1;
-      return seasonSortDir === 'desc' ? yb - ya : ya - yb;
-    });
+  } else if (activeCat === 'retro') {
+    if (seasonSortDir === 'relevance') {
+      // Relevancia en Retro: 1 local por equipo, por popularidad descendente,
+      // luego el resto (visitantes/variantes/otras temporadas).
+      result = getRetroRelevanceItems(result);
+    } else {
+      // Modo libre: sort por temporada según elección del usuario
+      result = result.slice().sort((a, b) => {
+        const sa = extractSeason(a.nameEn), sb = extractSeason(b.nameEn);
+        const ya = sa ? (seasonStartYear(sa) ?? 0) : null;
+        const yb = sb ? (seasonStartYear(sb) ?? 0) : null;
+        if (ya === null && yb === null) return 0;
+        if (ya === null) return 1;
+        if (yb === null) return -1;
+        return seasonSortDir === 'desc' ? yb - ya : ya - yb;
+      });
+    }
   } else if (seasonSortDir === 'relevance' && RELEVANCE_CATS.has(activeCat)) {
     // Vista de categoría: orden "grandes primero" — por país en Selecciones,
     // por club en el resto de categorías.
@@ -4906,6 +4912,37 @@ function makeRelevanceComparator(useCountries = false) {
 
 const bigClubsFirstComparator = makeRelevanceComparator(false);
 const countriesFirstComparator = makeRelevanceComparator(true);
+
+/**
+ * Orden de relevancia específico para Retro: 1 equipación local por equipo
+ * (la de temporada más reciente disponible), con los equipos ordenados por
+ * popularidad descendente; el resto (visitantes, variantes, otras
+ * temporadas del mismo equipo) va después, con el criterio general.
+ */
+function getRetroRelevanceItems(filtered) {
+  const homePool = filtered.filter(p => homeAwayVariantTier(p.nameEn) === 0);
+  const sortedHomes = [...homePool].sort((a, b) => {
+    const teamA = detectTeam(a.nameEn) || '';
+    const teamB = detectTeam(b.nameEn) || '';
+    const popA = popularityRank(teamA);
+    const popB = popularityRank(teamB);
+    if (popA !== popB) return popA - popB;
+    return relevanceSeasonYear(b) - relevanceSeasonYear(a);
+  });
+
+  const seenTeams = new Set();
+  const picked = [];
+  for (const p of sortedHomes) {
+    const team = detectTeam(p.nameEn) || p.id;
+    if (seenTeams.has(team)) continue;
+    seenTeams.add(team);
+    picked.push(p);
+  }
+
+  const pickedIds = new Set(picked.map(p => p.id));
+  const rest = filtered.filter(p => !pickedIds.has(p.id)).sort(bigClubsFirstComparator);
+  return [...picked, ...rest];
+}
 
 /**
  * Devuelve el array de productos Mundial 2026 en el orden canónico:
@@ -5268,11 +5305,11 @@ function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
 
   // Mismo criterio de relevancia que la categoría, para que el expositor
   // de la home refleje el mismo orden que se ve al entrar en esa categoría.
-  const comparator = cat === 'selecciones' ? countriesFirstComparator : bigClubsFirstComparator;
-  const items = allProducts
-    .filter(p => p.img && (cat === 'shorts' ? isShortProduct(p) : (p.cats || []).includes(cat)))
-    .sort(comparator)
-    .slice(0, limit);
+  const pool = allProducts.filter(p => p.img && (cat === 'shorts' ? isShortProduct(p) : (p.cats || []).includes(cat)));
+  const items = (cat === 'retro' ? getRetroRelevanceItems(pool)
+                : cat === 'selecciones' ? pool.slice().sort(countriesFirstComparator)
+                : pool.slice().sort(bigClubsFirstComparator)
+                ).slice(0, limit);
 
   if (items.length === 0) {
     section.style.display = 'none';
