@@ -1080,12 +1080,13 @@
 
     /* ─── Botón cross-sell: ir a la Versión Player del mismo kit ─────── */
     .player-upgrade-btn {
-      display: flex; align-items: center; justify-content: center; gap: 6px;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
       width: 100%;
       background: #FDD835; color: #111;
-      border: none; border-radius: 8px;
-      padding: 11px 16px;
-      font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 800; letter-spacing: .04em;
+      border: none; border-radius: 6px;
+      padding: 6px 10px;
+      margin-bottom: 6px;
+      font-family: 'Barlow', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: .03em;
       text-transform: uppercase;
       cursor: pointer;
       transition: background .2s, transform .15s;
@@ -2757,7 +2758,7 @@
       .modal-price-block { line-height: 1.15; }
       #custom-section { gap: 4px; }
       .custom-option { padding: 6px 0; }
-      .player-upgrade-btn { padding: 9px 14px; font-size: 12px; }
+      .player-upgrade-btn { padding: 5px 8px; font-size: 10px; }
     }
   </style>
 </head>
@@ -3231,9 +3232,6 @@
         <div class="modal-price-main" id="modal-price-main"></div>
         <div class="modal-price-sub" id="modal-price-sub"></div>
       </div>
-      <button id="opt-player-upgrade-wrap" class="player-upgrade-btn" style="display:none" onclick="goToPlayerVersion()">
-        ⭐ VERSIÓN PLAYER <strong>+5€</strong>
-      </button>
       <div>
         <div class="section-label-row">
           <p class="section-label" data-i18n="sizes">Tallas</p>
@@ -3249,6 +3247,9 @@
       </div>
       <div id="custom-section">
         <p class="section-label" data-i18n="personalization">Personalización</p>
+        <button id="opt-player-upgrade-wrap" class="player-upgrade-btn" style="display:none" onclick="goToPlayerVersion()">
+          ⭐ Versión Player <strong>+5€</strong>
+        </button>
         <label class="custom-option" id="opt-dorsal-wrap">
           <input type="checkbox" id="opt-dorsal" />
           <span class="custom-option-label" data-i18n="name_number">Nombre + dorsal</span>
