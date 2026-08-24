@@ -44,8 +44,9 @@ const SECRET_KEY = '26e30e0384e4fff6678c8b32c1f266ac8868c89c231aa2d3165335156a47
 
 const WEBP_QUALITY = 92;      // alta calidad, sin recorte agresivo
 const MAX_WIDTH     = 1600;   // solo limita tamaños desproporcionados, no reduce fotos normales
-const DELAY_MS       = 900;   // pausa entre álbumes
+const DELAY_MS       = 700;   // pausa entre álbumes (por worker)
 const CHECKPOINT_EVERY = 25;
+const CONCURRENCY    = 6;     // álbumes procesados en paralelo
 
 const client = new S3Client({
   region: 'auto',
@@ -162,6 +163,14 @@ async function convertAndUpload(buffer, key) {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
+// Las "5 grandes ligas" + Segunda Estrella (España 2 estrellas) — el resto del
+// catálogo queda fuera de esta pasada a petición explícita del usuario.
+const BIG5_CATS   = new Set(['laliga', 'premier', 'seriea', 'bundesliga', 'ligue1']);
+const SPAIN_RE    = /\bspain\b|\bespaña\b|\bespana\b/i;
+const TWO_STAR_RE = /2\s*-?\s*stars?\b|2\s*estrellas?\b/i;
+const isSpainTwoStar = p => SPAIN_RE.test(p.nameEn || '') && TWO_STAR_RE.test(p.nameEn || '');
+const isBig5OrTwoStar = p => (p.cats || []).some(c => BIG5_CATS.has(c)) || isSpainTwoStar(p);
+
 async function main() {
   if (!fs.existsSync(TMP_DIR)) fs.mkdirSync(TMP_DIR, { recursive: true });
 
@@ -174,6 +183,7 @@ async function main() {
     if (!p.yupooUrl) return false;
     if (FILTER_ID) return p.id === FILTER_ID;
     if ((p.cats || []).includes('nba')) return false;
+    if (!isBig5OrTwoStar(p)) return false;
     return !p.gallery || p.gallery.length === 0;
   });
   if (isFinite(LIMIT)) pending = pending.slice(0, LIMIT);
@@ -181,20 +191,18 @@ async function main() {
   console.log(`Pendientes a procesar: ${pending.length} (de ${products.length} totales)`);
   console.log(`De baja calidad (se re-descarga también la portada): ${pending.filter(p => lowQIds.has(p.id)).length}\n`);
 
-  let ok = 0, noPhotos = 0, errors = 0;
+  let ok = 0, noPhotos = 0, errors = 0, done = 0;
 
-  for (let i = 0; i < pending.length; i++) {
-    const p = pending[i];
+  async function processOne(p, i) {
     const replaceCover = lowQIds.has(p.id);
     const label = (p.nameEn || p.nameEs || p.id).slice(0, 60);
     console.log(`[${i + 1}/${pending.length}] ${p.id}  ${label}${replaceCover ? '  (re-portada)' : ''}`);
 
     const html = await fetchPage(p.yupooUrl);
-    if (!html) { console.log('  ⚠ página no cargó, omitido'); errors++; await sleep(DELAY_MS); continue; }
+    if (!html) { console.log(`  ⚠ [${p.id}] página no cargó, omitido`); errors++; return; }
 
-    const need = replaceCover ? 4 : 4; // siempre pedimos 4, la 1ª es portada
-    const imgUrls = extractAlbumImages(html, need);
-    if (imgUrls.length === 0) { console.log('  ⚠ sin imágenes en el álbum, omitido'); noPhotos++; await sleep(DELAY_MS); continue; }
+    const imgUrls = extractAlbumImages(html, 4); // siempre pedimos 4, la 1ª es portada
+    if (imgUrls.length === 0) { console.log(`  ⚠ [${p.id}] sin imágenes en el álbum, omitido`); noPhotos++; return; }
 
     const gallery = [];
     let newCoverUrl = null;
@@ -204,18 +212,17 @@ async function main() {
       const photoN = j + 1; // photo1 = portada, photo2.. = galería
       const key = `${R2_PREFIX}/${p.id}_photo${photoN}_resultado.webp`;
       try {
-        let buffer;
         if (await objectExists(key)) {
-          console.log(`  ✓ ${key} ya existe en R2`);
+          console.log(`  ✓ [${p.id}] ${key} ya existe en R2`);
         } else {
-          buffer = await fetchBuffer(imgUrls[j]);
+          const buffer = await fetchBuffer(imgUrls[j]);
           const size = await convertAndUpload(buffer, key);
-          console.log(`  ↑ ${key} (${(size / 1024).toFixed(0)} KB)`);
+          console.log(`  ↑ [${p.id}] ${key} (${(size / 1024).toFixed(0)} KB)`);
         }
         const url = `${R2_PUBLIC_BASE}/${key}`;
         if (photoN === 1) newCoverUrl = url; else gallery.push(url);
       } catch (err) {
-        console.warn(`  ✗ foto${photoN}: ${err.message}`);
+        console.warn(`  ✗ [${p.id}] foto${photoN}: ${err.message}`);
       }
     }
 
@@ -224,16 +231,27 @@ async function main() {
       if (gallery.length > 0) prod.gallery = gallery;
       if (newCoverUrl) prod.img = newCoverUrl;
     }
-    if (gallery.length > 0 || newCoverUrl) { ok++; console.log(`  ✅ listo\n`); }
-    else { errors++; console.log('  ✗ nada descargado\n'); }
-
-    if ((i + 1) % CHECKPOINT_EVERY === 0) {
-      fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
-      console.log(`💾 Checkpoint (${i + 1}/${pending.length})\n`);
-    }
-
-    await sleep(DELAY_MS);
+    if (gallery.length > 0 || newCoverUrl) { ok++; console.log(`  ✅ [${p.id}] listo`); }
+    else { errors++; console.log(`  ✗ [${p.id}] nada descargado`); }
   }
+
+  // Pool de workers concurrentes: cada uno toma el siguiente producto de la
+  // cola en cuanto termina el suyo, en vez de esperar turno secuencialmente.
+  let nextIdx = 0;
+  async function worker() {
+    while (nextIdx < pending.length) {
+      const i = nextIdx++;
+      await processOne(pending[i], i);
+      done++;
+      if (done % CHECKPOINT_EVERY === 0) {
+        fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
+        console.log(`💾 Checkpoint (${done}/${pending.length})`);
+      }
+      await sleep(DELAY_MS);
+    }
+  }
+
+  await Promise.all(Array.from({ length: CONCURRENCY }, () => worker()));
 
   fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
   console.log(`\n=== RESUMEN === OK: ${ok}  Sin fotos: ${noPhotos}  Errores: ${errors}`);
