@@ -71,8 +71,15 @@ const YUPOO_CATEGORIES = [
   { id: '5179801', label: 'Women',               kitzoneCat: 'women'       },
 ];
 
-// Categorías con ID configurado (las que realmente se scrapean)
-const ACTIVE_CATEGORIES = YUPOO_CATEGORIES.filter(c => c.id !== null);
+// Categorías con ID configurado (las que realmente se scrapean).
+// --cats=laliga,premier,... restringe la pasada a solo esas kitzoneCat
+// (útil para actualizar únicamente las 5 grandes ligas sin re-recorrer
+// selecciones/retro/nba/etc.).
+const catsArg = process.argv.find(a => a.startsWith('--cats='));
+const catsFilter = catsArg ? new Set(catsArg.slice('--cats='.length).split(',')) : null;
+const ACTIVE_CATEGORIES = YUPOO_CATEGORIES.filter(c =>
+  c.id !== null && (!catsFilter || catsFilter.has(c.kitzoneCat))
+);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

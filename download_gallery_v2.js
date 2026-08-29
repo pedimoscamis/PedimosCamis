@@ -62,6 +62,11 @@ const limitIdx = args.indexOf('--limit');
 const LIMIT    = limitIdx !== -1 ? parseInt(args[limitIdx + 1], 10) : Infinity;
 const idIdx    = args.indexOf('--id');
 const FILTER_ID = idIdx !== -1 ? args[idIdx + 1] : null;
+// --newcatalog=path.json → fichero con un array de productos NUEVOS (recién
+// añadidos por scraper.js + categorize.js, todavía sin foto ninguna). Para
+// estos se descargan las 4 fotos (portada incluida) en vez de solo galería.
+const newCatalogArg = args.find(a => a.startsWith('--newcatalog='));
+const NEW_CATALOG_FILE = newCatalogArg ? newCatalogArg.slice('--newcatalog='.length) : null;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -179,22 +184,33 @@ async function main() {
     JSON.parse(fs.readFileSync(LOWQ_KEYS_FILE, 'utf-8')).map(k => k.replace(/\.webp$/, ''))
   );
 
-  let pending = products.filter(p => {
-    if (!p.yupooUrl) return false;
-    if (FILTER_ID) return p.id === FILTER_ID;
-    if ((p.cats || []).includes('nba')) return false;
-    if (!isBig5OrTwoStar(p)) return false;
-    return !p.gallery || p.gallery.length === 0;
-  });
+  let pending, forceReplaceCover = false;
+  if (NEW_CATALOG_FILE) {
+    // Modo catálogo nuevo: todos los productos de la lista son 100% nuevos
+    // (sin ninguna foto todavía), así que se piden las 4 (portada incluida).
+    const newIds = new Set(
+      JSON.parse(fs.readFileSync(NEW_CATALOG_FILE, 'utf-8')).map(p => p.id)
+    );
+    pending = products.filter(p => p.yupooUrl && newIds.has(p.id));
+    forceReplaceCover = true;
+  } else {
+    pending = products.filter(p => {
+      if (!p.yupooUrl) return false;
+      if (FILTER_ID) return p.id === FILTER_ID;
+      if ((p.cats || []).includes('nba')) return false;
+      if (!isBig5OrTwoStar(p)) return false;
+      return !p.gallery || p.gallery.length === 0;
+    });
+  }
   if (isFinite(LIMIT)) pending = pending.slice(0, LIMIT);
 
   console.log(`Pendientes a procesar: ${pending.length} (de ${products.length} totales)`);
-  console.log(`De baja calidad (se re-descarga también la portada): ${pending.filter(p => lowQIds.has(p.id)).length}\n`);
+  console.log(`De baja calidad (se re-descarga también la portada): ${pending.filter(p => forceReplaceCover || lowQIds.has(p.id)).length}\n`);
 
   let ok = 0, noPhotos = 0, errors = 0, done = 0;
 
   async function processOne(p, i) {
-    const replaceCover = lowQIds.has(p.id);
+    const replaceCover = forceReplaceCover || lowQIds.has(p.id);
     const label = (p.nameEn || p.nameEs || p.id).slice(0, 60);
     console.log(`[${i + 1}/${pending.length}] ${p.id}  ${label}${replaceCover ? '  (re-portada)' : ''}`);
 
