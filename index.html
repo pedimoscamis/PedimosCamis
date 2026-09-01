@@ -7605,25 +7605,31 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
       ? Math.round(item.priceUsd * EUR_RATE * 100) / 100
       : item.priceUsd;
 
-    // ── Coste nuevo proveedor (valores internos en €) ─────────────────────────
+    // ── Coste nuevo proveedor 26/27 (valores internos en €, al céntimo) ───────
     const cats = item.cats || [];
     // Base según tipo/versión de producto
     let costeBase;
     if (cats.includes('nba')) {
-      costeBase = 15;                           // NBA: 15€
+      costeBase = 15;                           // NBA: 15€ (sin cambios, fuera del alcance 26/27)
     } else if (isShortProduct(item)) {
-      costeBase = 6;                            // Shorts: 6€
+      costeBase = 6;                            // Shorts: 6€ (sin cambios, fuera del alcance 26/27)
     } else if (PLAYER_RE.test(item.name)) {
-      costeBase = 10;                           // Player Version: 10€
+      costeBase = 10.36;                        // Versión Player
     } else if (cats.includes('retro') || /\bretro\b/i.test(item.name)) {
-      costeBase = 10;                           // Retro: 10€
+      costeBase = 12.95;                        // Versión Retro
     } else {
-      costeBase = 6;                            // Fan / por defecto: 6€
+      costeBase = 7.70;                         // Versión Fan / por defecto
     }
     // Extras de personalización
-    const hasDorsal = dorsal && (dorsal.name || dorsal.number);
-    const hasPatch  = patch && patch.label && patch.label !== 'Sin parches';
-    const coste     = costeBase + (hasDorsal ? 2.5 : 0) + (hasPatch ? 1 : 0);
+    const hasDorsal     = dorsal && (dorsal.name || dorsal.number);
+    const hasPatch      = patch && patch.label && patch.label !== 'Sin parches';
+    const hasLongSleeve = LONG_SLEEVE_RE.test(item.name);
+    const coste = Math.round((
+      costeBase
+      + (hasDorsal ? 2.59 : 0)
+      + (hasLongSleeve ? 2.59 : 0)
+      + (hasPatch ? 0.86 : 0)
+    ) * 100) / 100;
 
     const row = {
       jersey:   item.name,
