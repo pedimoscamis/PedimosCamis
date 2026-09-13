@@ -2786,7 +2786,7 @@
           <div id="user-code-error">Código no válido</div>
         </div>
         <div id="user-menu-active">
-          <div id="socio-active-label">✓ Modo socio activo — 10% dto.</div>
+          <div id="socio-active-label">✓ Modo socio activo</div>
           <div id="coupon-expiry-note" style="display:none"></div>
           <button id="user-logout-btn" onclick="deactivateSocio()">Cerrar sesión</button>
         </div>
@@ -6091,7 +6091,6 @@ function updateResultsInfo() {
 // Alias para compatibilidad con la llamada inicial en init()
 function renderGrid() { /* no-op: init usa renderAll tras cargar datos */ }
 
-// Aplica el descuento socio 10% si el modo está activo
 // applyDiscount ya no aplica % adicional — cada modo tiene sus propios precios
 function applyDiscount(price) { return price; }
 
@@ -6574,7 +6573,12 @@ function openModal(p) {
 
   // Avisos
   document.getElementById('modal-stock-warning').style.display   = p.avisoStock ? '' : 'none';
-  document.getElementById('modal-special-warning').style.display = /especial|special/i.test(p.nameEn) ? '' : 'none';
+  const specialWarningEl = document.getElementById('modal-special-warning');
+  const isSpainTwoStarSpecial = isSpainTwoStar(p) && /special edition/i.test(p.nameEn);
+  specialWarningEl.style.display = /especial|special/i.test(p.nameEn) ? '' : 'none';
+  specialWarningEl.textContent = isSpainTwoStarSpecial
+    ? '⚠️ Aunque en la imagen del producto salga solo 1 estrella, esta equipación se entrega con las 2 estrellas.'
+    : '⚠️ Es posible que no nos quede stock de este artículo. En ese caso te contactaremos cuando realices tu pedido (no se te cobrará nada).';
 
   // Patches
   const isMundialPatch = isMundial2026(p);
@@ -8021,7 +8025,7 @@ function updateMobUserState() {
       : variableCouponMode
         ? `✓ Descuento ${Math.round(variableCouponPct * 100)}% activo`
         : socioMode
-          ? '✓ Modo socio activo — 10% dto.'
+          ? '✓ Modo socio activo'
           : '';
   }
   // Actualizar indicador en el botón
