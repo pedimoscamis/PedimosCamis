@@ -6144,9 +6144,12 @@ const SOCIO_PRICES = {
   women:        8,
   nba:         15 / EUR_RATE,  // → 15.00€
 };
-const SOCIO_JERSEY        = 8;
-const SOCIO_RETRO         = 13;
-const SOCIO_PLAYER        = 11;
+// Nota: getBasePrice() añade +1€ global sobre este valor base, así que se
+// resta ese euro aquí para que el precio final mostrado sea el pactado
+// (Fan 9€, Player 12€, Retro 13€).
+const SOCIO_JERSEY        = 8 / EUR_RATE;   // → 9.00€ final (Fan)
+const SOCIO_RETRO         = 12 / EUR_RATE;  // → 13.00€ final (Fan +4€)
+const SOCIO_PLAYER        = 11 / EUR_RATE;  // → 12.00€ final (Fan +3€)
 const SOCIO_SHORTS_FAN    = 7;   // 7$ × 0.90 = 6.30€ en pantalla
 const SOCIO_SHORTS_PLAYER = 10;  // 10$ × 0.90 = 9.00€ en pantalla
 
@@ -6638,7 +6641,7 @@ function getModalPriceBase() {
   let total = base;
   // En super-flash el dorsal está incluido en el precio fijo → no sumar +3
   const isSuperFlash = currentProduct?.discountInfo?.source === 'super-flash';
-  if (document.getElementById('opt-dorsal').checked && !isSuperFlash) total += 3;
+  if (document.getElementById('opt-dorsal').checked && !isSuperFlash) total += socioMode ? 3 / EUR_RATE : 3;
   // Parche mundial2026: precio variable según opción elegida
   if (document.getElementById('opt-mundial-patch')?.checked) {
     const mundialSel = document.getElementById('mundial-patch-type');

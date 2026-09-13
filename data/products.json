@@ -20881,8 +20881,8 @@
   },
   {
     "id": "231559676",
-    "nameEs": "26/27 Real Madrid Home Jersey Player Version S-XXL",
-    "nameEn": "26/27 Real Madrid Home Jersey Player Version S-XXL",
+    "nameEs": "26/27 Real Madrid Home Jersey Player Version S-XXL (Predicted Version)",
+    "nameEn": "26/27 Real Madrid Home Jersey Player Version S-XXL (Predicted Version)",
     "cats": [
       "laliga",
       "nuevatemporada"
@@ -20903,8 +20903,8 @@
   },
   {
     "id": "231559675",
-    "nameEs": "26/27 Manchester City Home Jersey Player Version S-XXL",
-    "nameEn": "26/27 Manchester City Home Jersey Player Version S-XXL",
+    "nameEs": "26/27 Manchester City Home Jersey Player Version S-XXL (Predicted Version)",
+    "nameEn": "26/27 Manchester City Home Jersey Player Version S-XXL (Predicted Version)",
     "cats": [
       "premier",
       "nuevatemporada"
@@ -248959,6 +248959,35 @@
     ]
   },
   {
+    "id": "249543369",
+    "nameEs": "2026/27 Barcelona Away Jersey S-4XL",
+    "nameEn": "2026/27 Barcelona Away Jersey S-4XL",
+    "cats": [
+      "laliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543369?uid=1&isSubCate=false&referrercate=5179820",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/249543369_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/249543369_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/249543369_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/249543369_photo4_resultado.webp"
+    ]
+  },
+  {
     "id": "249543285",
     "nameEs": "2026/27 Malaga Home Jersey S-4XL",
     "nameEn": "2026/27 Malaga Home Jersey S-4XL",
@@ -254064,6 +254093,35 @@
       "L",
       "XL",
       "2XL"
+    ]
+  },
+  {
+    "id": "249538900",
+    "nameEs": "2026/27 Manchester United Home Jersey S-4XL",
+    "nameEn": "2026/27 Manchester United Home Jersey S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249538900?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/249538900_photo1_resultado.webp",
+    "photos": 0,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/249538900_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/249538900_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/249538900_photo4_resultado.webp"
     ]
   },
   {
@@ -267063,6 +267121,97 @@
     ]
   },
   {
+    "id": "246538658",
+    "nameEs": "Spain 2026 World Cup Home Jersey 2 Stars S-4XL",
+    "nameEn": "Spain 2026 World Cup Home Jersey 2 Stars S-4XL",
+    "cats": [
+      "selecciones"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "selecciones",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246538658?uid=1&isSubCate=false&referrercate=5179813",
+    "img": "https://photo.yupoo.com/ggjersey/fcb36f212b/small.jpg",
+    "photos": 3,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ]
+  },
+  {
+    "id": "246538440",
+    "nameEs": "Spain 2026 World Cup Home Jersey Player Version 2 Stars S-4XL",
+    "nameEn": "Spain 2026 World Cup Home Jersey Player Version 2 Stars S-4XL",
+    "cats": [
+      "selecciones"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "selecciones",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246538440?uid=1&isSubCate=false&referrercate=5179813",
+    "img": "https://photo.yupoo.com/ggjersey/ccd42752a0/small.jpg",
+    "photos": 17,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ]
+  },
+  {
+    "id": "246538239",
+    "nameEs": "Spain 2026 World Cup Home Womens Jersey 2 Stars S-XXL",
+    "nameEn": "Spain 2026 World Cup Home Womens Jersey 2 Stars S-XXL",
+    "cats": [
+      "selecciones"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "selecciones",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246538239?uid=1&isSubCate=false&referrercate=5179813",
+    "img": "https://photo.yupoo.com/ggjersey/f41f04a117/small.jpg",
+    "photos": 15,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ]
+  },
+  {
+    "id": "246538087",
+    "nameEs": "Spain 2026 World Cup Home jersey Kid Kits 2 Stars 16-28",
+    "nameEn": "Spain 2026 World Cup Home jersey Kid Kits 2 Stars 16-28",
+    "cats": [
+      "selecciones",
+      "kids"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "selecciones",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246538087?uid=1&isSubCate=false&referrercate=5179813",
+    "img": "https://photo.yupoo.com/ggjersey/04d8d69846/small.jpg",
+    "photos": 17,
+    "sizes": [
+      "16",
+      "18",
+      "20",
+      "22",
+      "24",
+      "26",
+      "28"
+    ]
+  },
+  {
     "id": "246537358",
     "nameEs": "Spain 2026 World Cup Away Kid Kits 2 Stars 16-28",
     "nameEn": "Spain 2026 World Cup Away Kid Kits 2 Stars 16-28",
@@ -267084,6 +267233,50 @@
       "24",
       "26",
       "28"
+    ]
+  },
+  {
+    "id": "246536814",
+    "nameEs": "Spain 2026 World Cup Away Jersey Player version 2 Stars S-4XL",
+    "nameEn": "Spain 2026 World Cup Away Jersey Player version 2 Stars S-4XL",
+    "cats": [
+      "selecciones"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "selecciones",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246536814?uid=1&isSubCate=false&referrercate=5179813",
+    "img": "https://photo.yupoo.com/ggjersey/3c26d79a75/small.jpg",
+    "photos": 17,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ]
+  },
+  {
+    "id": "246536495",
+    "nameEs": "Spain 2026 World Cup Away Womens Jersey 2 Stars S-XXL",
+    "nameEn": "Spain 2026 World Cup Away Womens Jersey 2 Stars S-XXL",
+    "cats": [
+      "selecciones"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "selecciones",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246536495?uid=1&isSubCate=false&referrercate=5179813",
+    "img": "https://photo.yupoo.com/ggjersey/eb63b19842/small.jpg",
+    "photos": 17,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
     ]
   },
   {
@@ -273405,11 +273598,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839276_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839276_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839276_photo4_resultado.webp"
     ]
   },
   {
@@ -273435,9 +273623,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839065_photo2_resultado.webp"
     ]
   },
   {
@@ -273463,9 +273648,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839012_photo2_resultado.webp"
     ]
   },
   {
@@ -273491,9 +273673,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839005_photo2_resultado.webp"
     ]
   },
   {
@@ -273519,9 +273698,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838964_photo2_resultado.webp"
     ]
   },
   {
@@ -273547,9 +273723,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838958_photo2_resultado.webp"
     ]
   },
   {
@@ -273574,9 +273747,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838907_photo2_resultado.webp"
     ]
   },
   {
@@ -273601,9 +273771,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838898_photo2_resultado.webp"
     ]
   },
   {
@@ -273628,9 +273795,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838871_photo2_resultado.webp"
     ]
   },
   {
@@ -273655,11 +273819,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838798_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838798_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838798_photo4_resultado.webp"
     ]
   },
   {
@@ -273684,11 +273843,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838792_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838792_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838792_photo4_resultado.webp"
     ]
   },
   {
@@ -273713,11 +273867,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838778_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838778_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838778_photo4_resultado.webp"
     ]
   },
   {
@@ -273743,9 +273892,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838776_photo2_resultado.webp"
     ]
   },
   {
@@ -273771,9 +273917,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838773_photo2_resultado.webp"
     ]
   },
   {
@@ -273798,11 +273941,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838769_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838769_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838769_photo4_resultado.webp"
     ]
   },
   {
@@ -273827,11 +273965,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838768_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838768_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838768_photo4_resultado.webp"
     ]
   },
   {
@@ -273856,11 +273989,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838763_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838763_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838763_photo4_resultado.webp"
     ]
   },
   {
@@ -273885,11 +274013,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838757_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838757_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838757_photo4_resultado.webp"
     ]
   },
   {
@@ -273914,9 +274037,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838755_photo2_resultado.webp"
     ]
   },
   {
@@ -273938,11 +274058,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838749_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838749_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838749_photo4_resultado.webp"
     ]
   },
   {
@@ -273967,11 +274082,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838745_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838745_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838745_photo4_resultado.webp"
     ]
   },
   {
@@ -273997,11 +274107,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838740_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838740_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838740_photo4_resultado.webp"
     ]
   },
   {
@@ -274027,11 +274132,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838731_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838731_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838731_photo4_resultado.webp"
     ]
   },
   {
@@ -274056,11 +274156,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838725_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838725_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838725_photo4_resultado.webp"
     ]
   },
   {
@@ -274084,11 +274179,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838715_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838715_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838715_photo4_resultado.webp"
     ]
   },
   {
@@ -274112,11 +274202,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838712_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838712_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838712_photo4_resultado.webp"
     ]
   },
   {
@@ -274140,11 +274225,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838706_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838706_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838706_photo4_resultado.webp"
     ]
   },
   {
@@ -274169,11 +274249,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838700_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838700_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838700_photo4_resultado.webp"
     ]
   },
   {
@@ -274198,11 +274273,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838696_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838696_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838696_photo4_resultado.webp"
     ]
   },
   {
@@ -274227,11 +274297,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838685_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838685_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838685_photo4_resultado.webp"
     ]
   },
   {
@@ -274256,11 +274321,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838680_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838680_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838680_photo4_resultado.webp"
     ]
   },
   {
@@ -274285,11 +274345,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838678_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838678_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838678_photo4_resultado.webp"
     ]
   },
   {
@@ -274313,9 +274368,6 @@
       "XL",
       "2XL",
       "3XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838673_photo2_resultado.webp"
     ]
   },
   {
@@ -274340,11 +274392,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838671_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838671_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838671_photo4_resultado.webp"
     ]
   },
   {
@@ -274369,11 +274416,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838668_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838668_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838668_photo4_resultado.webp"
     ]
   },
   {
@@ -274398,11 +274440,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838666_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838666_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838666_photo4_resultado.webp"
     ]
   },
   {
@@ -274427,11 +274464,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838647_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838647_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838647_photo4_resultado.webp"
     ]
   },
   {
@@ -274456,11 +274488,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838642_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838642_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838642_photo4_resultado.webp"
     ]
   },
   {
@@ -274485,11 +274512,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838636_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838636_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838636_photo4_resultado.webp"
     ]
   },
   {
@@ -274514,11 +274536,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838618_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838618_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838618_photo4_resultado.webp"
     ]
   },
   {
@@ -274543,9 +274560,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838559_photo2_resultado.webp"
     ]
   },
   {
@@ -274570,11 +274584,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838538_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838538_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838538_photo4_resultado.webp"
     ]
   },
   {
@@ -274599,11 +274608,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838508_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838508_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838508_photo4_resultado.webp"
     ]
   },
   {
@@ -274628,11 +274632,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838476_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838476_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838476_photo4_resultado.webp"
     ]
   },
   {
@@ -274657,9 +274656,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838472_photo2_resultado.webp"
     ]
   },
   {
@@ -274685,9 +274681,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838468_photo2_resultado.webp"
     ]
   },
   {
@@ -274713,9 +274706,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839153_photo2_resultado.webp"
     ]
   },
   {
@@ -274741,11 +274731,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839146_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839146_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839146_photo4_resultado.webp"
     ]
   },
   {
@@ -274771,11 +274756,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839141_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839141_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839141_photo4_resultado.webp"
     ]
   },
   {
@@ -274801,9 +274781,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839115_photo2_resultado.webp"
     ]
   },
   {
@@ -274828,9 +274805,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839106_photo2_resultado.webp"
     ]
   },
   {
@@ -274856,9 +274830,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839081_photo2_resultado.webp"
     ]
   },
   {
@@ -274884,9 +274855,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839072_photo2_resultado.webp"
     ]
   },
   {
@@ -274909,11 +274877,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839048_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839048_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839048_photo4_resultado.webp"
     ]
   },
   {
@@ -274936,11 +274899,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839041_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839041_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839041_photo4_resultado.webp"
     ]
   },
   {
@@ -274963,11 +274921,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839034_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839034_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839034_photo4_resultado.webp"
     ]
   },
   {
@@ -274993,9 +274946,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839016_photo2_resultado.webp"
     ]
   },
   {
@@ -275018,11 +274968,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838998_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838998_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838998_photo4_resultado.webp"
     ]
   },
   {
@@ -275073,9 +275018,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838988_photo2_resultado.webp"
     ]
   },
   {
@@ -275101,9 +275043,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838985_photo2_resultado.webp"
     ]
   },
   {
@@ -275129,9 +275068,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838983_photo2_resultado.webp"
     ]
   },
   {
@@ -275157,9 +275093,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838979_photo2_resultado.webp"
     ]
   },
   {
@@ -275185,9 +275118,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838978_photo2_resultado.webp"
     ]
   },
   {
@@ -275213,9 +275143,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838971_photo2_resultado.webp"
     ]
   },
   {
@@ -275241,9 +275168,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838961_photo2_resultado.webp"
     ]
   },
   {
@@ -275269,9 +275193,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838953_photo2_resultado.webp"
     ]
   },
   {
@@ -275297,9 +275218,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838952_photo2_resultado.webp"
     ]
   },
   {
@@ -275325,9 +275243,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838949_photo2_resultado.webp"
     ]
   },
   {
@@ -275353,9 +275268,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838946_photo2_resultado.webp"
     ]
   },
   {
@@ -275381,9 +275293,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838943_photo2_resultado.webp"
     ]
   },
   {
@@ -275408,9 +275317,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838879_photo2_resultado.webp"
     ]
   },
   {
@@ -275435,9 +275341,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838860_photo2_resultado.webp"
     ]
   },
   {
@@ -275462,9 +275365,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838840_photo2_resultado.webp"
     ]
   },
   {
@@ -275489,11 +275389,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838789_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838789_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838789_photo4_resultado.webp"
     ]
   },
   {
@@ -275518,11 +275413,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838786_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838786_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838786_photo4_resultado.webp"
     ]
   },
   {
@@ -275547,11 +275437,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838688_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838688_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838688_photo4_resultado.webp"
     ]
   },
   {
@@ -275574,11 +275459,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838653_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838653_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838653_photo4_resultado.webp"
     ]
   },
   {
@@ -275603,11 +275483,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838620_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838620_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838620_photo4_resultado.webp"
     ]
   },
   {
@@ -275630,11 +275505,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838616_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838616_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838616_photo4_resultado.webp"
     ]
   },
   {
@@ -275659,11 +275529,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838596_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838596_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838596_photo4_resultado.webp"
     ]
   },
   {
@@ -275687,11 +275552,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838590_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838590_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838590_photo4_resultado.webp"
     ]
   },
   {
@@ -275715,11 +275575,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838588_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838588_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838588_photo4_resultado.webp"
     ]
   },
   {
@@ -275743,11 +275598,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838581_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838581_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838581_photo4_resultado.webp"
     ]
   },
   {
@@ -275771,11 +275621,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838573_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838573_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838573_photo4_resultado.webp"
     ]
   },
   {
@@ -275799,11 +275644,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838570_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838570_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838570_photo4_resultado.webp"
     ]
   },
   {
@@ -275826,11 +275666,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838557_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838557_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838557_photo4_resultado.webp"
     ]
   },
   {
@@ -275855,11 +275690,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838555_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838555_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838555_photo4_resultado.webp"
     ]
   },
   {
@@ -275884,11 +275714,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838551_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838551_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838551_photo4_resultado.webp"
     ]
   },
   {
@@ -275913,11 +275738,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838547_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838547_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838547_photo4_resultado.webp"
     ]
   },
   {
@@ -275942,11 +275762,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838544_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838544_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838544_photo4_resultado.webp"
     ]
   },
   {
@@ -275971,11 +275786,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838533_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838533_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838533_photo4_resultado.webp"
     ]
   },
   {
@@ -276001,11 +275811,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839255_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839255_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839255_photo4_resultado.webp"
     ]
   },
   {
@@ -276031,9 +275836,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839003_photo2_resultado.webp"
     ]
   },
   {
@@ -276058,9 +275860,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838835_photo2_resultado.webp"
     ]
   },
   {
@@ -276085,9 +275884,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838833_photo2_resultado.webp"
     ]
   },
   {
@@ -276112,11 +275908,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838613_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838613_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838613_photo4_resultado.webp"
     ]
   },
   {
@@ -276141,11 +275932,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838602_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838602_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838602_photo4_resultado.webp"
     ]
   },
   {
@@ -276168,11 +275954,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838517_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838517_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838517_photo4_resultado.webp"
     ]
   },
   {
@@ -276198,9 +275979,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839030_photo2_resultado.webp"
     ]
   },
   {
@@ -276225,9 +276003,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838854_photo2_resultado.webp"
     ]
   },
   {
@@ -276252,11 +276027,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838790_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838790_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838790_photo4_resultado.webp"
     ]
   },
   {
@@ -276281,11 +276051,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838784_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838784_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838784_photo4_resultado.webp"
     ]
   },
   {
@@ -276310,11 +276075,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838701_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838701_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838701_photo4_resultado.webp"
     ]
   },
   {
@@ -276339,11 +276099,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838683_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838683_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838683_photo4_resultado.webp"
     ]
   },
   {
@@ -276368,11 +276123,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838650_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838650_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838650_photo4_resultado.webp"
     ]
   },
   {
@@ -276395,11 +276145,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838628_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838628_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838628_photo4_resultado.webp"
     ]
   },
   {
@@ -276423,11 +276168,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838576_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838576_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838576_photo4_resultado.webp"
     ]
   },
   {
@@ -276452,11 +276192,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838512_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838512_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838512_photo4_resultado.webp"
     ]
   },
   {
@@ -276481,11 +276216,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838510_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838510_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838510_photo4_resultado.webp"
     ]
   },
   {
@@ -276511,11 +276241,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839241_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839241_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839241_photo4_resultado.webp"
     ]
   },
   {
@@ -276540,11 +276265,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839190_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839190_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839190_photo4_resultado.webp"
     ]
   },
   {
@@ -276569,9 +276289,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839184_photo2_resultado.webp"
     ]
   },
   {
@@ -276597,9 +276314,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839123_photo2_resultado.webp"
     ]
   },
   {
@@ -276624,9 +276338,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838897_photo2_resultado.webp"
     ]
   },
   {
@@ -276652,11 +276363,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838753_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838753_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838753_photo4_resultado.webp"
     ]
   },
   {
@@ -276679,11 +276385,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838635_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838635_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838635_photo4_resultado.webp"
     ]
   },
   {
@@ -276707,11 +276408,6 @@
       "XL",
       "2XL",
       "3XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838605_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838605_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838605_photo4_resultado.webp"
     ]
   },
   {
@@ -276735,11 +276431,6 @@
       "L",
       "XL",
       "2XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838579_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838579_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838579_photo4_resultado.webp"
     ]
   },
   {
@@ -276764,9 +276455,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838526_photo2_resultado.webp"
     ]
   },
   {
@@ -276791,11 +276479,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838524_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838524_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838524_photo4_resultado.webp"
     ]
   },
   {
@@ -276820,9 +276503,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838520_photo2_resultado.webp"
     ]
   },
   {
@@ -276848,9 +276528,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839136_photo2_resultado.webp"
     ]
   },
   {
@@ -276876,9 +276553,6 @@
       "24",
       "26",
       "28"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839077_photo2_resultado.webp"
     ]
   },
   {
@@ -276903,11 +276577,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838692_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838692_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838692_photo4_resultado.webp"
     ]
   },
   {
@@ -276932,11 +276601,6 @@
       "2XL",
       "3XL",
       "4XL"
-    ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838624_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838624_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838624_photo4_resultado.webp"
     ]
   },
   {
@@ -276961,11 +276625,1140 @@
       "2XL",
       "3XL",
       "4XL"
+    ]
+  },
+  {
+    "id": "253430039",
+    "nameEs": "2026/27 Real Betis Home Jersey S-4XL",
+    "nameEn": "2026/27 Real Betis Home Jersey S-4XL",
+    "cats": [
+      "laliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430039?uid=1&isSubCate=false&referrercate=5179820",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430039_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
     ],
     "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838609_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838609_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838609_photo4_resultado.webp"
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430039_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430039_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430039_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429868",
+    "nameEs": "2026/27 Barcelona Goalkeeper Gray Jersey Player Version S-XXL",
+    "nameEn": "2026/27 Barcelona Goalkeeper Gray Jersey Player Version S-XXL",
+    "cats": [
+      "laliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429868?uid=1&isSubCate=false&referrercate=5179820",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429868_photo1_resultado.webp",
+    "photos": 17,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429868_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429868_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429868_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429508",
+    "nameEs": "Women's 2026/27 Real Madrid Away Jersey S-XXL",
+    "nameEn": "Women's 2026/27 Real Madrid Away Jersey S-XXL",
+    "cats": [
+      "laliga",
+      "nuevatemporada",
+      "women"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429508?uid=1&isSubCate=false&referrercate=5179820",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429508_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429508_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429508_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429508_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429455",
+    "nameEs": "2026/27 UD Almeria Home Jersey S-4XL",
+    "nameEn": "2026/27 UD Almeria Home Jersey S-4XL",
+    "cats": [
+      "laliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429455?uid=1&isSubCate=false&referrercate=5179820",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429455_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429455_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429455_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429455_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429446",
+    "nameEs": "2026/27 Granada Home Jersey S-4XL",
+    "nameEn": "2026/27 Granada Home Jersey S-4XL",
+    "cats": [
+      "laliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429446?uid=1&isSubCate=false&referrercate=5179820",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429446_photo1_resultado.webp",
+    "photos": 23,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429446_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429446_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429446_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429437",
+    "nameEs": "2026/27 Real Zaragoza Home Jersey S-4XL",
+    "nameEn": "2026/27 Real Zaragoza Home Jersey S-4XL",
+    "cats": [
+      "laliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429437?uid=1&isSubCate=false&referrercate=5179820",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429437_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429437_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429437_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429437_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429376",
+    "nameEs": "2026/27 Deportivo La Coruna Second Away Jersey S-4XL",
+    "nameEn": "2026/27 Deportivo La Coruna Second Away Jersey S-4XL",
+    "cats": [
+      "laliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429376?uid=1&isSubCate=false&referrercate=5179820",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429376_photo1_resultado.webp",
+    "photos": 23,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429376_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429376_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429376_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253430088",
+    "nameEs": "2026/27 Crystal Palace Away Jersey S-4XL",
+    "nameEn": "2026/27 Crystal Palace Away Jersey S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430088?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430088_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430088_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430088_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430088_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253430057",
+    "nameEs": "2026/27 Newcastle United Away Jersey S-4XL",
+    "nameEn": "2026/27 Newcastle United Away Jersey S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430057?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430057_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430057_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430057_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430057_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253430044",
+    "nameEs": "2026/27 Leicester City Home Jersey S-4XL",
+    "nameEn": "2026/27 Leicester City Home Jersey S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430044?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430044_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430044_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430044_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430044_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429968",
+    "nameEs": "2026/27 Tottenham Hotspur Away Jersey S-4XL",
+    "nameEn": "2026/27 Tottenham Hotspur Away Jersey S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429968?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429968_photo1_resultado.webp",
+    "photos": 5,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429968_photo2_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429958",
+    "nameEs": "2026/27 Tottenham Hotspur Second Away Jersey S-4XL",
+    "nameEn": "2026/27 Tottenham Hotspur Second Away Jersey S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429958?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429958_photo1_resultado.webp",
+    "photos": 5,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429958_photo2_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429952",
+    "nameEs": "2026/27 Liverpool Second Away Jersey S-4XL",
+    "nameEn": "2026/27 Liverpool Second Away Jersey S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429952?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429952_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429952_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429952_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429952_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429882",
+    "nameEs": "2026/27 Chelsea Second Away Jersey Player Version S-4XL",
+    "nameEn": "2026/27 Chelsea Second Away Jersey Player Version S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429882?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429882_photo1_resultado.webp",
+    "photos": 17,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429882_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429882_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429882_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429861",
+    "nameEs": "2026/27 Manchester United Second Away Jersey Long Sleeve S-4XL",
+    "nameEn": "2026/27 Manchester United Second Away Jersey Long Sleeve S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429861?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429861_photo1_resultado.webp",
+    "photos": 5,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429861_photo2_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429850",
+    "nameEs": "2026/27 Manchester United Away Jersey Long Sleeve S-4XL",
+    "nameEn": "2026/27 Manchester United Away Jersey Long Sleeve S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429850?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429850_photo1_resultado.webp",
+    "photos": 5,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429850_photo2_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429620",
+    "nameEs": "2026/27 Liverpool Away Kid Kits (Red Shorts)16-28",
+    "nameEn": "2026/27 Liverpool Away Kid Kits (Red Shorts)16-28",
+    "cats": [
+      "premier",
+      "nuevatemporada",
+      "kids"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429620?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429620_photo1_resultado.webp",
+    "photos": 19,
+    "sizes": [
+      "16",
+      "18",
+      "20",
+      "22",
+      "24",
+      "26",
+      "28"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429620_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429620_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429620_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429611",
+    "nameEs": "2026/27 Manchester City Away Kids Kits 16-28",
+    "nameEn": "2026/27 Manchester City Away Kids Kits 16-28",
+    "cats": [
+      "premier",
+      "nuevatemporada",
+      "kids"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429611?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429611_photo1_resultado.webp",
+    "photos": 19,
+    "sizes": [
+      "16",
+      "18",
+      "20",
+      "22",
+      "24",
+      "26",
+      "28"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429611_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429611_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429611_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429548",
+    "nameEs": "2026/27 Brighton & Hove Albion Home Jersey S-4XL",
+    "nameEn": "2026/27 Brighton & Hove Albion Home Jersey S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429548?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429548_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429548_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429548_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429548_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429538",
+    "nameEs": "2026/27 Brighton & Hove Albion Away Jersey S-4XL",
+    "nameEn": "2026/27 Brighton & Hove Albion Away Jersey S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429538?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429538_photo1_resultado.webp",
+    "photos": 19,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429538_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429538_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429538_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429482",
+    "nameEs": "Women's 2026/27 Liverpool Second Away Jersey S-XXL",
+    "nameEn": "Women's 2026/27 Liverpool Second Away Jersey S-XXL",
+    "cats": [
+      "premier",
+      "nuevatemporada",
+      "women"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429482?uid=1&isSubCate=false&referrercate=5179819",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429482_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429482_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429482_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429482_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253430050",
+    "nameEs": "2026/27 Fiorentina home jersey S-4XL",
+    "nameEn": "2026/27 Fiorentina home jersey S-4XL",
+    "cats": [
+      "seriea",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "seriea",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430050?uid=1&isSubCate=false&referrercate=5179818",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430050_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430050_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430050_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430050_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253430027",
+    "nameEs": "2026/27 Inter Milan Away Jersey Player Version S-4XL",
+    "nameEn": "2026/27 Inter Milan Away Jersey Player Version S-4XL",
+    "cats": [
+      "seriea",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "seriea",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430027?uid=1&isSubCate=false&referrercate=5179818",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430027_photo1_resultado.webp",
+    "photos": 19,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430027_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430027_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430027_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253430015",
+    "nameEs": "2026/27 Napoli Home Kids Kit 16-28",
+    "nameEn": "2026/27 Napoli Home Kids Kit 16-28",
+    "cats": [
+      "seriea",
+      "nuevatemporada",
+      "kids"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "seriea",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430015?uid=1&isSubCate=false&referrercate=5179818",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430015_photo1_resultado.webp",
+    "photos": 5,
+    "sizes": [
+      "16",
+      "18",
+      "20",
+      "22",
+      "24",
+      "26",
+      "28"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430015_photo2_resultado.webp"
+    ]
+  },
+  {
+    "id": "253430005",
+    "nameEs": "2026/27 Inter Milan Second Away Jersey S-4XL",
+    "nameEn": "2026/27 Inter Milan Second Away Jersey S-4XL",
+    "cats": [
+      "seriea",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "seriea",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430005?uid=1&isSubCate=false&referrercate=5179818",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430005_photo1_resultado.webp",
+    "photos": 17,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430005_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430005_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430005_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429886",
+    "nameEs": "2026/27 Inter Milan Second Away Jersey Player Version S-3XL",
+    "nameEn": "2026/27 Inter Milan Second Away Jersey Player Version S-3XL",
+    "cats": [
+      "seriea",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "seriea",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429886?uid=1&isSubCate=false&referrercate=5179818",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429886_photo1_resultado.webp",
+    "photos": 19,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429886_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429886_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429886_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429841",
+    "nameEs": "2026/27 Palermo F.C. Home Jersey S-4XL",
+    "nameEn": "2026/27 Palermo F.C. Home Jersey S-4XL",
+    "cats": [
+      "seriea",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "seriea",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429841?uid=1&isSubCate=false&referrercate=5179818",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429841_photo1_resultado.webp",
+    "photos": 5,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429841_photo2_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429579",
+    "nameEs": "2026/27 AS Roma Home Jersey S-4XL",
+    "nameEn": "2026/27 AS Roma Home Jersey S-4XL",
+    "cats": [
+      "seriea",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "seriea",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429579?uid=1&isSubCate=false&referrercate=5179818",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429579_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429579_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429579_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429579_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429405",
+    "nameEs": "2026/27 Inter Milan Away Jersey S-4XL",
+    "nameEn": "2026/27 Inter Milan Away Jersey S-4XL",
+    "cats": [
+      "seriea",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "seriea",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429405?uid=1&isSubCate=false&referrercate=5179818",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429405_photo1_resultado.webp",
+    "photos": 3,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ]
+  },
+  {
+    "id": "253429397",
+    "nameEs": "2026/27 Inter Milan Away Jersey S-4XL",
+    "nameEn": "2026/27 Inter Milan Away Jersey S-4XL",
+    "cats": [
+      "seriea",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "seriea",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429397?uid=1&isSubCate=false&referrercate=5179818",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429397_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429397_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429397_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429397_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429971",
+    "nameEs": "2026/27 Werder Bremen Away Jersey S-4XL",
+    "nameEn": "2026/27 Werder Bremen Away Jersey S-4XL",
+    "cats": [
+      "bundesliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "bundesliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429971?uid=1&isSubCate=false&referrercate=5179817",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429971_photo1_resultado.webp",
+    "photos": 5,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429971_photo2_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429878",
+    "nameEs": "2026/27 Bayern Munich Away Kids Kits 16-28",
+    "nameEn": "2026/27 Bayern Munich Away Kids Kits 16-28",
+    "cats": [
+      "bundesliga",
+      "nuevatemporada",
+      "kids"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "bundesliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429878?uid=1&isSubCate=false&referrercate=5179817",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429878_photo1_resultado.webp",
+    "photos": 19,
+    "sizes": [
+      "16",
+      "18",
+      "20",
+      "22",
+      "24",
+      "26",
+      "28"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429878_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429878_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429878_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429568",
+    "nameEs": "2026/27 Borussia Dortmund Second Away Jersey S-4XL",
+    "nameEn": "2026/27 Borussia Dortmund Second Away Jersey S-4XL",
+    "cats": [
+      "bundesliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "bundesliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429568?uid=1&isSubCate=false&referrercate=5179817",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429568_photo1_resultado.webp",
+    "photos": 23,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429568_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429568_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429568_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429560",
+    "nameEs": "2026/27 Hamburger SV Away Jersey S-XXL",
+    "nameEn": "2026/27 Hamburger SV Away Jersey S-XXL",
+    "cats": [
+      "bundesliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "bundesliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429560?uid=1&isSubCate=false&referrercate=5179817",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429560_photo1_resultado.webp",
+    "photos": 19,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429560_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429560_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429560_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253430093",
+    "nameEs": "2026/27 Strasbourg Home Jersey S-4XL",
+    "nameEn": "2026/27 Strasbourg Home Jersey S-4XL",
+    "cats": [
+      "ligue1",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "ligue1",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430093?uid=1&isSubCate=false&referrercate=5179798",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430093_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430093_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430093_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430093_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253430083",
+    "nameEs": "2026/27 Marseille Second Away Jersey S-4XL",
+    "nameEn": "2026/27 Marseille Second Away Jersey S-4XL",
+    "cats": [
+      "ligue1",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "ligue1",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430083?uid=1&isSubCate=false&referrercate=5179798",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430083_photo1_resultado.webp",
+    "photos": 23,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430083_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430083_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430083_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429919",
+    "nameEs": "Retro 2020/21 PSG X BALMAIN White Jersey S-XXL",
+    "nameEn": "Retro 2020/21 PSG X BALMAIN White Jersey S-XXL",
+    "cats": [
+      "retro",
+      "ligue1"
+    ],
+    "type": "retro",
+    "priceUsd": 13,
+    "yupooCategory": "ligue1",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429919?uid=1&isSubCate=false&referrercate=5179798",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429919_photo1_resultado.webp",
+    "photos": 11,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429919_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429919_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429919_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429912",
+    "nameEs": "Retro 2020/21 PSG X BALMAIN Jersey S-XXL",
+    "nameEn": "Retro 2020/21 PSG X BALMAIN Jersey S-XXL",
+    "cats": [
+      "retro",
+      "ligue1"
+    ],
+    "type": "retro",
+    "priceUsd": 13,
+    "yupooCategory": "ligue1",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429912?uid=1&isSubCate=false&referrercate=5179798",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429912_photo1_resultado.webp",
+    "photos": 11,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429912_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429912_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429912_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253429604",
+    "nameEs": "2026/27 Marseille Away Jersey Player Version S-4XL",
+    "nameEn": "2026/27 Marseille Away Jersey Player Version S-4XL",
+    "cats": [
+      "ligue1",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "ligue1",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253429604?uid=1&isSubCate=false&referrercate=5179798",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429604_photo1_resultado.webp",
+    "photos": 21,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429604_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429604_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429604_photo4_resultado.webp"
+    ]
+  },
+  {
+    "id": "253430074",
+    "nameEs": "2026/27 Celtic Away Jersey S-4XL",
+    "nameEn": "2026/27 Celtic Away Jersey S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/253430074?uid=1&isSubCate=false&referrercate=5179796",
+    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430074_photo1_resultado.webp",
+    "photos": 19,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "gallery": [
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430074_photo2_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430074_photo3_resultado.webp",
+      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253430074_photo4_resultado.webp"
     ]
   },
   {
