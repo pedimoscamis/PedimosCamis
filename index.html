@@ -5020,7 +5020,11 @@ function getFiltered() {
     return filtered.slice().sort((a, b) => {
       const ya = seasonStartYear(extractSeason(a.nameEn) || '') ?? 0;
       const yb = seasonStartYear(extractSeason(b.nameEn) || '') ?? 0;
-      return seasonSortDir === 'asc' ? ya - yb : yb - ya;
+      if (ya !== yb) return seasonSortDir === 'asc' ? ya - yb : yb - ya;
+      // Misma temporada: desempate por orden de inclusión en el catálogo
+      // (el más añadido recientemente va primero al ordenar por "reciente").
+      const aa = a.addedAt || 0, ab = b.addedAt || 0;
+      return seasonSortDir === 'asc' ? aa - ab : ab - aa;
     });
   }
 
@@ -5064,7 +5068,10 @@ function getFiltered() {
         if (ya === null && yb === null) return 0;
         if (ya === null) return 1;
         if (yb === null) return -1;
-        return seasonSortDir === 'desc' ? yb - ya : ya - yb;
+        if (ya !== yb) return seasonSortDir === 'desc' ? yb - ya : ya - yb;
+        // Misma temporada: desempate por orden de inclusión en el catálogo.
+        const aa = a.addedAt || 0, ab = b.addedAt || 0;
+        return seasonSortDir === 'desc' ? ab - aa : aa - ab;
       });
     }
   } else if (seasonSortDir === 'relevance' && RELEVANCE_CATS.has(activeCat)) {
@@ -5081,7 +5088,10 @@ function getFiltered() {
       if (ya === null && yb === null) return 0;
       if (ya === null) return 1;   // sin temporada → al final
       if (yb === null) return -1;
-      return seasonSortDir === 'desc' ? yb - ya : ya - yb;
+      if (ya !== yb) return seasonSortDir === 'desc' ? yb - ya : ya - yb;
+      // Misma temporada: desempate por orden de inclusión en el catálogo.
+      const aa = a.addedAt || 0, ab = b.addedAt || 0;
+      return seasonSortDir === 'desc' ? ab - aa : aa - ab;
     });
   }
   return result;

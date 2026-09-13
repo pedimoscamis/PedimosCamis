@@ -322,10 +322,15 @@ function main() {
     // Imagen: prioridad → CDN ya migrado → lo que trajo el scraper → null
     const img = existingImgById.get(String(p.id)) || p.img || null;
 
+    // Preservar campos que solo existen tras post-procesos posteriores
+    // (galería de fotos, nombre ya editado a mano, fecha de alta en NUESTRO
+    // catálogo…) — de lo contrario cada regeneración desde el raw los borra.
+    const prev = existingById.get(String(p.id));
+
     return {
       id: p.id,
-      nameEs: p.name,
-      nameEn: p.name,
+      nameEs: prev?.nameEs || p.name,
+      nameEn: prev?.nameEn || p.name,
       cats,
       type,
       priceUsd,
@@ -334,6 +339,8 @@ function main() {
       img,
       photos: p.photos || 0,
       sizes,
+      ...(prev?.gallery ? { gallery: prev.gallery } : {}),
+      addedAt: prev?.addedAt ?? Date.now(),
     };
   });
 
