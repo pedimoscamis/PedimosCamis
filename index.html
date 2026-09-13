@@ -5470,10 +5470,21 @@ function secondStarTier(name) {
   if (player)     return home ? 2 : 3;
   return home ? 0 : 1;
 }
+// Orden manual fijo para los primeros puestos del escaparate Segunda Estrella
+// (el resto sigue el criterio automático de siempre).
+const SECOND_STAR_PINNED = ['249543439', '249544896', '249544864'];
+
 function getSecondStarItems() {
   return allProducts
     .filter(p => isSpainTwoStar(p) && !(p.cats || []).includes('kids'))
     .sort((a, b) => {
+      const pinA = SECOND_STAR_PINNED.indexOf(a.id);
+      const pinB = SECOND_STAR_PINNED.indexOf(b.id);
+      if (pinA !== -1 || pinB !== -1) {
+        if (pinA === -1) return 1;
+        if (pinB === -1) return -1;
+        return pinA - pinB;
+      }
       const tierA = secondStarTier(a.nameEn);
       const tierB = secondStarTier(b.nameEn);
       if (tierA !== tierB) return tierA - tierB;
