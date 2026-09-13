@@ -20881,8 +20881,8 @@
   },
   {
     "id": "231559676",
-    "nameEs": "26/27 Real Madrid Home Jersey Player Version S-XXL (Predicted Version)",
-    "nameEn": "26/27 Real Madrid Home Jersey Player Version S-XXL (Predicted Version)",
+    "nameEs": "26/27 Real Madrid Home Jersey Player Version S-XXL",
+    "nameEn": "26/27 Real Madrid Home Jersey Player Version S-XXL",
     "cats": [
       "laliga",
       "nuevatemporada"
@@ -20903,8 +20903,8 @@
   },
   {
     "id": "231559675",
-    "nameEs": "26/27 Manchester City Home Jersey Player Version S-XXL (Predicted Version)",
-    "nameEn": "26/27 Manchester City Home Jersey Player Version S-XXL (Predicted Version)",
+    "nameEs": "26/27 Manchester City Home Jersey Player Version S-XXL",
+    "nameEn": "26/27 Manchester City Home Jersey Player Version S-XXL",
     "cats": [
       "premier",
       "nuevatemporada"
@@ -248959,30 +248959,6 @@
     ]
   },
   {
-    "id": "249543369",
-    "nameEs": "2026/27 Barcelona Away Jersey S-4XL",
-    "nameEn": "2026/27 Barcelona Away Jersey S-4XL",
-    "cats": [
-      "laliga",
-      "nuevatemporada"
-    ],
-    "type": "normal",
-    "priceUsd": 8,
-    "yupooCategory": "laliga",
-    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543369?uid=1&isSubCate=false&referrercate=5179820",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/249543369_photo1_resultado.webp",
-    "photos": 21,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL",
-      "3XL",
-      "4XL"
-    ]
-  },
-  {
     "id": "249543285",
     "nameEs": "2026/27 Malaga Home Jersey S-4XL",
     "nameEn": "2026/27 Malaga Home Jersey S-4XL",
@@ -267108,97 +267084,6 @@
       "XL",
       "2XL",
       "3XL"
-    ]
-  },
-  {
-    "id": "246538658",
-    "nameEs": "Spain 2026 World Cup Home Jersey 2 Stars S-4XL",
-    "nameEn": "Spain 2026 World Cup Home Jersey 2 Stars S-4XL",
-    "cats": [
-      "selecciones"
-    ],
-    "type": "normal",
-    "priceUsd": 8,
-    "yupooCategory": "selecciones",
-    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246538658?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://photo.yupoo.com/ggjersey/fcb36f212b/small.jpg",
-    "photos": 3,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL",
-      "3XL",
-      "4XL"
-    ]
-  },
-  {
-    "id": "246538440",
-    "nameEs": "Spain 2026 World Cup Home Jersey Player Version 2 Stars S-4XL",
-    "nameEn": "Spain 2026 World Cup Home Jersey Player Version 2 Stars S-4XL",
-    "cats": [
-      "selecciones"
-    ],
-    "type": "normal",
-    "priceUsd": 8,
-    "yupooCategory": "selecciones",
-    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246538440?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://photo.yupoo.com/ggjersey/ccd42752a0/small.jpg",
-    "photos": 17,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL",
-      "3XL",
-      "4XL"
-    ]
-  },
-  {
-    "id": "246538239",
-    "nameEs": "Spain 2026 World Cup Home Womens Jersey 2 Stars S-XXL",
-    "nameEn": "Spain 2026 World Cup Home Womens Jersey 2 Stars S-XXL",
-    "cats": [
-      "selecciones"
-    ],
-    "type": "normal",
-    "priceUsd": 8,
-    "yupooCategory": "selecciones",
-    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246538239?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://photo.yupoo.com/ggjersey/f41f04a117/small.jpg",
-    "photos": 15,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ]
-  },
-  {
-    "id": "246538087",
-    "nameEs": "Spain 2026 World Cup Home jersey Kid Kits 2 Stars 16-28",
-    "nameEn": "Spain 2026 World Cup Home jersey Kid Kits 2 Stars 16-28",
-    "cats": [
-      "selecciones",
-      "kids"
-    ],
-    "type": "normal",
-    "priceUsd": 8,
-    "yupooCategory": "selecciones",
-    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246538087?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/246538087_photo1_resultado.webp",
-    "photos": 17,
-    "sizes": [
-      "16",
-      "18",
-      "20",
-      "22",
-      "24",
-      "26",
-      "28"
     ]
   },
   {
