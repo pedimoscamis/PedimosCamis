@@ -3702,6 +3702,8 @@ function onShippingChange() {
   const addressWrap = document.getElementById('address-fields-wrap');
   addressWrap.style.display = esMano ? 'none' : '';
   addressWrap.querySelectorAll('input').forEach(el => { el.required = !esMano; });
+  // Entrega en mano → método de pago por defecto Efectivo (se paga al recogerlo)
+  if (esMano) document.getElementById('form-metodo-pago').value = 'Efectivo';
   updateShippingUpsell();
   updateCheckoutTotals();
 }
