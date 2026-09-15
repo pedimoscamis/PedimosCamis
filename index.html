@@ -2790,7 +2790,8 @@
       <div id="user-menu">
         <div id="user-menu-login">
           <div id="user-menu-title">Código de acceso</div>
-          <input type="text" id="user-code-input" placeholder="Introduce tu código" autocomplete="off" />
+          <input type="text" id="user-code-input" placeholder="Introduce tu código" autocomplete="off"
+                 onkeydown="if(event.key==='Enter') submitUserCode()" />
           <button id="user-code-submit" onclick="submitUserCode()">Entrar</button>
           <div id="user-code-error">Código no válido</div>
         </div>
@@ -2842,7 +2843,8 @@
         <div class="mob-menu-code-section">
           <div class="mob-menu-code-title">🔑 Código de acceso</div>
           <div id="mob-user-menu-login">
-            <input type="text" id="mob-code-input" placeholder="Introduce tu código" autocomplete="off" />
+            <input type="text" id="mob-code-input" placeholder="Introduce tu código" autocomplete="off"
+                   onkeydown="if(event.key==='Enter') submitMobCode()" />
             <button id="mob-code-submit" onclick="submitMobCode()">Entrar</button>
             <div id="mob-code-error"></div>
           </div>
@@ -4127,10 +4129,13 @@ async function init() {
       e.target.value = '';          // borrar el input al instante
       searchQuery    = '';
       showToast('🔑 Modo Súper Admin Activado');
+      updateUserBtn();
+      updateUserMenuState();
       // Si el modal del producto está abierto, mostrar el botón Yupoo ya
       if (currentProduct) {
         document.getElementById('modal-yupoo-btn').style.display = '';
       }
+      renderAll(); // refrescar precios visibles a coste
       return;                       // no continuar con la búsqueda
     }
 
@@ -5496,7 +5501,7 @@ function renderFeaturedNewSeason() {
 
   scroll.innerHTML = '';
   for (const p of items) {
-    const price = getBasePrice(p);
+    const price = getDisplayPrice(p);
     let priceHtml;
     if (discountMode) {
       const discounted = getDiscountedPrice(price);
@@ -5593,7 +5598,7 @@ function renderFeaturedSecondStar() {
 
   scroll.innerHTML = '';
   for (const p of items) {
-    const price = getBasePrice(p);
+    const price = getDisplayPrice(p);
     let priceHtml;
     if (discountMode) {
       const discounted = getDiscountedPrice(price);
@@ -5660,7 +5665,7 @@ function renderFeatured() {
 
   scroll.innerHTML = '';
   for (const p of items) {
-    const price = getBasePrice(p);
+    const price = getDisplayPrice(p);
     let priceHtml;
     if (discountMode) {
       const discounted = getDiscountedPrice(price);
@@ -5737,7 +5742,7 @@ function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
 
   scroll.innerHTML = '';
   for (const p of items) {
-    const price = getBasePrice(p);
+    const price = getDisplayPrice(p);
     let priceHtml;
     if (discountMode) {
       const discounted = getDiscountedPrice(price);
@@ -6447,7 +6452,7 @@ function buildKitLabel(name) {
 }
 
 function createCard(p, idx = 0) {
-  const base = getBasePrice(p);
+  const base = getDisplayPrice(p);
   const pc       = primaryCat(p);
   const catLabel = buildKitLabel(p.nameEn) || t().cat_labels[pc] || pc;
   const sizesStr = p.sizes ? p.sizes.join(' · ') : '';
@@ -6772,7 +6777,15 @@ function updateModalPrice() {
   const priceMainEl = document.getElementById('modal-price-main');
   const priceSubEl  = document.getElementById('modal-price-sub');
 
-  if (currentProduct?.discountInfo?.source === 'ucl-flash') {
+  // Modo Superadmin: se muestra el precio de coste real (independiente de
+  // descuentos/socio, que son de cara al cliente). El botón de añadir al
+  // carrito sigue mostrando y usando el precio de venta real, para no
+  // arriesgar que un pedido real salga cobrado al coste por error.
+  if (adminMode) {
+    const cost = getSupplierCostPrice(currentProduct);
+    priceMainEl.textContent = `${cost}€`;
+    priceSubEl.textContent  = 'coste proveedor';
+  } else if (currentProduct?.discountInfo?.source === 'ucl-flash') {
     // UCL Flash: precio tachado + badge descuento
     const origBase = currentProduct.discountInfo.originalBase;
     priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origBase)}</span>${fmtEur(price)}<span class="badge-discount" style="font-size:12px;padding:3px 7px;">-10%</span>`;
@@ -7713,6 +7726,34 @@ function closeCheckoutOnOverlay(e) {
   if (e.target === document.getElementById('checkout-overlay')) closeCheckout();
 }
 
+/**
+ * Coste base de proveedor 26/27 (en €, sin extras de personalización) según
+ * el nombre y categorías del artículo. Compartido entre el payload del
+ * webhook (buildWebhookPayload) y el precio mostrado en Modo Superadmin.
+ */
+function computeSupplierCostBase(name, cats) {
+  cats = cats || [];
+  if (cats.includes('nba')) return 15;                        // NBA: 15€ (sin cambios, fuera del alcance 26/27)
+  if (isShortProduct({ nameEn: name, cats })) return 6;        // Shorts: 6€ (sin cambios, fuera del alcance 26/27)
+  if (PLAYER_RE.test(name)) return 10.36;                      // Versión Player
+  if (cats.includes('retro') || /\bretro\b/i.test(name)) return 12.95; // Versión Retro
+  return 7.70;                                                 // Versión Fan / por defecto
+}
+
+/** Precio de coste mostrado en Modo Superadmin (base + manga larga, sin
+ *  extras de personalización que dependen de elecciones del cliente). */
+function getSupplierCostPrice(p) {
+  const base = computeSupplierCostBase(p.nameEn, p.cats);
+  const ls   = LONG_SLEEVE_RE.test(p.nameEn) ? 2.59 : 0;
+  return Math.round((base + ls) * 100) / 100;
+}
+
+/** Precio a mostrar en tarjetas/modal: coste real en Modo Superadmin, precio
+ *  de venta normal en cualquier otro caso. */
+function getDisplayPrice(p) {
+  return adminMode ? getSupplierCostPrice(p) : getBasePrice(p);
+}
+
 function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
   // flatMap: si qty > 1, cada artículo se duplica como filas independientes
   // para que Google Apps Script reciba siempre una fila por unidad.
@@ -7913,11 +7954,12 @@ function updateUserMenuState() {
   const activePanel  = document.getElementById('user-menu-active');
   const label        = document.getElementById('socio-active-label');
   const expiryNote   = document.getElementById('coupon-expiry-note');
-  if (socioMode || discountMode || variableCouponMode) {
+  if (socioMode || discountMode || variableCouponMode || adminMode) {
     loginPanel.style.display  = 'none';
     activePanel.style.display = 'block';
     label.textContent = discountMode        ? '✓ Descuento 33% activo'
                       : variableCouponMode  ? `✓ Descuento ${Math.round(variableCouponPct*100)}% activo`
+                      : adminMode           ? '✓ Modo Superadmin'
                       :                      '✓ Modo socio activo';
     if (variableCouponMode && activeCouponCode) {
       const days     = getCouponDaysLeft(activeCouponCode);
@@ -7946,10 +7988,11 @@ function updateUserMenuState() {
 
 function updateUserBtn() {
   const btn = document.getElementById('user-btn');
-  const anyActive = socioMode || discountMode || variableCouponMode;
+  const anyActive = socioMode || discountMode || variableCouponMode || adminMode;
   btn.classList.toggle('active', anyActive);
   btn.title = discountMode       ? 'Descuento 33% activo'
             : variableCouponMode ? `Descuento ${Math.round(variableCouponPct*100)}% activo`
+            : adminMode          ? 'Modo Superadmin'
             : socioMode          ? 'Modo socio activo'
             :                      'Acceso socio';
   // Sincronizar también el dropdown móvil
@@ -8119,7 +8162,7 @@ function updateMobUserState() {
   const loginPanel  = document.getElementById('mob-user-menu-login');
   const activePanel = document.getElementById('mob-user-menu-active');
   if (!loginPanel || !activePanel) return;
-  const anyActive = socioMode || discountMode || variableCouponMode;
+  const anyActive = socioMode || discountMode || variableCouponMode || adminMode;
   loginPanel.style.display  = anyActive ? 'none'  : 'block';
   activePanel.style.display = anyActive ? 'block' : 'none';
   // Actualizar etiqueta de modo activo
@@ -8129,9 +8172,11 @@ function updateMobUserState() {
       ? '✓ Descuento 33% activo'
       : variableCouponMode
         ? `✓ Descuento ${Math.round(variableCouponPct * 100)}% activo`
-        : socioMode
-          ? '✓ Modo socio activo'
-          : '';
+        : adminMode
+          ? '✓ Modo Superadmin'
+          : socioMode
+            ? '✓ Modo socio activo'
+            : '';
   }
   // Actualizar indicador en el botón
   const mobBtn = document.getElementById('mob-user-btn');
