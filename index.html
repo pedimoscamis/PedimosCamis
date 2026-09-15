@@ -3727,7 +3727,7 @@ function onShippingChange() {
   // "required" para no bloquear el envío del formulario con campos vacíos.
   const addressWrap = document.getElementById('address-fields-wrap');
   addressWrap.style.display = esMano ? 'none' : '';
-  addressWrap.querySelectorAll('input').forEach(el => { el.required = !esMano && !socioMode; });
+  addressWrap.querySelectorAll('input').forEach(el => { el.required = !esMano && !socioMode && !adminMode; });
   // Entrega en mano → método de pago por defecto Efectivo (se paga al recogerlo)
   if (esMano) document.getElementById('form-metodo-pago').value = 'Efectivo';
   updateShippingUpsell();
@@ -7480,7 +7480,8 @@ function fmtUsd(n) {
 // Devuelve el total del carrito siempre en euros
 function cartTotalEur() {
   const raw = cartTotalUsd();
-  return socioMode ? Math.round(raw * EUR_RATE * 100) / 100 : raw;
+  // En Modo Superadmin item.priceUsd ya es coste en €: no volver a convertir.
+  return (socioMode && !adminMode) ? Math.round(raw * EUR_RATE * 100) / 100 : raw;
 }
 
 function updateCheckoutTotals() {
@@ -7496,7 +7497,7 @@ function updateCheckoutTotals() {
   const totalRow      = document.getElementById('co-total-row');
 
   // ── Filas de precio base ─────────────────────────────────────────────────
-  if (socioMode) {
+  if (socioMode && !adminMode) {
     subtotalRow.style.display   = '';
     conversionRow.style.display = '';
     discountRow.style.display   = 'none';
@@ -7594,9 +7595,10 @@ function openCheckout(e) {
     const row    = document.createElement('div');
     row.className = 'checkout-item-row';
 
-    // El símbolo $ solo se muestra en modo Super Admin (para ver las cifras
-    // internas tal cual); a los socios normales siempre se les muestra en €.
-    const sym       = adminMode ? '$' : '€';
+    // Siempre en €: en Modo Superadmin "base" ya es el coste en € (lo
+    // devuelve getSupplierCostPrice), y para el resto se convierte si venía
+    // en $ (modo socio).
+    const sym       = '€';
     const baseEur   = socioMode ? Math.round(base * EUR_RATE * 100) / 100 : base;
     const baseShown = adminMode ? base : baseEur;
 
@@ -7697,12 +7699,13 @@ function openCheckout(e) {
   document.getElementById('envio-domicilio').checked           = true;
   document.getElementById('shipping-note-mano').style.display  = 'none';
   updateShippingUpsell();
-  // Socios: pueden enviar el pedido sin rellenar los campos obligatorios
-  // (nombre, teléfono, email, dirección, método de pago).
+  // Socios y Superadmin: pueden enviar el pedido sin rellenar los campos
+  // obligatorios (nombre, teléfono, email, dirección, método de pago).
+  const skipRequired = socioMode || adminMode;
   ['form-nombre', 'form-contacto', 'form-correo', 'form-metodo-pago']
-    .forEach(id => { document.getElementById(id).required = !socioMode; });
+    .forEach(id => { document.getElementById(id).required = !skipRequired; });
   document.getElementById('address-fields-wrap').querySelectorAll('input')
-    .forEach(el => { el.required = !socioMode; });
+    .forEach(el => { el.required = !skipRequired; });
   document.getElementById('order-success').style.display   = 'none';
   const submitBtn = document.getElementById('order-submit-btn');
   submitBtn.disabled    = false;
@@ -7838,20 +7841,21 @@ async function submitOrderForm(e) {
   const phoneErr = document.getElementById('form-contacto-error');
   const emailErr = document.getElementById('form-correo-error');
 
-  // ── Validar teléfono: al menos 9 dígitos (los socios pueden saltarse esto) ──
+  // ── Validar teléfono: al menos 9 dígitos (socios/Superadmin lo saltan) ──
+  const skipValidation = socioMode || adminMode;
   const contactoVal = document.getElementById('form-contacto').value;
   const digits = contactoVal.replace(/\D/g, '');
-  if (!socioMode && digits.length < 9) {
+  if (!skipValidation && digits.length < 9) {
     phoneErr.style.display = 'block';
     document.getElementById('form-contacto').focus();
     return;
   }
   phoneErr.style.display = 'none';
 
-  // ── Validar email (los socios pueden saltarse esto) ─────────────────────────
+  // ── Validar email (socios/Superadmin lo saltan) ─────────────────────────
   const correoVal = document.getElementById('form-correo').value.trim();
   const emailRe   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!socioMode && !emailRe.test(correoVal)) {
+  if (!skipValidation && !emailRe.test(correoVal)) {
     emailErr.style.display = 'block';
     document.getElementById('form-correo').focus();
     return;
