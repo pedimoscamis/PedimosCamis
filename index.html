@@ -4421,7 +4421,7 @@ const KNOWN_TEAMS = [
   { d: 'Osasuna',          k: ['osasuna'] },
   { d: 'Getafe',           k: ['getafe'] },
   { d: 'Girona',           k: ['girona'] },
-  { d: 'Rayo Vallecano',   k: ['rayo vallecano', 'rayo'] },
+  { d: 'Rayo Vallecano',   k: ['rayo vallecano'] },
   { d: 'Mallorca',         k: ['mallorca'] },
   { d: 'Alavés',           k: ['alaves', 'alavés'] },
   { d: 'Espanyol',         k: ['espanyol'] },
@@ -4495,7 +4495,6 @@ const KNOWN_TEAMS = [
   { d: 'Mainz',            k: ['mainz'] },
   // ── Ligue 1 ──
   { d: 'PSG',              k: ['psg', 'paris saint', 'paris sg'] },
-  { d: 'Marseille',        k: ['marseille', 'om '] },
   { d: 'Lyon',             k: ['lyon', 'olympique lyon'] },
   { d: 'Monaco',           k: ['monaco', 'as monaco'] },
   { d: 'Lille',            k: ['lille', 'losc'] },
@@ -4573,7 +4572,7 @@ const KNOWN_TEAMS = [
   { d: 'Suecia',           k: ['sweden', 'suecia'] },
   { d: 'Dinamarca',        k: ['denmark', 'dinamarca'] },
   { d: 'Austria',          k: ['austria'] },
-  { d: 'Turquía',          k: ['turkey', 'turquía', 'turquia'] },
+  { d: 'Turquía',          k: ['turkey', 'turkiye', 'türkiye', 'turquía', 'turquia'] },
   { d: 'Hungría',          k: ['hungary', 'hungría', 'hungria'] },
   { d: 'Rumanía',          k: ['romania', 'rumania', 'rumanía'] },
   { d: 'Rep. Checa',       k: ['czech republic', 'czechia', 'czech'] },
@@ -4582,7 +4581,49 @@ const KNOWN_TEAMS = [
   { d: 'Argelia',          k: ['algeria', 'argelia'] },
   { d: 'Túnez',            k: ['tunisia', 'tunez', 'túnez'] },
   { d: 'Camerún',          k: ['cameroon', 'camerún', 'camerun'] },
-  { d: 'Arabia Saudí',     k: ['saudi arabia', 'arabia saudi', 'arabia saudí'] },
+  { d: 'Arabia Saudí',     k: ['saudi arabia', 'saudi araba', 'arabia saudi', 'arabia saudí'] },
+  { d: 'Noruega',          k: ['norway', 'noruega'] },
+  { d: 'Albania',          k: ['albania'] },
+  { d: 'Irlanda del Norte',k: ['northern ireland'] },
+  { d: 'Irlanda',          k: ['republic of ireland', 'ireland'] },
+  { d: 'Grecia',           k: ['greece', 'grecia'] },
+  { d: 'Jamaica',          k: ['jamaica'] },
+  { d: 'Perú',             k: ['peru', 'perú'] },
+  { d: 'Chile',            k: ['chile'] },
+  { d: 'Haití',            k: ['haiti', 'haití', 'republic of haiti'] },
+  { d: 'Ecuador',          k: ['ecuador'] },
+  { d: 'Ucrania',          k: ['ukraine', 'ucrania'] },
+  { d: 'Paraguay',         k: ['paraguay'] },
+  { d: 'Bosnia',           k: ['bosnia'] },
+  { d: 'Sudáfrica',        k: ['south africa', 'sudafrica', 'sudáfrica'] },
+  { d: 'Curazao',          k: ['curacao', 'curaçao', 'curaao'] },
+  { d: 'Venezuela',        k: ['venezuela'] },
+  { d: 'Guinea Ecuatorial',k: ['equatorial guinea', 'guinea ecuatorial'] },
+  { d: 'Cabo Verde',       k: ['cape verde', 'cabo verde'] },
+  { d: 'Jordania',         k: ['jordan national team', 'jordania'] },
+  { d: 'Mali',             k: ['mali', 'malienne'] },
+  { d: 'Filipinas',        k: ['philippines', 'filipinas'] },
+  { d: 'Malasia',          k: ['malaysia', 'malasia'] },
+  { d: 'Islandia',         k: ['iceland', 'islandia'] },
+  { d: 'Costa Rica',       k: ['costa rica'] },
+  { d: 'Catar',            k: ['qatar', 'catar'] },
+  { d: 'Emiratos Árabes Unidos', k: ['united arab emirates', 'emiratos arabes', 'emiratos árabes'] },
+  { d: 'Nueva Zelanda',    k: ['new zealand', 'nueva zelanda'] },
+  { d: 'El Salvador',      k: ['el salvador'] },
+  { d: 'Finlandia',        k: ['finland', 'finlandia'] },
+  { d: 'Panamá',           k: ['panama', 'panamá'] },
+  { d: 'Uzbekistán',       k: ['uzbekistan', 'uzbekistán'] },
+  { d: 'Bolivia',          k: ['bolivia'] },
+  { d: 'Guatemala',        k: ['guatemala'] },
+  { d: 'Bulgaria',         k: ['bulgaria'] },
+  { d: 'Israel',           k: ['israel'] },
+  { d: 'Yemen',            k: ['yemen'] },
+  { d: 'Eslovaquia',       k: ['slovakia', 'eslovaquia'] },
+  { d: 'Eslovenia',        k: ['slovenia', 'eslovenia'] },
+  { d: 'Georgia',          k: ['georgia'] },
+  { d: 'Irak',             k: ['iraq', 'irak'] },
+  { d: 'Irán',             k: ['iran', 'irán'] },
+  { d: 'Honduras',         k: ['honduras'] },
   // ── NBA ──
   { d: 'LA Lakers',        k: ['lakers', 'los angeles lakers', 'la lakers'] },
   { d: 'Chicago Bulls',    k: ['bulls', 'chicago bulls'] },
@@ -4614,6 +4655,10 @@ const KNOWN_TEAMS = [
   { d: 'Washington Wizards',k:['wizards', 'washington wizards'] },
   { d: 'Cleveland Cavaliers',k:['cavaliers', 'cavs', 'cleveland cavaliers'] },
   { d: 'Minnesota Timberwolves',k:['timberwolves', 'minnesota timberwolves'] },
+  // Nota: se coloca tras Indiana Pacers para que un producto de esos
+  // Pacers no acabe cayendo aquí por contener "indiana" (que empieza
+  // por "india").
+  { d: 'India',            k: ['india'] },
 ];
 
 function detectTeam(name) {
@@ -4885,7 +4930,7 @@ function buildFilterBar() {
     }
     if (teamCount.size > 0) {
       const sorted = [...teamCount.entries()]
-        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .sort((a, b) => a[0].localeCompare(b[0]))
         .map(([name]) => name);
       pillRows.appendChild(makeSelectRow(
         isEs ? 'Equipo' : 'Team',

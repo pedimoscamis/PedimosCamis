@@ -868,7 +868,7 @@
     "nameEs": "2025/26 Atletico Nacional Third Away Jersey S-4XL",
     "nameEn": "2025/26 Atletico Nacional Third Away Jersey S-4XL",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -2125,7 +2125,7 @@
     "nameEs": "2026/27 Club América Home Jersey S-4XL",
     "nameEn": "2026/27 Club América Home Jersey S-4XL",
     "cats": [
-      "selecciones",
+      "sudamerica",
       "nuevatemporada"
     ],
     "type": "normal",
@@ -2153,7 +2153,7 @@
     "nameEs": "2025/26 FC Augsburg Special Edition Jersey S-4XL",
     "nameEn": "2025/26 FC Augsburg Special Edition Jersey S-4XL",
     "cats": [
-      "selecciones"
+      "bundesliga"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -3712,7 +3712,7 @@
     "nameEs": "2026/27 Penarol Home jersey S-XXL",
     "nameEn": "2026/27 Penarol Home jersey S-XXL",
     "cats": [
-      "selecciones",
+      "sudamerica",
       "nuevatemporada"
     ],
     "type": "normal",
@@ -3856,7 +3856,7 @@
     "nameEs": "2026/27 Los Angeles FC Home Jersey S-4XL",
     "nameEn": "2026/27 Los Angeles FC Home Jersey S-4XL",
     "cats": [
-      "selecciones",
+      "sudamerica",
       "nuevatemporada"
     ],
     "type": "normal",
@@ -5188,7 +5188,7 @@
     "nameEs": "2026/27 Chivas Blue Jersey Long Sleeve S-4XL",
     "nameEn": "2026/27 Chivas Blue Jersey Long Sleeve S-4XL",
     "cats": [
-      "selecciones",
+      "sudamerica",
       "nuevatemporada"
     ],
     "type": "normal",
@@ -5680,7 +5680,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/235297346?uid=1",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/235297346_resultado.webp",
+    "img": "https://photo.yupoo.com/ggjersey/104de3b018/medium.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -5689,12 +5689,7 @@
       "XL",
       "2XL"
     ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/235297346_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/235297346_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/235297346_photo4_resultado.webp"
-    ],
-    "addedAt": 1789287637339
+    "addedAt": 1789482856259
   },
   {
     "id": "235297232",
@@ -6274,7 +6269,7 @@
     "nameEs": "Curacao 2026 World Cup Away Kid Kits 16-28",
     "nameEn": "Curacao 2026 World Cup Away Kid Kits 16-28",
     "cats": [
-      "otros",
+      "selecciones",
       "kids"
     ],
     "type": "normal",
@@ -6310,7 +6305,7 @@
     "priceUsd": 8,
     "yupooCategory": null,
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/235296632?uid=1",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/235296632_resultado.webp",
+    "img": "https://photo.yupoo.com/ggjersey/36b91cf4ca/medium.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -6319,12 +6314,7 @@
       "XL",
       "2XL"
     ],
-    "gallery": [
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/235296632_photo2_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/235296632_photo3_resultado.webp",
-      "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/235296632_photo4_resultado.webp"
-    ],
-    "addedAt": 1789287659339
+    "addedAt": 1789483122833
   },
   {
     "id": "235296564",
@@ -26668,7 +26658,7 @@
     "nameEs": "Qatar 2026 World Cup Home Kids Kit 16-28",
     "nameEn": "Qatar 2026 World Cup Home Kids Kit 16-28",
     "cats": [
-      "otros",
+      "selecciones",
       "kids"
     ],
     "type": "normal",
@@ -29626,7 +29616,7 @@
     "nameEs": "NRL 2026 New Zealand Worriors Home Jersey S-7XL",
     "nameEn": "NRL 2026 New Zealand Worriors Home Jersey S-7XL",
     "cats": [
-      "otros"
+      "selecciones"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -29653,7 +29643,7 @@
     "nameEs": "NRL 2026 New Zealand Worriors Away Jersey S-7XL",
     "nameEn": "NRL 2026 New Zealand Worriors Away Jersey S-7XL",
     "cats": [
-      "otros"
+      "selecciones"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -29680,7 +29670,7 @@
     "nameEs": "NRL 2025 New Zealand Worriors Indigenous Jersey S-7XL",
     "nameEn": "NRL 2025 New Zealand Worriors Indigenous Jersey S-7XL",
     "cats": [
-      "otros"
+      "selecciones"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -29707,7 +29697,7 @@
     "nameEs": "NRL 2025 New Zealand Worriors Home Jersey S-7XL",
     "nameEn": "NRL 2025 New Zealand Worriors Home Jersey S-7XL",
     "cats": [
-      "otros"
+      "selecciones"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -34016,7 +34006,7 @@
     "nameEs": "2026/27 Venezuela Home Kid Kits 16-28",
     "nameEn": "2026/27 Venezuela Home Kid Kits 16-28",
     "cats": [
-      "otros",
+      "selecciones",
       "nuevatemporada",
       "kids"
     ],
@@ -35535,7 +35525,7 @@
     "nameEs": "2025/26 Guatemala Second Away Jersey S-XXL",
     "nameEn": "2025/26 Guatemala Second Away Jersey S-XXL",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -35820,7 +35810,7 @@
     "nameEs": "2026 Costa Rica Home Jersey S-XXL",
     "nameEn": "2026 Costa Rica Home Jersey S-XXL",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -43197,7 +43187,8 @@
     "nameEs": "Retro 1978 Iran Home Jersey S-XXL",
     "nameEn": "Retro 1978 Iran Home Jersey S-XXL",
     "cats": [
-      "retro"
+      "retro",
+      "selecciones"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -50719,7 +50710,8 @@
     "nameEs": "Retro 1994 South Africa home Jersey S-XXL",
     "nameEn": "Retro 1994 South Africa home Jersey S-XXL",
     "cats": [
-      "retro"
+      "retro",
+      "selecciones"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -50746,7 +50738,8 @@
     "nameEs": "Retro 1998 South Africa away Jersey S-XXL",
     "nameEn": "Retro 1998 South Africa away Jersey S-XXL",
     "cats": [
-      "retro"
+      "retro",
+      "selecciones"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -50773,7 +50766,8 @@
     "nameEs": "Retro 1998 South Africa home Jersey S-XXL",
     "nameEn": "Retro 1998 South Africa home Jersey S-XXL",
     "cats": [
-      "retro"
+      "retro",
+      "selecciones"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -50800,7 +50794,8 @@
     "nameEs": "Retro 2016/17 Iceland home Jersey S-XXL",
     "nameEn": "Retro 2016/17 Iceland home Jersey S-XXL",
     "cats": [
-      "retro"
+      "retro",
+      "selecciones"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -92449,7 +92444,7 @@
     "nameEs": "2025/26 Romania Home Jersey S-4XL",
     "nameEn": "2025/26 Romania Home Jersey S-4XL",
     "cats": [
-      "selecciones"
+      "seriea"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -92728,7 +92723,7 @@
     "nameEs": "2025/26 Guatemala Special Edition White Jersey S-XXL",
     "nameEn": "2025/26 Guatemala Special Edition White Jersey S-XXL",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -94157,7 +94152,7 @@
     "nameEs": "2025/26 Guatemala Home Jersey S-XXL",
     "nameEn": "2025/26 Guatemala Home Jersey S-XXL",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -94179,7 +94174,7 @@
     "nameEs": "2025/26 Guatemala Away Jersey S-XXL",
     "nameEn": "2025/26 Guatemala Away Jersey S-XXL",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -95082,7 +95077,7 @@
     "nameEs": "25/26 Guatemala Training Blue Jersey S-XXL",
     "nameEn": "25/26 Guatemala Training Blue Jersey S-XXL",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -104598,7 +104593,7 @@
     "nameEn": "Retro Chivas USA Special Jersey S-XXL",
     "cats": [
       "retro",
-      "selecciones"
+      "sudamerica"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -116881,7 +116876,7 @@
     "nameEn": "Retro 17/18 Chivas USA Away jersey S-XXL",
     "cats": [
       "retro",
-      "selecciones"
+      "sudamerica"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -116926,7 +116921,7 @@
     "nameEn": "Retro 02/03 Chivas USA Third jersey S-XXL",
     "cats": [
       "retro",
-      "selecciones"
+      "sudamerica"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -116971,7 +116966,7 @@
     "nameEn": "Retro 02/03 Chivas USA Home S-XXL",
     "cats": [
       "retro",
-      "selecciones"
+      "sudamerica"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -116994,7 +116989,7 @@
     "nameEn": "Retro 02/03 Chivas USA Away S-XXL",
     "cats": [
       "retro",
-      "selecciones"
+      "sudamerica"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -171759,7 +171754,8 @@
     "nameEs": "Retro  Venezuela 2000 Home Jersey Size:S-XXL",
     "nameEn": "Retro  Venezuela 2000 Home Jersey Size:S-XXL",
     "cats": [
-      "retro"
+      "retro",
+      "selecciones"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -190260,7 +190256,7 @@
     "nameEn": "Retro Chivas USA Home S-XXL",
     "cats": [
       "retro",
-      "selecciones"
+      "sudamerica"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -191347,7 +191343,7 @@
     "priceUsd": 13,
     "yupooCategory": "retro",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/231543175?uid=1",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/231543175_resultado.webp",
+    "img": "https://photo.yupoo.com/ggjersey/29bbf7d0/medium.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -191356,7 +191352,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789295038339
+    "addedAt": 1789483122855
   },
   {
     "id": "231543173",
@@ -191393,7 +191389,7 @@
     "priceUsd": 13,
     "yupooCategory": "retro",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/231543171?uid=1",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/231543171_resultado.webp",
+    "img": "https://photo.yupoo.com/ggjersey/89842186/medium.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -191402,7 +191398,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789295040339
+    "addedAt": 1789483122855
   },
   {
     "id": "231543170",
@@ -191416,7 +191412,7 @@
     "priceUsd": 13,
     "yupooCategory": "retro",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/231543170?uid=1",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/231543170_resultado.webp",
+    "img": "https://photo.yupoo.com/ggjersey/d2f21b30/medium.jpg",
     "photos": 15,
     "sizes": [
       "S",
@@ -191425,7 +191421,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789295041339
+    "addedAt": 1789483122855
   },
   {
     "id": "231543168",
@@ -191869,7 +191865,7 @@
     "nameEs": "Japan 2024/25 Sunset Version Jersey Player Version",
     "nameEn": "Japan 2024/25 Sunset Version Jersey Player Version",
     "cats": [
-      "selecciones"
+      "nba"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -193055,7 +193051,7 @@
     "nameEs": "Brazil 2024/25 Gui Santos#11 Home Basketball Jersey",
     "nameEn": "Brazil 2024/25 Gui Santos#11 Home Basketball Jersey",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -193077,7 +193073,7 @@
     "nameEs": "Brazil 2024/25 Gui Santos#11 Away Basketball Jersey",
     "nameEn": "Brazil 2024/25 Gui Santos#11 Away Basketball Jersey",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -193916,7 +193912,7 @@
     "nameEs": "Arsenal 2024/25 Home Shorts",
     "nameEn": "Arsenal 2024/25 Home Shorts",
     "cats": [
-      "selecciones"
+      "premier"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -198726,7 +198722,8 @@
     "nameEs": "Panama 1998/99 Home Retro Jersey",
     "nameEn": "Panama 1998/99 Home Retro Jersey",
     "cats": [
-      "retro"
+      "retro",
+      "selecciones"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -199965,7 +199962,7 @@
     "nameEs": "Costa Rica 2024/25 Away Jersey",
     "nameEn": "Costa Rica 2024/25 Away Jersey",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -208962,7 +208959,7 @@
     "nameEs": "Romania 2024/25 Euro Home Jersey",
     "nameEn": "Romania 2024/25 Euro Home Jersey",
     "cats": [
-      "selecciones"
+      "seriea"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -210178,7 +210175,7 @@
     "nameEs": "Turkiye 2024/25 Euro Home Kids Kit",
     "nameEn": "Turkiye 2024/25 Euro Home Kids Kit",
     "cats": [
-      "otros",
+      "selecciones",
       "kids"
     ],
     "type": "normal",
@@ -210201,7 +210198,7 @@
     "nameEs": "Turkiye 2024/25 Euro Away Kids Kit",
     "nameEn": "Turkiye 2024/25 Euro Away Kids Kit",
     "cats": [
-      "otros",
+      "selecciones",
       "kids"
     ],
     "type": "normal",
@@ -210247,7 +210244,7 @@
     "nameEs": "Georgia 2024/25 Euro Third away Kids Kit",
     "nameEn": "Georgia 2024/25 Euro Third away Kids Kit",
     "cats": [
-      "otros",
+      "selecciones",
       "kids"
     ],
     "type": "normal",
@@ -210270,7 +210267,7 @@
     "nameEs": "Georgia 2024/25 Euro Home Kids Kit",
     "nameEn": "Georgia 2024/25 Euro Home Kids Kit",
     "cats": [
-      "otros",
+      "selecciones",
       "kids"
     ],
     "type": "normal",
@@ -210293,7 +210290,7 @@
     "nameEs": "Georgia 2024/25 Euro Away Kids Kit",
     "nameEn": "Georgia 2024/25 Euro Away Kids Kit",
     "cats": [
-      "otros",
+      "selecciones",
       "kids"
     ],
     "type": "normal",
@@ -235655,7 +235652,8 @@
     "nameEs": "Retro Finland 1982 Home S-XXL",
     "nameEn": "Retro Finland 1982 Home S-XXL",
     "cats": [
-      "retro"
+      "retro",
+      "selecciones"
     ],
     "type": "retro",
     "priceUsd": 13,
@@ -262299,7 +262297,7 @@
     "nameEs": "FH-8202, P115. Same as Jordan Clarksons size:S-XL",
     "nameEn": "FH-8202, P115. Same as Jordan Clarksons size:S-XL",
     "cats": [
-      "otros"
+      "selecciones"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -277410,7 +277408,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249545088?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249545088.webp",
+    "img": "https://photo.yupoo.com/ggjersey/1b7cb0bb90/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -277419,7 +277417,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298511339
+    "addedAt": 1789482856292
   },
   {
     "id": "249544978",
@@ -278539,7 +278537,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249544477?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544477.webp",
+    "img": "https://photo.yupoo.com/ggjersey/539b0511e8/small.jpg",
     "photos": 19,
     "sizes": [
       "S",
@@ -278548,7 +278546,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298558339
+    "addedAt": 1789482856293
   },
   {
     "id": "249544461",
@@ -278561,7 +278559,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249544461?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544461.webp",
+    "img": "https://photo.yupoo.com/ggjersey/77e1cfcf5f/small.jpg",
     "photos": 15,
     "sizes": [
       "S",
@@ -278570,7 +278568,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298559339
+    "addedAt": 1789482856293
   },
   {
     "id": "249544456",
@@ -278583,7 +278581,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249544456?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544456.webp",
+    "img": "https://photo.yupoo.com/ggjersey/734ae553fe/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -278592,7 +278590,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298560339
+    "addedAt": 1789482856293
   },
   {
     "id": "249544426",
@@ -278606,7 +278604,7 @@
     "priceUsd": 13,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249544426?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544426.webp",
+    "img": "https://photo.yupoo.com/ggjersey/f64e1782d3/small.jpg",
     "photos": 23,
     "sizes": [
       "S",
@@ -278616,7 +278614,7 @@
       "2XL",
       "3XL"
     ],
-    "addedAt": 1789298561339
+    "addedAt": 1789482856293
   },
   {
     "id": "249544420",
@@ -278629,7 +278627,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249544420?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544420.webp",
+    "img": "https://photo.yupoo.com/ggjersey/49010c623a/small.jpg",
     "photos": 19,
     "sizes": [
       "S",
@@ -278638,7 +278636,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298562339
+    "addedAt": 1789482856293
   },
   {
     "id": "249544414",
@@ -278651,7 +278649,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249544414?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544414.webp",
+    "img": "https://photo.yupoo.com/ggjersey/5e03c36c09/small.jpg",
     "photos": 19,
     "sizes": [
       "S",
@@ -278660,7 +278658,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298563339
+    "addedAt": 1789482856293
   },
   {
     "id": "249544410",
@@ -278673,7 +278671,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249544410?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544410.webp",
+    "img": "https://photo.yupoo.com/ggjersey/b9723e9d53/small.jpg",
     "photos": 19,
     "sizes": [
       "S",
@@ -278682,7 +278680,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298564339
+    "addedAt": 1789482856293
   },
   {
     "id": "249544394",
@@ -278695,7 +278693,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249544394?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249544394.webp",
+    "img": "https://photo.yupoo.com/ggjersey/5e492e227f/small.jpg",
     "photos": 19,
     "sizes": [
       "S",
@@ -278704,7 +278702,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298565339
+    "addedAt": 1789482856293
   },
   {
     "id": "249544390",
@@ -279955,7 +279953,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543427?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249543427.webp",
+    "img": "https://photo.yupoo.com/ggjersey/821006fb7f/small.jpg",
     "photos": 5,
     "sizes": [
       "S",
@@ -279964,7 +279962,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298619339
+    "addedAt": 1789482856293
   },
   {
     "id": "249543426",
@@ -279977,7 +279975,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543426?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249543426.webp",
+    "img": "https://photo.yupoo.com/ggjersey/59651669bb/small.jpg",
     "photos": 5,
     "sizes": [
       "S",
@@ -279986,7 +279984,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298620339
+    "addedAt": 1789482856293
   },
   {
     "id": "249543424",
@@ -279999,7 +279997,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543424?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249543424.webp",
+    "img": "https://photo.yupoo.com/ggjersey/4964ec23aa/small.jpg",
     "photos": 5,
     "sizes": [
       "S",
@@ -280008,7 +280006,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298621339
+    "addedAt": 1789482856293
   },
   {
     "id": "249543423",
@@ -280021,7 +280019,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543423?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249543423.webp",
+    "img": "https://photo.yupoo.com/ggjersey/e4fdb6159b/small.jpg",
     "photos": 5,
     "sizes": [
       "S",
@@ -280030,7 +280028,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298622339
+    "addedAt": 1789482856293
   },
   {
     "id": "249543386",
@@ -280090,7 +280088,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543368?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249543368.webp",
+    "img": "https://photo.yupoo.com/ggjersey/cfd1847101/small.jpg",
     "photos": 5,
     "sizes": [
       "S",
@@ -280099,7 +280097,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298625339
+    "addedAt": 1789482856293
   },
   {
     "id": "249543365",
@@ -280183,7 +280181,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543327?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249543327.webp",
+    "img": "https://photo.yupoo.com/ggjersey/c8cdb16f5a/small.jpg",
     "photos": 19,
     "sizes": [
       "S",
@@ -280192,7 +280190,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298629339
+    "addedAt": 1789482856293
   },
   {
     "id": "249543325",
@@ -280205,7 +280203,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543325?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249543325.webp",
+    "img": "https://photo.yupoo.com/ggjersey/718b2ea843/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -280214,7 +280212,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298630339
+    "addedAt": 1789482856293
   },
   {
     "id": "249543320",
@@ -280227,7 +280225,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543320?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249543320.webp",
+    "img": "https://photo.yupoo.com/ggjersey/122ba1dd1c/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -280236,7 +280234,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298631339
+    "addedAt": 1789482856293
   },
   {
     "id": "249543318",
@@ -280321,7 +280319,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543303?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249543303.webp",
+    "img": "https://photo.yupoo.com/ggjersey/0d53c1c8e9/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -280330,7 +280328,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298635339
+    "addedAt": 1789482856293
   },
   {
     "id": "249543300",
@@ -280365,7 +280363,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543297?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249543297.webp",
+    "img": "https://photo.yupoo.com/ggjersey/27a51622a2/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -280374,7 +280372,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298637339
+    "addedAt": 1789482856293
   },
   {
     "id": "249543294",
@@ -282010,7 +282008,7 @@
     "nameEs": "2026 Costa Rica Away Kid Kits 16-28",
     "nameEn": "2026 Costa Rica Away Kid Kits 16-28",
     "cats": [
-      "selecciones",
+      "sudamerica",
       "kids"
     ],
     "type": "normal",
@@ -282767,7 +282765,7 @@
     "priceUsd": 13,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541477?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249541477.webp",
+    "img": "https://photo.yupoo.com/ggjersey/cc44cbd4c9/small.jpg",
     "photos": 21,
     "sizes": [
       "S",
@@ -282776,7 +282774,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298738339
+    "addedAt": 1789482856294
   },
   {
     "id": "249541422",
@@ -282790,7 +282788,7 @@
     "priceUsd": 13,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541422?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249541422.webp",
+    "img": "https://photo.yupoo.com/ggjersey/035731b580/small.jpg",
     "photos": 19,
     "sizes": [
       "S",
@@ -282799,7 +282797,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298739339
+    "addedAt": 1789482856294
   },
   {
     "id": "249541410",
@@ -282813,7 +282811,7 @@
     "priceUsd": 13,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541410?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249541410.webp",
+    "img": "https://photo.yupoo.com/ggjersey/a5e7b0c01a/small.jpg",
     "photos": 21,
     "sizes": [
       "S",
@@ -282822,7 +282820,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298740339
+    "addedAt": 1789482856294
   },
   {
     "id": "249541392",
@@ -282836,7 +282834,7 @@
     "priceUsd": 13,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541392?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249541392.webp",
+    "img": "https://photo.yupoo.com/ggjersey/e8114b9fea/small.jpg",
     "photos": 21,
     "sizes": [
       "S",
@@ -282845,7 +282843,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298741339
+    "addedAt": 1789482856294
   },
   {
     "id": "249541374",
@@ -282859,7 +282857,7 @@
     "priceUsd": 13,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541374?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249541374.webp",
+    "img": "https://photo.yupoo.com/ggjersey/eb40c9648c/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -282868,7 +282866,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298742339
+    "addedAt": 1789482856294
   },
   {
     "id": "249541358",
@@ -282882,7 +282880,7 @@
     "priceUsd": 13,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541358?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249541358.webp",
+    "img": "https://photo.yupoo.com/ggjersey/05d9401403/small.jpg",
     "photos": 19,
     "sizes": [
       "S",
@@ -282891,7 +282889,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298743339
+    "addedAt": 1789482856294
   },
   {
     "id": "249541336",
@@ -283039,7 +283037,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541068?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249541068.webp",
+    "img": "https://photo.yupoo.com/ggjersey/93a4735e8e/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -283048,7 +283046,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298750339
+    "addedAt": 1789482856294
   },
   {
     "id": "249541062",
@@ -283061,7 +283059,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541062?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249541062.webp",
+    "img": "https://photo.yupoo.com/ggjersey/6583aabb9c/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -283070,7 +283068,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298751339
+    "addedAt": 1789482856294
   },
   {
     "id": "249541055",
@@ -283106,7 +283104,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541043?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249541043.webp",
+    "img": "https://photo.yupoo.com/ggjersey/d49e587d68/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -283115,7 +283113,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298753339
+    "addedAt": 1789482856294
   },
   {
     "id": "249541034",
@@ -283128,7 +283126,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541034?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/249541034.webp",
+    "img": "https://photo.yupoo.com/ggjersey/1f5e903c41/small.jpg",
     "photos": 17,
     "sizes": [
       "S",
@@ -283137,7 +283135,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298754339
+    "addedAt": 1789482856294
   },
   {
     "id": "249541009",
@@ -283574,7 +283572,7 @@
     "nameEs": "2026 Honduras Away Jersey S-XXL",
     "nameEn": "2026 Honduras Away Jersey S-XXL",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -283970,7 +283968,7 @@
     "nameEs": "2026 Costa Rica Away Jersey S-4XL",
     "nameEn": "2026 Costa Rica Away Jersey S-4XL",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -284130,7 +284128,7 @@
     "nameEs": "2026 Guatemala Special Edition Jersey S-XXL",
     "nameEn": "2026 Guatemala Special Edition Jersey S-XXL",
     "cats": [
-      "selecciones"
+      "sudamerica"
     ],
     "type": "normal",
     "priceUsd": 8,
@@ -286080,7 +286078,7 @@
     "priceUsd": 8,
     "yupooCategory": "selecciones",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/246816185?uid=1&isSubCate=false&referrercate=5179813",
-    "img": "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/246816185.webp",
+    "img": "https://photo.yupoo.com/ggjersey/a3c560efe4/small.jpg",
     "photos": 5,
     "sizes": [
       "S",
@@ -286089,7 +286087,7 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789298883339
+    "addedAt": 1789482856295
   },
   {
     "id": "246706498",
@@ -296307,10 +296305,10 @@
       "3XL",
       "4XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429946_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "253429937",
@@ -296334,10 +296332,10 @@
       "3XL",
       "4XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429937_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "253429933",
@@ -296361,10 +296359,10 @@
       "3XL",
       "4XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429933_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "253429926",
@@ -296388,10 +296386,10 @@
       "3XL",
       "4XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429926_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "253429596",
@@ -296416,12 +296414,12 @@
       "26",
       "28"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429596_photo2_resultado.webp",
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429596_photo3_resultado.webp",
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/253429596_photo4_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251839236",
@@ -296444,12 +296442,12 @@
       "2XL",
       "3XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839236_photo2_resultado.webp",
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839236_photo3_resultado.webp",
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839236_photo4_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251839229",
@@ -296472,12 +296470,12 @@
       "2XL",
       "3XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839229_photo2_resultado.webp",
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839229_photo3_resultado.webp",
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839229_photo4_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251839225",
@@ -296500,12 +296498,12 @@
       "2XL",
       "3XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839225_photo2_resultado.webp",
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839225_photo3_resultado.webp",
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839225_photo4_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251839220",
@@ -296528,12 +296526,12 @@
       "2XL",
       "3XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839220_photo2_resultado.webp",
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839220_photo3_resultado.webp",
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839220_photo4_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251839177",
@@ -296556,10 +296554,10 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839177_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251839165",
@@ -296582,10 +296580,10 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839165_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251839160",
@@ -296608,10 +296606,10 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839160_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251839155",
@@ -296634,10 +296632,10 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251839155_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251838933",
@@ -296660,10 +296658,10 @@
       "XL",
       "2XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838933_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251838663",
@@ -296687,10 +296685,10 @@
       "3XL",
       "4XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838663_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "251838659",
@@ -296714,10 +296712,10 @@
       "3XL",
       "4XL"
     ],
-    "addedAt": 1789300180250,
     "gallery": [
       "https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/251838659_photo2_resultado.webp"
-    ]
+    ],
+    "addedAt": 1789300180250
   },
   {
     "id": "jxe1d77013d7",

@@ -63,10 +63,17 @@ const CATEGORY_RULES = [
       'germany', 'deutschland', 'portugal', 'spain', 'españa', 'argentina',
       'japan', 'italy', 'italia', 'usa', 'united states', 'belgium',
       'mexico', 'scotland', 'korea', 'south korea', 'uruguay', 'wales',
-      'ireland', 'colombia', 'croatia', 'chile', 'norway', 'turkey',
+      'ireland', 'colombia', 'croatia', 'chile', 'norway', 'turkey', 'turkiye',
       'jamaica', 'morocco', 'ukraine', 'australia', 'haiti', 'paraguay',
       'ecuador', 'peru', 'greece', 'albania',
       'hungary', 'canada', 'sweden', 'congo',
+      'bosnia', 'south africa', 'curacao', 'curaçao', 'venezuela',
+      'equatorial guinea', 'cape verde', 'jordan', 'mali', 'malienne',
+      'philippines', 'malaysia', 'iceland', 'costa rica', 'qatar',
+      'united arab emirates', 'new zealand', 'el salvador', 'finland',
+      'panama', 'uzbekistan', 'bolivia', 'guatemala', 'bulgaria', 'israel',
+      'yemen', 'slovakia', 'slovenia', 'georgia', 'india', 'iraq', 'iran',
+      'honduras', 'saudi arabia',
     ],
   },
   {
@@ -87,7 +94,7 @@ const CATEGORY_RULES = [
       'atletico mineiro', 'atletico paranaense', 'botafogo', 'vasco', 'santos',
       'cruzeiro', 'gremio', 'grêmio', 'internacional', 'river plate',
       'boca juniors', 'boca', 'racing club', 'independiente', 'estudiantes',
-      'san lorenzo', 'colo colo', 'club america', 'chivas',
+      'san lorenzo', 'colo colo', 'club america', 'club américa', 'chivas',
       'guadalajara', 'cruz azul', 'monterrey', 'atletico nacional', 'millonarios',
       'olimpo', 'olimpia', 'victoria', 'penarol',
       'new york city', 'nycfc', 'los angeles fc', 'lafc',
@@ -212,18 +219,47 @@ function categorizeCats(name, yupooCategory) {
 
   // ── Paso 1: Determinar categoría liga/deporte base ──────────────────────────
   // yupooCategory solo se acepta como liga si NO es un overlay.
+  // Excepción: "selecciones" es la categoría menos fiable del scraper (el
+  // proveedor cruza clubes ahí con frecuencia — Arsenal, Augsburg, Club
+  // América, etc.) así que si el nombre coincide con un club conocido de
+  // otra liga, ese match por palabra clave gana sobre el yupooCategory.
   let leagueCat = null;
   if (yupooCategory && VALID_CATS.has(yupooCategory) && !OVERLAY_CATS.has(yupooCategory)) {
-    leagueCat = yupooCategory;
+    if (yupooCategory === 'selecciones') {
+      // No considerar categorías de exclusión (no son ligas de fútbol reales,
+      // son solo el TIPO de prenda) ni "otros": si el override cae en una de
+      // estas, el producto no es realmente un club de otra liga — se queda
+      // en selecciones.
+      const SKIP_OVERRIDE = new Set(['nfl', 'streetwear', 'windbreaker', 'otros', 'selecciones']);
+      for (const { cat, keywords } of CATEGORY_RULES) {
+        if (OVERLAY_CATS.has(cat) || SKIP_OVERRIDE.has(cat)) continue;
+        if (keywords.some(kw => lower.includes(kw))) { leagueCat = cat; break; }
+      }
+    }
+    if (!leagueCat) leagueCat = yupooCategory;
   }
-  // Detección por keywords (saltando categorías overlay para no contaminar la liga)
+  // Detección por keywords (saltando categorías overlay para no contaminar la liga).
+  // "selecciones" se comprueba en último lugar: un club concreto (p.ej. "Chivas
+  // USA") es una coincidencia más específica que el nombre genérico de un país
+  // que pueda aparecer en el mismo nombre (p.ej. "USA").
   if (!leagueCat) {
+    // Prendas/tipo de producto, no ligas reales — deben quedar fuera de esta
+    // comprobación "más específica gana"; si no, un "Corteiz"/"Windbreaker"
+    // suelto en el nombre de una selección se lleva el producto a una
+    // categoría de exclusión por error.
+    const SKIP_SPECIFIC = new Set(['nfl', 'streetwear', 'windbreaker', 'selecciones']);
     for (const { cat, keywords } of CATEGORY_RULES) {
-      if (OVERLAY_CATS.has(cat)) continue;
+      if (OVERLAY_CATS.has(cat) || SKIP_SPECIFIC.has(cat)) continue;
       for (const kw of keywords) {
         if (lower.includes(kw)) { leagueCat = cat; break; }
       }
       if (leagueCat) break;
+    }
+    if (!leagueCat) {
+      for (const { cat, keywords } of CATEGORY_RULES) {
+        if (!SKIP_SPECIFIC.has(cat) || OVERLAY_CATS.has(cat)) continue;
+        if (keywords.some(kw => lower.includes(kw))) { leagueCat = cat; break; }
+      }
     }
   }
   if (!leagueCat) leagueCat = 'otros';
