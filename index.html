@@ -3443,12 +3443,12 @@
                   placeholder="Dudas, preferencias de envío, talla alternativa…"></textarea>
       </div>
 
-      <div class="trust-line" style="flex-direction:column; gap:2px; margin-top:14px; margin-bottom:14px;">
+      <div class="trust-line" style="flex-direction:column; gap:2px; margin-top:14px; margin-bottom:14px; padding:10px 14px; border-radius:8px; background:linear-gradient(135deg, rgba(56,189,148,.13), rgba(56,142,189,.10)); border:1px solid rgba(56,189,148,.35); color:#a8f0d8;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="margin-bottom:2px;">
-          <path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-          <path d="M8.5 12l2.3 2.3L15.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" stroke="#56e0b0" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M8.5 12l2.3 2.3L15.5 9.5" stroke="#56e0b0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span>Calidad garantizada</span>
+        <span style="color:#56e0b0; font-weight:700;">Calidad garantizada</span>
         <span>Reembolso 100% si tu paquete se pierde</span>
       </div>
       <p id="delivery-note" data-i18n="delivery_note" style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:16px;line-height:1.4;">⏱️ Plazo de entrega estimado: 2-3 semanas.</p>
@@ -6741,7 +6741,10 @@ function buildSizeGrid(sizes) {
 function getModalPriceBase() {
   if (!currentProduct) return 0;
   let base;
-  if (FLASH_SOURCES.has(currentProduct.discountInfo?.source)) {
+  if (adminMode) {
+    // Modo Superadmin: precio de coste también al añadir al carrito.
+    base = getSupplierCostPrice(currentProduct);
+  } else if (FLASH_SOURCES.has(currentProduct.discountInfo?.source)) {
     // Precio ya rebajado un 10% — inyectado directamente desde el módulo flash
     base = currentProduct.priceUsd;
   } else if (discountMode) {
@@ -6777,13 +6780,11 @@ function updateModalPrice() {
   const priceMainEl = document.getElementById('modal-price-main');
   const priceSubEl  = document.getElementById('modal-price-sub');
 
-  // Modo Superadmin: se muestra el precio de coste real (independiente de
-  // descuentos/socio, que son de cara al cliente). El botón de añadir al
-  // carrito sigue mostrando y usando el precio de venta real, para no
-  // arriesgar que un pedido real salga cobrado al coste por error.
+  // Modo Superadmin: precio de coste real (independiente de
+  // descuentos/socio, que son de cara al cliente) también al añadir al
+  // carrito — getModalPriceBase() ya devuelve el coste en este modo.
   if (adminMode) {
-    const cost = getSupplierCostPrice(currentProduct);
-    priceMainEl.textContent = `${cost}€`;
+    priceMainEl.textContent = `${price}€`;
     priceSubEl.textContent  = 'coste proveedor';
   } else if (currentProduct?.discountInfo?.source === 'ucl-flash') {
     // UCL Flash: precio tachado + badge descuento
