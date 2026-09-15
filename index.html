@@ -3441,14 +3441,15 @@
                   placeholder="Dudas, preferencias de envío, talla alternativa…"></textarea>
       </div>
 
-      <div class="trust-line" style="margin-top:4px;margin-bottom:2px;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <div class="trust-line" style="flex-direction:column; gap:2px; margin-top:14px; margin-bottom:14px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="margin-bottom:2px;">
           <path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
           <path d="M8.5 12l2.3 2.3L15.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span>Calidad garantizada · Reembolso 100% si tu paquete se pierde</span>
+        <span>Calidad garantizada</span>
+        <span>Reembolso 100% si tu paquete se pierde</span>
       </div>
-      <p id="delivery-note" data-i18n="delivery_note" style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px;line-height:1.4;">⏱️ Plazo de entrega estimado: 2-3 semanas.</p>
+      <p id="delivery-note" data-i18n="delivery_note" style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:16px;line-height:1.4;">⏱️ Plazo de entrega estimado: 2-3 semanas.</p>
       <button type="submit" id="order-submit-btn">ENVIAR PEDIDO</button>
     </form>
 
@@ -7579,8 +7580,11 @@ function openCheckout(e) {
     const row    = document.createElement('div');
     row.className = 'checkout-item-row';
 
-    const sym     = socioMode ? '$' : '€';
-    const baseEur = socioMode ? Math.round(base * EUR_RATE * 100) / 100 : base;
+    // El símbolo $ solo se muestra en modo Super Admin (para ver las cifras
+    // internas tal cual); a los socios normales siempre se les muestra en €.
+    const sym       = adminMode ? '$' : '€';
+    const baseEur   = socioMode ? Math.round(base * EUR_RATE * 100) / 100 : base;
+    const baseShown = adminMode ? base : baseEur;
 
     let bdHtml = `<div class="checkout-item-breakdown">`;
     if (discountMode && item.discountInfo) {
@@ -7600,7 +7604,7 @@ function openCheckout(e) {
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
       bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(origBase)}</del>${fmtEur(base)}</span>`;
     } else {
-      bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>${base}${sym}</span>`;
+      bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>${baseShown}${sym}</span>`;
     }
     for (const c of item.customizations) {
       let lbl;
