@@ -667,6 +667,15 @@
     .spotlight-bar-fill.done { width: 100%; }
     @keyframes spotlight-fill { from { width: 0%; } to { width: 100%; } }
 
+    /* ─── Línea de confianza — discreta, reutilizable (Hero y Checkout) ─── */
+    .trust-line {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      margin-top: 16px;
+      font-size: 11px; font-weight: 600; letter-spacing: .02em;
+      color: rgba(255,255,255,.4);
+    }
+    .trust-line svg { flex: none; opacity: .55; }
+
     /* ─── "Ve directo a tu equipo" — restaurado debajo de Hot Picks ─── */
     #hero-teams { margin-top: 20px; position: relative; max-width: 720px; margin-left: auto; margin-right: auto; }
     #hero-teams-label {
@@ -2904,6 +2913,13 @@
       <button class="hero-team-chip" style="--team-color:#034694" onclick="filterToTeam('premier','Chelsea')">Chelsea</button>
     </div>
   </div>
+  <div class="trust-line">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M8.5 12l2.3 2.3L15.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span>Calidad garantizada · Reembolso 100% si tu paquete se pierde</span>
+  </div>
 </section>
 
 <!-- ─── Featured: Segunda Estrella (España 2 estrellas) ────────────── -->
@@ -3425,6 +3441,13 @@
                   placeholder="Dudas, preferencias de envío, talla alternativa…"></textarea>
       </div>
 
+      <div class="trust-line" style="margin-top:4px;margin-bottom:2px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 2L4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M8.5 12l2.3 2.3L15.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Calidad garantizada · Reembolso 100% si tu paquete se pierde</span>
+      </div>
       <p id="delivery-note" data-i18n="delivery_note" style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px;line-height:1.4;">⏱️ Plazo de entrega estimado: 2-3 semanas.</p>
       <button type="submit" id="order-submit-btn">ENVIAR PEDIDO</button>
     </form>
