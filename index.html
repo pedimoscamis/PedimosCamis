@@ -7901,29 +7901,29 @@ async function submitOrderForm(e) {
   }
 
   // ── Enviar únicamente al webhook de Google Apps Script ───────────────────
-  // no-cors: GAS no devuelve headers CORS → no podemos leer la respuesta,
-  // pero el fetch resuelve en cuanto el servidor acepta la conexión.
-  try {
-    await fetch(WEBHOOK_URL, {
-      method:  'POST',
-      mode:    'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body:    JSON.stringify(payload),
-    });
+  // no-cors: GAS no devuelve headers CORS → no podemos leer la respuesta, y
+  // con `await` el fetch NO resuelve hasta que Apps Script termina de
+  // procesar todo el POST (escribir en Sheets, etc.) — eso es lo que hacía
+  // que "Enviando…" se quedara mucho rato, no algo que dependa de nuestro
+  // código. Con keepalive:true el navegador garantiza que la petición se
+  // complete en segundo plano aunque cerremos la pantalla de éxito ya
+  // mismo, así que ya no hace falta esperarla para dar el pedido por hecho.
+  fetch(WEBHOOK_URL, {
+    method:    'POST',
+    mode:      'no-cors',
+    keepalive: true,
+    headers:   { 'Content-Type': 'text/plain;charset=utf-8' },
+    body:      JSON.stringify(payload),
+  }).catch(err => console.warn('Webhook de pedido: fallo en segundo plano', err));
 
-    // Registrar uso del cupón en localStorage (solo al completar la compra)
-    if (variableCouponMode && activeCouponCode)    incrementCouponUses(activeCouponCode);
-    else if (discountMode && activeDiscountCode)   incrementCouponUses(activeDiscountCode);
+  // Registrar uso del cupón en localStorage (solo al completar la compra)
+  if (variableCouponMode && activeCouponCode)    incrementCouponUses(activeCouponCode);
+  else if (discountMode && activeDiscountCode)   incrementCouponUses(activeDiscountCode);
 
-    document.getElementById('order-form').style.display = 'none';
-    document.getElementById('order-success').style.display = 'block';
-    cart = [];
-    saveCart();
-  } catch {
-    btn.disabled    = false;
-    btn.textContent = 'ENVIAR PEDIDO';
-    showToast('Error de conexión. Inténtalo de nuevo.');
-  }
+  document.getElementById('order-form').style.display = 'none';
+  document.getElementById('order-success').style.display = 'block';
+  cart = [];
+  saveCart();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
