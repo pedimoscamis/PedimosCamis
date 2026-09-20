@@ -7381,8 +7381,10 @@ function cartTotalUsd() {
 /** Precio efectivo de un ítem aplicando el descuento activo si el ítem no tenía uno ya. */
 function effectiveCartPrice(item) {
   if (item.discountInfo) return item.priceUsd; // precio ya guardado con su descuento
-  if (discountMode)       return getDiscountedPrice(item.priceUsd);
-  if (variableCouponMode) return getVariableCouponPrice(item.priceUsd);
+  const extras = (item.customizations || []).reduce((s, c) => s + (c.extraUsd || 0), 0);
+  const base   = item.priceUsd - extras;
+  if (discountMode)       return getDiscountedPrice(base) + extras;
+  if (variableCouponMode) return getVariableCouponPrice(base) + extras;
   return item.priceUsd;
 }
 
@@ -7512,10 +7514,15 @@ function updateCheckoutTotals() {
     // Descuento total: suma de (originalBase - discountedBase) por ítem
     let totalDiscount = 0;
     for (const item of cart) {
+      const extras = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
+      const qty = item.qty || 1;
       if (item.discountInfo) {
-        const extras = item.customizations.reduce((s, c) => s + (c.extraUsd || 0), 0);
         const discountedBase = item.priceUsd - extras;
-        totalDiscount += item.discountInfo.originalBase - discountedBase;
+        totalDiscount += (item.discountInfo.originalBase - discountedBase) * qty;
+      } else {
+        const origBase = item.priceUsd - extras;
+        const discountedBase = discountMode ? getDiscountedPrice(origBase) : getVariableCouponPrice(origBase);
+        totalDiscount += (origBase - discountedBase) * qty;
       }
     }
     const expiryEl = document.getElementById('co-coupon-expiry');
@@ -7619,6 +7626,15 @@ function openCheckout(e) {
       const origBase = item.discountInfo.originalBase ?? base;
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
       bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(origBase)}</del>${fmtEur(base)}</span>`;
+    } else if (discountMode && !item.discountInfo) {
+      // Cupón activado después de añadir este ítem: aplicar igualmente el descuento
+      const discountedBase = getDiscountedPrice(base);
+      bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
+      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(base)}</del>${fmtEur(discountedBase)}</span>`;
+    } else if (variableCouponMode && !item.discountInfo) {
+      const discountedBase = getVariableCouponPrice(base);
+      bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
+      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(base)}</del>${fmtEur(discountedBase)}</span>`;
     } else {
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>${baseShown}${sym}</span>`;
     }
@@ -7630,21 +7646,23 @@ function openCheckout(e) {
       bdHtml += `<span class="extra">${escHtml(lbl)}</span><span class="extra">+${c.extraUsd}${sym}</span>`;
     }
     if (qty > 1) {
-      // Mostrar desglose de cantidad: precio unitario × cantidad
-      const unitEur  = socioMode ? Math.round(item.priceUsd * EUR_RATE * 100) / 100 : item.priceUsd;
+      // Mostrar desglose de cantidad: precio unitario × cantidad (precio efectivo con cupón aplicado)
+      const effUnitQty = effectiveCartPrice(item);
+      const unitEur  = socioMode ? Math.round(effUnitQty * EUR_RATE * 100) / 100 : effUnitQty;
       const totalEur = Math.round(unitEur * qty * 100) / 100;
       bdHtml += `<span style="color:var(--muted)">${isEs ? 'Cantidad' : 'Qty'}</span><span>${fmtEur(unitEur)} × ${qty} = ${fmtEur(totalEur)}</span>`;
     }
     bdHtml += `</div>`;
 
-    // Total de línea (precio unitario × cantidad)
-    const lineUnitSocio = Math.round(item.priceUsd * EUR_RATE * 100) / 100;
-    const lineUnitNorm  = item.priceUsd;
+    // Total de línea (precio unitario × cantidad) — precio efectivo, con el cupón activo aplicado
+    const effUnit        = effectiveCartPrice(item);
+    const lineUnitSocio = Math.round(effUnit * EUR_RATE * 100) / 100;
+    const lineUnitNorm  = effUnit;
     const lineTotal     = socioMode
       ? Math.round(lineUnitSocio * qty * 100) / 100
       : lineUnitNorm * qty;
     const itemTotalStr  = socioMode
-      ? `${fmtUsd(item.priceUsd * qty)} → ${fmtEur(lineTotal)}`
+      ? `${fmtUsd(effUnit * qty)} → ${fmtEur(lineTotal)}`
       : fmtEur(lineTotal);
 
     row.innerHTML = `
@@ -7766,9 +7784,12 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
     const patch   = item.customizations.find(c => c.type === 'patch');
 
     // ── Cobro: precio final que paga el cliente (número puro en €) ───────────
+    // Usar effectiveCartPrice para que el descuento activo se aplique aunque
+    // el ítem se añadiera al carrito antes de activar el cupón.
+    const effPrice = effectiveCartPrice(item);
     const cobro = socioMode
-      ? Math.round(item.priceUsd * EUR_RATE * 100) / 100
-      : item.priceUsd;
+      ? Math.round(effPrice * EUR_RATE * 100) / 100
+      : effPrice;
 
     // ── Coste nuevo proveedor 26/27 (valores internos en €, al céntimo) ───────
     const cats = item.cats || [];
