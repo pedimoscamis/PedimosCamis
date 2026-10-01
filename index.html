@@ -6795,15 +6795,15 @@ function renderAdminCatEditor(p) {
       if (priceBlock) priceBlock.textContent = editPrice + '€';
       const warning = document.getElementById('modal-stock-warning');
       if (warning) warning.style.display = editStock ? '' : 'none';
-      showToast('✓ Cambios guardados');
+      showToast('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M4 12l5 5L20 6"/></svg>Cambios guardados');
     };
 
     document.getElementById('admin-copy-json').onclick = () => {
       const modified = { ...p, nameEs: editName, nameEn: editName,
                          priceUsd: editPrice, avisoStock: editStock, cats: editCats };
       const json = JSON.stringify(modified, null, 2);
-      navigator.clipboard.writeText(json).then(() => showToast('✓ JSON copiado'))
-                                          .catch(() => { console.log(json); showToast('✓ JSON en consola (F12)'); });
+      navigator.clipboard.writeText(json).then(() => showToast('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M4 12l5 5L20 6"/></svg>JSON copiado'))
+                                          .catch(() => { console.log(json); showToast('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M4 12l5 5L20 6"/></svg>JSON en consola (F12)'); });
     };
   }
 
@@ -8176,14 +8176,14 @@ function submitUserCode() {
     discountMode       = false;  activeDiscountCode = null;
     variableCouponMode = false;  variableCouponPct  = 0;  activeCouponCode = null;
     localStorage.setItem('kz-socio-code', code); // persistir solo códigos SOCIO
-    showToast('✓ Modo socio activado');
+    showToast('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M4 12l5 5L20 6"/></svg>Modo socio activado');
   } else if (DISCOUNT_CODES.has(code)) {
     activeDiscountCode = code;
     discountMode       = true;
     socioMode          = false;  activeSocioCode    = null;
     variableCouponMode = false;  variableCouponPct  = 0;  activeCouponCode = null;
     // Código de descuento: NO sobrescribir localStorage
-    showToast('✓ Descuento 33% activado');
+    showToast('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M4 12l5 5L20 6"/></svg>Descuento 33% activado');
   } else {
     // Cupón variable
     activeCouponCode   = code;
@@ -8198,7 +8198,7 @@ function submitUserCode() {
     const usesRaw = getCouponUsesText(code).replace(/^ · /, '');
     if (usesRaw) parts.push(usesRaw);
     const toastExtra = parts.length ? ` · ${parts.join(' · ')}` : '';
-    showToast(`✓ Descuento ${Math.round(variablePct * 100)}% activado${toastExtra}`);
+    showToast(`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M4 12l5 5L20 6"/></svg>Descuento ${Math.round(variablePct * 100)}% activado${toastExtra}`);
   }
 
   document.getElementById('user-menu').classList.remove('open');
@@ -8404,7 +8404,7 @@ function jerseyIcon(size = 52) {
 let toastTimer;
 function showToast(msg) {
   const toast = document.getElementById('toast');
-  toast.textContent = msg;
+  toast.innerHTML = msg;
   toast.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
