@@ -8086,6 +8086,12 @@ async function submitOrderForm(e) {
   if (variableCouponMode && activeCouponCode)    incrementCouponUses(activeCouponCode);
   else if (discountMode && activeDiscountCode)   incrementCouponUses(activeDiscountCode);
 
+  // Pausa deliberada antes de mostrar "pedido enviado": al no esperar ya la
+  // respuesta de Apps Script, la transición era instantánea y no transmitía
+  // que el pedido se hubiera enviado de verdad. El fetch de arriba sigue su
+  // curso en segundo plano durante esta espera (keepalive), no se bloquea.
+  await new Promise(resolve => setTimeout(resolve, 1300));
+
   document.getElementById('order-form').style.display = 'none';
   document.getElementById('order-success').style.display = 'block';
   cart = [];
