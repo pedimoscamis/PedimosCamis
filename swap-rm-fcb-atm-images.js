@@ -14,7 +14,7 @@ const http    = require('http');
 const fs      = require('fs');
 const path    = require('path');
 const sharp   = require('sharp');
-const { S3Client, PutObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
 const NEWSUP_RAW     = path.join(__dirname, 'data', 'newsupplier-raw.json');
@@ -109,11 +109,6 @@ function extractAlbumImages(html, n = 4) {
   return urls;
 }
 
-async function objectExists(key) {
-  try { await client.send(new HeadObjectCommand({ Bucket: BUCKET, Key: key })); return true; }
-  catch (e) { if (e.$metadata?.httpStatusCode === 404 || e.name === 'NotFound') return false; throw e; }
-}
-
 async function convertAndUpload(buffer, key) {
   const webp = await sharp(buffer).resize({ width: MAX_WIDTH, withoutEnlargement: true }).webp({ quality: WEBP_QUALITY }).toBuffer();
   await client.send(new PutObjectCommand({
@@ -139,15 +134,19 @@ async function main() {
     const imgUrls = extractAlbumImages(html, 4);
     if (imgUrls.length === 0) { console.warn('  ⚠ sin imágenes, omitido'); continue; }
 
+    // Sufijo de versión: este script SIEMPRE sustituye una imagen que ya
+    // existía (a diferencia de download-newsupplier-images.js, que sube
+    // fotos de productos nuevos). Reutilizar la misma key con
+    // Cache-Control: immutable deja a cualquier navegador que ya la hubiera
+    // visto con la foto vieja en caché para siempre — así que cada
+    // sustitución usa una key nueva.
+    const version = Date.now();
     const gallery = [];
     let coverUrl = null;
     for (let j = 0; j < imgUrls.length; j++) {
       const photoN = j + 1;
-      const key = `${R2_PREFIX}/${prod.id}_photo${photoN}_resultado.webp`;
+      const key = `${R2_PREFIX}/${prod.id}_photo${photoN}_v${version}_resultado.webp`;
       try {
-        if (await objectExists(key)) {
-          console.log(`  ✓ ${key} ya existe, se sobreescribe`);
-        }
         const buffer = await fetchBuffer(imgUrls[j]);
         const size = await convertAndUpload(buffer, key);
         console.log(`  ↑ ${key} (${(size / 1024).toFixed(0)} KB)`);
