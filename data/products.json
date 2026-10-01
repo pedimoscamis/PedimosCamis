@@ -292993,7 +292993,8 @@
       "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/251838618_photo3_resultado.webp",
       "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/251838618_photo4_resultado.webp"
     ],
-    "supplier": "newsupplier"
+    "supplier": "newsupplier",
+    "hideGalleryForNormal": true
   },
   {
     "id": "251838538",

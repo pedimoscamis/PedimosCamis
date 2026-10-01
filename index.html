@@ -7062,6 +7062,13 @@ function buildModalCarousel(p) {
     slides.length = 2;
   }
 
+  // Productos marcados individualmente (hideGalleryForNormal): la propia
+  // 2ª foto tiene el mismo problema, así que al usuario normal solo se le
+  // muestra la portada. Socio y admin siguen viendo la galería completa.
+  if (p.hideGalleryForNormal && !socioMode && !adminMode && slides.length > 1) {
+    slides.length = 1;
+  }
+
   // Sin imagen: placeholder
   if (slides.length === 0) {
     const ph = document.createElement('div');
