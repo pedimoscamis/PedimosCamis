@@ -1463,6 +1463,18 @@
     }
     #order-success strong { display: block; font-size: 24px; margin-bottom: 10px; }
 
+    #order-error {
+      text-align: center; padding: 28px 16px;
+      font-size: 15px; line-height: 1.6; color: #ccc;
+    }
+    #order-error strong { display: block; font-size: 24px; margin-bottom: 10px; color: var(--accent); }
+    #order-error-retry {
+      margin-top: 16px; width: 100%; background: var(--accent); border: none;
+      color: #fff; font-family: 'Barlow', sans-serif; font-weight: 700;
+      font-size: 14px; padding: 13px; border-radius: 8px; cursor: pointer;
+    }
+    #order-error-retry:hover { background: var(--accent-dk); }
+
     #back-shopping-btn {
       width: 100%; background: none;
       border: 1px solid var(--border); color: var(--muted);
@@ -3488,6 +3500,12 @@
     <div id="order-success" style="display:none">
       <strong>✅ Pedido enviado</strong>
       <p style="font-size: 14px; font-weight: 300; margin-top: 8px; color: #aaaaaa;">Te iremos manteniendo informado sobre el estado de tu pedido por correo!</p>
+    </div>
+
+    <div id="order-error" style="display:none">
+      <strong>⚠️ No se ha podido enviar</strong>
+      <p style="font-size: 14px; font-weight: 300; margin-top: 8px; color: #aaaaaa;">Ha habido un problema al procesar tu pedido. No se ha registrado nada — puedes intentarlo de nuevo.</p>
+      <button id="order-error-retry" onclick="retryOrderSubmit()">Intentar de nuevo</button>
     </div>
 
     <button id="back-shopping-btn" onclick="closeCheckout()">
@@ -7240,7 +7258,6 @@ async function submitTracker() {
         const fecha        = (fechaRaw && !isNaN(fechaRaw))
           ? fechaRaw.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
           : (pedido.fecha || '—');
-        const btnId        = `ctt-btn-${idx}`;
 
         let cttHtml = '';
         if (showTracking) {
@@ -7248,14 +7265,10 @@ async function submitTracker() {
           cttHtml = `
             <div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(trackingCode)}</strong></div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button id="${btnId}" class="tracker-ctt-btn" onclick="fetchTracking('${escHtml(trackingCode)}', '${btnId}')">
-                📦 Rastrear envío
-              </button>
               <button id="${cttId}" class="tracker-ctt-btn" style="background:#2a6a4a;" onclick="openCttExpress('${escHtml(trackingCode)}', '${cttId}')">
-                🔗 Gestionar en CTT
+                🔗 Copiar código y rastrear en CTT
               </button>
-            </div>
-            <div id="tl-${btnId}"></div>`;
+            </div>`;
         }
 
         return `
@@ -7291,92 +7304,6 @@ function openCttExpress(trackingCode, btnId) {
     showToast(`Código: ${trackingCode} — cópialo manualmente.`);
   });
   window.open('https://www.cttexpress.com/localizador-de-envios/', '_blank', 'noopener');
-}
-
-// Traducción de los estados de la nueva web de rastreo (xxy819.github.io/track-website)
-const ESTADO_TRACKING_ES = {
-  '货物已揽收':              'Paquete recogido',
-  '货物到达操作中心/广州':   'Paquete llegó al centro logístico',
-  '货物离开操作中心/广州':   'Paquete salió del centro logístico',
-  '货物已入库/等待报关':     'Paquete almacenado, a la espera del despacho aduanero',
-  '出口报关完成':            'Despacho aduanero de exportación completado',
-  '等待航班/配载中':         'A la espera de vuelo, en proceso de carga',
-  '货物已出运/航班已离港':   'Paquete despachado, el vuelo ha salido',
-  '货物已出运/运输中':       'Paquete despachado, en tránsito',
-  '货物到达中转站/中转处理': 'Paquete llegó al centro de tránsito, en procesamiento',
-  '货物到达目的地/等待清关': 'Paquete llegó al país de destino, a la espera de aduana',
-  '清关中/等待海关查验':     'En trámite aduanero, a la espera de inspección',
-  '清关中/海关查验中':       'En trámite aduanero, inspección en curso',
-  '海关放行/清关完成':       'Aduana liberada, trámite completado',
-  '货物到达目的地处理中心':  'Paquete llegó al centro de procesamiento de destino',
-};
-
-// Ubicaciones en chino que necesitan traducción; el resto ya viene en formato occidental (Madrid, ES / Guangzhou…)
-const UBICACION_TRACKING_ES = {
-  '广州': 'Guangzhou',
-  '深圳': 'Shenzhen',
-};
-
-function translateEstadoTracking(desc) {
-  const limpio = (desc || '').trim();
-  return ESTADO_TRACKING_ES[limpio] || limpio || 'Estado desconocido';
-}
-
-function translateUbicacionTracking(loc) {
-  const limpio = (loc || '').trim();
-  return UBICACION_TRACKING_ES[limpio] || limpio;
-}
-
-async function fetchTracking(trackingCode, btnId) {
-  const btn  = document.getElementById(btnId);
-  const tlEl = document.getElementById(`tl-${btnId}`);
-  if (!btn || !tlEl) return;
-
-  btn.textContent = '⏳ Cargando...';
-  btn.disabled    = true;
-  tlEl.innerHTML  = '';
-
-  try {
-    const url  = `${WEBHOOK_URL}?action=proxyTrack&tracking=${encodeURIComponent(trackingCode)}`;
-    const res  = await fetch(url);
-    const json = await res.json();
-
-    if (!json.found || !json.data) throw new Error('empty');
-
-    const events = (json.data.records || []).map(r => ({
-      fecha:   r.time,
-      detalle: translateEstadoTracking(r.desc) + (r.location ? ` — ${translateUbicacionTracking(r.location)}` : ''),
-    }));
-    tlEl.innerHTML = renderTimeline(events);
-  } catch (_) {
-    tlEl.innerHTML = renderTimeline([]);
-  }
-
-  btn.textContent = '📦 Rastrear envío';
-  btn.disabled    = false;
-}
-
-function renderTimeline(events) {
-  if (!events || events.length === 0) {
-    return `<div class="tracker-tl-empty">📬 Información logística registrándose en el sistema central. Por favor, vuelve a consultar en unas horas.</div>`;
-  }
-  const items = events.map(ev => `
-    <li class="tl-item">
-      <div class="tl-dot-col">
-        <div class="tl-dot"></div>
-        <div class="tl-line"></div>
-      </div>
-      <div class="tl-body">
-        <div class="tl-date">${escHtml(ev.fecha)}</div>
-        <div class="tl-detail">${escHtml(ev.detalle)}</div>
-      </div>
-    </li>`).join('');
-
-  return `
-    <div class="tracker-timeline">
-      <div class="tracker-timeline-title">Historial del envío</div>
-      <ul class="tl-list">${items}</ul>
-    </div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -8066,36 +7993,48 @@ async function submitOrderForm(e) {
     });
   }
 
-  // ── Enviar únicamente al webhook de Google Apps Script ───────────────────
-  // no-cors: GAS no devuelve headers CORS → no podemos leer la respuesta, y
-  // con `await` el fetch NO resuelve hasta que Apps Script termina de
-  // procesar todo el POST (escribir en Sheets, etc.) — eso es lo que hacía
-  // que "Enviando…" se quedara mucho rato, no algo que dependa de nuestro
-  // código. Con keepalive:true el navegador garantiza que la petición se
-  // complete en segundo plano aunque cerremos la pantalla de éxito ya
-  // mismo, así que ya no hace falta esperarla para dar el pedido por hecho.
-  fetch(WEBHOOK_URL, {
-    method:    'POST',
-    mode:      'no-cors',
-    keepalive: true,
-    headers:   { 'Content-Type': 'text/plain;charset=utf-8' },
-    body:      JSON.stringify(payload),
-  }).catch(err => console.warn('Webhook de pedido: fallo en segundo plano', err));
+  // ── Enviar al webhook de Google Apps Script y esperar la respuesta real ───
+  // El tracker (submitTracker) ya demuestra que este Apps Script SÍ se puede
+  // leer con un fetch normal (sin mode:'no-cors') — no hay bloqueo CORS real.
+  // Aquí hacemos lo mismo: esperamos la respuesta de verdad (doPost tarda lo
+  // que tarde en escribir en Sheets y mandar los correos) y solo mostramos
+  // "pedido enviado" si Apps Script confirma status:"success". Si falla
+  // (red, excepción en el script, etc.) se muestra una pantalla de error y
+  // no se vacía el carrito ni se consume el cupón.
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body:    JSON.stringify(payload),
+    });
+    const resultado = await res.json();
+    if (resultado.status !== 'success') {
+      throw new Error(resultado.message || 'El servidor devolvió un error');
+    }
+  } catch (err) {
+    console.warn('Error al enviar el pedido:', err);
+    document.getElementById('order-form').style.display = 'none';
+    document.getElementById('order-error').style.display = 'block';
+    btn.disabled    = false;
+    btn.textContent = 'ENVIAR PEDIDO';
+    return;
+  }
 
   // Registrar uso del cupón en localStorage (solo al completar la compra)
   if (variableCouponMode && activeCouponCode)    incrementCouponUses(activeCouponCode);
   else if (discountMode && activeDiscountCode)   incrementCouponUses(activeDiscountCode);
 
-  // Pausa deliberada antes de mostrar "pedido enviado": al no esperar ya la
-  // respuesta de Apps Script, la transición era instantánea y no transmitía
-  // que el pedido se hubiera enviado de verdad. El fetch de arriba sigue su
-  // curso en segundo plano durante esta espera (keepalive), no se bloquea.
-  await new Promise(resolve => setTimeout(resolve, 1300));
-
   document.getElementById('order-form').style.display = 'none';
   document.getElementById('order-success').style.display = 'block';
   cart = [];
   saveCart();
+}
+
+/** Botón "Intentar de nuevo" de la pantalla de error: vuelve al formulario
+ *  (los datos introducidos siguen ahí) para que el usuario pueda reenviar. */
+function retryOrderSubmit() {
+  document.getElementById('order-error').style.display = 'none';
+  document.getElementById('order-form').style.display = '';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
