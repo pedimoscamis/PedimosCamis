@@ -7757,9 +7757,9 @@ function computeSupplierCostBase(name, cats) {
   cats = cats || [];
   if (cats.includes('nba')) return 15;                        // NBA: 15€ (sin cambios, fuera del alcance 26/27)
   if (isShortProduct({ nameEn: name, cats })) return 6;        // Shorts: 6€ (sin cambios, fuera del alcance 26/27)
-  if (PLAYER_RE.test(name)) return 10.36;                      // Versión Player
-  if (cats.includes('retro') || /\bretro\b/i.test(name)) return 12.95; // Versión Retro
-  return 7.70;                                                 // Versión Fan / por defecto
+  if (PLAYER_RE.test(name)) return 10.5;                       // Versión Player
+  if (cats.includes('retro') || /\bretro\b/i.test(name)) return 13; // Versión Retro
+  return 7.90;                                                 // Versión Fan / por defecto
 }
 
 /** Precio de coste mostrado en Modo Superadmin (base + manga larga, sin
@@ -7792,27 +7792,15 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
       : effPrice;
 
     // ── Coste nuevo proveedor 26/27 (valores internos en €, al céntimo) ───────
-    const cats = item.cats || [];
-    // Base según tipo/versión de producto
-    let costeBase;
-    if (cats.includes('nba')) {
-      costeBase = 15;                           // NBA: 15€ (sin cambios, fuera del alcance 26/27)
-    } else if (isShortProduct(item)) {
-      costeBase = 6;                            // Shorts: 6€ (sin cambios, fuera del alcance 26/27)
-    } else if (PLAYER_RE.test(item.name)) {
-      costeBase = 10.36;                        // Versión Player
-    } else if (cats.includes('retro') || /\bretro\b/i.test(item.name)) {
-      costeBase = 12.95;                        // Versión Retro
-    } else {
-      costeBase = 7.70;                         // Versión Fan / por defecto
-    }
+    const cats      = item.cats || [];
+    const costeBase = computeSupplierCostBase(item.name, cats);
     // Extras de personalización
     const hasDorsal     = dorsal && (dorsal.name || dorsal.number);
     const hasPatch      = patch && patch.label && patch.label !== 'Sin parches';
     const hasLongSleeve = LONG_SLEEVE_RE.test(item.name);
     const coste = Math.round((
       costeBase
-      + (hasDorsal ? 2.59 : 0)
+      + (hasDorsal ? 2.6 : 0)
       + (hasLongSleeve ? 2.59 : 0)
       + (hasPatch ? 0.86 : 0)
     ) * 100) / 100;
