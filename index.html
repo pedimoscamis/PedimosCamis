@@ -2824,7 +2824,7 @@
           <div id="user-code-error">Código no válido</div>
         </div>
         <div id="user-menu-active">
-          <div id="socio-active-label">✓ Modo socio activo</div>
+          <div id="socio-active-label">Modo socio activo</div>
           <div id="coupon-expiry-note" style="display:none"></div>
           <button id="user-logout-btn" onclick="deactivateSocio()">Cerrar sesión</button>
         </div>
@@ -2856,7 +2856,7 @@
         </button>
         <!-- Favoritos -->
         <button class="mob-menu-item" onclick="goFavorites(); closeMobUserMenu()">
-          <span class="mob-menu-item-icon">❤️</span>
+          <span class="mob-menu-item-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 20.3s-7.2-4.5-9.5-9.1A5 5 0 0112 6a5 5 0 019.5 5.2c-2.3 4.6-9.5 9.1-9.5 9.1z"/></svg></span>
           <span class="mob-menu-item-label">Favoritos</span>
           <span id="mob-fav-badge">0</span>
         </button>
@@ -2870,7 +2870,7 @@
         <hr class="mob-menu-divider">
         <!-- Código de acceso -->
         <div class="mob-menu-code-section">
-          <div class="mob-menu-code-title">🔑 Código de acceso</div>
+          <div class="mob-menu-code-title"><span class="mob-menu-lang-icon" style="display:inline-flex;vertical-align:-4px;margin-right:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="3.2"/><path d="M10.3 12.7L19 4M19 4v4M19 4h-4"/></svg></span>Código de acceso</div>
           <div id="mob-user-menu-login">
             <input type="text" id="mob-code-input" placeholder="Introduce tu código" autocomplete="off"
                    onkeydown="if(event.key==='Enter') submitMobCode()" />
@@ -2878,7 +2878,7 @@
             <div id="mob-code-error"></div>
           </div>
           <div id="mob-user-menu-active">
-            <div id="mob-socio-active-label">✓ Modo socio activo</div>
+            <div id="mob-socio-active-label">Modo socio activo</div>
             <button id="mob-user-logout-btn" onclick="deactivateSocio()">Cerrar sesión</button>
           </div>
         </div>
@@ -4217,6 +4217,12 @@ function catIconHtml(cat) {
     return `<span class="cat-icon cat-icon-svg" aria-hidden="true">${CAT_ICONS[cat]}</span>`;
   }
   return '';
+}
+
+// Icono de check usado en las etiquetas "Modo socio activo"/"Modo Superadmin"/
+// "Descuento X% activo" del menú de usuario (desktop y móvil).
+function checkIconHtml() {
+  return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M4 12l5 5L20 6"/></svg>';
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -8073,10 +8079,10 @@ function updateUserMenuState() {
   if (socioMode || discountMode || variableCouponMode || adminMode) {
     loginPanel.style.display  = 'none';
     activePanel.style.display = 'block';
-    label.textContent = discountMode        ? '✓ Descuento 33% activo'
-                      : variableCouponMode  ? `✓ Descuento ${Math.round(variableCouponPct*100)}% activo`
-                      : adminMode           ? '✓ Modo Superadmin'
-                      :                      '✓ Modo socio activo';
+    label.innerHTML = checkIconHtml() + (discountMode        ? 'Descuento 33% activo'
+                      : variableCouponMode  ? `Descuento ${Math.round(variableCouponPct*100)}% activo`
+                      : adminMode           ? 'Modo Superadmin'
+                      :                      'Modo socio activo');
     if (variableCouponMode && activeCouponCode) {
       const days     = getCouponDaysLeft(activeCouponCode);
       const usesText = getCouponUsesText(activeCouponCode);
@@ -8284,15 +8290,16 @@ function updateMobUserState() {
   // Actualizar etiqueta de modo activo
   const label = document.getElementById('mob-socio-active-label');
   if (label) {
-    label.textContent = discountMode
-      ? '✓ Descuento 33% activo'
+    const text = discountMode
+      ? 'Descuento 33% activo'
       : variableCouponMode
-        ? `✓ Descuento ${Math.round(variableCouponPct * 100)}% activo`
+        ? `Descuento ${Math.round(variableCouponPct * 100)}% activo`
         : adminMode
-          ? '✓ Modo Superadmin'
+          ? 'Modo Superadmin'
           : socioMode
-            ? '✓ Modo socio activo'
+            ? 'Modo socio activo'
             : '';
+    label.innerHTML = text ? checkIconHtml() + text : '';
   }
   // Actualizar indicador en el botón
   const mobBtn = document.getElementById('mob-user-btn');
