@@ -14754,8 +14754,8 @@
     "priceUsd": 8,
     "yupooCategory": "laliga",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/231561209?uid=1",
-    "img": "https://kitzone-images.alfonsohgolderos.workers.dev/231561209_resultado.webp",
-    "photos": 19,
+    "img": "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/231561209_photo1_resultado.webp",
+    "photos": 4,
     "sizes": [
       "S",
       "M",
@@ -266428,7 +266428,7 @@
     "yupooCategory": "laliga",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249544242?uid=1&isSubCate=false&referrercate=5179820",
     "img": "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/249544242_photo1_resultado.webp",
-    "photos": 17,
+    "photos": 4,
     "sizes": [
       "S",
       "M",
@@ -266575,7 +266575,7 @@
     "yupooCategory": "laliga",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543397?uid=1&isSubCate=false&referrercate=5179820",
     "img": "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/249543397_photo1_resultado.webp",
-    "photos": 21,
+    "photos": 4,
     "sizes": [
       "S",
       "M",
@@ -266605,7 +266605,7 @@
     "yupooCategory": "laliga",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249543369?uid=1&isSubCate=false&referrercate=5179820",
     "img": "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/249543369_photo1_resultado.webp",
-    "photos": 21,
+    "photos": 4,
     "sizes": [
       "S",
       "M",
@@ -267184,7 +267184,7 @@
     "yupooCategory": "laliga",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249542421?uid=1&isSubCate=false&referrercate=5179820",
     "img": "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/249542421_photo1_resultado.webp",
-    "photos": 21,
+    "photos": 4,
     "sizes": [
       "S",
       "M",
@@ -268504,7 +268504,7 @@
     "yupooCategory": "laliga",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249539957?uid=1&isSubCate=false&referrercate=5179820",
     "img": "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/249539957_photo1_resultado.webp",
-    "photos": 21,
+    "photos": 4,
     "sizes": [
       "S",
       "M",
@@ -292971,7 +292971,7 @@
     "yupooCategory": "laliga",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/251838618?uid=1&isSubCate=false&referrercate=5179820",
     "img": "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/251838618_photo1_resultado.webp",
-    "photos": 19,
+    "photos": 4,
     "sizes": [
       "S",
       "M",
@@ -292981,7 +292981,12 @@
       "3XL",
       "4XL"
     ],
-    "addedAt": 1789299164339
+    "addedAt": 1789299164339,
+    "gallery": [
+      "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/251838618_photo2_resultado.webp",
+      "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/251838618_photo3_resultado.webp",
+      "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/251838618_photo4_resultado.webp"
+    ]
   },
   {
     "id": "251838559",
@@ -293096,7 +293101,7 @@
     "yupooCategory": "laliga",
     "yupooUrl": "https://ggjersey.x.yupoo.com/albums/251838472?uid=1&isSubCate=false&referrercate=5179820",
     "img": "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/251838472_photo1_resultado.webp",
-    "photos": 5,
+    "photos": 4,
     "sizes": [
       "S",
       "M",
@@ -293106,7 +293111,12 @@
       "3XL",
       "4XL"
     ],
-    "addedAt": 1789299169339
+    "addedAt": 1789299169339,
+    "gallery": [
+      "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/251838472_photo2_resultado.webp",
+      "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/251838472_photo3_resultado.webp",
+      "https://kitzone-images.alfonsohgolderos.workers.dev/mascamis/251838472_photo4_resultado.webp"
+    ]
   },
   {
     "id": "251838468",
