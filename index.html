@@ -1883,29 +1883,29 @@
     #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
     /* ─── Featured Section (Mundial 2026 + Nueva Temporada 26/27 + Segunda Estrella) ─── */
-    #featured-section, #featured-newseason-section, #featured-secondstar-section {
+    #featured-section, #featured-newseason-section, #featured-secondstar-section, #featured-recientes-section {
       background: #131313;
       padding: 28px 0 32px;
       display: none;
       border-bottom: 1px solid var(--border);
     }
-    #featured-inner, #featured-newseason-inner, #featured-secondstar-inner {
+    #featured-inner, #featured-newseason-inner, #featured-secondstar-inner, #featured-recientes-inner {
       max-width: 1440px;
       margin: 0 auto;
       padding: 0 24px;
     }
-    #featured-header, #featured-newseason-header, #featured-secondstar-header {
+    #featured-header, #featured-newseason-header, #featured-secondstar-header, #featured-recientes-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 18px;
     }
-    #featured-title-wrap, #featured-newseason-title-wrap, #featured-secondstar-title-wrap {
+    #featured-title-wrap, #featured-newseason-title-wrap, #featured-secondstar-title-wrap, #featured-recientes-title-wrap {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    #featured-title, #featured-newseason-title, #featured-secondstar-title {
+    #featured-title, #featured-newseason-title, #featured-secondstar-title, #featured-recientes-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 26px;
       letter-spacing: 1px;
@@ -1921,7 +1921,7 @@
       vertical-align: middle;
       text-transform: uppercase;
     }
-    #featured-see-all, #featured-newseason-see-all, #featured-secondstar-see-all {
+    #featured-see-all, #featured-newseason-see-all, #featured-secondstar-see-all, #featured-recientes-see-all {
       background: none;
       border: 1px solid var(--border);
       color: var(--muted);
@@ -1934,8 +1934,8 @@
       white-space: nowrap;
       transition: border-color .2s, color .2s;
     }
-    #featured-see-all:hover, #featured-newseason-see-all:hover, #featured-secondstar-see-all:hover { border-color: var(--accent); color: var(--text); }
-    #featured-scroll, #featured-newseason-scroll, #featured-secondstar-scroll {
+    #featured-see-all:hover, #featured-newseason-see-all:hover, #featured-secondstar-see-all:hover, #featured-recientes-see-all:hover { border-color: var(--accent); color: var(--text); }
+    #featured-scroll, #featured-newseason-scroll, #featured-secondstar-scroll, #featured-recientes-scroll {
       display: flex;
       gap: 14px;
       overflow-x: auto;
@@ -1943,8 +1943,8 @@
       scrollbar-width: thin;
       scrollbar-color: #333 transparent;
     }
-    #featured-scroll::-webkit-scrollbar, #featured-newseason-scroll::-webkit-scrollbar, #featured-secondstar-scroll::-webkit-scrollbar { height: 4px; }
-    #featured-scroll::-webkit-scrollbar-thumb, #featured-newseason-scroll::-webkit-scrollbar-thumb, #featured-secondstar-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    #featured-scroll::-webkit-scrollbar, #featured-newseason-scroll::-webkit-scrollbar, #featured-secondstar-scroll::-webkit-scrollbar, #featured-recientes-scroll::-webkit-scrollbar { height: 4px; }
+    #featured-scroll::-webkit-scrollbar-thumb, #featured-newseason-scroll::-webkit-scrollbar-thumb, #featured-secondstar-scroll::-webkit-scrollbar-thumb, #featured-recientes-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
     .featured-card {
       flex: 0 0 168px;
       background: var(--card);
@@ -2969,6 +2969,19 @@
   </div>
 </section>
 
+<!-- ─── Featured: Nuevas Incorporaciones ──────────────────────────── -->
+<section id="featured-recientes-section">
+  <div id="featured-recientes-inner">
+    <div id="featured-recientes-header">
+      <div id="featured-recientes-title-wrap">
+        <span id="featured-recientes-title">NUEVAS INCORPORACIONES</span>
+      </div>
+      <button id="featured-recientes-see-all" onclick="setCategory('recientes')">Ver todas →</button>
+    </div>
+    <div id="featured-recientes-scroll"></div>
+  </div>
+</section>
+
 <!-- ─── Súper Flash Event ────────────────────────────────────────────── -->
 <!-- Para retirar el evento: SUPER_FLASH_ACTIVE = false en el JS. La estructura CSS queda intacta para reutilizarla. -->
 <section id="super-flash-section">
@@ -3836,6 +3849,7 @@ const T = {
     featured_title: 'MUNDIAL 2026',
     featured_newseason_title: 'NUEVA TEMPORADA 26/27',
     featured_secondstar_title: 'SEGUNDA ESTRELLA',
+    featured_recientes_title: 'NUEVAS INCORPORACIONES',
     featured_see_all: 'Ver todas →',
     upsell_shipping: (n) => `🚚 ¡Estás a solo <strong>${n} camiseta${n === 1 ? '' : 's'}</strong> del envío <strong>GRATIS</strong>!`,
     label_email: 'Correo electrónico *',
@@ -3912,6 +3926,7 @@ const T = {
     featured_title: 'WORLD CUP 2026',
     featured_newseason_title: 'NEW SEASON 26/27',
     featured_secondstar_title: 'SECOND STAR',
+    featured_recientes_title: 'NEW ARRIVALS',
     featured_see_all: 'View all →',
     upsell_shipping: (n) => `🚚 You're only <strong>${n} shirt${n === 1 ? '' : 's'}</strong> away from <strong>FREE</strong> shipping!`,
     label_email: 'Email *',
@@ -5171,6 +5186,16 @@ function getFiltered() {
     });
   }
 
+  // Vista Nuevas Incorporaciones: todo el catálogo ordenado por fecha de
+  // inclusión, de más reciente a más antigua. No es una categoría real (no
+  // tiene pastilla en la barra) — solo se llega aquí vía "Ver todas" en el
+  // escaparate de la home.
+  if (activeCat === 'recientes') {
+    let base = allProducts.filter(p => p.img).filter(matchesSearch);
+    const filtered = hasActiveFilters() ? base.filter(matchesFilter) : base;
+    return filtered.slice().sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+  }
+
   // Vista Mundial 2026: equipaciones 2026 en orden canónico, sin retros del escaparate,
   // con España "2 estrellas" siempre primero.
   if (activeCat === 'mundial2026') {
@@ -5549,6 +5574,72 @@ function renderFeaturedNewSeason() {
   }
 
   const items = getNewSeasonFeaturedItems(12);
+  if (items.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  scroll.innerHTML = '';
+  for (const p of items) {
+    const price = getDisplayPrice(p);
+    let priceHtml;
+    if (discountMode) {
+      const discounted = getDiscountedPrice(price);
+      priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">-33%</span>`;
+    } else if (variableCouponMode) {
+      const discounted = getVariableCouponPrice(price);
+      const pctLabel   = `-${Math.round(variableCouponPct * 100)}%`;
+      priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">${pctLabel}</span>`;
+    } else {
+      const { main } = t().price_fmt(price);
+      priceHtml = main;
+    }
+    const isPlayer = PLAYER_RE.test(p.nameEn);
+    const card = document.createElement('div');
+    card.className = 'featured-card';
+    card.onclick   = () => openModal(p);
+    card.innerHTML = `
+      <div class="featured-card-img-wrap">
+        ${p.img
+          ? `<img class="featured-card-img lazy" data-src="${p.img}" alt="${escHtml(p.nameEn)}" loading="lazy" onerror="this.style.display='none'">`
+          : jerseyIcon(56)}
+      </div>
+      <div class="featured-card-body">
+        <div class="featured-card-name">${escHtml(traducirNombre(p.nameEn))}</div>
+        <div class="featured-card-price">
+          ${priceHtml}
+          ${isPlayer ? '<span class="badge-player">PLAYER</span>' : ''}
+        </div>
+      </div>`;
+    scroll.appendChild(card);
+  }
+
+  if (imgObserver) {
+    scroll.querySelectorAll('img.lazy[data-src]').forEach(img => imgObserver.observe(img));
+  }
+
+  section.style.display = 'block';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FEATURED SECTION — Nuevas Incorporaciones (últimos productos añadidos)
+// ═══════════════════════════════════════════════════════════════════════════
+function renderFeaturedRecientes() {
+  const section = document.getElementById('featured-recientes-section');
+  const scroll  = document.getElementById('featured-recientes-scroll');
+  const isHome  = activeCat === 'all' && !searchQuery;
+
+  if (!isHome || allProducts.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+
+  const items = allProducts
+    .filter(p => p.img)
+    .slice()
+    .sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0))
+    .slice(0, 12);
+
   if (items.length === 0) {
     section.style.display = 'none';
     return;
@@ -6110,6 +6201,7 @@ function renderAll() {
   renderGallery();
   renderFeaturedSecondStar();
   renderFeaturedNewSeason();
+  renderFeaturedRecientes();
   renderFeatured();
   renderSuperFlash();
   renderUclFlash();
@@ -8316,6 +8408,10 @@ function updateLangUI() {
   if (featuredSecondStarTitle) featuredSecondStarTitle.textContent = t().featured_secondstar_title;
   const featuredSecondStarSeeAll = document.getElementById('featured-secondstar-see-all');
   if (featuredSecondStarSeeAll) featuredSecondStarSeeAll.textContent = t().featured_see_all;
+  const featuredRecientesTitle = document.getElementById('featured-recientes-title');
+  if (featuredRecientesTitle) featuredRecientesTitle.textContent = t().featured_recientes_title;
+  const featuredRecientesSeeAll = document.getElementById('featured-recientes-see-all');
+  if (featuredRecientesSeeAll) featuredRecientesSeeAll.textContent = t().featured_see_all;
   document.querySelectorAll('[data-i18n="label_email"]').forEach(el => el.textContent = t().label_email);
   const emailErrEl = document.getElementById('form-correo-error');
   if (emailErrEl) emailErrEl.textContent = t().error_email;
