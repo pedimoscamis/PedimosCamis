@@ -1,7 +1,9 @@
 'use strict';
 /**
- * Descarga portada + 3 fotos de galería para los productos recién
- * importados del nuevo proveedor (supplier: 'newsupplier', sin img todavía),
+ * Descarga portada + 1 foto de galería (solo 2 fotos — las fotos 3/4 de
+ * este proveedor dejan ver su propia página de fondo, y además ahorra
+ * almacenamiento) para los productos recién importados del nuevo proveedor
+ * (supplier: 'newsupplier', sin img todavía),
  * las convierte a webp y las sube a R2 bajo mascamis/{id}_photoN_resultado.webp,
  * usando el dominio del Worker (no r2.dev, que es solo de desarrollo).
  *
@@ -159,7 +161,7 @@ async function main() {
     const html = await fetchPage(p.yupooUrl);
     if (!html) { console.log(`  ⚠ [${p.id}] página no cargó, omitido`); errors++; return; }
 
-    const imgUrls = extractAlbumImages(html, 4);
+    const imgUrls = extractAlbumImages(html, 2);
     if (imgUrls.length === 0) { console.log(`  ⚠ [${p.id}] sin imágenes en el álbum, omitido`); noPhotos++; return; }
 
     const gallery = [];

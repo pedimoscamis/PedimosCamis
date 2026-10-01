@@ -131,7 +131,7 @@ async function main() {
     console.log(`\n[${m.label}] ${prod.nameEn}  (${m.existing} <- ${m.newAlbum})`);
     const html = await fetchPage(album.yupooUrl);
     if (!html) { console.warn('  ⚠ no se pudo cargar el álbum, omitido'); continue; }
-    const imgUrls = extractAlbumImages(html, 4);
+    const imgUrls = extractAlbumImages(html, 2);
     if (imgUrls.length === 0) { console.warn('  ⚠ sin imágenes, omitido'); continue; }
 
     // Sufijo de versión: este script SIEMPRE sustituye una imagen que ya
