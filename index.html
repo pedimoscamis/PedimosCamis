@@ -6935,6 +6935,13 @@ function buildModalCarousel(p) {
     }
   }
 
+  // Las fotos 3ª y 4ª del nuevo proveedor dejan ver de fondo su propia
+  // página — se ocultan al usuario normal (no socio, no admin) en los
+  // productos cuyas fotos vienen de ahí, dejando solo portada + 1ª galería.
+  if (p.supplier === 'newsupplier' && !socioMode && !adminMode && slides.length > 2) {
+    slides.length = 2;
+  }
+
   // Sin imagen: placeholder
   if (slides.length === 0) {
     const ph = document.createElement('div');
