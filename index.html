@@ -5170,7 +5170,7 @@ function getFiltered() {
 
   // Vista Shorts: usa isShortProduct() para máxima flexibilidad
   if (activeCat === 'shorts') {
-    let base = allProducts.filter(isShortProduct).filter(matchesSearch);
+    let base = allProducts.filter(isShortProduct).filter(p => p.img || searchQuery).filter(matchesSearch);
     const filtered = hasActiveFilters() ? base.filter(matchesFilter) : base;
     if (seasonSortDir === 'relevance') {
       return filtered.slice().sort(bigClubsFirstComparator);
@@ -5199,7 +5199,7 @@ function getFiltered() {
   // Vista Mundial 2026: equipaciones 2026 en orden canónico, sin retros del escaparate,
   // con España "2 estrellas" siempre primero.
   if (activeCat === 'mundial2026') {
-    const base = getMundialItems().filter(p => !(p.cats || []).includes('retro'));
+    const base = getMundialItems().filter(p => !(p.cats || []).includes('retro') && (p.img || searchQuery));
     const filtered = hasActiveFilters() ? base.filter(matchesFilter) : base;
     const twoStar = filtered.filter(isSpainTwoStar).sort((a, b) => homeAwayVariantTier(a.nameEn) - homeAwayVariantTier(b.nameEn));
     const rest    = filtered.filter(p => !isSpainTwoStar(p));
@@ -5213,6 +5213,9 @@ function getFiltered() {
       const cats = p.cats || [];
       if (cats.includes('streetwear') || cats.includes('windbreaker') || cats.includes('nba')) return false;
     }
+    // Productos sin foto: no deben aparecer navegando (home, categorías) —
+    // solo si el usuario los busca explícitamente por nombre.
+    if (!p.img && !searchQuery) return false;
     if (!matchesSearch(p)) return false;
     // Aplicar filtros activos tanto en categorías como en resultados de búsqueda
     if ((activeCat !== 'all' || searchQuery) && hasActiveFilters() && !matchesFilter(p)) return false;
