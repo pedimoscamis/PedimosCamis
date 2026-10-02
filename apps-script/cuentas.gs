@@ -87,14 +87,16 @@ function solicitarCodigo(emailRaw) {
   cache.remove('att:' + email);
 
   var html = '<div style="background:#f4f4f4;padding:20px;font-family:Arial,Helvetica,sans-serif;">' +
-    '<div style="max-width:480px;margin:0 auto;background:#fff;border-radius:8px;border:1px solid #e0e0e0;overflow:hidden;">' +
-    '<div style="background:#080808;padding:22px;text-align:center;color:#fff;font-size:22px;font-weight:bold;letter-spacing:1px;">PEDIMOS<span style="color:#e8173c;">CAMIS?</span></div>' +
-    '<div style="padding:28px;color:#333;line-height:1.6;">' +
+    '<div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:8px;border:1px solid #e0e0e0;overflow:hidden;">' +
+    '<div style="background-color:#080808;padding:25px;text-align:center;"><img src="https://res.cloudinary.com/dbeystyls/image/upload/v1779456332/ChatGPT_Image_22_may_2026_15_11_57_asrrdf.png" alt="PEDIMOSCAMIS?" style="max-width:280px;height:auto;display:block;margin:0 auto;"></div>' +
+    '<div style="padding:30px;color:#333333;line-height:1.6;">' +
     '<h2 style="margin-top:0;color:#080808;">Tu código de acceso</h2>' +
     '<p>Usa este código para entrar en tu cuenta. Caduca en 10 minutos.</p>' +
     '<p style="font-size:34px;font-weight:bold;letter-spacing:8px;text-align:center;background:#f9f9f9;border-radius:6px;padding:14px;margin:20px 0;">' + code + '</p>' +
     '<p style="font-size:12px;color:#888;">Si no lo has pedido tú, ignora este correo.</p>' +
-    '</div></div></div>';
+    '</div>' +
+    '<div style="background-color:#eeeeee;padding:20px;text-align:center;font-size:12px;color:#888888;"><p style="margin:0;">¡Muchas gracias por tu confianza!</p></div>' +
+    '</div></div>';
   MailApp.sendEmail({ to: email, subject: 'Tu código de acceso: ' + code, htmlBody: html });
   return _json({ status: 'success' });
 }
