@@ -3165,6 +3165,7 @@
         <button class="account-tab" data-tab="data" onclick="acctTab('data')">Mis datos</button>
       </div>
       <div id="account-tab-orders"></div>
+      <button class="account-link" id="account-refresh" onclick="acctLoadMain(true)" style="display:block;margin:12px auto 0">↻ Actualizar pedidos</button>
       <div id="account-tab-data" style="display:none">
         <p class="account-sub" style="margin-bottom:14px">Se rellenan solos en el checkout.</p>
         <label class="account-label" for="acd-nombre">Nombre completo</label><input id="acd-nombre" class="account-input" autocomplete="name" />
@@ -7919,14 +7920,25 @@ async function acctLogout() {
 function acctTab(tab) {
   document.querySelectorAll('.account-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.getElementById('account-tab-orders').style.display = tab === 'orders' ? 'block' : 'none';
+  document.getElementById('account-refresh').style.display = tab === 'orders' ? 'block' : 'none';
   document.getElementById('account-tab-data').style.display = tab === 'data' ? 'block' : 'none';
   acctMsg('');
 }
 
 const ACCT_PROFILE_FIELDS = ['nombre', 'telefono', 'pais', 'region', 'ciudad', 'camino', 'cp'];
 
-async function acctLoadMain() {
+async function acctLoadMain(manual) {
   const box = document.getElementById('account-tab-orders');
+  const rbtn = document.getElementById('account-refresh');
+  if (manual) { rbtn.disabled = true; rbtn.textContent = 'Actualizando…'; }
+  try { await acctLoadMainInner(box); } finally { rbtn.disabled = false; rbtn.textContent = '↻ Actualizar pedidos'; }
+}
+// Al volver a la pestaña con el modal abierto, refrescar solo
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && acctSession && document.getElementById('account-overlay').classList.contains('open')
+      && document.getElementById('account-view-main').style.display !== 'none') acctLoadMain();
+});
+async function acctLoadMainInner(box) {
   if (!acctData) box.innerHTML = '<div class="account-sub">Cargando tus pedidos…</div>';
   const ok = await acctRefresh(false);
   if (!acctSession) return;
