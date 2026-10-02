@@ -1888,7 +1888,7 @@
     .account-order-total { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
     .account-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
     .account-label { display: block; font-size: 12px; color: var(--muted); margin: 0 0 4px; }
-    #account-code-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+    #account-code-section { margin-top: 4px; }
     .account-code-title { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
     #account-code-section .account-code-row { display: flex; gap: 8px; }
     #account-code-section #user-code-input { margin-bottom: 0; flex: 1; width: auto; }
@@ -3141,6 +3141,10 @@
 <div id="account-overlay" onclick="if(event.target===this) closeAccount()">
   <div id="account-modal">
     <button id="account-close" onclick="closeAccount()" aria-label="Cerrar">✕</button>
+    <div id="account-out-tabs" class="account-tabs">
+      <button class="account-tab active" data-otab="login" onclick="acctOutTab('login')">Entrar</button>
+      <button class="account-tab" data-otab="code" onclick="acctOutTab('code')">Código de acceso</button>
+    </div>
     <div id="account-view-email">
       <h2>MI CUENTA</h2>
       <p class="account-sub">Entra con tu correo, sin contraseña: te enviamos un código. Verás todos tus pedidos, tus favoritos en cualquier dispositivo y harás el checkout en un clic.</p>
@@ -3163,6 +3167,7 @@
       <div class="account-tabs">
         <button class="account-tab active" data-tab="orders" onclick="acctTab('orders')">Mis pedidos</button>
         <button class="account-tab" data-tab="data" onclick="acctTab('data')">Mis datos</button>
+        <button class="account-tab" data-tab="code" onclick="acctTab('code')">Código de acceso</button>
       </div>
       <div id="account-tab-orders"></div>
       <button class="account-link" id="account-refresh" onclick="acctLoadMain(true)" style="display:block;margin:12px auto 0">↻ Actualizar pedidos</button>
@@ -3180,8 +3185,8 @@
         <button class="account-primary" id="acd-save" onclick="acctSaveProfile()">Guardar mis datos</button>
       </div>
     </div>
-    <div id="account-code-section">
-      <div class="account-code-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><circle cx="7" cy="14.5" r="3.3"/><path d="M9.3 12.2L18 3.5M15.3 6.2l2 2M17.6 3.9l2 2"/></svg>Código de acceso</div>
+    <div id="account-code-section" style="display:none">
+      <div class="account-code-title" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><circle cx="7" cy="14.5" r="3.3"/><path d="M9.3 12.2L18 3.5M15.3 6.2l2 2M17.6 3.9l2 2"/></svg>Código de acceso</div>
       <div id="user-menu-login">
         <div class="account-code-row">
           <input type="text" id="user-code-input" class="account-input" placeholder="Introduce tu código" autocomplete="off" onkeydown="if(event.key==='Enter') submitUserCode()" />
@@ -7843,9 +7848,27 @@ function acctMsg(text, kind) {
   const el = document.getElementById('account-msg');
   el.textContent = text || ''; el.className = kind || '';
 }
+let acctPanel = 'login';   // 'login' | 'code' (pestañas de sin sesión)
+let acctMainTab = 'orders';
 function acctShow(view) {
-  ['email', 'code', 'main'].forEach(v => { document.getElementById('account-view-' + v).style.display = v === view ? 'block' : 'none'; });
+  acctPanel = 'login';
+  ['email', 'code', 'main'].forEach(v => { const el = document.getElementById('account-view-' + v); delete el.dataset.hid; el.style.display = v === view ? 'block' : 'none'; });
+  acctSyncCode();
   acctMsg('');
+}
+function acctOutTab(t) { acctPanel = t; acctSyncCode(); acctMsg(''); }
+/** Un único bloque "Código de acceso" que sirve de pestaña con y sin sesión. */
+function acctSyncCode() {
+  const logged = document.getElementById('account-view-main').style.display === 'block';
+  const showCode = logged ? acctMainTab === 'code' : acctPanel === 'code';
+  document.getElementById('account-out-tabs').style.display = logged ? 'none' : 'flex';
+  document.querySelectorAll('[data-otab]').forEach(b => b.classList.toggle('active', b.dataset.otab === acctPanel));
+  document.getElementById('account-code-section').style.display = showCode ? 'block' : 'none';
+  if (!logged) ['email', 'code'].forEach(v => {
+    const el = document.getElementById('account-view-' + v);
+    if (showCode) el.dataset.hid = el.style.display, el.style.display = 'none';
+    else if (el.dataset.hid !== undefined) { el.style.display = el.dataset.hid; delete el.dataset.hid; }
+  });
 }
 function openAccount() {
   const ui = document.getElementById('user-code-input'); if (ui) ui.value = '';
@@ -7918,7 +7941,9 @@ async function acctLogout() {
 }
 
 function acctTab(tab) {
-  document.querySelectorAll('.account-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  acctMainTab = tab;
+  document.getElementById('account-code-section').style.display = tab === 'code' ? 'block' : 'none';
+  document.querySelectorAll('.account-tab[data-tab]').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.getElementById('account-tab-orders').style.display = tab === 'orders' ? 'block' : 'none';
   document.getElementById('account-refresh').style.display = tab === 'orders' ? 'block' : 'none';
   document.getElementById('account-tab-data').style.display = tab === 'data' ? 'block' : 'none';
