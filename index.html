@@ -1829,6 +1829,67 @@
     #tracker-btn:hover { border-color: var(--accent); color: var(--text); }
     @media (max-width: 500px) { #tracker-btn .tracker-btn-text { display: none; } }
 
+    /* ─── Cuenta de cliente ─────────────────────────────────── */
+    #account-btn {
+      display: flex; align-items: center; gap: 5px; position: relative;
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); font-family: 'Barlow', sans-serif;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 12px; border-radius: 20px;
+      cursor: pointer; white-space: nowrap;
+      transition: border-color .18s, color .18s;
+    }
+    #account-btn:hover { border-color: var(--accent); color: var(--text); }
+    #account-btn.logged { border-color: var(--accent); color: var(--text); }
+    @media (max-width: 500px) { #account-btn .account-btn-text { display: none; } }
+    #account-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.78);
+      z-index: 9450; align-items: center; justify-content: center; padding: 16px;
+    }
+    #account-overlay.open { display: flex; }
+    #account-modal {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      width: 100%; max-width: 480px; padding: 32px 28px 26px; position: relative;
+      max-height: 88vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    }
+    #account-close {
+      position: absolute; top: 14px; right: 16px; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; line-height: 1; transition: color .2s;
+    }
+    #account-close:hover { color: var(--accent); }
+    #account-modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1px; color: var(--text); margin: 0 0 6px; }
+    .account-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+    .account-input {
+      width: 100%; background: var(--card); border: 1px solid var(--border); color: var(--text);
+      padding: 11px 14px; border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 14px;
+      margin-bottom: 10px; box-sizing: border-box; transition: border-color .2s;
+    }
+    .account-input:focus { outline: none; border-color: var(--accent); }
+    #account-code-input { text-align: center; font-size: 24px; letter-spacing: 8px; font-weight: 700; }
+    .account-primary {
+      width: 100%; background: var(--accent); border: none; color: #fff; padding: 12px; border-radius: 8px;
+      font-family: 'Barlow', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .18s;
+    }
+    .account-primary:hover { background: var(--accent-dk); }
+    .account-primary:disabled { background: #555; cursor: not-allowed; }
+    .account-link { background: none; border: none; color: var(--muted); font-size: 13px; cursor: pointer; padding: 8px 0 0; text-decoration: underline; font-family: 'Barlow', sans-serif; }
+    .account-link:hover { color: var(--text); }
+    #account-msg { font-size: 13px; margin-top: 10px; min-height: 18px; }
+    #account-msg.err { color: #e05; }
+    #account-msg.ok { color: #56e0b0; }
+    .account-nonote { margin-top: 18px; padding: 10px 12px; border-radius: 8px; background: var(--card); border: 1px solid var(--border); font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .account-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; padding-right: 26px; }
+    .account-email { font-size: 13px; color: var(--muted); word-break: break-all; }
+    .account-tabs { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .account-tab { background: none; border: none; color: var(--muted); font-family: 'Barlow', sans-serif; font-size: 14px; font-weight: 700; padding: 8px 12px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .account-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+    .account-order-items { font-size: 12px; color: var(--muted); line-height: 1.6; margin: 0 0 10px; }
+    .account-order-total { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+    .account-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+    .account-label { display: block; font-size: 12px; color: var(--muted); margin: 0 0 4px; }
+    .account-save-chk { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted); margin: 4px 0 12px; cursor: pointer; line-height: 1.4; }
+    .account-save-chk input { margin-top: 2px; accent-color: var(--accent); }
+
     /* ─── Súper Flash Section ───────────────────────────────── */
     #super-flash-section {
       display: none;
@@ -2686,6 +2747,7 @@
     @media (max-width: 768px) {
       #lang-toggle,
       #tracker-btn,
+      #account-btn,
       #fav-btn,
       #user-btn-wrap { display: none !important; }
 
@@ -2890,6 +2952,10 @@
         </div>
       </div>
     </div>
+    <button id="account-btn" onclick="openAccount()" title="Mi cuenta">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span class="account-btn-text" id="account-btn-text">Entrar</span>
+    </button>
     <button id="tracker-btn" onclick="openTracker()" title="Sigue tu pedido">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.2L12 4l8.5 4.2M3.5 8.2v8.3L12 20.8l8.5-4.3V8.2M3.5 8.2L12 12.4l8.5-4.2M12 12.4v8.4"/></svg>
       <span class="tracker-btn-text">Sigue tu pedido</span>
@@ -2908,6 +2974,12 @@
         <span id="mob-user-dot"></span>
       </button>
       <div id="mob-user-dropdown">
+        <!-- Cuenta -->
+        <button class="mob-menu-item" onclick="openAccount(); closeMobUserMenu()">
+          <span class="mob-menu-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>
+          <span class="mob-menu-item-label" id="mob-account-label">Mi cuenta</span>
+          <span class="mob-menu-item-arrow">›</span>
+        </button>
         <!-- Tracker -->
         <button class="mob-menu-item" onclick="openTracker(); closeMobUserMenu()">
           <span class="mob-menu-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.2L12 4l8.5 4.2M3.5 8.2v8.3L12 20.8l8.5-4.3V8.2M3.5 8.2L12 12.4l8.5-4.2M12 12.4v8.4"/></svg></span>
@@ -3090,6 +3162,52 @@
            onkeydown="if(event.key==='Enter') submitTracker()" />
     <button id="tracker-submit" onclick="submitTracker()">Rastrear Pedido</button>
     <div id="tracker-result"></div>
+  </div>
+</div>
+
+<!-- ─── Cuenta de cliente (opcional) ──────────────────────────────── -->
+<div id="account-overlay" onclick="if(event.target===this) closeAccount()">
+  <div id="account-modal">
+    <button id="account-close" onclick="closeAccount()" aria-label="Cerrar">✕</button>
+    <div id="account-view-email">
+      <h2>MI CUENTA</h2>
+      <p class="account-sub">Entra con tu correo, sin contraseña: te enviamos un código. Verás todos tus pedidos, tus favoritos en cualquier dispositivo y harás el checkout en un clic.</p>
+      <input id="account-email-input" class="account-input" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email" onkeydown="if(event.key==='Enter') acctRequestCode()" />
+      <button id="account-email-submit" class="account-primary" onclick="acctRequestCode()">Enviarme el código</button>
+      <div class="account-nonote">La cuenta es opcional: puedes comprar y seguir tu pedido sin crearla.</div>
+    </div>
+    <div id="account-view-code" style="display:none">
+      <h2>REVISA TU CORREO</h2>
+      <p class="account-sub" id="account-code-sub">Introduce el código de 6 dígitos que te hemos enviado.</p>
+      <input id="account-code-input" class="account-input" type="text" inputmode="numeric" maxlength="6" placeholder="······" autocomplete="one-time-code" onkeydown="if(event.key==='Enter') acctVerifyCode()" />
+      <button id="account-code-submit" class="account-primary" onclick="acctVerifyCode()">Entrar</button>
+      <button class="account-link" onclick="acctBackToEmail()">Usar otro correo / reenviar código</button>
+    </div>
+    <div id="account-view-main" style="display:none">
+      <div class="account-head">
+        <div><h2 style="margin-bottom:2px">MI CUENTA</h2><div class="account-email" id="account-email-label"></div></div>
+        <button class="account-link" style="padding:0" onclick="acctLogout()">Cerrar sesión</button>
+      </div>
+      <div class="account-tabs">
+        <button class="account-tab active" data-tab="orders" onclick="acctTab('orders')">Mis pedidos</button>
+        <button class="account-tab" data-tab="data" onclick="acctTab('data')">Mis datos</button>
+      </div>
+      <div id="account-tab-orders"></div>
+      <div id="account-tab-data" style="display:none">
+        <p class="account-sub" style="margin-bottom:14px">Se rellenan solos en el checkout.</p>
+        <label class="account-label" for="acd-nombre">Nombre completo</label><input id="acd-nombre" class="account-input" autocomplete="name" />
+        <label class="account-label" for="acd-telefono">Teléfono</label><input id="acd-telefono" class="account-input" autocomplete="tel" inputmode="numeric" />
+        <div class="account-grid2">
+          <div><label class="account-label" for="acd-pais">País</label><input id="acd-pais" class="account-input" autocomplete="country-name" /></div>
+          <div><label class="account-label" for="acd-region">Región / Estado</label><input id="acd-region" class="account-input" autocomplete="address-level1" /></div>
+          <div><label class="account-label" for="acd-ciudad">Ciudad</label><input id="acd-ciudad" class="account-input" autocomplete="address-level2" /></div>
+          <div><label class="account-label" for="acd-cp">Código postal</label><input id="acd-cp" class="account-input" autocomplete="postal-code" inputmode="numeric" /></div>
+        </div>
+        <label class="account-label" for="acd-camino">Dirección (calle y número)</label><input id="acd-camino" class="account-input" autocomplete="street-address" />
+        <button class="account-primary" id="acd-save" onclick="acctSaveProfile()">Guardar mis datos</button>
+      </div>
+    </div>
+    <div id="account-msg"></div>
   </div>
 </div>
 
@@ -3552,6 +3670,11 @@
         <textarea id="form-notas" name="notas" rows="3"
                   placeholder="Dudas, preferencias de envío, talla alternativa…"></textarea>
       </div>
+
+      <label class="account-save-chk" id="save-profile-wrap">
+        <input type="checkbox" id="save-profile-chk" checked />
+        <span id="save-profile-text">Recordar mis datos para el próximo pedido</span>
+      </label>
 
       <div class="trust-line" style="flex-direction:column; gap:2px; margin-top:14px; margin-bottom:14px; padding:10px 14px; border-radius:8px; background:linear-gradient(135deg, rgba(56,189,148,.13), rgba(56,142,189,.10)); border:1px solid rgba(56,189,148,.35); color:#a8f0d8;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="margin-bottom:2px;">
@@ -4092,6 +4215,7 @@ let favorites      = new Set(JSON.parse(localStorage.getItem('kz-fav') || '[]'))
 
 function saveFavorites() {
   localStorage.setItem('kz-fav', JSON.stringify([...favorites]));
+  if (typeof acctScheduleFavSync === 'function') acctScheduleFavSync();
 }
 
 function updateFavBadge() {
@@ -4193,6 +4317,7 @@ async function init() {
   }
   updateUserBtn();
   updateUserMenuState();
+  acctInit();
 
   updateLangUI();
   buildCatBar();
@@ -7641,6 +7766,256 @@ function openCttExpress(trackingCode, btnId) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// CUENTA DE CLIENTE (opcional) — login por código al email, sesión persistente
+// hasta cerrar sesión manualmente. Sin cuenta todo sigue funcionando igual.
+// ═══════════════════════════════════════════════════════════════════════════
+const ACCT_KEY = 'kz-session';
+const PROFILE_KEY = 'kz-profile';
+let acctSession = (() => { try { return JSON.parse(localStorage.getItem(ACCT_KEY) || 'null'); } catch (e) { return null; } })();
+let acctData = null;          // { perfil, favoritos, pedidos }
+let acctPendingEmail = '';
+let acctBackend = null;       // null = sin comprobar, true/false
+let acctFavTimer = null;
+
+function acctLocalProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}') || {}; } catch (e) { return {}; } }
+
+/** El backend viejo trataría cualquier POST como un pedido; antes de enviar
+ *  acciones comprobamos con un GET inocuo que el Apps Script ya tiene cuentas. */
+async function acctBackendReady() {
+  if (acctBackend !== null) return acctBackend;
+  try {
+    const r = await fetch(`${WEBHOOK_URL}?accountsPing=1`);
+    const j = await r.json();
+    acctBackend = !!(j && j.accounts);
+  } catch (e) { acctBackend = false; }
+  return acctBackend;
+}
+
+async function acctApi(body) {
+  if (!(await acctBackendReady())) throw new Error('unavailable');
+  const res = await fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+  return res.json();
+}
+
+function acctInit() {
+  acctUpdateUi();
+  if (acctSession && acctSession.token) acctRefresh(true);
+}
+
+function acctUpdateUi() {
+  const logged = !!(acctSession && acctSession.token);
+  const btn = document.getElementById('account-btn');
+  if (btn) btn.classList.toggle('logged', logged);
+  const txt = document.getElementById('account-btn-text');
+  if (txt) txt.textContent = logged ? 'Mi cuenta' : 'Entrar';
+  const mob = document.getElementById('mob-account-label');
+  if (mob) mob.textContent = logged ? 'Mi cuenta' : 'Entrar / crear cuenta';
+}
+
+function acctClearSession() {
+  acctSession = null; acctData = null;
+  try { localStorage.removeItem(ACCT_KEY); } catch (e) {}
+  acctUpdateUi();
+}
+
+/** Descarga la cuenta; fusiona favoritos (unión local + nube). */
+async function acctRefresh(silent) {
+  if (!acctSession) return false;
+  try {
+    const r = await acctApi({ action: 'getAccount', token: acctSession.token });
+    if (r.status === 'invalid_session') { acctClearSession(); if (!silent) acctShow('email'); return false; }
+    if (r.status !== 'success') throw new Error(r.message || 'error');
+    acctData = r;
+    const cloud = Array.isArray(r.favoritos) ? r.favoritos : [];
+    const merged = new Set([...favorites, ...cloud]);
+    const changed = merged.size !== favorites.size;
+    if (changed) {
+      favorites = merged;
+      localStorage.setItem('kz-fav', JSON.stringify([...favorites]));
+      updateFavBadge();
+      if (typeof activeCat !== 'undefined' && activeCat === 'favoritos') renderAll();
+    }
+    if (merged.size !== cloud.length) acctPushFavs();
+    return true;
+  } catch (e) { return false; }
+}
+
+function acctScheduleFavSync() {
+  if (!acctSession) return;
+  clearTimeout(acctFavTimer);
+  acctFavTimer = setTimeout(acctPushFavs, 1500);
+}
+function acctPushFavs() {
+  if (!acctSession) return;
+  acctApi({ action: 'saveAccount', token: acctSession.token, favoritos: [...favorites] }).catch(() => {});
+}
+
+// ── UI ────────────────────────────────────────────────────────────────────
+function acctMsg(text, kind) {
+  const el = document.getElementById('account-msg');
+  el.textContent = text || ''; el.className = kind || '';
+}
+function acctShow(view) {
+  ['email', 'code', 'main'].forEach(v => { document.getElementById('account-view-' + v).style.display = v === view ? 'block' : 'none'; });
+  acctMsg('');
+}
+function openAccount() {
+  document.getElementById('account-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
+  if (acctSession && acctSession.token) {
+    acctShow('main');
+    document.getElementById('account-email-label').textContent = acctSession.email || '';
+    acctTab('orders');
+    acctLoadMain();
+  } else {
+    acctShow('email');
+    setTimeout(() => document.getElementById('account-email-input').focus(), 80);
+  }
+}
+function closeAccount() {
+  document.getElementById('account-overlay').classList.remove('open');
+  document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
+}
+function acctBackToEmail() { acctShow('email'); document.getElementById('account-email-input').focus(); }
+
+async function acctRequestCode() {
+  const inp = document.getElementById('account-email-input');
+  const btn = document.getElementById('account-email-submit');
+  const email = inp.value.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { inp.style.borderColor = 'var(--accent)'; inp.focus(); return; }
+  inp.style.borderColor = '';
+  btn.disabled = true; btn.textContent = 'Enviando…'; acctMsg('');
+  try {
+    const r = await acctApi({ action: 'requestCode', email });
+    if (r.status !== 'success') throw new Error(r.message || 'error');
+    acctPendingEmail = email;
+    document.getElementById('account-code-sub').textContent = `Introduce el código de 6 dígitos que hemos enviado a ${email}.`;
+    document.getElementById('account-code-input').value = '';
+    acctShow('code');
+    setTimeout(() => document.getElementById('account-code-input').focus(), 80);
+  } catch (e) {
+    acctMsg(e.message === 'unavailable' ? 'Las cuentas estarán disponibles muy pronto. Mientras tanto puedes comprar y seguir tu pedido igual que siempre.' : (e.message || 'No se ha podido enviar el código.'), 'err');
+  }
+  btn.disabled = false; btn.textContent = 'Enviarme el código';
+}
+
+async function acctVerifyCode() {
+  const code = document.getElementById('account-code-input').value.trim();
+  const btn = document.getElementById('account-code-submit');
+  if (!/^\d{6}$/.test(code)) { acctMsg('El código tiene 6 dígitos.', 'err'); return; }
+  btn.disabled = true; btn.textContent = 'Comprobando…'; acctMsg('');
+  try {
+    const r = await acctApi({ action: 'verifyCode', email: acctPendingEmail, code });
+    if (r.status !== 'success' || !r.token) throw new Error(r.message || 'Código incorrecto');
+    acctSession = { token: r.token, email: r.email || acctPendingEmail };
+    localStorage.setItem(ACCT_KEY, JSON.stringify(acctSession));
+    acctUpdateUi();
+    acctShow('main');
+    document.getElementById('account-email-label').textContent = acctSession.email;
+    acctTab('orders');
+    acctLoadMain();
+  } catch (e) { acctMsg(e.message || 'Código incorrecto', 'err'); }
+  btn.disabled = false; btn.textContent = 'Entrar';
+}
+
+async function acctLogout() {
+  const token = acctSession && acctSession.token;
+  acctClearSession();
+  closeAccount();
+  showToast('Sesión cerrada');
+  if (token) { try { await acctApi({ action: 'logout', token }); } catch (e) {} }
+}
+
+function acctTab(tab) {
+  document.querySelectorAll('.account-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('account-tab-orders').style.display = tab === 'orders' ? 'block' : 'none';
+  document.getElementById('account-tab-data').style.display = tab === 'data' ? 'block' : 'none';
+  acctMsg('');
+}
+
+const ACCT_PROFILE_FIELDS = ['nombre', 'telefono', 'pais', 'region', 'ciudad', 'camino', 'cp'];
+
+async function acctLoadMain() {
+  const box = document.getElementById('account-tab-orders');
+  if (!acctData) box.innerHTML = '<div class="account-sub">Cargando tus pedidos…</div>';
+  const ok = await acctRefresh(false);
+  if (!acctSession) return;
+  if (!ok && !acctData) { box.innerHTML = '<div class="tracker-error">Error de conexión. Inténtalo de nuevo en unos segundos.</div>'; return; }
+  acctRenderOrders();
+  const p = (acctData && acctData.perfil) || {};
+  const local = acctLocalProfile();
+  ACCT_PROFILE_FIELDS.forEach(k => { const el = document.getElementById('acd-' + k); if (el && document.activeElement !== el) el.value = p[k] || local[k] || ''; });
+}
+
+function acctRenderOrders() {
+  const box = document.getElementById('account-tab-orders');
+  const pedidos = (acctData && acctData.pedidos) || [];
+  if (!pedidos.length) { box.innerHTML = '<div class="account-sub">Todavía no hay pedidos asociados a <strong>' + escHtml(acctSession.email) + '</strong>. Aparecerán aquí cuando compres con este correo.</div>'; return; }
+  box.innerHTML = '<div class="tracker-orders-title">' + (pedidos.length === 1 ? '1 pedido' : pedidos.length + ' pedidos') + '</div>' + pedidos.map((p, idx) => {
+    const estadoLabel = TRACKER_ESTADOS[p.estado] || escHtml(p.estado || '—');
+    const d = p.fecha ? new Date(p.fecha) : null;
+    const fecha = (d && !isNaN(d)) ? d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : escHtml(p.fecha || '—');
+    const items = (p.items || []).filter(i => !i.envio).map(i => {
+      const extra = [i.version, i.name && i.name !== '-' ? i.name : '', i.patches && i.patches !== '-' ? i.patches : ''].filter(x => x && x !== '-').map(escHtml).join(' · ');
+      return `<div>${escHtml(i.jersey)} — ${escHtml(i.size)}${extra ? ' <span style="opacity:.7">(' + extra + ')</span>' : ''}</div>`;
+    }).join('');
+    const total = (p.total !== '' && p.total != null && !isNaN(parseFloat(p.total))) ? `<div class="account-order-total">Total: ${escHtml(String(Math.round(parseFloat(p.total) * 100) / 100))} €</div>` : '';
+    const code = (p.tracking || '').trim();
+    let ctt = '';
+    if (code) {
+      const id = `acct-ctt-${idx}`;
+      ctt = `<div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(code)}</strong></div>
+        <button id="${id}" class="tracker-ctt-btn" style="background:#2a6a4a" onclick="openCttExpress('${escHtml(code)}', '${id}')">Copiar código y rastrear en CTT</button>`;
+    }
+    return `<div class="tracker-order-card">
+      <div class="tracker-order-meta"><span class="tracker-order-date">${fecha}</span><span class="tracker-order-status">${estadoLabel}</span></div>
+      ${items ? `<div class="account-order-items">${items}</div>` : ''}${total}${ctt}</div>`;
+  }).join('');
+}
+
+async function acctSaveProfile() {
+  const perfil = {};
+  ACCT_PROFILE_FIELDS.forEach(k => { perfil[k] = document.getElementById('acd-' + k).value.trim(); });
+  const btn = document.getElementById('acd-save');
+  btn.disabled = true;
+  try {
+    const r = await acctApi({ action: 'saveAccount', token: acctSession.token, perfil });
+    if (r.status === 'invalid_session') { acctClearSession(); acctShow('email'); return; }
+    if (r.status !== 'success') throw new Error();
+    if (acctData) acctData.perfil = perfil;
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(perfil));
+    acctMsg('Datos guardados', 'ok');
+  } catch (e) { acctMsg('No se han podido guardar. Inténtalo de nuevo.', 'err'); }
+  btn.disabled = false;
+}
+
+// ── Checkout rápido ───────────────────────────────────────────────────────
+function acctPrefillCheckout() {
+  const p = Object.assign({}, acctLocalProfile(), (acctData && acctData.perfil) || {});
+  const set = (id, v) => { const el = document.getElementById(id); if (el && v && !el.value) el.value = v; };
+  set('form-nombre', p.nombre); set('form-contacto', p.telefono);
+  set('form-correo', acctSession && acctSession.email);
+  set('form-pais', p.pais); set('form-region', p.region); set('form-ciudad', p.ciudad);
+  set('form-camino', p.camino); set('form-cp', p.cp);
+  const logged = !!(acctSession && acctSession.token);
+  document.getElementById('save-profile-text').textContent = logged ? 'Guardar mis datos en mi cuenta para el próximo pedido' : 'Recordar mis datos en este dispositivo para el próximo pedido';
+  document.getElementById('save-profile-chk').checked = true;
+}
+
+function acctSaveFromCheckout(v) {
+  const chk = document.getElementById('save-profile-chk');
+  if (!chk || !chk.checked) return;
+  const prev = Object.assign({}, acctLocalProfile(), (acctData && acctData.perfil) || {});
+  const perfil = Object.assign({}, prev, { nombre: v.nombre, telefono: v.telefono });
+  if (!v.esMano) Object.assign(perfil, { pais: v.pais, region: v.region, ciudad: v.ciudad, camino: v.camino, cp: v.cp });
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(perfil)); } catch (e) {}
+  if (acctSession && acctSession.token) {
+    if (acctData) acctData.perfil = perfil;
+    acctApi({ action: 'saveAccount', token: acctSession.token, perfil }).catch(() => {});
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // CART
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -8146,6 +8521,7 @@ function openCheckout(e) {
   const submitBtn = document.getElementById('order-submit-btn');
   submitBtn.disabled    = false;
   submitBtn.textContent = 'ENVIAR PEDIDO';
+  acctPrefillCheckout();
 
   // Pequeño delay para que el evento del click anterior quede completamente
   // procesado antes de mostrar el overlay (evita ghost-click / click-through)
@@ -8357,6 +8733,9 @@ async function submitOrderForm(e) {
   // Registrar uso del cupón en localStorage (solo al completar la compra)
   if (variableCouponMode && activeCouponCode)    incrementCouponUses(activeCouponCode);
   else if (discountMode && activeDiscountCode)   incrementCouponUses(activeDiscountCode);
+
+  acctSaveFromCheckout({ nombre: nombreVal, telefono: contactoVal, correo: correoVal, esMano: esManoVal,
+                         pais: paisVal, region: regionVal, ciudad: ciudadVal, camino: caminoVal, cp: cpVal });
 
   document.getElementById('order-form').style.display = 'none';
   document.getElementById('order-success').style.display = 'block';
