@@ -755,6 +755,25 @@
       color: var(--muted); font-size: 13px;
       margin-bottom: 18px;
     }
+    /* Chip del equipo en el modal de producto: escudo + nombre, lleva a su página */
+    #modal-team-chip {
+      display: inline-flex; align-items: center; gap: 7px; margin-bottom: 8px;
+      padding: 4px 10px 4px 5px; border-radius: 20px; cursor: pointer;
+      border: 1px solid color-mix(in srgb, var(--chip-a, #888) 45%, #2a2a2a);
+      background: color-mix(in srgb, var(--chip-a, #888) 12%, transparent);
+      color: var(--text); font-family: 'Barlow', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      transition: background .2s, border-color .2s, transform .15s;
+    }
+    #modal-team-chip:hover {
+      background: color-mix(in srgb, var(--chip-a, #888) 26%, transparent);
+      border-color: var(--chip-a, #888); transform: translateX(2px);
+    }
+    #modal-team-chip .mtc-logo {
+      width: 24px; height: 24px; flex-shrink: 0;
+      background: var(--chip-logo) center / contain no-repeat;
+    }
+    #modal-team-chip svg { opacity: .6; }
     /* ─── Tema por equipo (página de un equipo concreto) ───────────────── */
     #team-banner {
       display: none; position: relative; overflow: hidden;
@@ -3309,6 +3328,7 @@
       <button id="modal-close" onclick="closeModal()">×</button>
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
         <div style="flex:1;min-width:0">
+          <button type="button" id="modal-team-chip" style="display:none"><span class="mtc-logo"></span><span class="mtc-name"></span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
           <p id="modal-cat"></p>
           <h2 id="modal-name"></h2>
           <div id="modal-badges"></div>
@@ -6007,18 +6027,177 @@ function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
 // y el desplegable "Equipo"). Los escudos se leen de los propios botones de
 // "Ve directo a tu equipo" para no duplicar los assets.
 const TEAM_THEMES = {
-  'Real Madrid':       { a: '#FEBE10', b: '#FFFFFF' , logo: 'real_madrid' },
-  'Barcelona':         { a: '#A50044', b: '#004D98' , logo: 'barcelona' },
-  'Atlético Madrid':   { a: '#CB3524', b: '#272E61' , logo: 'atletico' },
-  'Manchester United': { a: '#DA020E', b: '#FBE122' , logo: 'man_utd' },
-  'Manchester City':   { a: '#6CABDD', b: '#1C2C5B' , logo: 'man_city' },
-  'Liverpool':         { a: '#C8102E', b: '#00B2A9' , logo: 'liverpool' },
-  'Arsenal':           { a: '#EF0107', b: '#063672' , logo: 'arsenal' },
-  'Bayern Munich':     { a: '#DC052D', b: '#0066B2' , logo: 'bayern' },
-  'PSG':               { a: '#004170', b: '#DA291C' , logo: 'psg' },
-  'Juventus':          { a: '#9a9a9a', b: '#FFFFFF' , logo: 'juventus' },
-  'AC Milan':          { a: '#FB090B', b: '#FFFFFF' , logo: 'ac_milan' },
-  'Chelsea':           { a: '#034694', b: '#DBA111' , logo: 'chelsea' },
+  "Barcelona": ['#A50044', '#004D98', 'barcelona', 'laliga'],
+  "Celta Vigo": ['#fe0100', '#90eaea', 'celta-vigo', 'laliga'],
+  "Getafe": ['#035093', '#7aa531', 'getafe', 'laliga'],
+  "Osasuna": ['#03024c', '#d70e27', 'osasuna', 'laliga'],
+  "Alavés": ['#0534a1', '#01299b', 'alaves', 'laliga'],
+  "Real Madrid": ['#FEBE10', '#FFFFFF', 'real-madrid', 'laliga'],
+  "Atlético Madrid": ['#CB3524', '#272E61', 'atletico-madrid', 'laliga'],
+  "Sevilla": ['#d50819', '#cd9208', 'sevilla', 'laliga'],
+  "Valencia": ['#ee3225', '#ffe71b', 'valencia', 'laliga'],
+  "Real Betis": ['#ea8d02', '#038728', 'real-betis', 'laliga'],
+  "Athletic Bilbao": ['#EE2523', '#FFFFFF', 'athletic-bilbao', 'laliga'],
+  "Villarreal": ['#025187', '#fdee6c', 'villarreal', 'laliga'],
+  "Real Sociedad": ['#0f3889', '#eca915', 'real-sociedad', 'laliga'],
+  "Girona": ['#cf0d2a', '#fdb505', 'girona', 'laliga'],
+  "Rayo Vallecano": ['#bdac2c', '#e43118', 'rayo-vallecano', 'laliga'],
+  "Mallorca": ['#ed1425', '#fbf403', 'mallorca', 'laliga'],
+  "Espanyol": ['#fc0c17', '#1c6cc1', 'espanyol', 'laliga'],
+  "Las Palmas": ['#044a98', '#ecd401', 'las-palmas', 'laliga'],
+  "Leganés": ['#cb9406', '#256d1b', 'leganes', 'laliga'],
+  "Valladolid": ['#5C2D91', '#FFFFFF', 'valladolid', 'laliga'],
+  "Cádiz": ['#fde907', '#0146a9', 'cadiz', 'laliga'],
+  "Córdoba": ['#00592f', '#e6b214', 'cordoba', 'laliga'],
+  "PSG": ['#004170', '#DA291C', 'psg', 'ligue1'],
+  "Lyon": ['#1024aa', '#f20038', 'lyon', 'ligue1'],
+  "Monaco": ['#ff042c', '#c5933b', 'monaco', 'ligue1'],
+  "Lille": ['#28256e', '#de140a', 'lille', 'ligue1'],
+  "Nice": ['#C8202F', '#000000', 'nice', 'ligue1'],
+  "Rennes": ['#e23327', '#fec517', 'rennes', 'ligue1'],
+  "Lens": ['#b61113', '#fec900', 'lens', 'ligue1'],
+  "Nantes": ['#fcdc01', '#08a657', 'nantes', 'ligue1'],
+  "Saint-Étienne": ['#199758', '#cdb98b', 'saint-etienne', 'ligue1'],
+  "Strasbourg": ['#019de2', '#db2e33', 'strasbourg', 'ligue1'],
+  "Manchester United": ['#DA020E', '#FBE122', 'manchester-united', 'premier'],
+  "Manchester City": ['#6CABDD', '#1C2C5B', 'manchester-city', 'premier'],
+  "Liverpool": ['#C8102E', '#00B2A9', 'liverpool', 'premier'],
+  "Arsenal": ['#EF0107', '#063672', 'arsenal', 'premier'],
+  "Chelsea": ['#034694', '#DBA111', 'chelsea', 'premier'],
+  "Tottenham": ['#132257', '#FFFFFF', 'tottenham', 'premier'],
+  "Newcastle": ['#d1d1d1', '#241F20', 'newcastle', 'premier'],
+  "West Ham": ['#7b2b3b', '#2cb4eb', 'west-ham', 'premier'],
+  "Aston Villa": ['#95BFE5', '#670E36', 'aston-villa', 'premier'],
+  "Everton": ['#01019c', '#2f2fb0', 'everton', 'premier'],
+  "Brighton": ['#014999', '#e7d8a5', 'brighton', 'premier'],
+  "Wolves": ['#fbb812', '#121321', 'wolves', 'premier'],
+  "Leicester": ['#003090', '#FDBE11', 'leicester', 'premier'],
+  "Leeds": ['#fddd1b', '#0462a9', 'leeds', 'premier'],
+  "Sunderland": ['#EB172B', '#FFFFFF', 'sunderland', 'premier'],
+  "Crystal Palace": ['#0353a5', '#f0928e', 'crystal-palace', 'premier'],
+  "Brentford": ['#c20404', '#fab71d', 'brentford', 'premier'],
+  "Nottm Forest": ['#DD0000', '#FFFFFF', 'nottm-forest', 'premier'],
+  "Fulham": ['#d00202', '#e6f1f1', 'fulham', 'premier'],
+  "Southampton": ['#ee1638', '#23b34d', 'southampton', 'premier'],
+  "Bournemouth": ['#cd1419', '#bcaa8a', 'bournemouth', 'premier'],
+  "Burnley": ['#6C1D45', '#99D6EA', 'burnley', 'premier'],
+  "Juventus": ['#9a9a9a', '#FFFFFF', 'juventus', 'seriea'],
+  "Inter Milan": ['#0068A8', '#FFFFFF', 'inter-milan', 'seriea'],
+  "AC Milan": ['#FB090B', '#FFFFFF', 'ac-milan', 'seriea'],
+  "Roma": ['#96092c', '#f9b800', 'roma', 'seriea'],
+  "Napoli": ['#02a7e1', '#00a2df', 'napoli', 'seriea'],
+  "Lazio": ['#87D8F7', '#FFFFFF', 'lazio', 'seriea'],
+  "Atalanta": ['#0c67b1', '#005eac', 'atalanta', 'seriea'],
+  "Fiorentina": ['#62378c', '#dd3427', 'fiorentina', 'seriea'],
+  "Torino": ['#871c16', '#f1b516', 'torino', 'seriea'],
+  "Bologna": ['#9D1E32', '#1A2838', 'bologna', 'seriea'],
+  "Sampdoria": ['#024a95', '#dc0112', 'sampdoria', 'seriea'],
+  "Genoa": ['#ad1718', '#02263e', 'genoa', 'seriea'],
+  "Udinese": ['#B4B4B4', '#000000', 'udinese', 'seriea'],
+  "Parma": ['#26358a', '#fbd003', 'parma', 'seriea'],
+  "Cagliari": ['#b01129', '#0c2545', 'cagliari', 'seriea'],
+  "Monza": ['#ed1437', '#ee2e4d', 'monza', 'seriea'],
+  "Como": ['#12436b', '#063963', 'como', 'seriea'],
+  "Venezia": ['#ff6903', '#016836', 'venezia', 'seriea'],
+  "Bayern Munich": ['#DC052D', '#0066B2', 'bayern-munich', 'bundesliga'],
+  "Borussia Dortmund": ['#fcd700', '#ffe700', 'borussia-dortmund', 'bundesliga'],
+  "Bayer Leverkusen": ['#e92827', '#fbee05', 'bayer-leverkusen', 'bundesliga'],
+  "RB Leipzig": ['#de1148', '#445c7b', 'rb-leipzig', 'bundesliga'],
+  "Eintracht Frankfurt": ['#E1050D', '#000000', 'eintracht-frankfurt', 'bundesliga'],
+  "Wolfsburg": ['#09633d', '#015b34', 'wolfsburg', 'bundesliga'],
+  "Schalke": ['#02499b', '#003d94', 'schalke', 'bundesliga'],
+  "Gladbach": ['#00A651', '#FFFFFF', 'gladbach', 'bundesliga'],
+  "Stuttgart": ['#d50d28', '#ffe901', 'stuttgart', 'bundesliga'],
+  "Union Berlin": ['#e90927', '#fefbb3', 'union-berlin', 'bundesliga'],
+  "Werder Bremen": ['#188d4f', '#239357', 'werder-bremen', 'bundesliga'],
+  "Hoffenheim": ['#1961b5', '#0d58b1', 'hoffenheim', 'bundesliga'],
+  "Freiburg": ['#E30613', '#FFFFFF', 'freiburg', 'bundesliga'],
+  "Augsburg": ['#b93632', '#d0b12a', 'augsburg', 'bundesliga'],
+  "Mainz": ['#C3141E', '#FFFFFF', 'mainz', 'bundesliga'],
+  "España": ['#ff0328', '#ffd407', 'espana', 'selecciones'],
+  "Francia": ['#0055A4', '#EF4135', 'francia', 'selecciones'],
+  "Alemania": ['#DD0000', '#FFCE00', 'alemania', 'selecciones'],
+  "Inglaterra": ['#CF081F', '#FFFFFF', 'inglaterra', 'selecciones'],
+  "Italia": ['#0251b4', '#019b4e', 'italia', 'selecciones'],
+  "Brasil": ['#0b86d2', '#17b149', 'brasil', 'selecciones'],
+  "Argentina": ['#75AADB', '#FFFFFF', 'argentina', 'selecciones'],
+  "Portugal": ['#C1272D', '#006600', 'portugal', 'selecciones'],
+  "Países Bajos": ['#f36e24', '#f46618', 'paises-bajos', 'selecciones'],
+  "Bélgica": ['#e30914', '#fbd405', 'belgica', 'selecciones'],
+  "Uruguay": ['#eab903', '#74c7ec', 'uruguay', 'selecciones'],
+  "Colombia": ['#f42d3c', '#f6e204', 'colombia', 'selecciones'],
+  "México": ['#006847', '#CE1126', 'mexico', 'selecciones'],
+  "USA": ['#B31942', '#0A3161', 'usa', 'selecciones'],
+  "Japón": ['#BC002D', '#FFFFFF', 'japon', 'selecciones'],
+  "Corea del Sur": ['#010e51', '#ed425e', 'corea-del-sur', 'selecciones'],
+  "Australia": ['#fac352', '#92c84d', 'australia', 'selecciones'],
+  "Marruecos": ['#43ae7a', '#ed1a26', 'marruecos', 'selecciones'],
+  "Senegal": ['#01853f', '#e31b23', 'senegal', 'selecciones'],
+  "Costa de Marfil": ['#2fad96', '#fd912d', 'costa-de-marfil', 'selecciones'],
+  "Ghana": ['#fde701', '#07a74f', 'ghana', 'selecciones'],
+  "Nigeria": ['#e3060e', '#4fb077', 'nigeria', 'selecciones'],
+  "Egipto": ['#e20118', '#4fb172', 'egipto', 'selecciones'],
+  "Croacia": ['#0256a4', '#ed1923', 'croacia', 'selecciones'],
+  "Serbia": ['#d42c38', '#bb9a4f', 'serbia', 'selecciones'],
+  "Suiza": ['#d9002c', '#e6002f', 'suiza', 'selecciones'],
+  "Escocia": ['#fada05', '#0b1831', 'escocia', 'selecciones'],
+  "Gales": ['#ce1e26', '#0c4438', 'gales', 'selecciones'],
+  "Polonia": ['#dc123a', '#ece7ec', 'polonia', 'selecciones'],
+  "Suecia": ['#035695', '#fad503', 'suecia', 'selecciones'],
+  "Dinamarca": ['#ca0e14', '#eeaeb0', 'dinamarca', 'selecciones'],
+  "Austria": ['#fd0303', '#940909', 'austria', 'selecciones'],
+  "Turquía": ['#e40a16', '#f5afb3', 'turquia', 'selecciones'],
+  "Hungría": ['#cc273c', '#b4900e', 'hungria', 'selecciones'],
+  "Rumanía": ['#fecd08', '#0a4aa5', 'rumania', 'selecciones'],
+  "Rep. Checa": ['#ea2a1d', '#01146e', 'rep-checa', 'selecciones'],
+  "Canadá": ['#c5281c', '#c11c0f', 'canada', 'selecciones'],
+  "Congo": ['#007fff', '#cd0f21', 'congo', 'selecciones'],
+  "Argelia": ['#b28f4f', '#6fb58a', 'argelia', 'selecciones'],
+  "Túnez": ['#e7020f', '#ebefee', 'tunez', 'selecciones'],
+  "Camerún": ['#f8d712', '#449d47', 'camerun', 'selecciones'],
+  "Arabia Saudí": ['#08774c', '#328e6b', 'arabia-saudi', 'selecciones'],
+  "Noruega": ['#db112d', '#af8b50', 'noruega', 'selecciones'],
+  "Albania": ['#d54243', '#89282c', 'albania', 'selecciones'],
+  "Irlanda del Norte": ['#cb0000', '#d2ceaf', 'irlanda-del-norte', 'selecciones'],
+  "Irlanda": ['#047126', '#f88e01', 'irlanda', 'selecciones'],
+  "Grecia": ['#14448b', '#093b85', 'grecia', 'selecciones'],
+  "Jamaica": ['#38b54a', '#fbf801', 'jamaica', 'selecciones'],
+  "Perú": ['#e41d25', '#d5ba45', 'peru', 'selecciones'],
+  "Chile": ['#024f91', '#e50a16', 'chile', 'selecciones'],
+  "Haití": ['#d21034', '#00209f', 'haiti', 'selecciones'],
+  "Ecuador": ['#042455', '#d6ac76', 'ecuador', 'selecciones'],
+  "Ucrania": ['#3b6bad', '#fde734', 'ucrania', 'selecciones'],
+  "Paraguay": ['#005898', '#ca0217', 'paraguay', 'selecciones'],
+  "Bosnia": ['#5369ab', '#ffe68e', 'bosnia', 'selecciones'],
+  "Sudáfrica": ['#03953a', '#fcc625', 'sudafrica', 'selecciones'],
+  "Curazao": ['#e8aa2b', '#2d2c72', 'curazao', 'selecciones'],
+  "Venezuela": ['#4f0c25', '#b99651', 'venezuela', 'selecciones'],
+  "Guinea Ecuatorial": ['#3d9900', '#e42118', 'guinea-ecuatorial', 'selecciones'],
+  "Cabo Verde": ['#003793', '#cf1f26', 'cabo-verde', 'selecciones'],
+  "Jordania": ['#c10b2f', '#057c42', 'jordania', 'selecciones'],
+  "Mali": ['#ce1126', '#14b53a', 'mali', 'selecciones'],
+  "Filipinas": ['#fecb2e', '#91abca', 'filipinas', 'selecciones'],
+  "Malasia": ['#faf400', '#b3ab00', 'malasia', 'selecciones'],
+  "Islandia": ['#0244e6', '#0036e3', 'islandia', 'selecciones'],
+  "Costa Rica": ['#e52a2d', '#252e5b', 'costa-rica', 'selecciones'],
+  "Catar": ['#8a1538', '#993251', 'catar', 'selecciones'],
+  "Emiratos Árabes Unidos": ['#d90926', '#00843d', 'emiratos-arabes-unidos', 'selecciones'],
+  "Nueva Zelanda": ['#9a9a9a', '#ffffff', 'nueva-zelanda', 'selecciones'],
+  "El Salvador": ['#0444ad', '#044dc2', 'el-salvador', 'selecciones'],
+  "Finlandia": ['#022c90', '#b09a66', 'finlandia', 'selecciones'],
+  "Panamá": ['#272f49', '#bd9567', 'panama', 'selecciones'],
+  "Uzbekistán": ['#1EB53A', '#0099B5', 'uzbekistan', 'selecciones'],
+  "Bolivia": ['#f9e400', '#007934', 'bolivia', 'selecciones'],
+  "Guatemala": ['#05bbe1', '#9c6514', 'guatemala', 'selecciones'],
+  "Bulgaria": ['#c10c2f', '#d6942f', 'bulgaria', 'selecciones'],
+  "Israel": ['#0135b7', '#95ade2', 'israel', 'selecciones'],
+  "Yemen": ['#044818', '#c64b4f', 'yemen', 'selecciones'],
+  "Eslovaquia": ['#0c3386', '#fc0303', 'eslovaquia', 'selecciones'],
+  "Eslovenia": ['#88c337', '#1d4196', 'eslovenia', 'selecciones'],
+  "Georgia": ['#ff0101', '#ffb6b6', 'georgia', 'selecciones'],
+  "Irak": ['#e12226', '#aacdb8', 'irak', 'selecciones'],
+  "Irán": ['#05944a', '#e11d24', 'iran', 'selecciones'],
+  "Honduras": ['#2564a5', '#1c5da1', 'honduras', 'selecciones'],
 };
 const TEAM_LOGO_BASE = 'https://kitzone-images.alfonsohgolderos.workers.dev/ui/team-';
 function applyTeamTheme() {
@@ -6029,10 +6208,10 @@ function applyTeamTheme() {
   document.body.classList.toggle('team-themed', !!theme);
   if (!theme) { banner.style.display = 'none'; return; }
   const name = teams[0];
-  banner.style.setProperty('--team-a', theme.a);
-  banner.style.setProperty('--team-b', theme.b);
-  document.body.style.setProperty('--team-a', theme.a);
-  banner.style.setProperty('--team-logo', `url('${TEAM_LOGO_BASE}${theme.logo}.webp')`);
+  banner.style.setProperty('--team-a', theme[0]);
+  banner.style.setProperty('--team-b', theme[1]);
+  document.body.style.setProperty('--team-a', theme[0]);
+  banner.style.setProperty('--team-logo', `url('${TEAM_LOGO_BASE}${theme[2]}.webp')`);
   document.getElementById('team-banner-name').textContent = name.toUpperCase();
   document.getElementById('team-banner-sub').textContent =
     lang === 'es' ? 'Todas las equipaciones' : 'All kits';
@@ -6972,6 +7151,8 @@ function openModal(p) {
   // Super Admin: editor de categorías (solo si adminMode)
   renderAdminCatEditor(p);
 
+  setModalTeamChip(p);
+
   const modalOverlay = document.getElementById('modal-overlay');
   modalOverlay.classList.remove('sf-modal-locked'); // limpiar estado bloqueado previo
   modalOverlay.classList.add('open');
@@ -6982,6 +7163,27 @@ function openModal(p) {
 // Escritorio: fija la altura del modal a la que tiene con dorsal/parche SIN
 // marcar, para que desplegar esos campos no lo agrande (la columna de
 // contenido hace scroll interno). En móvil se deja fluir.
+// Chip con el escudo del equipo del producto → lleva a la página de ese equipo.
+const TEAM_LEAGUE_CATS = ['selecciones', 'laliga', 'premier', 'seriea', 'bundesliga', 'ligue1'];
+function setModalTeamChip(p) {
+  const chip = document.getElementById('modal-team-chip');
+  if (!chip) return;
+  chip.style.display = 'none';
+  const team = detectTeam(p.nameEn || '');
+  const theme = team && TEAM_THEMES[team];
+  if (!theme) return;
+  const cats = p.cats || [];
+  // Solo si el producto está realmente en la liga/selección de ese equipo.
+  const cat = TEAM_LEAGUE_CATS.find(c => c === theme[3] && cats.includes(c));
+  if (!cat) return;
+  chip.style.setProperty('--chip-a', theme[0]);
+  chip.style.setProperty('--chip-logo', `url('${TEAM_LOGO_BASE}${theme[2]}.webp')`);
+  chip.querySelector('.mtc-name').textContent = team;
+  chip.title = lang === 'es' ? `Ver todas las equipaciones de ${team}` : `See all ${team} kits`;
+  chip.onclick = () => { closeModal(); filterToTeam(cat, team); };
+  chip.style.display = '';
+}
+
 function lockModalHeight() {
   const modal = document.getElementById('modal');
   if (!modal) return;
