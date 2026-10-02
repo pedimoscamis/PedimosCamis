@@ -5669,7 +5669,7 @@ function getRetroRelevanceItems(filtered) {
  * @param {number} maxExtra  máx. extras tras el bloque prioritario (Infinity = todos)
  */
 function getMundialItems(maxExtra = Infinity) {
-  const fanPool    = allProducts.filter(p => isMundial2026(p) && !MUNDIAL_EXCL_FAN.test(p.nameEn));
+  const fanPool    = allProducts.filter(p => isMundial2026(p) && !MUNDIAL_EXCL_FAN.test(p.nameEn) && !FEATURED_EXCLUDE_IDS.has(p.id));
   const playerPool = allProducts.filter(p => isMundial2026(p) && !MUNDIAL_EXCL_BASE.test(p.nameEn) && PLAYER_RE.test(p.nameEn));
   const allMundial = allProducts.filter(p => isMundial2026(p));
 
@@ -5781,9 +5781,14 @@ function getMundialItems(maxExtra = Infinity) {
  * visitante, temporada más reciente primero), para que el escaparate de la
  * home refleje exactamente el mismo orden que esa categoría.
  */
+// Productos que no deben aparecer en los escaparates de la home (siguen en el catálogo)
+const FEATURED_EXCLUDE_IDS = new Set([
+  '249545468', // Barcelona 26/27 Third Away
+]);
+
 function getNewSeasonFeaturedItems(limit = 12) {
   const pool = allProducts.filter(p =>
-    (p.cats || []).includes('nuevatemporada') && !(p.cats || []).includes('kids')
+    (p.cats || []).includes('nuevatemporada') && !(p.cats || []).includes('kids') && !FEATURED_EXCLUDE_IDS.has(p.id)
   );
   return [...pool].sort(bigClubsFirstComparator).slice(0, limit);
 }
@@ -5860,7 +5865,7 @@ function renderFeaturedRecientes() {
   }
 
   const items = allProducts
-    .filter(p => p.img)
+    .filter(p => p.img && !FEATURED_EXCLUDE_IDS.has(p.id))
     .slice()
     .sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0))
     .slice(0, 12);
