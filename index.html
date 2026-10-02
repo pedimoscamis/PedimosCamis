@@ -4192,6 +4192,9 @@ async function init() {
   }, { rootMargin: '300px' });
   observer.observe(sentinel);
 
+  // El hero (SPOTLIGHT_DATA) es estático: se pinta ya, sin esperar al catálogo.
+  initSpotlight();
+
   try {
     const res = await fetch(PRODUCTS_URL);
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -4199,11 +4202,9 @@ async function init() {
     buildCatBar();     // reconstruir tras cargar datos (ej. la pill 'shorts' depende de allProducts)
     buildFilterBar();
     renderAll();
-    initSpotlight();
   } catch (e) {
     document.getElementById('results-info').textContent = t().error_load;
     console.error(e);
-    initSpotlight();
   }
 
   // Search — con intercepción de contraseña de Modo Admin
@@ -8540,6 +8541,22 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 
 // Start
+// ─── Rendimiento: memoización de funciones puras sobre el nombre ──────────
+// Los comparadores de relevancia llaman a estas funciones (regex pesadas)
+// miles de veces por ordenación y renderAll() ordena 13+ listas. Cachear por
+// nombre baja el render inicial de varios segundos a décimas.
+function memoizeByName(fn) {
+  const cache = new Map();
+  return function (name) {
+    let v = cache.get(name);
+    if (v === undefined && !cache.has(name)) { v = fn(name); cache.set(name, v); }
+    return v;
+  };
+}
+detectTeam           = memoizeByName(detectTeam);
+homeAwayVariantTier  = memoizeByName(homeAwayVariantTier);
+extractSeason        = memoizeByName(extractSeason);
+
 init();
 </script>
 </body>
