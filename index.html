@@ -2802,6 +2802,12 @@
     /* ─── Modal de producto — compacto en móvil ──────────────────────── */
     /* Al final de la hoja de estilos a propósito: gana cualquier empate de
        especificidad frente a las reglas base de #modal-img-col/#modal-name/etc. */
+    /* Escritorio: altura fija — marcar dorsal/parche (que despliega campos)
+       no debe agrandar el modal; la columna de contenido hace scroll interno. */
+    @media (min-width: 621px) {
+      #modal { height: min(640px, 90vh); grid-template-rows: minmax(0, 1fr); }
+      #modal-content-col { max-height: none; height: 100%; }
+    }
     @media (max-width: 620px) {
       #modal { grid-template-columns: minmax(0, 1fr); }
       #modal-img-col {
