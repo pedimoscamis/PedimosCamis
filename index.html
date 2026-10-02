@@ -5034,8 +5034,8 @@ function matchesTipo(p, tipo) {
 
 function matchesEquipacion(p, equip) {
   if (equip === 'Local')         return /\bhome\b|\blocal\b/i.test(p.nameEn);
-  if (equip === 'Visitante')     return /\baway\b|\bvisitante\b/i.test(p.nameEn);
-  if (equip === 'Tercera')       return /\bthird\b|\btercera\b|\b3rd\b/i.test(p.nameEn);
+  if (equip === 'Visitante')     return /\baway\b|\bvisitante\b/i.test(p.nameEn) && !SECOND_AWAY_RE.test(p.nameEn);
+  if (equip === 'Tercera')       return /\bthird\b|\btercera\b|\b3rd\b/i.test(p.nameEn) || SECOND_AWAY_RE.test(p.nameEn);
   if (equip === 'Cuarta')        return /\bfourth\b|\b4th\b/i.test(p.nameEn);
   if (equip === 'Portero')       return /\bgoalkeeper\b|\bportero\b|\bkeeper\b|\bgk\b/i.test(p.nameEn);
   if (equip === 'Entrenamiento') return /training|entrenamiento|pre.match|prematch/i.test(p.nameEn);
@@ -5489,7 +5489,9 @@ const MUNDIAL_EXCL_BASE = /entrenamiento|training|especial|special|edition|edici
 const MUNDIAL_EXCL_FAN  = /entrenamiento|training|especial|special|edition|edición|niño|niños|kids|kid|baby|mujer|women|woman|ladies|portero|goalkeeper|long\s*sleeve|manga\s*larga|\bplayer\b|authentic/i;
 
 const isMundialHome = n => /\bhome\b|\blocal\b/i.test(n);
-const isMundialAway = n => /\baway\b|\bvisitante\b/i.test(n);
+// "Second Away" del proveedor = tercera equipación (no cuenta como visitante)
+const SECOND_AWAY_RE = /\bsecond\s+away\b/i;
+const isMundialAway = n => /\baway\b|\bvisitante\b/i.test(n) && !SECOND_AWAY_RE.test(n);
 
 // España "2 estrellas" (segunda estrella de campeón del mundo) — celebra el
 // título; se muestran primero en Mundial 2026 y en su propio escaparate.
@@ -5546,7 +5548,7 @@ function homeAwayVariantTier(name) {
   // Shorts, terceras/cuartas equipaciones, etc. nunca ocupan el slot de
   // local/visitante normal aunque el nombre diga "Home"/"Away".
   if (/\bshort/i.test(name)) return 2;
-  if (/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b/i.test(name)) return 2;
+  if (/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b/i.test(name) || SECOND_AWAY_RE.test(name)) return 2;
   if (isMundialHome(name) && !MUNDIAL_EXCL_FAN.test(name)) return 0;
   if (isMundialAway(name) && !MUNDIAL_EXCL_FAN.test(name)) return 1;
   return 2;
@@ -6779,6 +6781,7 @@ const NOMBRE_TRANSLATIONS = [
   [/\bFan Version\b/gi,    'Versión Fan'],
   [/\bHome\b/g,            'Local'],
   [/\bAway\b/g,            'Visitante'],
+  [/\bSecond Away\b/gi,    'Tercera'],
   [/\bThird\b/g,           'Tercera'],
   [/\bFourth\b|\b4th\b/g,  'Cuarta'],
   [/\bGoalkeeper\b/gi,     'Portero'],
@@ -6933,7 +6936,7 @@ function findPlayerVersionCounterpart(p) {
     extractSeason(x.nameEn) === season &&
     (isHome ? isMundialHome(x.nameEn) : isMundialAway(x.nameEn)) &&
     isSpainTwoStar(x) === twoStar &&
-    !/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b|\bshort|goalkeeper|\bgk\b|portero/i.test(x.nameEn)
+    !/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b|\bsecond\s+away\b|\bshort|goalkeeper|\bgk\b|portero/i.test(x.nameEn)
   );
   if (candidates.length === 0) return null;
 
@@ -6982,7 +6985,7 @@ function seasonStartYear(s) {
 const KIT_TYPE_RULES = [
   { re: /\bgoalkeeper\b/i,   key: 'goalkeeper'   },
   { re: /\btraining\b/i,     key: 'training'     },
-  { re: /\bthird\b/i,        key: 'third'        },
+  { re: /\bthird\b|\bsecond\s+away\b/i, key: 'third' },
   { re: /\baway\b/i,         key: 'away'         },
   { re: /\bhome\b/i,         key: 'home'         },
   { re: /\bretro\b/i,        key: 'retro'        },
