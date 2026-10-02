@@ -63,7 +63,7 @@ function manejarAccion(data) {
       case 'verifyCode':  return verificarCodigo(data.email, data.code);
       case 'getAccount':  return obtenerCuenta(data.token);
       case 'saveAccount': return guardarCuenta(data.token, data.perfil, data.favoritos);
-      case 'logout':      return cerrarSesion(data.token);
+      case 'logout':      return cuentaCerrarSesion(data.token);
       default:            return _json({ status: 'error', message: 'Acción desconocida' });
     }
   } catch (err) {
@@ -215,7 +215,7 @@ function guardarCuenta(token, perfil, favoritos) {
 }
 
 // ── 5. Cerrar sesión ─────────────────────────────────────────────────────
-function cerrarSesion(token) {
+function cuentaCerrarSesion(token) {
   if (!token) return _json({ status: 'success' });
   var hash = _sha256(token.toString());
   var hoja = _hojaSesiones();
