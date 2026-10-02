@@ -756,17 +756,21 @@
       margin-bottom: 18px;
     }
     /* Chip del equipo en el modal de producto: escudo + nombre, lleva a su página */
+    /* Superpuesto en la esquina de la foto: no ocupa sitio en el flujo, así
+       no cambia la altura (ni la proporción) del modal. */
     #modal-team-chip {
-      display: inline-flex; align-items: center; gap: 7px; margin-bottom: 8px;
+      position: absolute; top: 12px; left: 12px; z-index: 6;
+      display: inline-flex; align-items: center; gap: 7px;
       padding: 4px 10px 4px 5px; border-radius: 20px; cursor: pointer;
-      border: 1px solid color-mix(in srgb, var(--chip-a, #888) 45%, #2a2a2a);
-      background: color-mix(in srgb, var(--chip-a, #888) 12%, transparent);
+      backdrop-filter: blur(6px);
+      border: 1px solid color-mix(in srgb, var(--chip-a, #888) 55%, #2a2a2a);
+      background: color-mix(in srgb, var(--chip-a, #888) 18%, rgba(14,14,14,.78));
       color: var(--text); font-family: 'Barlow', sans-serif; font-size: 11px; font-weight: 700;
       letter-spacing: .06em; text-transform: uppercase;
       transition: background .2s, border-color .2s, transform .15s;
     }
     #modal-team-chip:hover {
-      background: color-mix(in srgb, var(--chip-a, #888) 26%, transparent);
+      background: color-mix(in srgb, var(--chip-a, #888) 34%, rgba(14,14,14,.78));
       border-color: var(--chip-a, #888); transform: translateX(2px);
     }
     #modal-team-chip .mtc-logo {
@@ -3326,9 +3330,9 @@
     </div>
     <div id="modal-content-col">
       <button id="modal-close" onclick="closeModal()">×</button>
+      <button type="button" id="modal-team-chip" style="display:none"><span class="mtc-logo"></span><span class="mtc-name"></span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
         <div style="flex:1;min-width:0">
-          <button type="button" id="modal-team-chip" style="display:none"><span class="mtc-logo"></span><span class="mtc-name"></span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
           <p id="modal-cat"></p>
           <h2 id="modal-name"></h2>
           <div id="modal-badges"></div>
@@ -7189,7 +7193,10 @@ function lockModalHeight() {
   if (!modal) return;
   modal.style.height = '';
   if (window.matchMedia('(max-width: 620px)').matches) return;
-  modal.style.height = modal.offsetHeight + 'px';
+  // Mínimo de 525px: así todos los productos (NBA, sin equipo, nombres cortos…)
+  // comparten la misma proporción de modal que el resto.
+  const maxH = Math.floor(window.innerHeight * 0.9);
+  modal.style.height = Math.min(Math.max(modal.offsetHeight, 525), maxH) + 'px';
 }
 
 function buildSizeGrid(sizes) {
