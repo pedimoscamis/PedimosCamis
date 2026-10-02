@@ -756,25 +756,25 @@
       margin-bottom: 18px;
     }
     /* Chip del equipo en el modal de producto: escudo + nombre, lleva a su página */
-    /* Superpuesto en la esquina de la foto: no ocupa sitio en el flujo, así
-       no cambia la altura (ni la proporción) del modal. */
+    /* Chip en la cabecera del contenido, compacto: se compensa con un poco
+       menos de padding/gap (#modal-content-col.has-team-chip) y la altura del
+       modal NO cuenta el chip (ver lockModalHeight), así no lo estira. */
     #modal-team-chip {
-      position: absolute; top: 12px; left: 12px; z-index: 6;
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 4px 10px 4px 5px; border-radius: 20px; cursor: pointer;
-      backdrop-filter: blur(6px);
-      border: 1px solid color-mix(in srgb, var(--chip-a, #888) 55%, #2a2a2a);
-      background: color-mix(in srgb, var(--chip-a, #888) 18%, rgba(14,14,14,.78));
+      display: inline-flex; align-items: center; gap: 7px; margin-bottom: 4px;
+      padding: 2px 10px 2px 4px; border-radius: 20px; cursor: pointer;
+      border: 1px solid color-mix(in srgb, var(--chip-a, #888) 45%, #2a2a2a);
+      background: color-mix(in srgb, var(--chip-a, #888) 12%, transparent);
       color: var(--text); font-family: 'Barlow', sans-serif; font-size: 11px; font-weight: 700;
       letter-spacing: .06em; text-transform: uppercase;
       transition: background .2s, border-color .2s, transform .15s;
     }
+    #modal-content-col.has-team-chip { padding-top: 20px; padding-bottom: 20px; gap: 12px; }
     #modal-team-chip:hover {
-      background: color-mix(in srgb, var(--chip-a, #888) 34%, rgba(14,14,14,.78));
+      background: color-mix(in srgb, var(--chip-a, #888) 26%, transparent);
       border-color: var(--chip-a, #888); transform: translateX(2px);
     }
     #modal-team-chip .mtc-logo {
-      width: 24px; height: 24px; flex-shrink: 0;
+      width: 20px; height: 20px; flex-shrink: 0;
       background: var(--chip-logo) center / contain no-repeat;
     }
     #modal-team-chip svg { opacity: .6; }
@@ -3330,9 +3330,9 @@
     </div>
     <div id="modal-content-col">
       <button id="modal-close" onclick="closeModal()">×</button>
-      <button type="button" id="modal-team-chip" style="display:none"><span class="mtc-logo"></span><span class="mtc-name"></span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
         <div style="flex:1;min-width:0">
+          <button type="button" id="modal-team-chip" style="display:none"><span class="mtc-logo"></span><span class="mtc-name"></span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
           <p id="modal-cat"></p>
           <h2 id="modal-name"></h2>
           <div id="modal-badges"></div>
@@ -7173,6 +7173,7 @@ function setModalTeamChip(p) {
   const chip = document.getElementById('modal-team-chip');
   if (!chip) return;
   chip.style.display = 'none';
+  document.getElementById('modal-content-col').classList.remove('has-team-chip');
   const team = detectTeam(p.nameEn || '');
   const theme = team && TEAM_THEMES[team];
   if (!theme) return;
@@ -7186,6 +7187,7 @@ function setModalTeamChip(p) {
   chip.title = lang === 'es' ? `Ver todas las equipaciones de ${team}` : `See all ${team} kits`;
   chip.onclick = () => { closeModal(); filterToTeam(cat, team); };
   chip.style.display = '';
+  document.getElementById('modal-content-col').classList.add('has-team-chip');
 }
 
 function lockModalHeight() {
@@ -7193,10 +7195,18 @@ function lockModalHeight() {
   if (!modal) return;
   modal.style.height = '';
   if (window.matchMedia('(max-width: 620px)').matches) return;
-  // Mínimo de 525px: así todos los productos (NBA, sin equipo, nombres cortos…)
-  // comparten la misma proporción de modal que el resto.
+  // Se mide SIN el chip del equipo (ni su compactado): el chip no debe
+  // estirar el modal; si no cabe, la columna hace scroll interno.
+  const col = document.getElementById('modal-content-col');
+  const chip = document.getElementById('modal-team-chip');
+  const hadChip = col.classList.contains('has-team-chip');
+  const chipDisplay = chip.style.display;
+  col.classList.remove('has-team-chip'); chip.style.display = 'none';
+  const natural = modal.offsetHeight;
+  chip.style.display = chipDisplay; if (hadChip) col.classList.add('has-team-chip');
+  // Mínimo de 525px: así todos los productos comparten la misma proporción.
   const maxH = Math.floor(window.innerHeight * 0.9);
-  modal.style.height = Math.min(Math.max(modal.offsetHeight, 525), maxH) + 'px';
+  modal.style.height = Math.min(Math.max(natural, 525), maxH) + 'px';
 }
 
 function buildSizeGrid(sizes) {
