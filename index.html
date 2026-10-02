@@ -755,6 +755,35 @@
       color: var(--muted); font-size: 13px;
       margin-bottom: 18px;
     }
+    /* ─── Tema por equipo (página de un equipo concreto) ───────────────── */
+    #team-banner {
+      display: none; position: relative; overflow: hidden;
+      align-items: center; justify-content: space-between; gap: 16px;
+      margin-bottom: 20px; padding: 16px 22px;
+      border: 1px solid var(--border); border-left: 4px solid var(--team-a, var(--accent));
+      border-radius: var(--radius);
+      background: linear-gradient(100deg, color-mix(in srgb, var(--team-a, #e8173c) 24%, #111) 0%, #111 70%);
+    }
+    #team-banner::after {
+      content: ''; position: absolute; right: 0; bottom: 0; width: 38%; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--team-b, var(--team-a, transparent)));
+    }
+    #team-banner-name {
+      font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 1px; line-height: 1;
+    }
+    #team-banner-sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    #team-banner-logo {
+      width: 56px; height: 56px; flex-shrink: 0;
+      background: var(--team-logo) center / contain no-repeat;
+      filter: drop-shadow(0 4px 14px rgba(0,0,0,.55));
+    }
+    body.team-themed .card:hover { border-color: var(--team-a); }
+    body.team-themed #results-info { color: color-mix(in srgb, var(--team-a) 55%, var(--muted)); }
+    @media (max-width: 700px) {
+      #team-banner { padding: 12px 14px; margin-bottom: 14px; }
+      #team-banner-name { font-size: 24px; }
+      #team-banner-logo { width: 44px; height: 44px; }
+    }
     #load-more-wrap { text-align: center; padding: 32px 0 12px; }
     #load-more-btn {
       background: none; border: 1px solid var(--border);
@@ -3234,6 +3263,13 @@
 
 <!-- ─── Grid ───────────────────────────────────────────────────────────── -->
 <main id="main">
+  <div id="team-banner">
+    <div>
+      <div id="team-banner-name"></div>
+      <div id="team-banner-sub"></div>
+    </div>
+    <div id="team-banner-logo"></div>
+  </div>
   <p id="results-info"></p>
   <div id="grid"></div>
   <div id="load-more-wrap">
@@ -5959,6 +5995,55 @@ function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
  * @param {string} cat       categoría destino (ej. 'ligue1', 'premier')
  * @param {string} teamName  nombre canónico del equipo (ej. 'PSG', 'Arsenal')
  */
+// ─── Tema visual por equipo ──────────────────────────────────────────────
+// Colores principal/secundario por club (nombres tal y como los usa filterToTeam
+// y el desplegable "Equipo"). Los escudos se leen de los propios botones de
+// "Ve directo a tu equipo" para no duplicar los assets.
+const TEAM_THEMES = {
+  'Real Madrid':       { a: '#FEBE10', b: '#FFFFFF' },
+  'Barcelona':         { a: '#A50044', b: '#004D98' },
+  'Atlético Madrid':   { a: '#CB3524', b: '#272E61' },
+  'Manchester United': { a: '#DA020E', b: '#FBE122' },
+  'Manchester City':   { a: '#6CABDD', b: '#1C2C5B' },
+  'Liverpool':         { a: '#C8102E', b: '#00B2A9' },
+  'Arsenal':           { a: '#EF0107', b: '#063672' },
+  'Bayern Munich':     { a: '#DC052D', b: '#0066B2' },
+  'PSG':               { a: '#004170', b: '#DA291C' },
+  'Juventus':          { a: '#9a9a9a', b: '#FFFFFF' },
+  'AC Milan':          { a: '#FB090B', b: '#FFFFFF' },
+  'Chelsea':           { a: '#034694', b: '#DBA111' },
+};
+let teamLogoCache = null;
+function getTeamLogo(teamName) {
+  if (!teamLogoCache) {
+    teamLogoCache = {};
+    document.querySelectorAll('.hero-team-chip').forEach(chip => {
+      const m = (chip.getAttribute('onclick') || '').match(/filterToTeam\('[^']*','([^']*)'\)/);
+      const logo = chip.style.getPropertyValue('--team-logo');
+      if (m && logo) teamLogoCache[m[1]] = logo;
+    });
+  }
+  return teamLogoCache[teamName] || '';
+}
+function applyTeamTheme() {
+  const banner = document.getElementById('team-banner');
+  if (!banner) return;
+  const teams = [...activeFilters.teams];
+  const theme = (teams.length === 1 && activeCat !== 'all') ? TEAM_THEMES[teams[0]] : null;
+  document.body.classList.toggle('team-themed', !!theme);
+  if (!theme) { banner.style.display = 'none'; return; }
+  const name = teams[0];
+  banner.style.setProperty('--team-a', theme.a);
+  banner.style.setProperty('--team-b', theme.b);
+  document.body.style.setProperty('--team-a', theme.a);
+  const logo = getTeamLogo(name);
+  banner.style.setProperty('--team-logo', logo || 'none');
+  document.getElementById('team-banner-name').textContent = name.toUpperCase();
+  document.getElementById('team-banner-sub').textContent =
+    lang === 'es' ? 'Todas las equipaciones' : 'All kits';
+  banner.style.display = 'flex';
+}
+
 function filterToTeam(cat, teamName) {
   activeCat    = cat;
   searchQuery  = '';
@@ -6214,6 +6299,7 @@ function renderAll() {
     // normalmente gestionan — como hacemos return early, debemos hacerlo aquí.
     document.querySelectorAll('.home-row-section, #featured-section, #super-flash-section, #ucl-section')
       .forEach(s => { s.style.display = 'none'; });
+    applyTeamTheme();
     renderGallery();     // idempotente: construye el grid solo la primera vez
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return;              // no renderizar nada más
@@ -6246,6 +6332,7 @@ function renderAll() {
   renderHomeRow('row-kids',           'scroll-kids',           'kids',           12);
   renderHomeRow('row-europa',         'scroll-europa',         'europa',         12);
 
+  applyTeamTheme();
   currentFiltered = getFiltered();
   displayedCount  = 0;
 
