@@ -2968,7 +2968,7 @@
           <span class="mob-menu-item-arrow">›</span>
         </button>
         <!-- Tracker -->
-        <button class="mob-menu-item" onclick="openTracker(); closeMobUserMenu()">
+        <button class="mob-menu-item" id="mob-tracker-item" onclick="openTracker(); closeMobUserMenu()">
           <span class="mob-menu-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.2L12 4l8.5 4.2M3.5 8.2v8.3L12 20.8l8.5-4.3V8.2M3.5 8.2L12 12.4l8.5-4.2M12 12.4v8.4"/></svg></span>
           <span class="mob-menu-item-label">Sigue tu pedido</span>
           <span class="mob-menu-item-arrow">›</span>
@@ -7826,6 +7826,9 @@ function acctUpdateUi() {
   if (btn) btn.classList.toggle('logged', logged);
   const txt = document.getElementById('account-btn-text');
   if (txt) txt.textContent = logged ? 'Mi cuenta' : 'Entrar';
+  // Con sesión iniciada el seguimiento vive dentro de Mi cuenta → sobra el botón suelto
+  const trk = document.getElementById('tracker-btn'); if (trk) trk.style.display = logged ? 'none' : '';
+  const mtrk = document.getElementById('mob-tracker-item'); if (mtrk) mtrk.style.display = logged ? 'none' : '';
   const mob = document.getElementById('mob-account-label');
   if (mob) mob.textContent = logged ? 'Mi cuenta' : 'Entrar / crear cuenta';
 }
