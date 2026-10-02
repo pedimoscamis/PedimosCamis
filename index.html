@@ -5491,6 +5491,7 @@ const MUNDIAL_EXCL_FAN  = /entrenamiento|training|especial|special|edition|edici
 const isMundialHome = n => /\bhome\b|\blocal\b/i.test(n);
 // "Second Away" del proveedor = tercera equipación (no cuenta como visitante)
 const SECOND_AWAY_RE = /\bsecond\s+away\b/i;
+const isMundialThird = n => /\bthird\b|\btercera\b|\b3rd\b/i.test(n) || SECOND_AWAY_RE.test(n);
 const isMundialAway = n => /\baway\b|\bvisitante\b/i.test(n) && !SECOND_AWAY_RE.test(n);
 
 // España "2 estrellas" (segunda estrella de campeón del mundo) — celebra el
@@ -5547,11 +5548,14 @@ function popularityRank(team) {
 function homeAwayVariantTier(name) {
   // Shorts, terceras/cuartas equipaciones, etc. nunca ocupan el slot de
   // local/visitante normal aunque el nombre diga "Home"/"Away".
-  if (/\bshort/i.test(name)) return 2;
-  if (/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b/i.test(name) || SECOND_AWAY_RE.test(name)) return 2;
+  if (/\bshort/i.test(name)) return 3;
+  if (/\bfourth\b|\bcuarta\b/i.test(name)) return 3;
+  // Tercera (incluye "Second Away" del proveedor): va justo después de local y visitante
+  if ((/\bthird\b|\btercera\b/i.test(name) || SECOND_AWAY_RE.test(name)) && !MUNDIAL_EXCL_FAN.test(name)) return 2;
+  if (/\bthird\b|\btercera\b/i.test(name)) return 3;
   if (isMundialHome(name) && !MUNDIAL_EXCL_FAN.test(name)) return 0;
   if (isMundialAway(name) && !MUNDIAL_EXCL_FAN.test(name)) return 1;
-  return 2;
+  return 3;
 }
 
 // Ranking de popularidad de selecciones nacionales — para la categoría
@@ -5598,9 +5602,9 @@ function makeRelevanceComparator(useCountries = false) {
     const tierA = homeAwayVariantTier(a.nameEn);
     const tierB = homeAwayVariantTier(b.nameEn);
 
-    // Fase 1: solo local/visitante normales. Fase 2: todo lo demás.
-    const phaseA = tierA <= 1 ? 0 : 1;
-    const phaseB = tierB <= 1 ? 0 : 1;
+    // Fase 1: local, visitante y tercera normales. Fase 2: todo lo demás.
+    const phaseA = tierA <= 2 ? 0 : 1;
+    const phaseB = tierB <= 2 ? 0 : 1;
     if (phaseA !== phaseB) return phaseA - phaseB;
 
     const seasonA = relevanceSeasonYear(a);
@@ -5658,6 +5662,7 @@ function getRetroRelevanceItems(filtered) {
  * — Por cada selección prioritaria (MUNDIAL_PRIORITY):
  *     1. Home Fan (versión estándar)
  *     2. Away Fan (versión estándar)
+ *     2b. Third Fan (tercera, incluye "Second Away")
  *     3. Player Version Home (versión de jugador local)
  *     4. Retro Home de esa misma selección (cualquier temporada histórica)
  * — Resto de selecciones mundialistas (fan → player → resto)
@@ -5701,7 +5706,7 @@ function getMundialItems(maxExtra = Infinity) {
     const teamPlayer    = playerPool.filter(matchTeam);
     const teamRetro     = retroSelPool.filter(matchTeam);
 
-    let addedHome = false, addedAway = false, addedPlayerHome = false, addedRetro = false;
+    let addedHome = false, addedAway = false, addedThird = false, addedPlayerHome = false, addedRetro = false;
 
     // 1. Home Fan
     for (const p of teamFan) {
@@ -5710,6 +5715,10 @@ function getMundialItems(maxExtra = Infinity) {
     // 2. Away Fan
     for (const p of teamFan) {
       if (!addedAway && !picked.has(p.id) && isMundialAway(p.nameEn)) { items.push(p); picked.add(p.id); addedAway = true; break; }
+    }
+    // 2b. Third Fan (tercera equipación; incluye los "Second Away" del proveedor)
+    for (const p of teamFan) {
+      if (!addedThird && !picked.has(p.id) && isMundialThird(p.nameEn)) { items.push(p); picked.add(p.id); addedThird = true; break; }
     }
     // 3. Player Version — override por selección si existe (ej: España → Away Player)
     const playerFilter = PLAYER_SLOT_FILTER[si];
@@ -5745,7 +5754,7 @@ function getMundialItems(maxExtra = Infinity) {
     }
 
     // Fallback global: equipo con productos pero ningún slot rellenado
-    if (!addedHome && !addedAway && !addedPlayerHome && !addedRetro) {
+    if (!addedHome && !addedAway && !addedThird && !addedPlayerHome && !addedRetro) {
       for (const p of [...teamFan, ...teamPlayer]) {
         if (!picked.has(p.id)) { items.push(p); picked.add(p.id); break; }
       }
