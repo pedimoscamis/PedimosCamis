@@ -2805,7 +2805,7 @@
     /* Escritorio: altura fija — marcar dorsal/parche (que despliega campos)
        no debe agrandar el modal; la columna de contenido hace scroll interno. */
     @media (min-width: 621px) {
-      #modal { height: min(640px, 90vh); grid-template-rows: minmax(0, 1fr); }
+      #modal { grid-template-rows: minmax(0, 1fr); }
       #modal-content-col { max-height: none; height: 100%; }
     }
     @media (max-width: 620px) {
@@ -6976,6 +6976,18 @@ function openModal(p) {
   modalOverlay.classList.remove('sf-modal-locked'); // limpiar estado bloqueado previo
   modalOverlay.classList.add('open');
   document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
+  lockModalHeight();
+}
+
+// Escritorio: fija la altura del modal a la que tiene con dorsal/parche SIN
+// marcar, para que desplegar esos campos no lo agrande (la columna de
+// contenido hace scroll interno). En móvil se deja fluir.
+function lockModalHeight() {
+  const modal = document.getElementById('modal');
+  if (!modal) return;
+  modal.style.height = '';
+  if (window.matchMedia('(max-width: 620px)').matches) return;
+  modal.style.height = modal.offsetHeight + 'px';
 }
 
 function buildSizeGrid(sizes) {
