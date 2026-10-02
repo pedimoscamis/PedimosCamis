@@ -6000,31 +6000,20 @@ function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
 // y el desplegable "Equipo"). Los escudos se leen de los propios botones de
 // "Ve directo a tu equipo" para no duplicar los assets.
 const TEAM_THEMES = {
-  'Real Madrid':       { a: '#FEBE10', b: '#FFFFFF' },
-  'Barcelona':         { a: '#A50044', b: '#004D98' },
-  'Atlético Madrid':   { a: '#CB3524', b: '#272E61' },
-  'Manchester United': { a: '#DA020E', b: '#FBE122' },
-  'Manchester City':   { a: '#6CABDD', b: '#1C2C5B' },
-  'Liverpool':         { a: '#C8102E', b: '#00B2A9' },
-  'Arsenal':           { a: '#EF0107', b: '#063672' },
-  'Bayern Munich':     { a: '#DC052D', b: '#0066B2' },
-  'PSG':               { a: '#004170', b: '#DA291C' },
-  'Juventus':          { a: '#9a9a9a', b: '#FFFFFF' },
-  'AC Milan':          { a: '#FB090B', b: '#FFFFFF' },
-  'Chelsea':           { a: '#034694', b: '#DBA111' },
+  'Real Madrid':       { a: '#FEBE10', b: '#FFFFFF' , logo: 'real_madrid' },
+  'Barcelona':         { a: '#A50044', b: '#004D98' , logo: 'barcelona' },
+  'Atlético Madrid':   { a: '#CB3524', b: '#272E61' , logo: 'atletico' },
+  'Manchester United': { a: '#DA020E', b: '#FBE122' , logo: 'man_utd' },
+  'Manchester City':   { a: '#6CABDD', b: '#1C2C5B' , logo: 'man_city' },
+  'Liverpool':         { a: '#C8102E', b: '#00B2A9' , logo: 'liverpool' },
+  'Arsenal':           { a: '#EF0107', b: '#063672' , logo: 'arsenal' },
+  'Bayern Munich':     { a: '#DC052D', b: '#0066B2' , logo: 'bayern' },
+  'PSG':               { a: '#004170', b: '#DA291C' , logo: 'psg' },
+  'Juventus':          { a: '#9a9a9a', b: '#FFFFFF' , logo: 'juventus' },
+  'AC Milan':          { a: '#FB090B', b: '#FFFFFF' , logo: 'ac_milan' },
+  'Chelsea':           { a: '#034694', b: '#DBA111' , logo: 'chelsea' },
 };
-let teamLogoCache = null;
-function getTeamLogo(teamName) {
-  if (!teamLogoCache) {
-    teamLogoCache = {};
-    document.querySelectorAll('.hero-team-chip').forEach(chip => {
-      const m = (chip.getAttribute('onclick') || '').match(/filterToTeam\('[^']*','([^']*)'\)/);
-      const logo = chip.style.getPropertyValue('--team-logo');
-      if (m && logo) teamLogoCache[m[1]] = logo;
-    });
-  }
-  return teamLogoCache[teamName] || '';
-}
+const TEAM_LOGO_BASE = 'https://kitzone-images.alfonsohgolderos.workers.dev/ui/team-';
 function applyTeamTheme() {
   const banner = document.getElementById('team-banner');
   if (!banner) return;
@@ -6036,8 +6025,7 @@ function applyTeamTheme() {
   banner.style.setProperty('--team-a', theme.a);
   banner.style.setProperty('--team-b', theme.b);
   document.body.style.setProperty('--team-a', theme.a);
-  const logo = getTeamLogo(name);
-  banner.style.setProperty('--team-logo', logo || 'none');
+  banner.style.setProperty('--team-logo', `url('${TEAM_LOGO_BASE}${theme.logo}.webp')`);
   document.getElementById('team-banner-name').textContent = name.toUpperCase();
   document.getElementById('team-banner-sub').textContent =
     lang === 'es' ? 'Todas las equipaciones' : 'All kits';
@@ -6054,8 +6042,10 @@ function filterToTeam(cat, teamName) {
   buildCatBar();
   buildFilterBar();
   renderAll();
-  const grid = document.getElementById('main');
-  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // El hero se oculta al filtrar, así que la página queda corta: subir arriba
+  // deja el banner del equipo visible justo bajo la barra fija (scrollIntoView
+  // sobre #main lo dejaba tapado por ella en escritorio).
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ─── Flash Events ────────────────────────────────────────────────────────
