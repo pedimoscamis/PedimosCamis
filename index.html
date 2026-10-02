@@ -6904,7 +6904,15 @@ function isPlayerVersion(p) {
  * Player Home (tier 2). Aquí usamos isMundialHome/isMundialAway en crudo,
  * que solo miran la palabra "home"/"away" sin ese descarte.
  */
+// Emparejamientos manuales fan → player cuando el automático elige otro anuncio
+// del mismo kit (hay álbumes duplicados del proveedor).
+const PLAYER_VERSION_OVERRIDES = {
+  '249543369': '249545094', // Barcelona 26/27 Away
+};
+
 function findPlayerVersionCounterpart(p) {
+  const forced = PLAYER_VERSION_OVERRIDES[p.id] && allProducts.find(x => x.id === PLAYER_VERSION_OVERRIDES[p.id]);
+  if (forced) return forced;
   const team = detectTeam(p.nameEn);
   if (!team) return null;
   const isHome = isMundialHome(p.nameEn);
@@ -6925,7 +6933,7 @@ function findPlayerVersionCounterpart(p) {
     extractSeason(x.nameEn) === season &&
     (isHome ? isMundialHome(x.nameEn) : isMundialAway(x.nameEn)) &&
     isSpainTwoStar(x) === twoStar &&
-    !/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b|\bshort/i.test(x.nameEn)
+    !/\bthird\b|\btercera\b|\bfourth\b|\bcuarta\b|\bshort|goalkeeper|\bgk\b|portero/i.test(x.nameEn)
   );
   if (candidates.length === 0) return null;
 
