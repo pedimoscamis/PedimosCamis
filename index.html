@@ -1655,64 +1655,6 @@
       .sizes-table th, .sizes-table td { padding: 8px 10px; font-size: 12px; }
     }
     /* ─── Tracker de Pedidos Modal ──────────────────────────── */
-    #tracker-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,.78);
-      z-index: 9400;
-      align-items: center; justify-content: center;
-      padding: 16px;
-    }
-    #tracker-overlay.open { display: flex; }
-    #tracker-modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      width: 100%; max-width: 460px;
-      padding: 32px 28px 28px;
-      position: relative;
-      max-height: 88vh;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    #tracker-close {
-      position: absolute; top: 14px; right: 16px;
-      background: none; border: none;
-      color: var(--muted); font-size: 22px;
-      cursor: pointer; line-height: 1;
-      transition: color .2s;
-    }
-    #tracker-close:hover { color: var(--accent); }
-    #tracker-modal h2 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 26px; letter-spacing: 1px;
-      color: var(--text); margin: 0 0 6px;
-    }
-    #tracker-modal .tracker-sub {
-      font-size: 13px; color: var(--muted); margin-bottom: 24px;
-    }
-    #tracker-email-input {
-      width: 100%; background: var(--card);
-      border: 1px solid var(--border); color: var(--text);
-      padding: 11px 14px; border-radius: 8px;
-      font-family: 'Barlow', sans-serif; font-size: 14px;
-      margin-bottom: 12px; box-sizing: border-box;
-      transition: border-color .2s;
-    }
-    #tracker-email-input:focus { outline: none; border-color: var(--accent); }
-    #tracker-submit {
-      width: 100%; background: var(--accent);
-      border: none; color: #fff;
-      padding: 12px; border-radius: 8px;
-      font-family: 'Barlow', sans-serif; font-size: 15px; font-weight: 700;
-      cursor: pointer; transition: background .18s;
-    }
-    #tracker-submit:hover  { background: var(--accent-dk); }
-    #tracker-submit:disabled { background: #555; cursor: not-allowed; }
-    #tracker-result {
-      margin-top: 20px; display: none;
-      border-top: 1px solid var(--border); padding-top: 18px;
-    }
-    #tracker-result.visible { display: block; }
     .tracker-orders-title {
       font-size: 12px; font-weight: 700; letter-spacing: .06em;
       text-transform: uppercase; color: var(--muted);
@@ -1816,18 +1758,6 @@
       padding: 8px 0;
     }
 
-    /* Botón "Sigue tu pedido" en el header */
-    #tracker-btn {
-      display: flex; align-items: center; gap: 5px;
-      background: none; border: 1px solid var(--border);
-      color: var(--muted); font-family: 'Barlow', sans-serif;
-      font-size: 12px; font-weight: 600;
-      padding: 6px 12px; border-radius: 20px;
-      cursor: pointer; white-space: nowrap;
-      transition: border-color .18s, color .18s;
-    }
-    #tracker-btn:hover { border-color: var(--accent); color: var(--text); }
-    @media (max-width: 500px) { #tracker-btn .tracker-btn-text { display: none; } }
 
     /* ─── Cuenta de cliente ─────────────────────────────────── */
     #account-btn {
@@ -2753,7 +2683,6 @@
     /* Solo en móvil: ocultar elementos del header que van al dropdown */
     @media (max-width: 768px) {
       #lang-toggle,
-      #tracker-btn,
       #account-btn,
       #fav-btn { display: none !important; }
 
@@ -2943,10 +2872,6 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       <span class="account-btn-text" id="account-btn-text">Entrar</span>
     </button>
-    <button id="tracker-btn" onclick="openTracker()" title="Sigue tu pedido">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.2L12 4l8.5 4.2M3.5 8.2v8.3L12 20.8l8.5-4.3V8.2M3.5 8.2L12 12.4l8.5-4.2M12 12.4v8.4"/></svg>
-      <span class="tracker-btn-text">Sigue tu pedido</span>
-    </button>
     <button id="fav-btn" onclick="goFavorites()" title="Favoritos">
       <span id="fav-icon">♡</span>
       <span id="fav-badge">0</span>
@@ -2965,12 +2890,6 @@
         <button class="mob-menu-item" onclick="openAccount(); closeMobUserMenu()">
           <span class="mob-menu-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>
           <span class="mob-menu-item-label" id="mob-account-label">Mi cuenta</span>
-          <span class="mob-menu-item-arrow">›</span>
-        </button>
-        <!-- Tracker -->
-        <button class="mob-menu-item" id="mob-tracker-item" onclick="openTracker(); closeMobUserMenu()">
-          <span class="mob-menu-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.2L12 4l8.5 4.2M3.5 8.2v8.3L12 20.8l8.5-4.3V8.2M3.5 8.2L12 12.4l8.5-4.2M12 12.4v8.4"/></svg></span>
-          <span class="mob-menu-item-label">Sigue tu pedido</span>
           <span class="mob-menu-item-arrow">›</span>
         </button>
         <!-- Favoritos -->
@@ -3125,18 +3044,6 @@
 </section>
 
 <!-- ─── Tracker de Pedidos Modal ─────────────────────────────────────── -->
-<div id="tracker-overlay" onclick="closeTrackerOnOverlay(event)">
-  <div id="tracker-modal">
-    <button id="tracker-close" onclick="closeTracker()" aria-label="Cerrar">✕</button>
-    <h2><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:6px"><path d="M3.5 8.2L12 4l8.5 4.2M3.5 8.2v8.3L12 20.8l8.5-4.3V8.2M3.5 8.2L12 12.4l8.5-4.2M12 12.4v8.4"/></svg>SIGUE TU PEDIDO</h2>
-    <p class="tracker-sub">Introduce el email con el que realizaste tu compra.</p>
-    <input id="tracker-email-input" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email"
-           onkeydown="if(event.key==='Enter') submitTracker()" />
-    <button id="tracker-submit" onclick="submitTracker()">Rastrear Pedido</button>
-    <div id="tracker-result"></div>
-  </div>
-</div>
-
 <!-- ─── Cuenta de cliente (opcional) ──────────────────────────────── -->
 <div id="account-overlay" onclick="if(event.target===this) closeAccount()">
   <div id="account-modal">
@@ -3150,7 +3057,7 @@
       <p class="account-sub">Entra con tu correo, sin contraseña: te enviamos un código. Verás todos tus pedidos, tus favoritos en cualquier dispositivo y harás el checkout en un clic.</p>
       <input id="account-email-input" class="account-input" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email" onkeydown="if(event.key==='Enter') acctRequestCode()" />
       <button id="account-email-submit" class="account-primary" onclick="acctRequestCode()">Enviarme el código</button>
-      <div class="account-nonote">La cuenta es opcional: puedes comprar y seguir tu pedido sin crearla.</div>
+      <div class="account-nonote">La cuenta es opcional: puedes comprar sin cuenta.</div>
     </div>
     <div id="account-view-code" style="display:none">
       <h2>REVISA TU CORREO</h2>
@@ -7664,113 +7571,6 @@ const TRACKER_ESTADOS = {
 };
 const TRACKER_SHIPPED_STATES = new Set(['Shipped', 'Arrived', 'Delivered']);
 
-function openTracker() {
-  document.getElementById('tracker-email-input').value = '';
-  document.getElementById('tracker-result').className  = '';
-  document.getElementById('tracker-result').innerHTML  = '';
-  document.getElementById('tracker-submit').textContent = 'Rastrear Pedido';
-  document.getElementById('tracker-submit').disabled    = false;
-  document.getElementById('tracker-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); document.documentElement.classList.add('modal-open');
-  setTimeout(() => document.getElementById('tracker-email-input').focus(), 80);
-}
-
-function closeTracker() {
-  document.getElementById('tracker-overlay').classList.remove('open');
-  document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
-}
-
-function closeTrackerOnOverlay(e) {
-  if (e.target === document.getElementById('tracker-overlay')) closeTracker();
-}
-
-async function submitTracker() {
-  const emailEl  = document.getElementById('tracker-email-input');
-  const submitEl = document.getElementById('tracker-submit');
-  const resultEl = document.getElementById('tracker-result');
-  const email    = emailEl.value.trim();
-
-  if (!email || !email.includes('@')) {
-    emailEl.style.borderColor = 'var(--accent)';
-    emailEl.focus();
-    return;
-  }
-  emailEl.style.borderColor = '';
-
-  submitEl.textContent = 'Buscando...';
-  submitEl.disabled    = true;
-  resultEl.className   = '';
-  resultEl.innerHTML   = '';
-
-  try {
-    // GET estándar sin mode:'no-cors' para recibir la respuesta legible
-    const res      = await fetch(`${WEBHOOK_URL}?email=${encodeURIComponent(email)}`);
-    const resultado = await res.json();
-
-    console.log('Respuesta del Tracker:', resultado);
-
-    // La estructura devuelta es { status, data: [ { fecha, estado, tracking }, ... ] }
-    const pedidos = Array.isArray(resultado.data)
-      ? resultado.data
-      : resultado.data ? [resultado.data] : []; // compatibilidad si algún día vuelve objeto
-
-    if (resultado.status === 'not_found' || resultado.error || pedidos.length === 0) {
-      resultEl.innerHTML = `<div class="tracker-error"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M12 3.5l9.5 16.5H2.5z"/><path d="M12 10v4.5M12 17.2v.1"/></svg>No se ha encontrado ningún pedido reciente asociado a este correo electrónico.</div>`;
-    } else {
-      // Ordenar de más reciente a más antiguo
-      pedidos.sort((a, b) => {
-        const da = a.fecha ? new Date(a.fecha) : new Date(0);
-        const db = b.fecha ? new Date(b.fecha) : new Date(0);
-        return db - da;
-      });
-      const cards = pedidos.map((pedido, idx) => {
-        const estadoRaw    = pedido.estado || '';
-        // TRACKER_ESTADOS ya trae su icono SVG embebido (HTML de confianza,
-        // no se escapa); si no hay traducción conocida, se cae a texto plano
-        // del estado crudo (o guion), que sí se escapa más abajo.
-        const estadoLabel  = TRACKER_ESTADOS[estadoRaw] || escHtml(estadoRaw || '—');
-        const trackingCode = (pedido.tracking || '').trim();
-        const showTracking = !!trackingCode;
-        const fechaRaw     = pedido.fecha ? new Date(pedido.fecha) : null;
-        const fecha        = (fechaRaw && !isNaN(fechaRaw))
-          ? fechaRaw.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
-          : (pedido.fecha || '—');
-
-        let cttHtml = '';
-        if (showTracking) {
-          const cttId = `ctt2-btn-${idx}`;
-          cttHtml = `
-            <div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(trackingCode)}</strong></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button id="${cttId}" class="tracker-ctt-btn" style="background:#2a6a4a;" onclick="openCttExpress('${escHtml(trackingCode)}', '${cttId}')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M9 15l6-6"/><path d="M10.5 7.5l1-1a3.5 3.5 0 015 5l-1 1"/><path d="M13.5 16.5l-1 1a3.5 3.5 0 01-5-5l1-1"/></svg>Copiar código y rastrear en CTT
-              </button>
-            </div>`;
-        }
-
-        return `
-          <div class="tracker-order-card">
-            <div class="tracker-order-meta">
-              <span class="tracker-order-date"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>${fecha}</span>
-              <span class="tracker-order-status">${estadoLabel}</span>
-            </div>
-            ${cttHtml}
-          </div>`;
-      }).join('');
-
-      resultEl.innerHTML = `
-        <div class="tracker-orders-title">${pedidos.length === 1 ? '1 pedido encontrado' : `${pedidos.length} pedidos encontrados`}</div>
-        ${cards}`;
-    }
-  } catch (err) {
-    resultEl.innerHTML = `<div class="tracker-error"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M12 3.5l9.5 16.5H2.5z"/><path d="M12 10v4.5M12 17.2v.1"/></svg>Error de conexión. Inténtalo de nuevo en unos segundos.</div>`;
-  }
-
-  resultEl.classList.add('visible');
-  submitEl.textContent = 'Rastrear Pedido';
-  submitEl.disabled    = false;
-}
-
 function openCttExpress(trackingCode, btnId) {
   const btn = document.getElementById(btnId);
   navigator.clipboard.writeText(trackingCode).then(() => {
@@ -7826,9 +7626,6 @@ function acctUpdateUi() {
   if (btn) btn.classList.toggle('logged', logged);
   const txt = document.getElementById('account-btn-text');
   if (txt) txt.textContent = logged ? 'Mi cuenta' : 'Entrar';
-  // Con sesión iniciada el seguimiento vive dentro de Mi cuenta → sobra el botón suelto
-  const trk = document.getElementById('tracker-btn'); if (trk) trk.style.display = logged ? 'none' : '';
-  const mtrk = document.getElementById('mob-tracker-item'); if (mtrk) mtrk.style.display = logged ? 'none' : '';
   const mob = document.getElementById('mob-account-label');
   if (mob) mob.textContent = logged ? 'Mi cuenta' : 'Entrar / crear cuenta';
 }
@@ -7936,7 +7733,7 @@ async function acctRequestCode() {
     acctShow('code');
     setTimeout(() => document.getElementById('account-code-input').focus(), 80);
   } catch (e) {
-    acctMsg(e.message === 'unavailable' ? 'Las cuentas estarán disponibles muy pronto. Mientras tanto puedes comprar y seguir tu pedido igual que siempre.' : (e.message || 'No se ha podido enviar el código.'), 'err');
+    acctMsg(e.message === 'unavailable' ? 'Las cuentas estarán disponibles muy pronto. Mientras tanto puedes comprar sin cuenta.' : (e.message || 'No se ha podido enviar el código.'), 'err');
   }
   btn.disabled = false; btn.textContent = 'Enviarme el código';
 }
