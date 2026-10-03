@@ -97,7 +97,14 @@ function solicitarCodigo(emailRaw) {
     '</div>' +
     '<div style="background-color:#eeeeee;padding:20px;text-align:center;font-size:12px;color:#888888;"><p style="margin:0;">¡Muchas gracias por tu confianza!</p></div>' +
     '</div></div>';
-  MailApp.sendEmail({ to: email, subject: 'Tu código de acceso: ' + code, htmlBody: html });
+  // Menos pinta de spam: nombre de remitente, versión en texto plano y sin el código en el asunto
+  MailApp.sendEmail({
+    to: email,
+    subject: 'Tu código de acceso a PedimosCamis',
+    name: 'PedimosCamis?',
+    body: 'Tu código de acceso es ' + code + '. Caduca en 10 minutos. Si no lo has pedido tú, ignora este correo.',
+    htmlBody: html
+  });
   return _json({ status: 'success' });
 }
 
