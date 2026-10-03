@@ -6679,7 +6679,8 @@ function applyDiscount(price) { return price; }
 
 const EUR_RATE = 0.90; // conversión USD → EUR en modo socio
 const USD_RATE = 0.85; // conversión EUR → USD  en modo normal EN
-const SHIPPING_COST   = 5;    // €  coste de envío a domicilio
+const SHIPPING_COST   = 5;    // €  precio de envío a domicilio que paga el cliente
+const SHIPPING_REAL_COST = 4.5; // € coste real del envío para mí (columna coste del Sheet)
 const SHIPPING_FREE_AT = 5;   // nº de camisetas a partir del cual el envío es gratis
 
 // ── Webhook Google Sheets ─────────────────────────────────────────────────
@@ -8550,7 +8551,7 @@ async function submitOrderForm(e) {
       name:    '-',
       patches: '-',
       size:    '-',
-      coste:   5,
+      coste:   SHIPPING_REAL_COST,
       cobro:   shippingCost,
     });
   }
