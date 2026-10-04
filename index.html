@@ -6683,6 +6683,7 @@ const EUR_RATE = 0.90; // conversión USD → EUR en modo socio
 const USD_RATE = 0.85; // conversión EUR → USD  en modo normal EN
 const SHIPPING_COST   = 5;    // €  precio de envío a domicilio que paga el cliente
 const SHIPPING_REAL_COST = 4.5; // € coste real del envío para mí (columna coste del Sheet)
+const HOME_DELIVERY_EXTRA_COST = 2.66; // € coste fijo extra para mí en todo pedido a domicilio (incluso con envío gratis)
 const SHIPPING_FREE_AT = 5;   // nº de camisetas a partir del cual el envío es gratis
 
 // ── Webhook Google Sheets ─────────────────────────────────────────────────
@@ -8553,8 +8554,10 @@ async function submitOrderForm(e) {
     formattedAddress,
     document.getElementById('form-metodo-pago').value
   );
-  // Añadir gastos de envío como fila extra si procede
-  if (shippingCost > 0) {
+  // Añadir gastos de envío como fila extra en todo pedido a domicilio: el
+  // cobro es lo que paga el cliente (0 si es gratis) y el coste suma siempre
+  // HOME_DELIVERY_EXTRA_COST, más SHIPPING_REAL_COST cuando el envío se cobra.
+  if (document.getElementById('envio-domicilio')?.checked) {
     payload.carrito.push({
       jersey:  'Gastos de envío',
       picture: '',
@@ -8562,7 +8565,7 @@ async function submitOrderForm(e) {
       name:    '-',
       patches: '-',
       size:    '-',
-      coste:   SHIPPING_REAL_COST,
+      coste:   Math.round(((shippingCost > 0 ? SHIPPING_REAL_COST : 0) + HOME_DELIVERY_EXTRA_COST) * 100) / 100,
       cobro:   shippingCost,
     });
   }
