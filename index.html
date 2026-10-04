@@ -6738,7 +6738,7 @@ const SOCIO_PRICES = {
   women:        8,
   nba:         15 / EUR_RATE,  // → 15.00€
 };
-// Nota: getBasePrice() añade +1€ global sobre este valor base, así que se
+// Nota: en modo socio getBasePrice() añade +1€ global sobre este valor base, así que se
 // resta ese euro aquí para que el precio final mostrado sea el pactado
 // (Fan 9€, Player 12€, Retro 13€).
 const SOCIO_JERSEY        = 8 / EUR_RATE;   // → 9.00€ final (Fan)
@@ -6760,13 +6760,16 @@ function primaryCat(p) {
 
 function getBasePrice(p) {
   const price = computeBasePrice(p);
-  // Segunda Estrella: +1€ sobre el precio que le correspondería normalmente
-  const withSpecials = isSpainTwoStar(p) ? price + 1 : price;
-  // Subida general de +1€ a todo el catálogo (artículos, no personalización
-  // ni envío, que se calculan aparte). En modo socio el valor está en $, así
-  // que se sube el equivalente a +1€ reales tras la conversión.
-  const surcharge = socioMode ? 1 / EUR_RATE : 1;
-  return withSpecials + surcharge;
+  if (socioMode) {
+    // Segunda Estrella: +1€ sobre el precio que le correspondería normalmente.
+    // Subida general de +1€ (en $, equivalente a +1€ reales tras la conversión).
+    const withSpecials = isSpainTwoStar(p) ? price + 1 : price;
+    return withSpecials + 1 / EUR_RATE;
+  }
+  // Modo normal: subida general de +2€ a todo el catálogo (artículos, no
+  // personalización ni envío, que se calculan aparte). La Segunda Estrella ya
+  // llevaba +1€ propio, así que se queda igual: sin recargo extra encima.
+  return price + 2;
 }
 
 function computeBasePrice(p) {
