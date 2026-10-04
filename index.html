@@ -7807,11 +7807,17 @@ async function acctLoadMainInner(box) {
 
 function acctRenderOrders() {
   const box = document.getElementById('account-tab-orders');
-  const pedidos = (acctData && acctData.pedidos) || [];
+  // La fecha llega como "dd/MM/yyyy HH:mm" (o ISO): más reciente primero
+  const fechaMs = s => {
+    const m = String(s || '').match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
+    if (m) return new Date(+m[3], +m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0)).getTime();
+    const d = new Date(s); return isNaN(d) ? 0 : d.getTime();
+  };
+  const pedidos = [...((acctData && acctData.pedidos) || [])].sort((a, b) => fechaMs(b.fecha) - fechaMs(a.fecha));
   if (!pedidos.length) { box.innerHTML = '<div class="account-sub">Todavía no hay pedidos asociados a <strong>' + escHtml(acctSession.email) + '</strong>. Aparecerán aquí cuando compres con este correo.</div>'; return; }
   box.innerHTML = '<div class="tracker-orders-title">' + (pedidos.length === 1 ? '1 pedido' : pedidos.length + ' pedidos') + '</div>' + pedidos.map((p, idx) => {
     const estadoLabel = TRACKER_ESTADOS[p.estado] || escHtml(p.estado || '—');
-    const d = p.fecha ? new Date(p.fecha) : null;
+    const ms = fechaMs(p.fecha), d = ms ? new Date(ms) : null;
     const fecha = (d && !isNaN(d)) ? d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : escHtml(p.fecha || '—');
     const items = (p.items || []).filter(i => !i.envio).map(i => {
       const extra = [i.version, i.name && i.name !== '-' ? i.name : '', i.patches && i.patches !== '-' ? i.patches : ''].filter(x => x && x !== '-').map(escHtml).join(' · ');
