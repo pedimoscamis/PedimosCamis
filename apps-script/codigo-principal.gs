@@ -160,6 +160,8 @@ function doPost(e) {
     items.forEach(function(item) {
       if (item.jersey && item.jersey.toLowerCase().includes("gasto") && item.jersey.toLowerCase().includes("envío")) {
         precioEnvioParaCorreo = Number(item.cobro) || Number(item.price) || 0;
+      } else if (esFilaNoArticulo(item.jersey)) {
+        // Tax aduana: solo coste interno, no se muestra al cliente
       } else {
         var precioMuestra = Number(item.cobro) || Number(item.price) || Number(item.precio) || 0;
 
@@ -300,7 +302,7 @@ function onEdit(e) {
             var jersey = datosArticulos[f][2].toString();
             var talla = datosArticulos[f][7];
 
-            if (!jersey.toLowerCase().includes("gasto") && !jersey.toLowerCase().includes("envío")) {
+            if (!esFilaNoArticulo(jersey)) {
 
               var imgUrl = "";
               var formulaImg = formulasArticulos[f][3];
@@ -360,7 +362,7 @@ function onEdit(e) {
         var jersey = datosArticulos[f][2].toString();
         var talla = datosArticulos[f][7];
 
-        if (!jersey.toLowerCase().includes("gasto") && !jersey.toLowerCase().includes("envío")) {
+        if (!esFilaNoArticulo(jersey)) {
 
           var imgUrl = "";
           var formulaImg = formulasArticulos[f][3];
@@ -451,7 +453,7 @@ function actualizarTotalesDeEncargo(numEncargoTexto, sheetEncargos, filaDestino)
 
     if (clavesPedidosEnEncargo.indexOf(claveArt) !== -1) {
       var jersey = datosArticulos[a][2].toString();
-      if (!jersey.toLowerCase().includes("gasto") && !jersey.toLowerCase().includes("envío")) {
+      if (!esFilaNoArticulo(jersey)) {
         totalArticulos++;
       }
     }
@@ -723,4 +725,11 @@ function convertirObjetoJsAJson(texto) {
   }
   resultado = resultado.replace(/,\s*([}\]])/g, '$1');
   return resultado;
+}
+
+// Filas de la hoja Artículos que no son camisetas: gastos de envío y tax de
+// aduana. No cuentan como artículo ni se muestran al cliente.
+function esFilaNoArticulo(jersey) {
+  var j = (jersey || "").toString().toLowerCase();
+  return (j.indexOf("gasto") !== -1 && j.indexOf("envío") !== -1) || j.indexOf("tax aduana") !== -1;
 }

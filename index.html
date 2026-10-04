@@ -8554,20 +8554,15 @@ async function submitOrderForm(e) {
     formattedAddress,
     document.getElementById('form-metodo-pago').value
   );
-  // Añadir gastos de envío como fila extra en todo pedido a domicilio: el
-  // cobro es lo que paga el cliente (0 si es gratis) y el coste suma siempre
-  // HOME_DELIVERY_EXTRA_COST, más SHIPPING_REAL_COST cuando el envío se cobra.
+  // Pedidos a domicilio: fila "Gastos de envío" si el envío se cobra (coste
+  // real SHIPPING_REAL_COST) y fila "Tax aduana" siempre, con el coste fijo
+  // HOME_DELIVERY_EXTRA_COST y cobro 0. Ninguna cuenta como artículo.
   if (document.getElementById('envio-domicilio')?.checked) {
-    payload.carrito.push({
-      jersey:  'Gastos de envío',
-      picture: '',
-      version: '-',
-      name:    '-',
-      patches: '-',
-      size:    '-',
-      coste:   Math.round(((shippingCost > 0 ? SHIPPING_REAL_COST : 0) + HOME_DELIVERY_EXTRA_COST) * 100) / 100,
-      cobro:   shippingCost,
+    const filaGasto = (jersey, coste, cobro) => ({
+      jersey, picture: '', version: '-', name: '-', patches: '-', size: '-', coste, cobro,
     });
+    if (shippingCost > 0) payload.carrito.push(filaGasto('Gastos de envío', SHIPPING_REAL_COST, shippingCost));
+    payload.carrito.push(filaGasto('Tax aduana', HOME_DELIVERY_EXTRA_COST, 0));
   }
 
   // ── Enviar al webhook de Google Apps Script y esperar la respuesta real ───

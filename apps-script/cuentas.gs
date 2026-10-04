@@ -192,7 +192,7 @@ function obtenerCuenta(token) {
     for (var k = 1; k < articulos.length; k++) {
       if (normalizarATexto(articulos[k][0]) === fecha && articulos[k][1].toString().trim() === cliente) {
         var jersey = articulos[k][2].toString();
-        var esEnvio = jersey.toLowerCase().indexOf('gasto') !== -1 && jersey.toLowerCase().indexOf('envío') !== -1;
+        var esEnvio = esFilaNoArticulo(jersey);
         items.push({ jersey: jersey, version: articulos[k][4], name: articulos[k][5], patches: articulos[k][6],
                      size: articulos[k][7], cobro: articulos[k][9], envio: esEnvio });
       }
