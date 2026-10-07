@@ -1908,18 +1908,22 @@
 
     /* ─── Fav header button ──────────────────────────────────── */
     #fav-btn {
-      position: relative; background: none; border: none;
-      color: var(--text); cursor: pointer; padding: 8px;
-      border-radius: 8px; transition: background .2s;
-      display: flex; align-items: center; font-size: 20px; line-height: 1;
+      position: relative; display: flex; align-items: center; gap: 6px;
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); cursor: pointer;
+      padding: 5px 11px; border-radius: 20px; line-height: 1;
+      font-family: 'Barlow', sans-serif;
+      transition: border-color .18s, color .18s, background .18s;
     }
-    #fav-btn:hover { background: var(--surface); }
+    #fav-btn:hover { border-color: var(--accent); color: var(--text); }
+    #fav-icon { width: 18px; height: 18px; display: block; transition: transform .2s; }
+    #fav-icon path { fill: none; stroke: currentColor; stroke-width: 1.8; transition: fill .2s, stroke .2s; }
+    #fav-btn.has-favs { border-color: rgba(232,23,60,.55); background: rgba(232,23,60,.08); color: var(--text); }
+    #fav-btn.has-favs #fav-icon path { fill: var(--accent); stroke: var(--accent); }
+    #fav-btn.has-favs:hover #fav-icon { transform: scale(1.12); }
     #fav-badge {
-      position: absolute; top: 2px; right: 2px;
-      background: var(--accent); color: #fff;
-      font-size: 10px; font-weight: 700;
-      border-radius: 50%; width: 18px; height: 18px;
-      display: none; align-items: center; justify-content: center;
+      display: none; font-size: 13px; font-weight: 700;
+      font-variant-numeric: tabular-nums; min-width: 8px; text-align: center;
     }
 
     /* ─── Card fav button ────────────────────────────────────── */
@@ -2881,7 +2885,7 @@
       <span class="account-btn-text" id="account-btn-text">Entrar</span>
     </button>
     <button id="fav-btn" onclick="goFavorites()" title="Favoritos">
-      <span id="fav-icon">♡</span>
+      <svg id="fav-icon" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linejoin="round" d="M12 20.5s-7.5-4.6-9.3-9.4C1.5 7.8 3.6 4.5 7 4.5c2.1 0 3.9 1.2 5 3 1.1-1.8 2.9-3 5-3 3.4 0 5.5 3.3 4.3 6.6-1.8 4.8-9.3 9.4-9.3 9.4z"/></svg>
       <span id="fav-badge">0</span>
     </button>
     <!-- ─── Mobile user dropdown (solo móvil) ─────────────── -->
@@ -4133,10 +4137,9 @@ function saveFavorites() {
 
 function updateFavBadge() {
   const badge = document.getElementById('fav-badge');
-  const icon  = document.getElementById('fav-icon');
-  badge.style.display = favorites.size ? 'flex' : 'none';
-  badge.textContent   = favorites.size;
-  icon.textContent    = favorites.size ? '♥' : '♡';
+  badge.style.display = favorites.size ? 'inline-block' : 'none';
+  badge.textContent   = favorites.size > 99 ? '99+' : favorites.size;
+  document.getElementById('fav-btn').classList.toggle('has-favs', favorites.size > 0);
   // Sincronizar badge en el menú móvil
   const mobBadge = document.getElementById('mob-fav-badge');
   if (mobBadge) {
