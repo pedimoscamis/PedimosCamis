@@ -35,6 +35,7 @@ jobs:
           cp index.html _site/
           mkdir -p _site/data
           cp data/products.json _site/data/
+          node scripts/build-share-pages.js _site
           touch _site/.nojekyll
 
       - name: Configurar GitHub Pages

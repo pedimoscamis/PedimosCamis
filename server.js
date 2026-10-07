@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 3000;
 // Servir archivos estáticos desde la raíz del proyecto
 app.use(express.static(path.join(__dirname), {
   index: 'index.html',
+  extensions: ['html'],   // /p/<id> → p/<id>.html (enlaces compartidos)
   setHeaders(res, filePath) {
     // CORS abierto para desarrollo local
     res.setHeader('Access-Control-Allow-Origin', '*');

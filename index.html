@@ -2646,6 +2646,14 @@
     }
     #modal-fav-btn:hover { border-color: var(--accent); color: var(--accent); }
     #modal-fav-btn.active { color: var(--accent); border-color: var(--accent); }
+    .modal-head-actions { display: flex; gap: 6px; flex-shrink: 0; align-self: flex-start; }
+    #modal-share-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); width: 38px; height: 38px; padding: 0;
+      border-radius: 8px; cursor: pointer; transition: all .2s;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    #modal-share-btn:hover { border-color: var(--accent); color: var(--accent); }
 
     /* ─── Mobile User Dropdown ───────────────────────────────── */
     /* ─── Badges en el modal ─────────────────────────────────── */
@@ -3357,7 +3365,10 @@
           <h2 id="modal-name"></h2>
           <div id="modal-badges"></div>
         </div>
-        <button id="modal-fav-btn" title="Añadir a favoritos">♡</button>
+        <div class="modal-head-actions">
+          <button id="modal-share-btn" type="button" title="Compartir" aria-label="Compartir"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.3M8.3 13.2l7.4 4.3"/></svg></button>
+          <button id="modal-fav-btn" title="Añadir a favoritos">♡</button>
+        </div>
       </div>
       <div id="modal-stock-warning" style="display:none">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M12 3.5l9.5 16.5H2.5z"/><path d="M12 10v4.5M12 17.2v.1"/></svg>Es posible que no nos quede stock de este artículo. En ese caso te contactaremos cuando realices tu pedido (no se te cobrará nada).
@@ -4261,6 +4272,7 @@ async function init() {
     buildCatBar();     // reconstruir tras cargar datos (ej. la pill 'shorts' depende de allProducts)
     buildFilterBar();
     renderAll();
+    openProductFromUrl();
   } catch (e) {
     document.getElementById('results-info').textContent = t().error_load;
     console.error(e);
@@ -7215,6 +7227,7 @@ function openModal(p) {
   renderAdminCatEditor(p);
 
   setModalTeamChip(p);
+  setProductUrl(p);
 
   const modalOverlay = document.getElementById('modal-overlay');
   modalOverlay.classList.remove('sf-modal-locked'); // limpiar estado bloqueado previo
@@ -7544,6 +7557,57 @@ function closeModal() {
   document.body.style.overflow = ''; document.body.classList.remove('modal-open'); document.documentElement.classList.remove('modal-open');
   currentProduct = null;
   selectedSize = null;
+  setProductUrl(null);
+}
+
+// ─── Enlaces compartibles de producto ────────────────────────────────────────
+// Cada equipación tiene su URL: ?p=<id> (la que se ve en la barra al abrir el
+// modal) y p/<id> (página estática generada en el deploy con las etiquetas
+// Open Graph — foto y nombre — para que WhatsApp/Instagram muestren vista
+// previa; redirige a ?p=<id>). Se comparte la segunda.
+function catalogProduct(p) {
+  return p && p.id != null ? allProducts.find(x => String(x.id) === String(p.id)) : null;
+}
+
+function setProductUrl(p) {
+  const url = new URL(location.href);
+  const shareable = catalogProduct(p);
+  if (shareable) url.searchParams.set('p', shareable.id);
+  else url.searchParams.delete('p');
+  if (url.href !== location.href) history.replaceState(history.state, '', url);
+  document.getElementById('modal-share-btn').style.display = shareable ? '' : 'none';
+}
+
+function productShareUrl(p) {
+  return new URL('p/' + encodeURIComponent(p.id), location.origin + location.pathname.replace(/[^/]*$/, '')).href;
+}
+
+async function shareCurrentProduct() {
+  const p = catalogProduct(currentProduct);
+  if (!p) return;
+  const url   = productShareUrl(p);
+  const title = traducirNombre(p.nameEn);
+  const okIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M4 12l5 5L20 6"/></svg>';
+  if (navigator.share) {
+    try { await navigator.share({ title, text: title + ' — PedimosCamis?', url }); return; }
+    catch (e) { if (e.name === 'AbortError') return; }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    showToast(okIcon + (lang === 'es' ? 'Enlace copiado' : 'Link copied'));
+  } catch {
+    prompt(lang === 'es' ? 'Copia el enlace:' : 'Copy the link:', url);
+  }
+}
+document.getElementById('modal-share-btn').onclick = shareCurrentProduct;
+
+// Abrir el producto de un enlace compartido (?p=<id>) al cargar el catálogo.
+function openProductFromUrl() {
+  const id = new URLSearchParams(location.search).get('p');
+  if (!id) return;
+  const p = allProducts.find(x => String(x.id) === id);
+  if (p) openModal(p);
+  else setProductUrl(null);
 }
 
 function closeModalOnOverlay(e) {
