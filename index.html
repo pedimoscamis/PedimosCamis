@@ -3877,6 +3877,14 @@ function updateShippingUpsell() {
   }
 }
 
+/** Plazo de entrega: en mano es más largo (2-6 semanas) que a domicilio. */
+function updateDeliveryNote() {
+  const deliveryNote = document.getElementById('delivery-note');
+  if (!deliveryNote) return;
+  const esMano = document.getElementById('envio-mano')?.checked;
+  deliveryNote.innerHTML = esMano ? t().delivery_note_mano : t().delivery_note;
+}
+
 /** Refresca totales al cambiar tipo de envío. */
 function onShippingChange() {
   const esMano   = document.getElementById('envio-mano').checked;
@@ -3889,6 +3897,7 @@ function onShippingChange() {
   addressWrap.querySelectorAll('input').forEach(el => { el.required = !esMano && !socioMode && !adminMode; });
   // Entrega en mano → método de pago por defecto Efectivo (se paga al recogerlo)
   if (esMano) document.getElementById('form-metodo-pago').value = 'Efectivo';
+  updateDeliveryNote();
   updateShippingUpsell();
   updateCheckoutTotals();
 }
@@ -3984,6 +3993,7 @@ const T = {
     label_email: 'Correo electrónico *',
     error_email: 'Introduce un correo electrónico válido',
     delivery_note: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg>Plazo de entrega estimado: 2-3 semanas.',
+    delivery_note_mano: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg>Plazo de entrega estimado: 2-6 semanas.',
     select_size: 'Selecciona una talla',
     added_cart: '¡Añadido al carrito!',
     see_photos: 'VER FOTOS EN YUPOO →',
@@ -4063,6 +4073,7 @@ const T = {
     label_email: 'Email *',
     error_email: 'Please enter a valid email address',
     delivery_note: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg>Estimated delivery time: approximately 2 weeks.',
+    delivery_note_mano: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg>Estimated delivery time: 2-6 weeks.',
     select_size: 'Select a size',
     added_cart: 'Added to cart!',
     see_photos: 'SEE PHOTOS ON YUPOO →',
@@ -8981,8 +8992,7 @@ function updateLangUI() {
   document.querySelectorAll('[data-i18n="label_email"]').forEach(el => el.textContent = t().label_email);
   const emailErrEl = document.getElementById('form-correo-error');
   if (emailErrEl) emailErrEl.textContent = t().error_email;
-  const deliveryNote = document.getElementById('delivery-note');
-  if (deliveryNote) deliveryNote.innerHTML = t().delivery_note;
+  updateDeliveryNote();
   document.getElementById('cart-total-val').textContent = t().total_fmt(cartTotalEur());
 }
 
