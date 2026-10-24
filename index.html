@@ -4272,7 +4272,7 @@ async function init() {
       }
       obs.unobserve(img);
     }
-  }, { rootMargin: '500% 0px' });
+  }, { rootMargin: '300px 0px' });
 
   // ── Infinite scroll con IntersectionObserver ────────────────────────────
   const sentinel = document.getElementById('load-more-sentinel');
@@ -4527,7 +4527,7 @@ function buildSpotlightSlide(item, idx) {
     </div>
     <div class="spotlight-media">
       <div class="spotlight-glow"></div>
-      <img src="${item.img}" alt="${escHtml(item.team)}" draggable="false">
+      <img src="${item.img}" alt="${escHtml(item.team)}" draggable="false" loading="lazy" onerror="this.style.visibility='hidden'">
     </div>`;
   slide.querySelector('.spotlight-cta').addEventListener('click', () => spotlightOpenProduct(idx));
   return slide;
