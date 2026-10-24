@@ -5,7 +5,7 @@
  * almacenamiento) para los productos recién importados del nuevo proveedor
  * (supplier: 'newsupplier', sin img todavía),
  * las convierte a webp y las sube a R2 bajo mascamis/{id}_photoN_resultado.webp,
- * usando el dominio del Worker (no r2.dev, que es solo de desarrollo).
+ * usando la URL pública de R2.
  *
  * Reanudable: guarda checkpoint en products.json cada 25 productos y omite
  * los que ya tengan img.
@@ -24,7 +24,7 @@ const sharp   = require('sharp');
 const { S3Client, PutObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
 
 const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
-const WORKER_BASE    = 'https://kitzone-images.alfonsohgolderos.workers.dev';
+const WORKER_BASE    = 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev';
 const R2_PREFIX      = 'mascamis';
 
 const BUCKET     = 'pedimoscamis';

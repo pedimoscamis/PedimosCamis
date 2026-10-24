@@ -18,7 +18,7 @@ const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
 const NEWSUP_RAW     = path.join(__dirname, 'data', 'newsupplier-raw.json');
-const WORKER_BASE    = 'https://kitzone-images.alfonsohgolderos.workers.dev';
+const WORKER_BASE    = 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev';
 const R2_PREFIX      = 'mascamis';
 
 const BUCKET     = 'pedimoscamis';
