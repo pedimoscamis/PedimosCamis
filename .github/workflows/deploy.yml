@@ -36,6 +36,7 @@ jobs:
           mkdir -p _site/data
           cp data/products.json _site/data/
           node scripts/build-share-pages.js _site
+          cp CNAME _site/
           touch _site/.nojekyll
 
       - name: Configurar GitHub Pages
