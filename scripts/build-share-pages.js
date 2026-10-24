@@ -32,6 +32,12 @@ for (const p of products) {
   const title = esc(`${traducirNombre(p.nameEn || p.nameEs)} — PedimosCamis?`);
   const desc = esc('Camisetas de fútbol y NBA. Calidad premium, precios imbatibles. Personalízala con nombre y dorsal.');
   const target = `../?p=${encodeURIComponent(id)}`;
+  const url = `https://pedimoscamis.com/p/${encodeURIComponent(id)}.html`;
+  const ld = JSON.stringify({
+    '@context': 'https://schema.org', '@type': 'Product',
+    name: traducirNombre(p.nameEn || p.nameEs), description: 'Camiseta de fútbol y NBA. Personalízala con nombre y dorsal.',
+    ...(p.img ? { image: p.img } : {}), sku: id, brand: { '@type': 'Brand', name: 'PedimosCamis?' }, url,
+  }).replace(/</g, '\\u003c');
   const img = p.img ? `<meta property="og:image" content="${esc(p.img)}">\n<meta name="twitter:image" content="${esc(p.img)}">\n` : '';
   fs.writeFileSync(path.join(outDir, `${id}.html`), `<!doctype html>
 <html lang="es"><head>
@@ -44,7 +50,9 @@ for (const p of products) {
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${desc}">
 ${img}<meta name="twitter:card" content="summary_large_image">
-<meta name="robots" content="noindex">
+<link rel="canonical" href="${url}">
+<meta property="og:url" content="${url}">
+<script type="application/ld+json">${ld}</script>
 <meta http-equiv="refresh" content="0; url=${target}">
 <script>location.replace(${JSON.stringify(target)});</script>
 </head><body><a href="${target}">Ver camiseta</a></body></html>
