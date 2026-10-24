@@ -8,7 +8,7 @@
  *     - Extrae las URLs de las 3 primeras imágenes del álbum
  *     - Las descarga en H:\mascamis como {id}_photo1.jpg … _photo3.jpg
  *  3. Inyecta en cada producto un array "gallery" con las URLs definitivas de R2
- *     Formato: https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/galeria/{id}_photo1.jpg
+ *     Formato: https://img.pedimoscamis.com/galeria/{id}_photo1.jpg
  *  4. Guarda products.json con checkpoint cada 50 productos
  *
  * Incremental: omite productos que ya tengan gallery[] con entradas.
@@ -31,7 +31,7 @@ const path    = require('path');
 
 const PRODUCTS_FILE    = path.join(__dirname, 'data', 'products.json');
 const DOWNLOAD_DIR     = 'H:\\mascamis';
-const R2_BASE          = 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis';
+const R2_BASE          = 'https://img.pedimoscamis.com/mascamis';
 const PHOTOS_PER_ALBUM = 4;  // extraemos 4 y luego descartamos la 1ª (igual a portada)
 const DELAY_MS         = 1200; // ms entre álbumes para no saturar el servidor
 

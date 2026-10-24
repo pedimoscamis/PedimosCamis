@@ -34,7 +34,7 @@ const { S3Client, PutObjectCommand, HeadObjectCommand } = require('@aws-sdk/clie
 const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
 const LOWQ_KEYS_FILE = path.join(__dirname, 'data', 'r2-uploaded-keys.json'); // set de "baja calidad" a re-portada
 const TMP_DIR        = path.join(__dirname, '.gallery-tmp');
-const R2_PUBLIC_BASE = 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev';
+const R2_PUBLIC_BASE = 'https://img.pedimoscamis.com';
 const R2_PREFIX      = 'mascamis';
 
 const BUCKET     = 'pedimoscamis';

@@ -5,7 +5,7 @@
  * Variante de r2-upload.js apuntando a la carpeta generada por
  * download-new-images.js (./images-nuevas-webp), subiendo a la raíz
  * del bucket con el mismo convenio que el resto del catálogo:
- *   https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/{id}.webp
+ *   https://img.pedimoscamis.com/{id}.webp
  *
  * Uso: node r2-upload-new-catalog.js
  */
@@ -24,7 +24,7 @@ const SECRET_KEY   = '26e30e0384e4fff6678c8b32c1f266ac8868c89c231aa2d3165335156a
 const REGION       = 'auto';
 const CONCURRENCY  = 8;
 const LOG_EVERY    = 100;
-const PUBLIC_BASE  = 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev';
+const PUBLIC_BASE  = 'https://img.pedimoscamis.com';
 
 // ─── Cliente R2 ───────────────────────────────────────────────────────────────
 

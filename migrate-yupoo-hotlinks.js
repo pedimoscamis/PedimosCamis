@@ -10,7 +10,7 @@ const path = require('path');
 const sharp = require('sharp');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const FILE = path.join(__dirname, 'data', 'products.json');
-const WORKER = 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev';
+const WORKER = 'https://img.pedimoscamis.com';
 const client = new S3Client({ region: 'auto', endpoint: 'https://6600c8fee14f863b13c7b9bba8869364.r2.cloudflarestorage.com',
   credentials: { accessKeyId: '566df4f751d6f3d8ac1d94839f034bcd', secretAccessKey: '26e30e0384e4fff6678c8b32c1f266ac8868c89c231aa2d3165335156a4794da' } });
 const sleep = ms => new Promise(r => setTimeout(r, ms));

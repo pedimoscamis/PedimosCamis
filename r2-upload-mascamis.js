@@ -4,7 +4,7 @@
  *
  * Lee los archivos .jpg de H:\mascamis y los sube al bucket R2 bajo
  * la carpeta "mascamis/", de forma que queden accesibles en:
- *   https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/mascamis/{filename}
+ *   https://img.pedimoscamis.com/mascamis/{filename}
  *
  * Características:
  *  - Reanudable: omite archivos que ya existen en R2
@@ -143,7 +143,7 @@ async function main() {
   console.log(`  Subidas OK:  ${uploaded}`);
   console.log(`  Ya existían: ${skipped}`);
   console.log(`  Errores:     ${errors}`);
-  console.log(`\n  URL base: https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev/${R2_PREFIX}/`);
+  console.log(`\n  URL base: https://img.pedimoscamis.com/${R2_PREFIX}/`);
 
   if (errorList.length > 0) {
     fs.writeFileSync('r2-upload-mascamis-errors.json', JSON.stringify(errorList, null, 2));
