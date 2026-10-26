@@ -2860,19 +2860,31 @@
       #modal { grid-template-rows: minmax(0, 1fr); }
       #modal-content-col { max-height: none; height: 100%; }
     }
+    /* Móvil: columna flex limitada a la altura VISIBLE (dvh descuenta la barra
+       del navegador / navegador integrado de apps). La foto se encoge si no
+       cabe y el contenido hace scroll interno, así nunca se sale del modal. */
     @media (max-width: 620px) {
-      #modal { grid-template-columns: minmax(0, 1fr); }
+      #modal {
+        display: flex; flex-direction: column;
+        max-height: calc(100vh - 32px);
+        max-height: calc(100dvh - 32px);
+      }
       #modal-img-col {
-        aspect-ratio: 1/1; min-height: 0;
+        flex: 0 0 auto;
+        height: min(calc(100vw - 34px), 42vh);
+        height: min(calc(100vw - 34px), 42dvh);
+        min-height: 0;
         border-radius: 14px 14px 0 0;
       }
       #modal-img-col img { object-fit: contain; }
       .modal-carousel-track img { object-fit: contain; }
       #modal-content-col {
+        flex: 1 1 auto; min-height: 0; max-height: none;
         padding: 28px 22px 24px;
         gap: 12px;
         border-radius: 0 0 14px 14px;
       }
+      #modal-content-col > * { flex-shrink: 0; }
     }
   </style>
 </head>
@@ -3553,9 +3565,6 @@
           <input type="radio" name="tipoEnvio" id="envio-mano" value="mano" onchange="onShippingChange()" />
           <label for="envio-mano"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M12 21s7-7.2 7-12.2a7 7 0 10-14 0C5 13.8 12 21 12 21z"/><circle cx="12" cy="8.8" r="2.4"/></svg>Entrega en mano</span></label>
         </div>
-        <div class="shipping-note" id="shipping-note-mano">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M21 11.5a8.4 8.4 0 01-8.9 8.4 8.6 8.6 0 01-3.8-.9L3 20l1.2-5.1a8.3 8.3 0 01-.9-3.8A8.4 8.4 0 0112 2.5h.5A8.4 8.4 0 0121 11v.5z"/></svg>Quedaremos contigo por WhatsApp para la entrega en mano.
-        </div>
       </div>
 
       <div id="address-fields-wrap">
@@ -3906,8 +3915,6 @@ function updateDeliveryNote() {
 /** Refresca totales al cambiar tipo de envío. */
 function onShippingChange() {
   const esMano   = document.getElementById('envio-mano').checked;
-  const notaMano = document.getElementById('shipping-note-mano');
-  notaMano.style.display = esMano ? 'block' : 'none';
   // En entrega en mano no hace falta dirección: se oculta y se quita el
   // "required" para no bloquear el envío del formulario con campos vacíos.
   const addressWrap = document.getElementById('address-fields-wrap');
@@ -8456,7 +8463,6 @@ function openCheckout(e) {
 
   // Resetear el selector de envío a "Envío a domicilio" ANTES de calcular totales.
   document.getElementById('envio-domicilio').checked           = true;
-  document.getElementById('shipping-note-mano').style.display  = 'none';
   document.getElementById('shipping-upsell').style.display     = '';
 
   updateCheckoutTotals();
@@ -8490,7 +8496,6 @@ function openCheckout(e) {
   orderForm.reset();
   // Re-aplicar el estado de envío tras el reset del formulario (reset() borra el checked)
   document.getElementById('envio-domicilio').checked           = true;
-  document.getElementById('shipping-note-mano').style.display  = 'none';
   updateShippingUpsell();
   // Socios y Superadmin: pueden enviar el pedido sin rellenar los campos
   // obligatorios (nombre, teléfono, email, dirección, método de pago).
@@ -8659,7 +8664,7 @@ async function submitOrderForm(e) {
   const nombreVal  = document.getElementById('form-nombre').value.trim();
   const esManoVal  = document.getElementById('envio-mano').checked;
   const formattedAddress = esManoVal
-    ? `Entrega en mano (se coordina por WhatsApp)\nNombre: ${nombreVal}\nTeléfono: ${contactoVal}`
+    ? `Entrega en mano\nNombre: ${nombreVal}\nTeléfono: ${contactoVal}`
     : `País: ${paisVal}\nRegión/Estado: ${regionVal}\nCiudad: ${ciudadVal}\nCamino: ${caminoVal}\nCódigo Postal: ${cpVal}\nNombre: ${nombreVal}\nTeléfono: ${contactoVal}`;
 
   // ── Construir payload para Google Apps Script ─────────────────────────────

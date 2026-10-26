@@ -18,7 +18,7 @@ const path = require('path');
 
 // ─── Configuración ────────────────────────────────────────────────────────────
 
-const IMAGES_DIR   = 'C:/Users/Alfonso/Downloads/Camis_Optimizadas';
+const IMAGES_DIR   = process.env.IMAGES_DIR || path.join(__dirname, 'Camis_Optimizadas');
 const BUCKET       = 'pedimoscamis';
 const ENDPOINT     = 'https://6600c8fee14f863b13c7b9bba8869364.r2.cloudflarestorage.com';
 const ACCESS_KEY   = '566df4f751d6f3d8ac1d94839f034bcd';
