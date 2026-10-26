@@ -1,0 +1,8 @@
+# Solo la portada es indexable (para búsquedas literales de "pedimoscamis").
+# El catálogo se carga desde data/ y queda fuera de los buscadores.
+User-agent: *
+Disallow: /data/
+Allow: /
+
+User-agent: Googlebot-Image
+Disallow: /
