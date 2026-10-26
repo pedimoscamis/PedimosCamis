@@ -6,3 +6,5 @@ Allow: /
 
 User-agent: Googlebot-Image
 Disallow: /
+
+Sitemap: https://pedimoscamis.com/sitemap.xml
