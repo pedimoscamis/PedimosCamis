@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "pedimoscamis-dev",
-      "runtimeExecutable": "/opt/homebrew/bin/node",
+      "runtimeExecutable": "C:/Program Files/nodejs/node.exe",
       "runtimeArgs": ["server.js"],
       "port": 3000
     }

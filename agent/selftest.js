@@ -65,6 +65,7 @@ const CASES = [
   ['2026/27 AC Milan Away Jersey S-4XL', 'include', 'seriea'],
   ['2026/27 Olympique Lyonnais Away Jersey Player Version S-3XL', 'include', 'ligue1'],
   ['2026/27 Newcastle United Home Jersey S-4XL', 'include', 'premier'],
+  ['2026/27 Real Madrid Second Away Kids Kits 16-28', 'include', 'laliga', 'laliga,nuevatemporada,kids'],
   // fuera de alcance / no son camisetas / peligrosos
   ['2026/27 Inter Miami Home Jersey S-4XL', 'skip', 'fuera-de-alcance'],
   ['2026/27 Atletico Mineiro Third Kids Kits 16-28', 'skip', 'fuera-de-alcance'],

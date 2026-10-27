@@ -122,8 +122,8 @@ const GK_RE = /\b(goalkeeper|goal\s*keeper|keeper|gk)\b/i;
 const SPECIAL_RE = /\b(special|concept\w*|anniversary|aniversario|limited|commemorative|x\s+\w+|originals?|trefoil|collab\w*|edition)\b/i;
 const VARIANT_RES = [
   ['fourth', /\b(fourth|4th)\b/i],
-  ['third', /\b(third|3rd|iii)\b/i],
-  ['away', /\b(away|second|2nd|ii)\b/i],
+  ['third', /\b(third|3rd|iii|second|2nd)\b/i],   // regla del catálogo: "Second Away" = tercera equipación
+  ['away', /\baway\b/i],
   ['home', /\bhome\b/i],
 ];
 
