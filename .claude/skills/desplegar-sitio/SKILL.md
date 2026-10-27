@@ -1,12 +1,12 @@
 ---
 name: desplegar-sitio
-description: Publica PedimosCamis en producción (Cloudflare Pages vía GitHub Actions) y comprueba el resultado. Úsala cuando el usuario pida subir, desplegar o publicar cambios.
+description: Publica PedimosCamis en producción (GitHub Pages vía GitHub Actions; las imágenes van aparte, en Cloudflare R2) y comprueba el resultado. Úsala cuando el usuario pida subir, desplegar o publicar cambios.
 disable-model-invocation: true
 ---
 
 # Desplegar
 
-El deploy es automático con `push` a `main` (`.github/workflows/deploy.yml`). Solo se publica lo que el paso "Preparar sitio estático" copia: `index.html`, `manifest.webmanifest`, iconos, `data/products.json`, `p/*.html` (generadas) y `_headers` (noindex).
+El deploy es automático con `push` a `main` (`.github/workflows/deploy.yml`). Solo se publica lo que el paso "Preparar sitio estático" copia: `index.html`, `manifest.webmanifest`, iconos, `data/products.json`, `p/*.html` (generadas), `robots.txt`, `sitemap.xml` y `CNAME`.
 
 1. Ejecuta la skill `verificar-sitio`.
 2. `git status` y `git diff --stat`: confirma que no se cuelan `.env`, `cloudflare.txt`, `data/products-raw.json` ni imágenes. Si hay cambios ajenos a la tarea (p. ej. `.claude/launch.json`, `deploy.yml`), no los añadas sin preguntar.

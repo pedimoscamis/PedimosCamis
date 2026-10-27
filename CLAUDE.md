@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Qué es
 
-PedimosCamis? (`pedimoscamis.com`): tienda de camisetas de fútbol/NBA como SPA en JavaScript vanilla, sin build ni framework. El README la describe como proyecto personal/portfolio; el sitio está oculto a buscadores a propósito (`noindex`, cabecera `X-Robots-Tag` en el deploy). Idioma de trabajo: español (commits, comentarios, UI).
+PedimosCamis? (`pedimoscamis.com`): tienda de camisetas de fútbol/NBA como SPA en JavaScript vanilla, sin build ni framework. El README la describe como proyecto personal/portfolio; solo la portada es indexable (`robots.txt` + `sitemap.xml`); el catálogo (`/data/`) queda fuera de los buscadores. Idioma de trabajo: español (commits, comentarios, UI).
 
 ## Comandos
 
@@ -32,7 +32,7 @@ No hay tests ni linter. La comprobación mínima tras editar `index.html` es sin
 
 ## Deploy
 
-`push` a `main` → `.github/workflows/deploy.yml` construye `_site` (copia `index.html`, manifest, iconos, `data/products.json`, genera `p/`, escribe `_headers` noindex) y publica con wrangler en Cloudflare Pages (proyecto `pedimoscamis`, dominio `pedimoscamis.com`). Solo esos archivos llegan a producción: cualquier asset nuevo que el HTML necesite debe añadirse al paso "Preparar sitio estático". Secrets `CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID` en GitHub. Se trabaja directo sobre `main` con commits en español descriptivos.
+`push` a `main` → `.github/workflows/deploy.yml` construye `_site` (copia `index.html`, `robots.txt`, `sitemap.xml`, manifest, iconos, `data/products.json` y `CNAME`; genera `p/`) y publica en **GitHub Pages** (dominio `pedimoscamis.com`). Solo las **imágenes** viven en Cloudflare (R2 → `img.pedimoscamis.com`); la web no se despliega en Cloudflare. Solo esos archivos llegan a producción: cualquier asset nuevo que el HTML necesite debe añadirse al paso "Preparar sitio estático". Los push hechos por el agente de catálogo (GITHUB_TOKEN) no disparan el deploy, por eso el workflow lo lanza con `gh workflow run deploy.yml`. Se trabaja directo sobre `main` con commits en español descriptivos.
 
 ## Cuidado
 
