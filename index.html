@@ -7702,16 +7702,8 @@ const TRACKER_ESTADOS = {
 };
 const TRACKER_SHIPPED_STATES = new Set(['Shipped', 'Arrived', 'Delivered']);
 
-function openCttExpress(trackingCode, btnId) {
-  const btn = document.getElementById(btnId);
-  navigator.clipboard.writeText(trackingCode).then(() => {
-    if (btn) { btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M4 12l5 5L20 6"/></svg>Código copiado'; btn.disabled = true; }
-    showToast('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><rect x="6" y="4.5" width="12" height="16" rx="1.6"/><path d="M9 4.5V3.8A1.8 1.8 0 0110.8 2h2.4A1.8 1.8 0 0115 3.8v.7"/><path d="M9 11h6M9 15h6"/></svg>Código copiado. Pégalo en CTT Express.');
-    setTimeout(() => { if (btn) { btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M9 15l6-6"/><path d="M10.5 7.5l1-1a3.5 3.5 0 015 5l-1 1"/><path d="M13.5 16.5l-1 1a3.5 3.5 0 01-5-5l1-1"/></svg>Gestionar en CTT'; btn.disabled = false; } }, 3000);
-  }).catch(() => {
-    showToast(`Código: ${trackingCode} — cópialo manualmente.`);
-  });
-  window.open('https://www.cttexpress.com/localizador-de-envios/', '_blank', 'noopener');
+function open17Track(trackingCode) {
+  window.open('https://t.17track.net/es#nums=' + encodeURIComponent(trackingCode), '_blank', 'noopener');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -7953,8 +7945,8 @@ function acctRenderOrders() {
     let ctt = '';
     if (code) {
       const id = `acct-ctt-${idx}`;
-      ctt = `<div class="tracker-tracking-code">Tracking CTT Express: <strong>${escHtml(code)}</strong></div>
-        <button id="${id}" class="tracker-ctt-btn" style="background:#2a6a4a" onclick="openCttExpress('${escHtml(code)}', '${id}')">Copiar código y rastrear en CTT</button>`;
+      ctt = `<div class="tracker-tracking-code">Tracking: <strong>${escHtml(code)}</strong></div>
+        <button id="${id}" class="tracker-ctt-btn" style="background:#2a6a4a" onclick="open17Track('${escHtml(code)}')">Rastrear en 17track</button>`;
     }
     return `<div class="tracker-order-card">
       <div class="tracker-order-meta"><span class="tracker-order-date">${fecha}</span><span class="tracker-order-status">${estadoLabel}</span></div>
