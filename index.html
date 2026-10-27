@@ -1791,29 +1791,6 @@
     #account-btn.socio { border-color: var(--accent); }
     #account-btn.logged { border-color: var(--accent); color: var(--text); }
     @media (max-width: 500px) { #account-btn .account-btn-text { display: none; } }
-    #track-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.78);
-      z-index: 9500; align-items: center; justify-content: center; padding: 16px;
-    }
-    #track-overlay.open { display: flex; }
-    #track-modal {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-      width: 100%; max-width: 720px; padding: 24px 20px 20px; position: relative;
-      max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
-    }
-    #track-modal h2 {
-      font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1px;
-      color: var(--text); margin: 0 0 4px;
-    }
-    #track-modal-code { font-size: 12px; color: var(--muted); margin-bottom: 14px; word-break: break-all; }
-    #track-modal-close {
-      position: absolute; top: 14px; right: 16px; background: none; border: none;
-      color: var(--muted); font-size: 22px; cursor: pointer; line-height: 1;
-    }
-    #track-modal-close:hover { color: var(--accent); }
-    #track-widget { min-height: 200px; border-radius: 10px; overflow: hidden; background: #fff; }
-    #track-widget-msg { font-size: 13px; color: var(--muted); padding: 20px 4px; }
-    #track-modal-ext { display: inline-block; margin-top: 12px; font-size: 12px; color: var(--muted); }
     #account-overlay {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,.78);
       z-index: 9450; align-items: center; justify-content: center; padding: 16px;
@@ -3690,17 +3667,6 @@
 <div id="gallery-lightbox" onclick="closeGalleryLightbox(event)">
   <button id="gallery-lightbox-close" onclick="closeGalleryLightbox()">✕</button>
   <img id="gallery-lightbox-img" src="" alt="Foto de galería">
-</div>
-
-<!-- ─── Seguimiento de envío (widget 17track) ──────────────────────────── -->
-<div id="track-overlay" onclick="if(event.target===this) close17Track()">
-  <div id="track-modal">
-    <button id="track-modal-close" onclick="close17Track()" aria-label="Cerrar">✕</button>
-    <h2>SEGUIMIENTO DEL ENVÍO</h2>
-    <div id="track-modal-code"></div>
-    <div id="track-widget"></div>
-    <a id="track-modal-ext" href="#" target="_blank" rel="noopener">¿No carga? Ábrelo en 17track ↗</a>
-  </div>
 </div>
 
 <!-- ─── Guía de Tallas Modal ─────────────────────────────────────────────── -->
@@ -7736,40 +7702,8 @@ const TRACKER_ESTADOS = {
 };
 const TRACKER_SHIPPED_STATES = new Set(['Shipped', 'Arrived', 'Delivered']);
 
-// Widget oficial de 17track: se carga bajo demanda la primera vez que se abre.
-let _yq17Loading = null;
-function load17TrackScript() {
-  if (window.YQV5) return Promise.resolve();
-  if (_yq17Loading) return _yq17Loading;
-  _yq17Loading = new Promise((resolve, reject) => {
-    const sc = document.createElement('script');
-    sc.src = 'https://www.17track.net/externalcall.js';
-    sc.async = true;
-    sc.onload = () => window.YQV5 ? resolve() : reject(new Error('YQV5 no disponible'));
-    sc.onerror = () => reject(new Error('No se pudo cargar 17track'));
-    document.head.appendChild(sc);
-  }).catch(err => { _yq17Loading = null; throw err; });
-  return _yq17Loading;
-}
-
 function open17Track(trackingCode) {
-  const extUrl = 'https://t.17track.net/es#nums=' + encodeURIComponent(trackingCode);
-  const widget = document.getElementById('track-widget');
-  document.getElementById('track-modal-code').textContent = 'Código: ' + trackingCode;
-  document.getElementById('track-modal-ext').href = extUrl;
-  widget.innerHTML = '<div id="track-widget-msg">Cargando seguimiento…</div>';
-  document.getElementById('track-overlay').classList.add('open');
-  load17TrackScript().then(() => {
-    widget.innerHTML = '';
-    YQV5.trackSingle({ YQ_ContainerId: 'track-widget', YQ_Height: 560, YQ_Fc: '0', YQ_Lang: 'es', YQ_Num: trackingCode });
-  }).catch(() => {
-    widget.innerHTML = '<div id="track-widget-msg">No se ha podido cargar el seguimiento aquí. Usa el enlace de abajo para verlo en 17track.</div>';
-  });
-}
-
-function close17Track() {
-  document.getElementById('track-overlay').classList.remove('open');
-  document.getElementById('track-widget').innerHTML = '';
+  window.open('https://t.17track.net/es#nums=' + encodeURIComponent(trackingCode), '_blank', 'noopener');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -9143,7 +9077,6 @@ const navScroll = (function () {
 // Keyboard: close modals on Escape
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    if (document.getElementById('track-overlay').classList.contains('open')) { close17Track(); return; }
     closeModal();
     closeCart();
     closeCheckout();
