@@ -321138,5 +321138,29 @@
       "https://img.pedimoscamis.com/mascamis/207876948_photo3_resultado.webp",
       "https://img.pedimoscamis.com/mascamis/207876948_photo4_resultado.webp"
     ]
+  },
+  {
+    "id": "jx305f68d9e0",
+    "nameEs": "Atlético de Madrid Local Mujer Fan Version 26/27",
+    "nameEn": "Atletico Madrid Home Women Fan Version 26/27",
+    "cats": [
+      "laliga",
+      "nuevatemporada",
+      "women"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "",
+    "img": "https://img.pedimoscamis.com/mascamis/jx305f68d9e0_photo1_resultado.webp",
+    "photos": 1,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "addedAt": 1793131285014
   }
 ]
