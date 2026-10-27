@@ -14,7 +14,10 @@
     "download-gallery": "node download_gallery.js",
     "upload-mascamis": "node r2-upload-mascamis.js",
     "upload-cloudinary": "node upload-cloudinary.js",
-    "apply-cloudinary": "node apply-cloudinary.js"
+    "apply-cloudinary": "node apply-cloudinary.js",
+    "agent": "node agent/update-catalog.js",
+    "agent:dry": "node agent/update-catalog.js --dry-run",
+    "agent:test": "node agent/selftest.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1053.0",

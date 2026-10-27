@@ -6,3 +6,5 @@ images/
 images-nuevas-webp/
 p/
 .claude/settings.local.json
+cloudflare.txt
+data/catalog-agent-dryrun.json

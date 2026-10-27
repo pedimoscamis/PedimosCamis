@@ -1,67 +1,92 @@
-name: Actualizar catálogo
+name: Actualizar catálogo (agente)
 
+# Agente que añade novedades de ggjersey.x.yupoo.com al catálogo.
+# Se ejecuta los días 1 y 15 de cada mes (≈ cada 2 semanas; cron no admite "cada 14 días").
+# Requiere los secretos R2_ACCESS_KEY_ID y R2_SECRET_ACCESS_KEY (Settings → Secrets → Actions).
 on:
-  # schedule DESACTIVADO — el scraper sobreescribe las URLs de Cloudinary con null.
-  # Reactivar solo cuando el scraper preserve las imágenes existentes.
-  # schedule:
-  #   - cron: '0 4 * * *'
+  schedule:
+    - cron: '0 6 1,15 * *'
   workflow_dispatch:
     inputs:
-      force_full:
-        description: 'Forzar scraping completo (ignorar caché)'
-        required: false
-        default: 'false'
+      dry_run:
+        description: 'Solo simular: clasifica y cuenta, no descarga ni escribe nada'
         type: boolean
+        default: true
+      max_new:
+        description: 'Máximo de productos nuevos por ejecución (freno de seguridad)'
+        default: '800'
+
+concurrency:
+  group: catalog-agent
+  cancel-in-progress: false
+
+permissions:
+  contents: write    # commit de products.json
+  actions: write     # lanzar el despliegue tras el commit
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    timeout-minutes: 240
+    env:
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      # En ejecuciones programadas no hay "inputs": ahí NO es simulación.
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+      MAX_NEW: ${{ github.event_name == 'workflow_dispatch' && inputs.max_new || '800' }}
 
     steps:
-      - name: Checkout repositorio
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+      - uses: actions/checkout@v4
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: Instalar dependencias
-        run: npm ci
+      - run: npm ci
 
-      - name: Limpiar caché (si force_full)
-        if: ${{ github.event.inputs.force_full == 'true' }}
+      - name: Autotest del clasificador (si falla, no se toca el catálogo)
+        run: node agent/selftest.js --show 0
+
+      - name: Ejecutar agente
         run: |
-          echo "Modo scraping completo activado — eliminando caché"
-          rm -f data/products-raw.json
+          if [ "$DRY_RUN" = "true" ]; then
+            node agent/update-catalog.js --dry-run --max-new "$MAX_NEW" --report "$RUNNER_TEMP/dryrun.json"
+          else
+            node agent/update-catalog.js --max-new "$MAX_NEW"
+          fi
 
-      - name: Ejecutar scraper
-        run: node scraper.js
-        timeout-minutes: 180
-
-      - name: Ejecutar categorizador
-        run: node categorize.js
-
-      - name: Verificar cambios
-        id: changes
+      - name: Resumen
+        if: always()
         run: |
-          git diff --quiet data/products.json && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+          f=data/catalog-agent-report.json
+          [ "$DRY_RUN" = "true" ] && f="$RUNNER_TEMP/dryrun.json"
+          [ -f "$f" ] && node -e "
+            const r=require(process.argv[1]);
+            const L=['## Agente de catálogo'+(r.dryRun?' (simulación)':''),
+              '- Añadidos: **'+r.added+'** · fallos de imagen: '+r.failed.length+' · reintentos pendientes: '+r.retryPending,
+              '- Álbumes evaluados: '+r.candidates+' · duplicados: '+r.tally.duplicate+' · fuera de alcance: '+r.tally.skip+' · a revisar: '+r.tally.review,
+              '', '### Equipos desconocidos (añadir a agent/teams.js si procede)',
+              ...r.unknownTeams.slice(0,25).map(u=>'- '+u.team+' ('+u.count+')'),
+              '', '### Dudosos (no se añadieron)',
+              ...r.review.slice(0,25).map(x=>'- '+x.title+' — '+x.reason)];
+            console.log(L.join('\n'));" "$f" >> "$GITHUB_STEP_SUMMARY" || true
 
-      - name: Commit y push si hay cambios
-        if: steps.changes.outputs.changed == 'true'
+      - name: Commit y despliegue
+        if: env.DRY_RUN != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/products-raw.json data/products.json
-          DATE=$(date -u '+%Y-%m-%d %H:%M UTC')
-          git commit -m "chore: actualizar catálogo [$DATE]"
-          git push
-
-      - name: Sin cambios
-        if: steps.changes.outputs.changed == 'false'
-        run: echo "✅ Catálogo ya actualizado — sin cambios nuevos"
+          git add data/products.json data/catalog-agent-state.json data/catalog-agent-report.json
+          if git diff --cached --quiet; then
+            echo "Sin cambios en el catálogo."
+            exit 0
+          fi
+          N=$(node -p "require('./data/catalog-agent-report.json').added")
+          git config user.name  "catalog-agent[bot]"
+          git config user.email "catalog-agent[bot]@users.noreply.github.com"
+          git commit -m "chore(catálogo): agente añade $N productos [$(date -u '+%Y-%m-%d')]"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          # Los push hechos con GITHUB_TOKEN no disparan otros workflows: se lanza el despliegue a mano.
+          gh workflow run deploy.yml --ref main
