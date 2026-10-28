@@ -1,0 +1,4525 @@
+{
+  "runAt": "2026-10-28T12:27:24.048Z",
+  "dryRun": false,
+  "pagesRead": 11,
+  "candidates": 994,
+  "tally": {
+    "include": 393,
+    "skip": 406,
+    "review": 62,
+    "duplicate": 133
+  },
+  "skipReasons": {
+    "fuera-de-alcance": 334,
+    "no-camiseta": 71,
+    "temporada-futura": 1
+  },
+  "added": 393,
+  "failed": [],
+  "retryPending": 0,
+  "addedItems": [
+    {
+      "id": "260055764",
+      "title": "2025/26 Bayern Munich Third Kids Kits 16-28",
+      "cats": [
+        "bundesliga",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "260055763",
+      "title": "2025/26 Bayern Munich Third Jersey Long Sleeve S-4XL",
+      "cats": [
+        "bundesliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "260055760",
+      "title": "2026/27 Napoli Away Kids Kit 16-28",
+      "cats": [
+        "seriea",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055758",
+      "title": "2026/27 Croatia Away Kids Kits 16-28",
+      "cats": [
+        "selecciones",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055757",
+      "title": "2026/27 Croatia Home Kids Kits 16-28",
+      "cats": [
+        "selecciones",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055726",
+      "title": "2026/27 Inter Milan Third kids Kits 16-28",
+      "cats": [
+        "seriea",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055716",
+      "title": "Retro 1987/88 Crystal Palace Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "premier"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055714",
+      "title": "Retro 1973/75 Crystal Palace Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "premier"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055693",
+      "title": "Retro 1998/99 Celta Vigo UEFA Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055683",
+      "title": "Retro 1997/98 Borussia Mönchengladbach Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "bundesliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055653",
+      "title": "Retro 2016/17 Bayern Munich Home Jesrey S-XXL",
+      "cats": [
+        "retro",
+        "bundesliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055639",
+      "title": "2026/27 Como 1907 Goalkeeper Jersey S-XXL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055629",
+      "title": "Women's 2026/27 Napoli Away Jersey S-XXL",
+      "cats": [
+        "seriea",
+        "nuevatemporada",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055627",
+      "title": "Women's 2026/27 Napoli Home Jersey S-XXL",
+      "cats": [
+        "seriea",
+        "nuevatemporada",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055626",
+      "title": "Retro 2013/14 Manchester United Away Kids Kits 16-28",
+      "cats": [
+        "retro",
+        "premier",
+        "kids"
+      ],
+      "priceUsd": 13,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055622",
+      "title": "2026/27 Barcelona x Golf Wang El Clasico Home Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055621",
+      "title": "Retro 1992/95 Barcelona Home Kid Kits 16-28",
+      "cats": [
+        "retro",
+        "laliga",
+        "kids"
+      ],
+      "priceUsd": 13,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055619",
+      "title": "Retro 2010/11 Inter Milan Away Kids Kits 16-28",
+      "cats": [
+        "retro",
+        "seriea",
+        "kids"
+      ],
+      "priceUsd": 13,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055610",
+      "title": "2026/27 Tottenham Hotspur Third Kids Kits 16-28",
+      "cats": [
+        "premier",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "260055586",
+      "title": "2026/27 Sporting CP October Pink Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055581",
+      "title": "2026/27 Sporting Lisbon Goalkeeper Grey Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055579",
+      "title": "2026/27 Venezia FC x SK RAPID Unione Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055577",
+      "title": "2026/27 Real Madrid White Jersey Player Version S-XXL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055576",
+      "title": "2026/27 RB Leipzig Third Jersey Player Version S-XXL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055571",
+      "title": "2026/27 Fiorentina Third Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055548",
+      "title": "2026 Spain Yellow Jersey Player Version S-XXL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055546",
+      "title": "2026 Slovakia Home Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055517",
+      "title": "2026/27 Getafe UECL Home Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055510",
+      "title": "Retro 2011/12 FC Porto Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "europa"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055466",
+      "title": "2026/27 Chelsea Strike Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055460",
+      "title": "2026/27 Brighton & Hove Albion 125th Anniversary Sky Blue Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055458",
+      "title": "2026/27 Benfica Purple Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055452",
+      "title": "2026 Argentina Messi Farewell Royal Blue Jersey Player Version S-XXL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055411",
+      "title": "2026/27 AC Monza Away Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055397",
+      "title": "2026/27 Stade Brestois 29 Third Jersey S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055392",
+      "title": "2026/27 Sporting CP October Pink Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055388",
+      "title": "2026 Spain Special Edition Casual Style Red Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055384",
+      "title": "2026/27 Spain Conceptual Jersey S-4XL",
+      "cats": [
+        "selecciones",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055378",
+      "title": "2026 AS Roma EQT White Jersey Player Version S-3XL",
+      "cats": [
+        "seriea"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260055369",
+      "title": "2026/27 Real Madrid Y-3 Jersey S-XXL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055363",
+      "title": "2026/27 Real Madrid EQT White Jersey Player Version S-3XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260055358",
+      "title": "2026/27 Real Madrid EQT Purple Jersey Player Version S-3XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260055353",
+      "title": "2026/27 Real Madrid EQT Black Jersey Player Version S-3XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260055346",
+      "title": "2026/27 Real Madrid EQT Purple Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055341",
+      "title": "2026/27 Manchester United EQT Black Jersey Player Version S-3XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260055331",
+      "title": "2026/27 Manchester United EQT Red Jersey Player Version S-3XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260055288",
+      "title": "2026 Bayern Munich EQT Red Jersey Player Version S-3XL",
+      "cats": [
+        "bundesliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260055285",
+      "title": "2026/27 PSG Third Jersey Player Version Long Sleeve S-3XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260055280",
+      "title": "2026/27 Manchester United Conceptual Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055279",
+      "title": "Women's 2026/27 Manchester City Away Jersey S-XXL",
+      "cats": [
+        "premier",
+        "nuevatemporada",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055274",
+      "title": "2026/27 Leicester City Third Kids Kits 16-28",
+      "cats": [
+        "premier",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055224",
+      "title": "2026 Germany Third Jersey Long Sleeve S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 1
+    },
+    {
+      "id": "260055221",
+      "title": "2026 Germany Third Kids Kits 16-28",
+      "cats": [
+        "selecciones",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055216",
+      "title": "2026 Germany Special Edition Casual Style Jersey S-XXL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055207",
+      "title": "2026/27 Chelsea Third Jersey Long Sleeve S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055200",
+      "title": "2026/27 Chelsea Away Jersey Long Sleeve S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055195",
+      "title": "2026 USA X Cactus Jack Travis Scott Total 90 Retro Blue Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055187",
+      "title": "2026 Barcelona Special Edition Casual Style Jersey Player Version S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055185",
+      "title": "2026 Barcelona Special Edition Casual Style Jersey S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055178",
+      "title": "2026/27 Barcelona Conceptual Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055171",
+      "title": "2026/27 Arsenal Third Jersey Long Sleeve S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055163",
+      "title": "2026 Arsenal Special Edition Casual Style Jersey Player Version S-4XL",
+      "cats": [
+        "premier"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055156",
+      "title": "2026 Argentina Messi Farewell Black Jersey Player Version S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055153",
+      "title": "2026 Argentina Messi Farewell Green Jersey Player Version Long SleeveS-3XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260055150",
+      "title": "2026 Argentina Messi Farewell Jersey Player Version Long Sleeve S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "260055147",
+      "title": "2026 Argentina Messi Farewell Special Edition Jersey Long Sleeve S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055143",
+      "title": "2026 Argentina Messi Farewell Baby Jersey 9-12",
+      "cats": [
+        "selecciones",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "9,10,11,12",
+      "images": 2
+    },
+    {
+      "id": "260055140",
+      "title": "2026 Argentina Messi Farewell Royal Blue Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055137",
+      "title": "2026 Argentina Messi Farewell Pre-Match White Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055133",
+      "title": "2026 Argentina Messi Deep Blue Tee S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055128",
+      "title": "2026 Argentina Messi Farewell Pre-Match White Jersey Player Version S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055125",
+      "title": "2026 Argentina Messi Farewell Deep Blue Jersey Player Version S-3XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260055121",
+      "title": "2026 Argentina Conceptual Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055092",
+      "title": "Women's 2026/27 Sporting CP Home Jersey S-XXL",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260055075",
+      "title": "2026 Senegal X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055071",
+      "title": "2026 Canada X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260055018",
+      "title": "2026/27 Real Madrid Black Goalkeeper Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055014",
+      "title": "2026/27 Real Madrid Concept White Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 3
+    },
+    {
+      "id": "260055009",
+      "title": "2026 Real Madrid 125th Anniversary Pre-Match Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260055006",
+      "title": "2026 Real Madrid 125th Anniversary Pre-Match Jersey S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054984",
+      "title": "2026 France Special Edition Casual Style Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054981",
+      "title": "2026/27 FC Porto Goalkeeper Yellow Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260054976",
+      "title": "2026/27 FC Porto Goalkeeper Orange Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260054971",
+      "title": "2026/27 FC Porto Goalkeeper White Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260054969",
+      "title": "2026/27 FC Porto Goalkeeper Orange Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054957",
+      "title": "2026/27 Marseille Away Kids Kits 16-28",
+      "cats": [
+        "ligue1",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260054941",
+      "title": "Retro 1965/66 Napoli Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "seriea"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054914",
+      "title": "Women's 2026/27 Inter Milan Away Jersey S-XXL",
+      "cats": [
+        "seriea",
+        "nuevatemporada",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054911",
+      "title": "2026 Argentina Messi Farewell Green Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054907",
+      "title": "2026 Argentina Messi Farewell Green Jersey Player Version S-3XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054897",
+      "title": "2026/27 Athletic Bilbao Away Jersey Player Version S-3XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054885",
+      "title": "2026/27 Fenerbahce Home Jersey Player Version S-XXL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054877",
+      "title": "2026/27 Fulham Third Jersey Player Version S-XXL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054873",
+      "title": "2026 Barcelona Spider-Man Jersey Player Version S-XXL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054869",
+      "title": "2026/27 Atalanta Away Jersey Player Version S-XXL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054865",
+      "title": "2026/27 PSG Fourth Jersey Player Version S-XXL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054858",
+      "title": "2026/27 Ipswich Town Away Jersey Player Version S-XXL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054846",
+      "title": "2026/27 Atalanta Home Jersey Player Version S-XXL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054841",
+      "title": "2026/27 Ipswich Town Home Jersey Player Version S-XXL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054833",
+      "title": "2026/27 Nottingham Forest Away Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054822",
+      "title": "2026/27 Fulham Away Jersey Player Version S-XXL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054816",
+      "title": "2026/27 SS Lazio Away Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054811",
+      "title": "2026/27 Paris FC Home Jersey Player Version S-XXL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054802",
+      "title": "2026/27 Arsenal Green Jersey Player Version S-XXL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054794",
+      "title": "2026/27 Arsenal Royal Blue Jersey Player Version S-3XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054789",
+      "title": "2026/27 Arsenal Goalkeeper Blue Jersey Player Version S-XXL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054785",
+      "title": "2026/27 Fulham Home Jersey Player Version S-XXL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054780",
+      "title": "2026/27 Sporting CP Away Jersey Player Version S-3XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054776",
+      "title": "2026/27 Paris FC Away Jersey Player Version S-XXL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054771",
+      "title": "2026 Barcelona X CORTEIZ Jersey Player Version S-XXL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054754",
+      "title": "2026/27 Arsenal Special Edition Jersey Player Version S-3XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054750",
+      "title": "2026/27 Lille OSC Away Jersey Player Version S-XXL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054744",
+      "title": "2026/27 Borussia Dortmund Third Jersey Player Version S-XXL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054725",
+      "title": "2026/27 Galatasaray Third Jersey Player Version S-3XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054716",
+      "title": "2026/27 Aston Villa Away Jersey Player Version S-3XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054652",
+      "title": "2026/27 West Ham United Third Jersey Player Version S-XXL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054645",
+      "title": "2026 Japan Special Edition Casual Style Jersey Player Version S-XXL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260054641",
+      "title": "Women's 2026 Argentina Messi Farewell Pink Jersey S-XXL",
+      "cats": [
+        "selecciones",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054636",
+      "title": "2026 Argentina Special Edition Casual Style Jersey Player Version S-3XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054634",
+      "title": "2026/27 Manchester United Goalkeeper Pink Jersey Player Version S-3XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054628",
+      "title": "2026 Spain Special Edition Casual Style Jersey Player Version S-3XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054615",
+      "title": "2026/27 Newcastle United Third Jersey Player Version S-3XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054601",
+      "title": "Retro 1998/99 Torino FC Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "seriea"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054600",
+      "title": "Retro 1992/93 Torino FC Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "seriea"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054593",
+      "title": "2026/27 Sporting Lisbon Goalkeeper Grey Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054591",
+      "title": "2026 Spain Special Edition Casual Style Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054589",
+      "title": "Retro 1998/2001 Sevilla Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054588",
+      "title": "Retro 1998/2000 Sevilla Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054584",
+      "title": "Retro 2005/06 Sevilla UEFA Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054579",
+      "title": "Retro 1997/98 Schalke 04 Third Jersey S-XXL",
+      "cats": [
+        "retro",
+        "bundesliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054576",
+      "title": "2026/27 AS Roma Third Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054575",
+      "title": "Retro 1997/98 Real Oviedo Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 3
+    },
+    {
+      "id": "260054571",
+      "title": "Retro 1989/90 Real Oviedo Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054568",
+      "title": "2026 Real Madrid OG Retro Style White Jersey S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054563",
+      "title": "2026 Real Madrid OG Retro Style Black Jersey S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054560",
+      "title": "Retro 1997/98 RC Lens Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "ligue1"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054553",
+      "title": "Retro 1996/97 RC Lens Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "ligue1"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054550",
+      "title": "Retro 1993/94 RC Lens Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "ligue1"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054545",
+      "title": "2026/27 PSG Pre-Match Purple Jersey S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054536",
+      "title": "Retro 2018 Nigeria Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054526",
+      "title": "2026/27 Napoli Pre-Match Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054522",
+      "title": "Retro 1995/96 Napoli Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "seriea"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054517",
+      "title": "Retro 1982/83 Napoli Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "seriea"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054513",
+      "title": "Retro 1981/82 Napoli Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "seriea"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054508",
+      "title": "Retro 1980/81 Napoli Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "seriea"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054497",
+      "title": "2026/27 Marseille Third Jersey Player Version S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054490",
+      "title": "2026/27 Manchester United white Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054485",
+      "title": "Retro 2021/22 Manchester United Home Jersey Long Sleeve S-XXL",
+      "cats": [
+        "retro",
+        "premier"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054482",
+      "title": "Retro 2016/17 Manchester City Third Jersey S-XXL",
+      "cats": [
+        "retro",
+        "premier"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054454",
+      "title": "Retro 1978/81 Ipswich Town Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "premier"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054444",
+      "title": "2026 Germany OG Retro Style White Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054439",
+      "title": "2026/27 Fiorentina Goalkeeper Centenary Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054431",
+      "title": "2026 England Special Edition Casual Style Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054397",
+      "title": "Retro 2001/02 Como 1907 Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "seriea"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054335",
+      "title": "2026/27 PSG Third Jersey Player Version S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "260054331",
+      "title": "2026/27 Feyenoord Rotterdam Third Jersey Player Version S-3XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260054318",
+      "title": "2026/27 Fiorentina Away Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054238",
+      "title": "2026/27 PSG Third Jersey S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 3
+    },
+    {
+      "id": "260054234",
+      "title": "2026/27 Arsenal Pre-Match Black Jersey S-XXL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054230",
+      "title": "2026/27 AFC Bournemouth Away Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054221",
+      "title": "2026 Barcelona X NOCTA Jersey Player Version S-XXL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054172",
+      "title": "Retro 1998/99 Borussia Mönchengladbach Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "bundesliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054168",
+      "title": "2026/27 Borussia Dortmund Away Kids Kits 16-28",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260054163",
+      "title": "2026/27 Benfica Goalkeeper Grey Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260054158",
+      "title": "2026/27 Benfica Goalkeeper Black Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260054152",
+      "title": "2026/27 Benfica Goalkeeper Purple Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054142",
+      "title": "2026/27 Benfica Goalkeeper Grey Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054134",
+      "title": "2026/27 Benfica Goalkeeper Black Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054130",
+      "title": "2026/27 Bayern Munich Third Jersey Long Sleeve S-4XL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 3
+    },
+    {
+      "id": "260054080",
+      "title": "2026/27 Bayern Munich Oktoberfest Jersey Long Sleeve S-4XL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054075",
+      "title": "2026/27 Bayern Munich Oktoberfest Jersey S-4XL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 3
+    },
+    {
+      "id": "260054072",
+      "title": "2026/27 Bayern Munich Oktoberfest Kids Kits 16-28",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "260054071",
+      "title": "Retro 1997/99 Bayer Leverkusen Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "bundesliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054068",
+      "title": "Retro 1997/98 Bayer Leverkusen Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "bundesliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054064",
+      "title": "Retro 1996/97 Bayer Leverkusen Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "bundesliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054060",
+      "title": "Retro 2002/04 Bayer Leverkusen Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "bundesliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054053",
+      "title": "2026/27 Barcelona Fourth Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260054049",
+      "title": "2026 Australia X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054046",
+      "title": "2026 Croatia X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 3
+    },
+    {
+      "id": "260054042",
+      "title": "2026 Korea X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054040",
+      "title": "2026 Norway X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054032",
+      "title": "2026/27 Celtic Away Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260054027",
+      "title": "2026/27 Celtic Away Jersey Player Version S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260054026",
+      "title": "Retro 2019/20 Chelsea Third Jersey S-XXL",
+      "cats": [
+        "retro",
+        "premier"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260054010",
+      "title": "2026/27 Chelsea Third kids kits 16-28",
+      "cats": [
+        "premier",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "260053983",
+      "title": "2026 Argentina Messi#10 Farewell Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053977",
+      "title": "2026 Argentina Messi#10 Farewell Jersey Player Version S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053947",
+      "title": "2026/27 Aston Villa Third Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053941",
+      "title": "2026 Arsenal Special Edition Green Jersey S-3XL",
+      "cats": [
+        "premier"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "260053938",
+      "title": "2026 Arsenal Special Edition Casual Style Jersey S-4XL",
+      "cats": [
+        "premier"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053922",
+      "title": "2026 Argentina Messi Farewell Women's Jersey S-XXL",
+      "cats": [
+        "selecciones",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053916",
+      "title": "2026 Argentina Messi Farewell Special Edition Kids Kits 16-28",
+      "cats": [
+        "selecciones",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260053909",
+      "title": "2026 Argentina Special Edition Casual Style Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053904",
+      "title": "2026 Argentina OG Retro Style White Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053899",
+      "title": "2026 Argentina OG Retro Style Black Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053889",
+      "title": "2026/27 Ajax Away Jersey Player Version S-XXL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "260053885",
+      "title": "2026/27 AC Milan Third Jersey Long Sleeve S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053874",
+      "title": "2026/27 AC Milan Third Kids Kits 16-28",
+      "cats": [
+        "seriea",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260053851",
+      "title": "2026 AC Milan Retro Style White Jersey S-4XL",
+      "cats": [
+        "seriea"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053848",
+      "title": "2026 AC Milan Retro Style Black Jersey S-4XL",
+      "cats": [
+        "seriea"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053843",
+      "title": "2026/27 AC Milan Home Jersey Long Sleeve S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053817",
+      "title": "2026/27 AFC Sunderland European Matchday Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053796",
+      "title": "2026/27 Sevilla FC EQT White Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053786",
+      "title": "2026/27 Real Madrid X LV Co-Branded Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "260053766",
+      "title": "Retro 2017/18 PSG Home Jersey Long Sleeve S-XXL",
+      "cats": [
+        "retro",
+        "ligue1"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053755",
+      "title": "Retro 2016/17 PSG Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "ligue1"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053749",
+      "title": "Retro 2020 Portugal Away Jersey Long Sleeve S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053742",
+      "title": "Retro 2020 Portugal Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053735",
+      "title": "Retro 2014 Portugal Home Jersey Long Sleeve S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053731",
+      "title": "Retro 2013 Portugal Away Jersey Long Sleeve S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053728",
+      "title": "Retro 2013 Portugal Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053723",
+      "title": "Retro 2012 Portugal Home Jersey Long Sleeve S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053718",
+      "title": "Retro 2004 Mexico Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053703",
+      "title": "2026/27 Manchester United EQT Red Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053699",
+      "title": "2026/27 Manchester United EQT Black Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053695",
+      "title": "Retro 2015/16 Manchester United Third Jersey S-XXL",
+      "cats": [
+        "retro",
+        "premier"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053672",
+      "title": "2026 Japan EQT White Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053660",
+      "title": "Retro 2002 Ireland Home Jersey Long Sleeve S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053655",
+      "title": "Retro 2002 Ireland Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053651",
+      "title": "2026/27 Hamburger SV eSports Jersey S-4XL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053637",
+      "title": "Retro 2016 England Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053633",
+      "title": "Retro 1998 England Away Jersey Long Sleeve S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053627",
+      "title": "2026/27 Elche Third Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053612",
+      "title": "Retro 2018 Croatia Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053569",
+      "title": "2026/27 Croatia Home Jersey Player Version S-3XL",
+      "cats": [
+        "selecciones",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260053564",
+      "title": "2026 Bayern Munich EQT Red Jersey S-4XL",
+      "cats": [
+        "bundesliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053559",
+      "title": "Retro 2014/15 Bayern Munich Third Jesrey S-XXL",
+      "cats": [
+        "retro",
+        "bundesliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "260053533",
+      "title": "2026 Argentina #10 Commemorative Edition Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053531",
+      "title": "2026/27 Croatia Away Jersey Player Version S-3XL",
+      "cats": [
+        "selecciones",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "260053524",
+      "title": "2026 Arsenal EQT Red Jersey S-4XL",
+      "cats": [
+        "premier"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "260053517",
+      "title": "2026 Arsenal EQT Navy Blue Jersey S-4XL",
+      "cats": [
+        "premier"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707379",
+      "title": "2026 Mexico Vintage Style Jersey S-XXL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257707376",
+      "title": "2026 Real Betis Balompie Street Style Jersey S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707372",
+      "title": "2026/27 Barcelona Spider-Man Concept Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707369",
+      "title": "2026/27 AFC Fiorentina 100th Anniversary Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707363",
+      "title": "2026/27 Juventus Away Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707358",
+      "title": "2026/27 JUV Home Kids Kits 16-28",
+      "cats": [
+        "seriea",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "257707356",
+      "title": "2026/27 Real Betis Home Baby Jersey 9-12",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "9,10,11,12",
+      "images": 4
+    },
+    {
+      "id": "257707353",
+      "title": "2026/27 Real Madrid Third Baby Jersey 9-12",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "9,10,11,12",
+      "images": 4
+    },
+    {
+      "id": "257707350",
+      "title": "2026/27 Real Madrid Away Baby Jersey 9-12",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "9,10,11,12",
+      "images": 4
+    },
+    {
+      "id": "257707346",
+      "title": "2026/27 Barcelona Third Baby Jersey 9-12",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "9,10,11,12",
+      "images": 4
+    },
+    {
+      "id": "257707344",
+      "title": "2026/27 Barcelona Away Baby Jersey 9-12",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "9,10,11,12",
+      "images": 4
+    },
+    {
+      "id": "257707341",
+      "title": "2026/27 Real Madrid Third Women's Crop Jersey",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257707338",
+      "title": "2026/27 Real Madrid Away Women's Crop Jersey",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257707336",
+      "title": "2026/27 Real Madrid Second Away Jersey Player Version Long Sleeve S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707334",
+      "title": "2026/27 Real Madrid Away Jersey Long SleeveS-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707332",
+      "title": "2026/27 Real Betis Third Jersey Player Version S-3XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "257707324",
+      "title": "2026/27 Nottingham Forest Home Jersey Player Version S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707318",
+      "title": "2026/27 Barcelona Away Jersey Long Sleeve S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707316",
+      "title": "2026/27 Barcelona Third Jersey Long Sleeve S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707315",
+      "title": "2026/27 Barcelona Away Women's Crop Jersey",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257707311",
+      "title": "2026/27 Barcelona Third Women Crop Jersey S-XXL",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257707303",
+      "title": "2026/27 Atletico Madrid Away Jersey Player Version Long Sleeve S-3XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "257707285",
+      "title": "2026/27 Everton Away Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707277",
+      "title": "2026/27 Real Sociedad Away Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707274",
+      "title": "2026/27 U.S. Lecce Third Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707269",
+      "title": "2026/27 Real Valladolid Third Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707242",
+      "title": "2026/27 Liverpool Third Kids Kits 16-28",
+      "cats": [
+        "premier",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "257707240",
+      "title": "2026/27 Bayern Munich Third Kids Kits 16-28",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "257707236",
+      "title": "Retro 1999/2000 Levante UD Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257707234",
+      "title": "Retro 1999/2000 Getafe Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257707230",
+      "title": "Retro 2010/11 Getafe Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257707228",
+      "title": "2026/27 Bosnia & Herzegovina Away Jersey S-4XL",
+      "cats": [
+        "selecciones",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707225",
+      "title": "2026 Germany Third Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707222",
+      "title": "2026 Real Sociedad 1909 Anniversary Special Jersey S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707215",
+      "title": "2026 Germany Third Jersey Player Version S-XXL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257707213",
+      "title": "2026/27 Udinese Calcio Away Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707209",
+      "title": "2026/27 Udinese Calcio Home Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707199",
+      "title": "Retro 1992/93 Celta Vigo Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257707197",
+      "title": "2026/27 Valencia CF Third Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "257707194",
+      "title": "2026/27 Valencia CF Away Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "257707185",
+      "title": "2026/27 Stade Rennais Home Jersey S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707180",
+      "title": "2026/27 Sporting Lisbon Home Jersey Player Version S-3XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "257707176",
+      "title": "2026 Sporting Lisbon X CR7 Jersey S-4XL",
+      "cats": [
+        "europa"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707172",
+      "title": "2026/27 Sporting Lisbon Pre-Match Black Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707170",
+      "title": "Retro 2002/03 Sporting Lisbon Third Jersey S-XXL",
+      "cats": [
+        "retro",
+        "europa"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257707131",
+      "title": "2026/27 Rayo Vallecano Home Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "257707128",
+      "title": "2026/27 Rayo Vallecano Away Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "257707126",
+      "title": "2026 Real Madrid originals EQT Jersey S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257707119",
+      "title": "2026/27 Rayo Vallecano Goalkeeper Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707104",
+      "title": "2026/27 FC Porto Third Jersey Player Version S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707096",
+      "title": "2026/27 Leganes Home Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707091",
+      "title": "2026/27 Leganes Away Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707082",
+      "title": "2026/27 Getafe Home Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 1
+    },
+    {
+      "id": "257707062",
+      "title": "Retro 1999/2002 Deportivo Alaves Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257707044",
+      "title": "Retro 1982 Chile Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257707037",
+      "title": "Retro 1985/86 Celtic Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "europa"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257707032",
+      "title": "Retro 2012/13 Celtic 125th Anniversary Jersey S-XXL",
+      "cats": [
+        "retro",
+        "europa"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257707027",
+      "title": "2026/27 Celta Vigo Third Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "257707024",
+      "title": "2026/27 Celta Vigo Home Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "257707015",
+      "title": "2026 Benfica Black Gold Eagle Special Jersey S-4XL",
+      "cats": [
+        "europa"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707013",
+      "title": "2026/27 Benfica Pre-Match Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257707010",
+      "title": "2026/27 Benfica Third Jersey Player Version S-XXL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257707005",
+      "title": "2026/27 Benfica Away Jersey Player Version S-XXL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257707004",
+      "title": "2026/27 Barcelona Goalkeeper Gray Jersey Long Sleeve S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706999",
+      "title": "2026/27 Barcelona Goalkeeper Gray Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706997",
+      "title": "2026/27 Atletico Madrid Third Jersey Player Version S-XXL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257706993",
+      "title": "2026/27 Atletico Madrid Third Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "257706989",
+      "title": "2026/27 Atletico Madrid Third Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706988",
+      "title": "2026/27 Atletico Madrid Home Jersey Long Sleeve S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706981",
+      "title": "2026 Argentina Messi Farewell Special Edition Jersey Player Version S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706979",
+      "title": "2026 Argentina Messi Farewell Special Edition Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706925",
+      "title": "2026/27 Torino F.C. Away Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257706920",
+      "title": "2026/27 U.S. Sassuolo Home Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257706916",
+      "title": "2026/27 U.S. Lecce Home Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257706905",
+      "title": "2026/27 Feyenoord Rotterdam Home Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257706902",
+      "title": "2026/27 Feyenoord Rotterdam Away Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257706897",
+      "title": "2026/27 Real Madrid Concept White Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257706883",
+      "title": "2026/27 Manchester United Concept White Jersey S-3XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 4
+    },
+    {
+      "id": "257706881",
+      "title": "2026/27 Rayo Vallecano Third Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257706877",
+      "title": "2026/27 Rayo Vallecano Away Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "257706856",
+      "title": "Retro 1993/94 Rayo Vallecano Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257706853",
+      "title": "2026/27 Crystal Palace Third Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706844",
+      "title": "2026/27 Osasuna Third Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706824",
+      "title": "Retro 2005/06 Sunderland AFC Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "premier"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257706813",
+      "title": "2026/27 Real Madrid 125th Anniversary Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "257706810",
+      "title": "2026 Real Madrid Collab Jersey S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706785",
+      "title": "2026/27 Napoli Contept Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706742",
+      "title": "Retro 2000/01 Deportivo Alaves UEFA Cup Final Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "257706734",
+      "title": "2026/27 Como 1907 Third Away Jersey S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706723",
+      "title": "2026 Barcelona BARCA Edition Jersey Player Version S-XXL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257706718",
+      "title": "2026 Athletic Bilbao 125th Anniversary Jersey S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706711",
+      "title": "2026/27 West Ham United Away Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706709",
+      "title": "2026/27 RCD Mallorca Away Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706702",
+      "title": "2026/27 Ipswich Town Home Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706698",
+      "title": "2026/27 Ipswich Town Away Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706690",
+      "title": "2026/27 PSV Eindhoven Second Away Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706685",
+      "title": "2026 Real Madrid Originals White Tee S-4XL",
+      "cats": [
+        "laliga"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706680",
+      "title": "2026/27 Getafe Away Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706677",
+      "title": "2026/27 Deportivo Alaves Home Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706652",
+      "title": "Retro 2001/02 Rayo Vallecano UEFA Cup Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "laliga"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "257706631",
+      "title": "2026 Mexico Dragon Ball Special Edition Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706591",
+      "title": "2026/27 Croatia Away Jersey S-4XL",
+      "cats": [
+        "selecciones",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706589",
+      "title": "2026/27 Croatia Home Jersey S-4XL",
+      "cats": [
+        "selecciones",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "257706574",
+      "title": "2026/27 Barcelona Home Baby Jersey 9-12",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "9,10,11,12",
+      "images": 4
+    },
+    {
+      "id": "257706571",
+      "title": "2026/27 Barcelona Away Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "254869066",
+      "title": "2026/27 Sporting Lisbon Away Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "254869064",
+      "title": "2026/27 Manchester United Goalkeeper Pink Kids Kits 16-28",
+      "cats": [
+        "premier",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "254869058",
+      "title": "2026/27 Benfica Originals Red T-shirt S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "254869003",
+      "title": "2026/27 Coventry City Away Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868995",
+      "title": "2026/27 AS Saint-Etienne Home Jersey S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868970",
+      "title": "2026/27 Fenerbahce Second Away Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868968",
+      "title": "2026/27 Fenerbahce Home Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868960",
+      "title": "2026/27 Fenerbahce Away Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868920",
+      "title": "Retro 1998/99 Sporting Lisbon Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "europa"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "254868907",
+      "title": "2026/27 Real Betis Away Jersey Long Sleeve S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "254868899",
+      "title": "2026/27 OGC Nice Away Jersey S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868885",
+      "title": "2026/27 Sunderland Third Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868880",
+      "title": "2026/27 OGC Nice Home Jersey S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868876",
+      "title": "2026/27 Lille OSC Away Jersey S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868863",
+      "title": "2026/27 Coventry Second Away Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868756",
+      "title": "2026/27 Schalke 04 Away Jersey S-4XL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868749",
+      "title": "2026/27 Real Valladolid Home Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868744",
+      "title": "2026/27 Real Valladolid Away Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868740",
+      "title": "2026/27 RCD Espanyol Second Away Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868737",
+      "title": "2026/27 RCD Espanyol Away Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868735",
+      "title": "2026/27 Leeds United Second Away Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868731",
+      "title": "2026/27 Hamburger SV Second Away Jersey S-4XL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868717",
+      "title": "2026/27 Elche Home Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868712",
+      "title": "2026/27 Elche Away Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868710",
+      "title": "2026/27 Frankfurt Second Away Jersey S-4XL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868707",
+      "title": "2026/27 Frankfurt Away Jersey S-4XL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868699",
+      "title": "2026/27 Crystal Palace Home Jersey S-4XL",
+      "cats": [
+        "premier",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868696",
+      "title": "2026/27 Celta Vigo Second Away Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868662",
+      "title": "2026/27 FC Köln Away Jersey S-4XL",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868638",
+      "title": "2026 USA X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "254868635",
+      "title": "2026 Netherlands X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "254868632",
+      "title": "2026 Mexico X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "254868630",
+      "title": "2026 France X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "254868626",
+      "title": "2026/27 Manchester United Away Kids Kits 16-28",
+      "cats": [
+        "premier",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "254868613",
+      "title": "2026/27 AC Milan Away Kids Kits 16-28",
+      "cats": [
+        "seriea",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "254868579",
+      "title": "2026 Spain X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868576",
+      "title": "2026 Portugal X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "254868562",
+      "title": "2026/27 Ajax Home Jersey Player Version S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "254868559",
+      "title": "2026/27 Ajax Second Away Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "254868557",
+      "title": "2026/27 Ajax Home Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "254868522",
+      "title": "2026/27 Villarreal Home Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "254868517",
+      "title": "2026/27 Las Palmas Second Away Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "254868514",
+      "title": "2026/27 Las Palmas Home Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "254868510",
+      "title": "2026/27 Las Palmas Away Kids Kits 16-28",
+      "cats": [
+        "laliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "254868490",
+      "title": "2026/27 Sporting Lisbon 120th Anniversary Green Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "254868453",
+      "title": "2026/27 Coventry City Home Kids Kits 16-28",
+      "cats": [
+        "premier",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "254868451",
+      "title": "2026/27 Coventry City Away Kid Kits 16-28",
+      "cats": [
+        "premier",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "254868428",
+      "title": "2026 England X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "254868423",
+      "title": "2026 Argentina X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "254868421",
+      "title": "2026 Brazil X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 4
+    },
+    {
+      "id": "254868383",
+      "title": "2026/27 Schalke 04 Home Kids Kits 16-28",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "254868378",
+      "title": "2026/27 AS Roma Home Jersey Player Version S-XXL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    },
+    {
+      "id": "254868352",
+      "title": "2026/27 PSV Eindhoven Home Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "254868344",
+      "title": "2026/27 Leicester City Home Kids Kits 16-28",
+      "cats": [
+        "premier",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "254868323",
+      "title": "2026/27 Benfica Second Away Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 4
+    },
+    {
+      "id": "254868320",
+      "title": "2026/27 Benfica Away Kids Kits 16-28",
+      "cats": [
+        "europa",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "254868263",
+      "title": "2026/27 FC Köln Home Kids Kits 16-28",
+      "cats": [
+        "bundesliga",
+        "nuevatemporada",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    }
+  ],
+  "review": [
+    {
+      "id": "260054475",
+      "title": "Retro 1980/82 Uruguay Nacional Home Jersey S-XXL",
+      "reason": "equipo-dudoso(Uruguay+nacional)",
+      "residual": [
+        "nacional"
+      ]
+    },
+    {
+      "id": "260054470",
+      "title": "Retro 1994 Uruguay Nacional Home Jersey S-XXL",
+      "reason": "equipo-dudoso(Uruguay+nacional)",
+      "residual": [
+        "nacional"
+      ]
+    },
+    {
+      "id": "260054465",
+      "title": "Retro 1989 Uruguay Nacional Home Jersey S-XXL",
+      "reason": "equipo-dudoso(Uruguay+nacional)",
+      "residual": [
+        "nacional"
+      ]
+    },
+    {
+      "id": "260054051",
+      "title": "2026/27 Barcelona City EXCLUSIVE Jersey S-XXL",
+      "reason": "equipo-dudoso(Barcelona+city)",
+      "residual": [
+        "city",
+        "exclusive"
+      ]
+    },
+    {
+      "id": "254869050",
+      "title": "Miami Hearts Black Jersey ANTETOKOUNMPO#7 S-XXL",
+      "reason": "sin-temporada",
+      "residual": []
+    },
+    {
+      "id": "254869049",
+      "title": "Miami Hearts White Jersey ANTETOKOUNMPO#7 S-XXL",
+      "reason": "sin-temporada",
+      "residual": []
+    },
+    {
+      "id": "254869006",
+      "title": "2026/27 Deportivo Second Alaves Away Jersey S-4XL",
+      "reason": "equipo-dudoso(Alaves+deportivo)",
+      "residual": [
+        "deportivo"
+      ]
+    }
+  ],
+  "unknownTeams": [
+    {
+      "team": "racing de santander",
+      "count": 5
+    },
+    {
+      "team": "tsv munich",
+      "count": 4
+    },
+    {
+      "team": "west bromwich albion",
+      "count": 3
+    },
+    {
+      "team": "watford",
+      "count": 3
+    },
+    {
+      "team": "dinamo bucuresti",
+      "count": 2
+    },
+    {
+      "team": "groningen",
+      "count": 2
+    },
+    {
+      "team": "aris thessaloniki",
+      "count": 2
+    },
+    {
+      "team": "hull city",
+      "count": 2
+    },
+    {
+      "team": "alverca",
+      "count": 2
+    },
+    {
+      "team": "euskal herriko",
+      "count": 2
+    },
+    {
+      "team": "stoke city",
+      "count": 2
+    },
+    {
+      "team": "chicago fire",
+      "count": 2
+    },
+    {
+      "team": "cultural leonesa",
+      "count": 2
+    },
+    {
+      "team": "atlante",
+      "count": 2
+    },
+    {
+      "team": "birmingham city",
+      "count": 2
+    },
+    {
+      "team": "mc algier",
+      "count": 1
+    },
+    {
+      "team": "richmond",
+      "count": 1
+    },
+    {
+      "team": "oasis live tour jacquard",
+      "count": 1
+    },
+    {
+      "team": "oasis",
+      "count": 1
+    },
+    {
+      "team": "cartagena",
+      "count": 1
+    },
+    {
+      "team": "dynamo dresden",
+      "count": 1
+    },
+    {
+      "team": "toronto",
+      "count": 1
+    },
+    {
+      "team": "recreativo de huelva",
+      "count": 1
+    },
+    {
+      "team": "deportivo de la coruna",
+      "count": 1
+    },
+    {
+      "team": "bod glimt",
+      "count": 1
+    },
+    {
+      "team": "norwich city",
+      "count": 1
+    },
+    {
+      "team": "huddersfield town",
+      "count": 1
+    },
+    {
+      "team": "motagua",
+      "count": 1
+    },
+    {
+      "team": "sd eibar",
+      "count": 1
+    },
+    {
+      "team": "blackburn rovers",
+      "count": 1
+    },
+    {
+      "team": "wattenscheid",
+      "count": 1
+    },
+    {
+      "team": "bolton wanderers",
+      "count": 1
+    },
+    {
+      "team": "deportivo universidad",
+      "count": 1
+    }
+  ]
+}
