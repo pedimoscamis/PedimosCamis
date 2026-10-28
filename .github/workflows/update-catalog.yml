@@ -62,7 +62,7 @@ jobs:
           f=data/catalog-agent-report.json
           [ "$DRY_RUN" = "true" ] && f="$RUNNER_TEMP/dryrun.json"
           [ -f "$f" ] && node -e "
-            const r=require(process.argv[1]);
+            const r=require(require('path').resolve(process.argv[1]));
             const L=['## Agente de catálogo'+(r.dryRun?' (simulación)':''),
               '- Añadidos: **'+r.added+'** · fallos de imagen: '+r.failed.length+' · reintentos pendientes: '+r.retryPending,
               '- Álbumes evaluados: '+r.candidates+' · duplicados: '+r.tally.duplicate+' · fuera de alcance: '+r.tally.skip+' · a revisar: '+r.tally.review,
@@ -77,16 +77,32 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git add data/products.json data/catalog-agent-state.json data/catalog-agent-report.json
-          if git diff --cached --quiet; then
-            echo "Sin cambios en el catálogo."
-            exit 0
-          fi
+          [ -f data/catalog-agent-report.json ] || { echo "El agente no generó informe."; exit 1; }
+          # El agente tarda ~40 min y main puede avanzar mientras tanto: un rebase de products.json
+          # choca. Se guarda su resultado y se reaplican sus altas sobre el main más reciente.
+          A="$RUNNER_TEMP/agent-out"
+          mkdir -p "$A"
+          cp data/products.json data/catalog-agent-state.json data/catalog-agent-report.json "$A/"
           N=$(node -p "require('./data/catalog-agent-report.json').added")
           git config user.name  "catalog-agent[bot]"
           git config user.email "catalog-agent[bot]@users.noreply.github.com"
-          git commit -m "chore(catálogo): agente añade $N productos [$(date -u '+%Y-%m-%d')]"
-          git pull --rebase origin main
-          git push origin HEAD:main
-          # Los push hechos con GITHUB_TOKEN no disparan otros workflows: se lanza el despliegue a mano.
-          gh workflow run deploy.yml --ref main
+          for i in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp "$A/catalog-agent-state.json" "$A/catalog-agent-report.json" data/
+            node agent/merge-products.js "$A/products.json" "$A/catalog-agent-report.json"
+            git add data/products.json data/catalog-agent-state.json data/catalog-agent-report.json
+            if git diff --cached --quiet; then
+              echo "Sin cambios en el catálogo."
+              exit 0
+            fi
+            git commit -m "chore(catálogo): agente añade $N productos [$(date -u '+%Y-%m-%d')]"
+            if git push origin HEAD:main; then
+              # Los push hechos con GITHUB_TOKEN no disparan otros workflows: se lanza el despliegue a mano.
+              gh workflow run deploy.yml --ref main
+              exit 0
+            fi
+            echo "Push rechazado (main cambió); reintento $i/3…"
+            sleep 15
+          done
+          exit 1
