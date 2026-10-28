@@ -54,6 +54,7 @@ const TEAMS = [
   ['laliga', 'Atletico Madrid', ['atletico madrid', 'atletico de madrid', 'atl madrid']],
   ['laliga', 'Barcelona', ['barcelona', 'fc barcelona', 'barca']],
   ['laliga', 'Celta Vigo', ['celta vigo', 'celta de vigo', 'celta']],
+  ['laliga', 'Deportivo La Coruna', ['deportivo de la coruna', 'deportivo la coruna', 'deportivo coruna', 'rc deportivo', 'depor']],
   ['laliga', 'Elche', ['elche']],
   ['laliga', 'Espanyol', ['espanyol']],
   ['laliga', 'Getafe', ['getafe']],
@@ -64,6 +65,7 @@ const TEAMS = [
   ['laliga', 'Mallorca', ['mallorca', 'rcd mallorca']],
   ['laliga', 'Osasuna', ['osasuna']],
   ['laliga', 'Rayo Vallecano', ['rayo vallecano', 'rayo']],
+  ['laliga', 'Racing Santander', ['racing de santander', 'racing santander', 'real racing club', 'racing club de santander']],
   ['laliga', 'Real Betis', ['real betis', 'betis']],
   ['laliga', 'Real Madrid', ['real madrid']],
   ['laliga', 'Real Oviedo', ['real oviedo', 'oviedo']],
@@ -154,6 +156,9 @@ const TEAMS = [
   ['europa', 'Celtic', ['celtic']],
   ['europa', 'Galatasaray', ['galatasaray']],
   ['europa', 'Fenerbahce', ['fenerbahce']],
+  ['europa', 'Recreativo de Huelva', ['recreativo de huelva', 'recreativo huelva']],
+  ['europa', 'Cartagena', ['fc cartagena', 'cartagena']],
+  ['europa', 'Cultural Leonesa', ['cultural leonesa', 'cultural y deportiva leonesa']],
 
   // ── Selecciones ─────────────────────────────────────────────────────────────
   ...[
@@ -197,8 +202,6 @@ const TEAMS = [
   ['out', 'Sporting Gijon', ['sporting gijon']],
   ['out', 'Real Salt Lake', ['real salt lake']],
   ['out', 'Real Zaragoza', ['real zaragoza']],
-  ['out', 'Real Santander', ['racing santander', 'real racing club']],
-  ['out', 'Deportivo La Coruna', ['deportivo la coruna', 'depor']],
   ['out', 'Deportivo Cali', ['deportivo cali']],
   ['out', 'Deportivo Saprissa', ['deportivo saprissa']],
   ['out', 'Deportivo Pereira', ['deportivo pereira']],
