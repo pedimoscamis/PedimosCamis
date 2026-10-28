@@ -594,8 +594,7 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23e8173c'/%3E%3C/svg%3E");
     }
 
-    /* ─── Hero — Mundial 2026 ───────────────────────────────── */
-    /* ─── Hero: La Rueda de Fichajes (carrusel 3D) ──────────────────── */
+    /* ─── Hero ─────────────────────────────────────────────── */
     #hero {
       padding: 26px 20px 18px;
       text-align: center;
@@ -629,104 +628,223 @@
     #hero-season-title span { color: var(--accent); }
     .hero-title-break { display: none; }
 
-    /* ─── Hero Spotlight — una camiseta protagonista a la vez ───────── */
-    #spotlight {
+    /* ─── Hero "El Vestuario": camisetas recortadas colgadas en fila ───── */
+    /* Cada camiseta es un webp sin fondo (img/hero/). La activa queda en el
+       centro con el color de su equipo detrás; las demás se alejan en 3D.
+       Capas por camiseta: .vt-card (posición en la fila, con transición)
+       > .vt-par (paralaje + inclinación con el ratón, y balanceo con `rotate`)
+       > .vt-flip (giro para ver la espalda) > .vt-face delantera/trasera. */
+    #vestuario {
+      --vt-c: #e8173c;
       position: relative;
-      min-height: 440px;
-      margin-bottom: 4px;
-      overflow: hidden;
-      touch-action: pan-y;
+      display: grid; grid-template-columns: minmax(280px, 1fr) 1.5fr;
+      align-items: center; gap: 12px;
+      max-width: 1180px; margin: 14px auto 0;
     }
-    .spotlight-slide {
-      position: absolute; inset: 0;
-      display: grid;
-      grid-template-columns: 1.05fr 1fr;
-      align-items: center;
-      gap: 20px;
-      opacity: 0;
-      transform: translateX(0);
-      transition: opacity .55s ease, transform .55s ease;
-      pointer-events: none;
-    }
-    .spotlight-slide.active {
-      opacity: 1; transform: translateX(0);
-      pointer-events: auto; z-index: 2;
-    }
-    /* Punto de partida/llegada según la dirección del cambio — se asignan
-       justo antes de animar, sin transición, para que la entrante "llegue"
-       deslizando desde el lado correcto y la saliente "se vaya" al opuesto. */
-    .spotlight-slide.enter-right { transform: translateX(70px); }
-    .spotlight-slide.enter-left  { transform: translateX(-70px); }
-    .spotlight-slide.exit-left   { opacity: 0; transform: translateX(-70px); }
-    .spotlight-slide.exit-right  { opacity: 0; transform: translateX(70px); }
-    .spotlight-content { text-align: left; padding-left: clamp(4px, 3vw, 32px); }
-    .spotlight-season {
+    #vt-info { text-align: left; padding-left: clamp(4px, 3vw, 40px); position: relative; z-index: 8; }
+    #vt-info.vt-swap > :not(#vt-name-form):not(#vt-actions) { animation: vt-text-in .5s ease both; }
+    @keyframes vt-text-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    #vt-season {
       display: block;
       font-family: 'Barlow', sans-serif;
       font-size: 12px; font-weight: 700; letter-spacing: .16em;
-      text-transform: uppercase; color: rgba(255,255,255,.55);
-      margin-bottom: 8px;
+      text-transform: uppercase; color: rgba(255,255,255,.6);
+      margin-bottom: 6px;
     }
-    .spotlight-team {
+    #vt-season::before {
+      content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--vt-c); box-shadow: 0 0 10px var(--vt-c);
+      margin-right: 8px; vertical-align: 1px;
+      transition: background .6s, box-shadow .6s;
+    }
+    #vt-team {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(38px, 6.4vw, 84px);
-      line-height: .96; letter-spacing: 1px;
-      color: #fff;
-      text-shadow: 0 6px 30px rgba(0,0,0,.6);
-      margin: 0 0 28px;
+      font-size: clamp(44px, 6.2vw, 88px);
+      line-height: .92; letter-spacing: 1px;
+      color: #fff; text-shadow: 0 6px 30px rgba(0,0,0,.6);
+      margin: 0 0 6px;
     }
-    .spotlight-cta {
-      background: var(--accent); color: #fff; border: none;
-      padding: 15px 40px; border-radius: 3px;
+    #vt-version { display: block; font-size: 13px; font-weight: 600; color: rgba(255,255,255,.55); margin-bottom: 12px; }
+    #vt-price {
+      font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 1px;
+      color: #fff; min-height: 40px; margin-bottom: 14px;
+    }
+    #vt-price small {
+      font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 600;
+      letter-spacing: .02em; color: rgba(255,255,255,.5); margin-left: 8px;
+    }
+    #vt-name-form { display: none; gap: 8px; margin-bottom: 12px; }
+    #vestuario.flipped #vt-name-form { display: flex; }
+    .vt-input {
+      min-width: 0;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22);
+      color: #fff; border-radius: 4px; padding: 11px 12px;
+      font-family: 'Barlow', sans-serif; font-size: 14px; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+    }
+    .vt-input::placeholder { color: rgba(255,255,255,.4); }
+    .vt-input:focus { outline: none; border-color: var(--vt-c); background: rgba(255,255,255,.12); }
+    #vt-name { flex: 1; max-width: 220px; }
+    #vt-number { width: 72px; }
+    #vt-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .vt-btn {
+      border: none; cursor: pointer;
+      padding: 15px 30px; border-radius: 3px;
       font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 800;
       letter-spacing: .1em; text-transform: uppercase;
-      cursor: pointer; transition: background .2s, transform .15s;
+      transition: background .2s, border-color .2s, transform .15s;
     }
-    .spotlight-cta:hover { background: var(--accent-dk); transform: translateY(-2px); }
+    .vt-btn:hover { transform: translateY(-2px); }
+    .vt-btn-primary { background: var(--accent); color: #fff; }
+    .vt-btn-primary:hover { background: var(--accent-dk); }
+    .vt-btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.35); }
+    .vt-btn-ghost:hover { border-color: #fff; }
+    #vestuario:not(.has-back) #vt-flip-btn { display: none; }
+    #vt-ship { margin-top: 14px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,.55); }
+    #vt-ship strong { color: #fff; }
 
-    .spotlight-media { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; }
-    .spotlight-glow {
-      position: absolute; width: 68%; height: 68%; top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      background: radial-gradient(circle, rgba(253,216,53,.32) 0%, rgba(253,216,53,0) 72%);
-      filter: blur(16px);
-      z-index: 1;
+    /* Escenario: el foco, el haz de luz y el suelo se desplazan menos que las
+       camisetas (paralaje) según el ratón o la inclinación del móvil. */
+    #vt-stage { position: relative; height: 480px; perspective: 1400px; touch-action: pan-y; --px: 0; --py: 0; }
+    #vt-glow {
+      position: absolute; left: 50%; top: 46%;
+      width: min(460px, 75%); aspect-ratio: 1; border-radius: 50%;
+      background-color: var(--vt-c);
+      -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 68%);
+      mask-image: radial-gradient(circle, #000 0%, transparent 68%);
+      opacity: .5; filter: blur(24px);
+      transform: translate(calc(-50% + var(--px) * -14px), calc(-50% + var(--py) * -10px));
+      transition: background-color .8s ease;
+      pointer-events: none;
     }
-    .spotlight-media img {
-      position: relative; z-index: 2;
-      max-height: clamp(240px, 38vw, 400px); max-width: 88%;
-      object-fit: contain;
-      filter: drop-shadow(0 28px 36px rgba(0,0,0,.55));
-      -webkit-mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 58%, transparent 100%);
-      mask-image: radial-gradient(ellipse 62% 62% at 50% 50%, #000 58%, transparent 100%);
+    #vt-beam {
+      position: absolute; left: 50%; top: -40px; width: 380px; height: 105%;
+      background: linear-gradient(180deg, rgba(255,255,255,.17), rgba(255,255,255,0) 78%);
+      clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%);
+      transform: translateX(calc(-50% + var(--px) * -8px));
+      pointer-events: none;
     }
+    #vt-floor {
+      position: absolute; left: 50%; bottom: 10px; width: 60%; height: 46px; border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,.7), transparent 70%);
+      transform: translateX(calc(-50% + var(--px) * -6px));
+      pointer-events: none;
+    }
+    .vt-card {
+      position: absolute; left: 50%; top: 50%;
+      width: min(340px, 50%); aspect-ratio: 5 / 6;
+      margin: 0; padding: 0; border: none; background: none; cursor: pointer;
+      transform:
+        translate(-50%, -50%)
+        translateX(calc(var(--off, 0) * 60%))
+        translateZ(calc(var(--abs, 0) * -230px))
+        rotateY(calc(var(--off, 0) * -24deg));
+      transform-style: preserve-3d;
+      filter: brightness(calc(1 - var(--abs, 0) * .3));
+      opacity: calc(1 - var(--abs, 0) * .28);
+      transition: transform .75s cubic-bezier(.2,.8,.2,1), opacity .5s, filter .5s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Sin filter/opacity en la activa: aplanarían el 3D y romperían el giro */
+    .vt-card.active { filter: none; opacity: 1; cursor: zoom-in; }
+    .vt-card.vt-hidden { opacity: 0; pointer-events: none; }
+    .vt-card:focus-visible { outline: 2px solid var(--vt-c); outline-offset: 6px; border-radius: 8px; }
+    .vt-par {
+      position: absolute; inset: 0;
+      transform-style: preserve-3d; transform-origin: 50% 8%;
+      transition: transform .25s ease-out;
+    }
+    .vt-card.active .vt-par {
+      transform: translateX(calc(var(--px) * 10px)) rotateX(calc(var(--py) * -7deg)) rotateY(calc(var(--px) * 12deg));
+      animation: vt-sway 4.5s ease-in-out infinite alternate;
+    }
+    /* Balanceo de percha: `rotate` es independiente de `transform` */
+    @keyframes vt-sway { from { rotate: -1.4deg; } to { rotate: 1.4deg; } }
+    .vt-flip {
+      position: absolute; inset: 0;
+      transform-style: preserve-3d;
+      transition: transform .85s cubic-bezier(.3,.7,.2,1);
+    }
+    #vestuario.flipped .vt-card.active .vt-flip { transform: rotateY(180deg); }
+    .vt-face {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      -webkit-backface-visibility: hidden; backface-visibility: hidden;
+    }
+    .vt-back { transform: rotateY(180deg); }
+    .vt-shirt {
+      position: relative; height: 100%; max-width: 100%;
+      aspect-ratio: var(--ar, .69);
+      container-type: inline-size;
+    }
+    .vt-shirt img {
+      display: block; width: 100%; height: 100%; object-fit: contain;
+      filter: drop-shadow(0 26px 30px rgba(0,0,0,.6));
+      user-select: none; -webkit-user-drag: none;
+    }
+    /* Serigrafía de la espalda: tamaño relativo al ancho de la camiseta */
+    .vt-print-name, .vt-print-num {
+      position: absolute; transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', sans-serif; line-height: 1; white-space: nowrap;
+      color: var(--ink); pointer-events: none;
+      text-shadow: 0 1px 0 rgba(0,0,0,.12);
+    }
+    .vt-print-name { font-size: min(10cqw, calc(105cqw / var(--len, 6))); letter-spacing: .08em; }
+    .vt-print-num  { font-size: 31cqw; letter-spacing: .02em; }
 
-    .spotlight-arrow {
+    .vt-arrow {
       position: absolute; top: 50%; transform: translateY(-50%);
       background: none; border: none; cursor: pointer;
       font-size: 34px; line-height: 1; font-family: Georgia, serif;
       color: rgba(255,255,255,.32);
-      padding: 10px; z-index: 5;
+      padding: 10px; z-index: 9;
       transition: color .2s;
     }
-    .spotlight-arrow:hover { color: rgba(255,255,255,.85); }
-    #spotlight-prev { left: -4px; }
-    #spotlight-next { right: -4px; }
-
-    #spotlight-progress {
-      position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
-      width: min(50%, 340px);
-      display: flex; gap: 6px; z-index: 5;
+    .vt-arrow:hover { color: rgba(255,255,255,.85); }
+    #vt-prev { left: -4px; }
+    #vt-next { right: -4px; }
+    #vt-progress {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: min(60%, 320px);
+      display: flex; gap: 6px; z-index: 9;
     }
-    .spotlight-bar {
-      flex: 1; height: 2px; border-radius: 1px;
+    .vt-bar {
+      flex: 1; height: 2px; border-radius: 1px; padding: 0; border: none;
       background: rgba(255,255,255,.25);
       cursor: pointer; overflow: hidden;
     }
-    .spotlight-bar-fill { display: block; height: 100%; width: 0%; background: #fff; }
-    .spotlight-bar-fill.filling { animation: spotlight-fill 4.5s linear forwards; }
-    .spotlight-bar-fill.done { width: 100%; }
-    @keyframes spotlight-fill { from { width: 0%; } to { width: 100%; } }
+    .vt-bar::after { content: ''; display: block; height: 100%; width: 0; background: #fff; }
+    .vt-bar.done::after { width: 100%; }
+    .vt-bar.filling::after { animation: vt-fill 5s linear forwards; }
+    #vestuario.vt-paused .vt-bar.filling::after { animation-play-state: paused; }
+    @keyframes vt-fill { from { width: 0; } to { width: 100%; } }
+
+    /* Cinta tipo marcador de estadio con datos reales del catálogo */
+    #vt-ticker {
+      margin: 16px -20px 0; overflow: hidden;
+      background: rgba(0,0,0,.4);
+      border-top: 1px solid rgba(255,255,255,.08); border-bottom: 1px solid rgba(255,255,255,.08);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+    #vt-ticker-track { display: flex; width: max-content; animation: vt-marquee 45s linear infinite; }
+    #vt-ticker:hover #vt-ticker-track { animation-play-state: paused; }
+    .vt-tick-set { display: flex; }
+    .vt-tick {
+      font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 1.5px;
+      color: rgba(255,255,255,.82); padding: 9px 0; white-space: nowrap;
+    }
+    .vt-tick::after { content: '✦'; color: var(--accent); font-size: 11px; margin: 0 22px; vertical-align: 2px; }
+    @keyframes vt-marquee { to { transform: translateX(-50%); } }
+
+    /* Chip "tu equipo" (último equipo que visitó el usuario) */
+    .hero-team-chip.is-fav { border-color: var(--accent); background: rgba(232,23,60,.18); }
+    .hero-team-chip.is-fav::after { content: '★'; color: var(--accent); font-size: 11px; margin-left: 2px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      #vt-ticker-track, .vt-card.active .vt-par, #vt-info.vt-swap > * { animation: none; }
+      .vt-card, .vt-flip { transition-duration: .01s; }
+    }
 
     /* ─── Línea de confianza — discreta, reutilizable (Hero y Checkout) ─── */
     .trust-line {
@@ -775,19 +893,16 @@
         font-size: clamp(22px, 6.5vw, 32px);
       }
       .hero-title-break { display: block; }
-      #spotlight { min-height: 380px; }
-      .spotlight-slide {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
-        align-content: start;
-        text-align: center;
-        gap: 10px;
-      }
-      .spotlight-media { order: 1; height: auto; min-height: 200px; }
-      .spotlight-media img { max-height: 200px; }
-      .spotlight-content { order: 2; text-align: center; padding-left: 0; }
-      .spotlight-cta { padding: 13px 34px; }
-      .spotlight-arrow { display: none; }
+      #vestuario { grid-template-columns: 1fr; gap: 0; margin-top: 10px; }
+      #vt-stage { order: -1; height: 330px; }
+      #vt-info { text-align: center; padding-left: 0; margin-top: 16px; }
+      #vt-team { font-size: clamp(38px, 11vw, 56px); }
+      #vt-price { margin-bottom: 12px; }
+      #vt-actions, #vt-name-form { justify-content: center; }
+      .vt-btn { padding: 13px 22px; }
+      .vt-card { width: min(250px, 62%); }
+      .vt-arrow { display: none; }
+      #vt-ticker { margin: 14px -14px 0; }
       #hero-teams { margin-top: 14px; }
     }
 
@@ -3015,14 +3130,33 @@
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
   <h1 id="hero-season-title">LA TEMPORADA <span>26/27</span><br class="hero-title-break"> YA ESTÁ AQUÍ</h1>
-  <div id="spotlight">
-    <div id="spotlight-slides">
-      <!-- Las 5 diapositivas se generan en JS: ver initSpotlight() -->
+  <div id="vestuario" aria-roledescription="carrusel" aria-label="Camisetas destacadas">
+    <div id="vt-info" aria-live="polite">
+      <span id="vt-season"></span>
+      <h2 id="vt-team"></h2>
+      <span id="vt-version"></span>
+      <div id="vt-price"></div>
+      <div id="vt-name-form">
+        <input id="vt-name" class="vt-input" type="text" maxlength="12" autocomplete="off" aria-label="Nombre">
+        <input id="vt-number" class="vt-input" type="text" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Dorsal">
+      </div>
+      <div id="vt-actions">
+        <button id="vt-buy-btn" class="vt-btn vt-btn-primary" type="button" onclick="vtOpenProduct()"></button>
+        <button id="vt-flip-btn" class="vt-btn vt-btn-ghost" type="button" onclick="vtToggleFlip()"></button>
+      </div>
+      <div id="vt-ship"></div>
     </div>
-    <button id="spotlight-prev" class="spotlight-arrow" onclick="spotlightPrev()" aria-label="Anterior">‹</button>
-    <button id="spotlight-next" class="spotlight-arrow" onclick="spotlightNext()" aria-label="Siguiente">›</button>
-    <div id="spotlight-progress"></div>
+    <div id="vt-stage">
+      <div id="vt-beam"></div>
+      <div id="vt-glow"></div>
+      <div id="vt-floor"></div>
+      <!-- Las camisetas (.vt-card) se generan en JS: ver initVestuario() -->
+      <button id="vt-prev" class="vt-arrow" type="button" onclick="vtPrev()" aria-label="Anterior">‹</button>
+      <button id="vt-next" class="vt-arrow" type="button" onclick="vtNext()" aria-label="Siguiente">›</button>
+      <div id="vt-progress"></div>
+    </div>
   </div>
+  <div id="vt-ticker" aria-label="Novedades"><div id="vt-ticker-track"></div></div>
   <div id="hero-teams">
     <span id="hero-teams-label" data-i18n="hero_teams_label"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg>Ve directo a tu equipo</span>
     <div id="hero-teams-row">
@@ -4025,7 +4159,19 @@ const T = {
   es: {
     search_placeholder: 'Buscar por camiseta, equipo...',
     hero_season_title: 'LA TEMPORADA <span>26/27</span><br class="hero-title-break"> YA ESTÁ AQUÍ',
-    spotlight_kicker: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M12 2.5c1 3 .3 4.3-1 5.8-1.6 1.8-2.5 3-2.5 5a3.5 3.5 0 007 0c0-1-.3-1.8-1-2.5.8.3 2 1.6 2 4a5.5 5.5 0 01-11 0c0-5 3-6 2.5-9.3.8.6 1.5 1.7 1.5 3.3 0-2.8 1-5.3 2.5-6.3z"/></svg>HOT SALES',
+    vt_buy: 'La quiero',
+    vt_buy_named: 'Pedirla con mi nombre',
+    vt_flip: 'Ponle tu nombre',
+    vt_front: 'Ver delantera',
+    vt_name_ph: 'Tu nombre',
+    vt_name_default: 'TU NOMBRE',
+    vt_name_extra: 'nombre y dorsal',
+    vt_ship_info: (n) => `Envío gratis desde <strong>${n} camisetas</strong>`,
+    vt_ship_missing: (n) => `Te ${n === 1 ? 'falta' : 'faltan'} <strong>${n} camiseta${n === 1 ? '' : 's'}</strong> para el envío gratis`,
+    vt_ship_done: '<strong>¡Ya tienes envío gratis!</strong>',
+    vt_ticker: (n) => [`Envío gratis desde ${n} camisetas`, 'Personalízala con tu nombre y dorsal', 'Reembolso 100% si tu paquete se pierde', 'Retro, selecciones, NBA y mucho más'],
+    vt_tick_fresh: (n) => `${n} camisetas nuevas esta quincena`,
+    vt_tick_season: (n) => `${n} modelos de la temporada 26/27`,
     hero_teams_label: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg>Ve directo a tu equipo',
     results: (n) => `${n} producto${n !== 1 ? 's' : ''}`,
     sizes: 'Tallas',
@@ -4105,7 +4251,19 @@ const T = {
   en: {
     search_placeholder: 'Search jersey, team, player…',
     hero_season_title: 'THE <span>26/27</span><br class="hero-title-break"> SEASON IS HERE',
-    spotlight_kicker: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M12 2.5c1 3 .3 4.3-1 5.8-1.6 1.8-2.5 3-2.5 5a3.5 3.5 0 007 0c0-1-.3-1.8-1-2.5.8.3 2 1.6 2 4a5.5 5.5 0 01-11 0c0-5 3-6 2.5-9.3.8.6 1.5 1.7 1.5 3.3 0-2.8 1-5.3 2.5-6.3z"/></svg>HOT SALES',
+    vt_buy: 'I want it',
+    vt_buy_named: 'Order with my name',
+    vt_flip: 'Add your name',
+    vt_front: 'See front',
+    vt_name_ph: 'Your name',
+    vt_name_default: 'YOUR NAME',
+    vt_name_extra: 'name & number',
+    vt_ship_info: (n) => `Free shipping from <strong>${n} shirts</strong>`,
+    vt_ship_missing: (n) => `<strong>${n} more shirt${n === 1 ? '' : 's'}</strong> for free shipping`,
+    vt_ship_done: '<strong>You have free shipping!</strong>',
+    vt_ticker: (n) => [`Free shipping from ${n} shirts`, 'Customise it with your name & number', '100% refund if your parcel gets lost', 'Retro, national teams, NBA and much more'],
+    vt_tick_fresh: (n) => `${n} new shirts this fortnight`,
+    vt_tick_season: (n) => `${n} models from the 26/27 season`,
     hero_teams_label: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:5px;flex-shrink:0"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg>Jump straight to your team',
     results: (n) => `${n} product${n !== 1 ? 's' : ''}`,
     sizes: 'Sizes',
@@ -4339,8 +4497,8 @@ async function init() {
   }, { rootMargin: '300px' });
   observer.observe(sentinel);
 
-  // El hero (SPOTLIGHT_DATA) es estático: se pinta ya, sin esperar al catálogo.
-  initSpotlight();
+  // El hero (VESTUARIO_DATA) es estático: se pinta ya, sin esperar al catálogo.
+  initVestuario();
 
   try {
     const res = await fetch(PRODUCTS_URL);
@@ -4349,6 +4507,7 @@ async function init() {
     buildCatBar();     // reconstruir tras cargar datos (ej. la pill 'shorts' depende de allProducts)
     buildFilterBar();
     renderAll();
+    refreshVestuario(); // precios y cinta de novedades reales
     openProductFromUrl();
   } catch (e) {
     document.getElementById('results-info').textContent = t().error_load;
@@ -4530,186 +4689,344 @@ function scrollToGrid() {
 // HERO SPOTLIGHT — una camiseta protagonista, rotación automática (vanilla JS)
 // ═══════════════════════════════════════════════════════════════════════════
 
-const SPOTLIGHT_DATA = [
-  {
-    team: 'España · Special Edition', season: 'World Cup 2026', version: 'Versión Fan · 2 Stars',
-    img: 'https://img.pedimoscamis.com/249543439.webp',
-    productId: '249543439',
-  },
-  {
-    team: 'Real Madrid', season: 'Temporada 26/27', version: 'Versión Fan',
-    img: 'https://img.pedimoscamis.com/mascamis/231561209_photo1_v2_resultado.webp',
-    productId: '231561209',
-  },
-  {
-    team: 'Barcelona', season: 'Temporada 26/27', version: 'Versión Fan',
-    img: 'https://img.pedimoscamis.com/mascamis/249539957_photo1_v2_resultado.webp',
-    productId: '249539957',
-  },
-  {
-    team: 'Atlético Madrid', season: 'Temporada 26/27', version: 'Versión Fan',
-    img: 'https://img.pedimoscamis.com/mascamis/251838618_photo1_v2_resultado.webp',
-    productId: '251838618',
-  },
-  {
-    team: 'España · Visitante', season: 'World Cup 2026', version: 'Versión Jugador · 2 Stars',
-    img: 'https://img.pedimoscamis.com/mascamis/249544896_photo1_resultado.webp',
-    productId: '249544896',
-  },
-  {
-    team: 'España · Local', season: 'World Cup 2026', version: 'Versión Fan · 2 Stars',
-    img: 'https://img.pedimoscamis.com/mascamis/249544864_photo1_resultado.webp',
-    productId: '249544864',
-  },
+// ─── Hero "El Vestuario" ──────────────────────────────────────────────────
+// Camisetas recortadas (sin fondo) en img/hero/{id}.webp. Las que tienen foto
+// de espalda ({id}_back.webp) permiten "Ponle tu nombre": la camiseta gira y
+// se ve el nombre y el dorsal que escribe el usuario. `ar` = ancho/alto de
+// cada imagen; `back` = posición (en % de la imagen de espalda) del nombre y
+// del número, y color de la serigrafía. Textos: [es, en].
+const VESTUARIO_DATA = [
+  { productId: '249544864', team: 'España', teamKey: 'España', color: '#c8102e', ar: .683,
+    season: ['Mundial 2026', 'World Cup 2026'], version: ['Local · 2 estrellas', 'Home · 2 stars'] },
+  { productId: '231561209', team: 'Real Madrid', teamKey: 'Real Madrid', color: '#d9b95b', ar: .68,
+    season: ['Temporada 26/27', 'Season 26/27'], version: ['Primera equipación', 'Home kit'],
+    back: { ar: .684, x: 48, nameY: 25, numY: 45, ink: '#1d2a4d' } },
+  { productId: '249539957', team: 'Barcelona', teamKey: 'Barcelona', color: '#a50044', ar: .677,
+    season: ['Temporada 26/27', 'Season 26/27'], version: ['Primera equipación', 'Home kit'],
+    back: { ar: .698, x: 50, nameY: 26, numY: 44, ink: '#f6c544' } },
+  { productId: '251838618', team: 'Atlético de Madrid', teamKey: 'Atlético Madrid', color: '#cb3524', ar: .672,
+    season: ['Temporada 26/27', 'Season 26/27'], version: ['Primera equipación', 'Home kit'] },
+  { productId: '249543407', team: 'Bayern', teamKey: 'Bayern Munich', color: '#dc052d', ar: .756,
+    season: ['Temporada 26/27', 'Season 26/27'], version: ['Primera equipación', 'Home kit'],
+    back: { ar: .824, x: 50, nameY: 35, numY: 57, ink: '#ffffff' } },
+  { productId: '249544896', team: 'España', teamKey: 'España', color: '#8c2333', ar: .692,
+    season: ['Mundial 2026', 'World Cup 2026'], version: ['Visitante · Versión jugador', 'Away · Player version'],
+    back: { ar: .688, x: 50, nameY: 22, numY: 39, ink: '#7a1f2b' } },
+  { productId: '235297734', team: 'Arsenal', teamKey: 'Arsenal', color: '#ef0107', ar: .689,
+    season: ['Temporada 26/27', 'Season 26/27'], version: ['Primera equipación', 'Home kit'] },
+  { productId: '257707363', team: 'Juventus', teamKey: 'Juventus', color: '#f08bb4', ar: .687,
+    season: ['Temporada 26/27', 'Season 26/27'], version: ['Segunda equipación', 'Away kit'],
+    back: { ar: .711, x: 49, nameY: 25, numY: 43, ink: '#151515' } },
 ];
 
-const SPOTLIGHT_INTERVAL_MS = 4500;
+const VT_INTERVAL_MS = 5000;
+const FAV_TEAM_KEY   = 'kz-team'; // último equipo visitado (lo guarda filterToTeam)
 
-const spotlightState = {
+const vt = {
   active: 0,
+  flipped: false,
+  hover: false,
   timerId: null,
-  isPaused: false,
+  reduceMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
 };
 
-function buildSpotlightSlide(item, idx) {
-  const slide = document.createElement('div');
-  slide.className = 'spotlight-slide';
-  slide.dataset.index = idx;
-  slide.innerHTML = `
-    <div class="spotlight-content">
-      <span class="spotlight-season">${escHtml(item.season)}</span>
-      <h2 class="spotlight-team">${escHtml(item.team)}</h2>
-      <button class="spotlight-cta">Ver Fichaje</button>
-    </div>
-    <div class="spotlight-media">
-      <div class="spotlight-glow"></div>
-      <img src="${item.img}" alt="${escHtml(item.team)}" draggable="false" loading="lazy" onerror="this.style.visibility='hidden'">
-    </div>`;
-  slide.querySelector('.spotlight-cta').addEventListener('click', () => spotlightOpenProduct(idx));
-  return slide;
+const vtText = (v) => Array.isArray(v) ? v[lang === 'en' ? 1 : 0] : v;
+
+function getFavTeam() {
+  try { return localStorage.getItem(FAV_TEAM_KEY) || ''; } catch (e) { return ''; }
 }
 
-function initSpotlight() {
-  const slidesEl = document.getElementById('spotlight-slides');
-  const progressEl = document.getElementById('spotlight-progress');
-  if (!slidesEl || !progressEl) return; // el hero está oculto en categorías/búsqueda
+function buildVestuarioCard(item, idx) {
+  const card = document.createElement('button');
+  card.type = 'button';
+  card.className = 'vt-card';
+  card.dataset.index = idx;
+  card.setAttribute('aria-label', item.team);
+  const back = item.back ? `
+        <div class="vt-face vt-back">
+          <div class="vt-shirt" style="--ar:${item.back.ar};--ink:${item.back.ink}">
+            <img src="img/hero/${item.productId}_back.webp" alt="" decoding="async" draggable="false">
+            <span class="vt-print-name" style="left:${item.back.x}%;top:${item.back.nameY}%"></span>
+            <span class="vt-print-num" style="left:${item.back.x}%;top:${item.back.numY}%"></span>
+          </div>
+        </div>` : '';
+  card.innerHTML = `
+    <div class="vt-par"><div class="vt-flip">
+      <div class="vt-face vt-front">
+        <div class="vt-shirt" style="--ar:${item.ar}">
+          <img src="img/hero/${item.productId}.webp" alt="${escHtml(item.team)}" decoding="async" draggable="false">
+        </div>
+      </div>${back}
+    </div></div>`;
+  card.addEventListener('click', () => {
+    if (+card.dataset.index !== vt.active) vtGoTo(idx);
+    else if (VESTUARIO_DATA[idx].back) vtToggleFlip();
+    else vtOpenProduct();
+  });
+  return card;
+}
 
-  slidesEl.innerHTML = '';
-  SPOTLIGHT_DATA.forEach((item, idx) => slidesEl.appendChild(buildSpotlightSlide(item, idx)));
+function initVestuario() {
+  const root  = document.getElementById('vestuario');
+  const stage = document.getElementById('vt-stage');
+  if (!root || !stage) return;
 
-  progressEl.innerHTML = SPOTLIGHT_DATA.map((_, idx) =>
-    `<div class="spotlight-bar" onclick="spotlightGoTo(${idx})"><span class="spotlight-bar-fill"></span></div>`
+  // El hero arranca con el equipo del usuario si está en la fila
+  const fav = getFavTeam();
+  const favIdx = VESTUARIO_DATA.findIndex(it => it.teamKey === fav);
+  vt.active = favIdx >= 0 ? favIdx : 0;
+  markFavTeamChip(fav);
+
+  stage.querySelectorAll('.vt-card').forEach(n => n.remove());
+  const arrow = document.getElementById('vt-prev');
+  VESTUARIO_DATA.forEach((item, idx) => stage.insertBefore(buildVestuarioCard(item, idx), arrow));
+
+  document.getElementById('vt-progress').innerHTML = VESTUARIO_DATA.map((item, idx) =>
+    `<button class="vt-bar" type="button" aria-label="${escHtml(item.team)}" onclick="vtGoTo(${idx})"></button>`
   ).join('');
 
-  const scene = document.getElementById('spotlight');
-  // Solo pausar al pasar el ratón en dispositivos con puntero real — en
-  // táctil, mouseenter puede dispararse sin un mouseleave posterior (no hay
-  // "salida" real del cursor), dejando isPaused atascado en true para
-  // siempre y el auto-avance parado de forma intermitente.
-  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    scene.addEventListener('mouseenter', () => { spotlightState.isPaused = true; });
-    scene.addEventListener('mouseleave', () => { spotlightState.isPaused = false; });
+  const nameInput = document.getElementById('vt-name');
+  const numInput  = document.getElementById('vt-number');
+  nameInput.addEventListener('input', vtRenderPrint);
+  numInput.addEventListener('input', () => {
+    numInput.value = numInput.value.replace(/\D/g, '').slice(0, 2);
+    vtRenderPrint();
+  });
+  nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') vtOpenProduct(); });
+  numInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') vtOpenProduct(); });
+
+  // Pausa al pasar el ratón solo con puntero real: en táctil mouseenter puede
+  // llegar sin mouseleave y dejaría el auto-avance parado.
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (finePointer) {
+    root.addEventListener('mouseenter', () => { vt.hover = true; root.classList.add('vt-paused'); });
+    root.addEventListener('mouseleave', () => { vt.hover = false; root.classList.toggle('vt-paused', vt.flipped); vtSetParallax(0, 0); });
   }
 
-  // ── Deslizar con el dedo (izquierda/derecha) ─────────────────────────────
-  // Solo se escucha inicio/fin (no cada movimiento): más que suficiente para
-  // detectar un swipe, y así el scroll vertical de la página no se bloquea.
-  const swipe = { startX: 0, startY: 0, active: false };
-  scene.addEventListener('touchstart', (e) => {
-    const t = e.touches[0];
-    swipe.startX = t.clientX;
-    swipe.startY = t.clientY;
-    swipe.active = true;
+  // Paralaje: ratón en escritorio; inclinación del móvil en Android (iOS
+  // exige pedir permiso con un gesto y no compensa interrumpir por ello).
+  if (!vt.reduceMotion) {
+    if (finePointer) {
+      root.addEventListener('pointermove', (e) => {
+        const r = stage.getBoundingClientRect();
+        vtSetParallax(((e.clientX - r.left) / r.width) * 2 - 1, ((e.clientY - r.top) / r.height) * 2 - 1);
+      });
+    } else if ('DeviceOrientationEvent' in window && typeof DeviceOrientationEvent.requestPermission !== 'function') {
+      window.addEventListener('deviceorientation', (e) => {
+        if (e.gamma == null || e.beta == null) return;
+        vtSetParallax(e.gamma / 25, (e.beta - 45) / 25);
+      }, { passive: true });
+    }
+  }
+
+  // Deslizar con el dedo (solo inicio/fin: no bloquea el scroll vertical)
+  const swipe = { x: 0, y: 0, active: false };
+  stage.addEventListener('touchstart', (e) => {
+    swipe.x = e.touches[0].clientX; swipe.y = e.touches[0].clientY; swipe.active = true;
   }, { passive: true });
-  scene.addEventListener('touchend', (e) => {
-    spotlightState.isPaused = false; // red de seguridad: nunca queda atascado en táctil
+  stage.addEventListener('touchend', (e) => {
     if (!swipe.active) return;
     swipe.active = false;
-    const t = e.changedTouches[0];
-    const deltaX = t.clientX - swipe.startX;
-    const deltaY = t.clientY - swipe.startY;
-    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
-      if (deltaX < 0) spotlightNext(); else spotlightPrev();
+    const dx = e.changedTouches[0].clientX - swipe.x;
+    const dy = e.changedTouches[0].clientY - swipe.y;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) vtNext(); else vtPrev();
     }
   });
 
-  spotlightState.active = 0;
-  spotlightRender();
-  spotlightRestartTimer();
+  root.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowRight') vtNext();
+    if (e.key === 'ArrowLeft')  vtPrev();
+  });
+
+  vtRender(false);
+  vtRestartTimer();
+  updateVestuarioShip();
+  renderVestuarioTicker();
 }
 
-/**
- * @param {number} direction  0 = mostrar sin animar (carga inicial); 1 = la
- *   entrante llega desde la derecha (avanzar); -1 = llega desde la izquierda
- *   (retroceder). La saliente siempre se va hacia el lado opuesto.
- * @param {number|null} prevActive  índice que estaba activo antes del cambio
- */
-function spotlightRender(direction = 0, prevActive = null) {
-  const slides = document.querySelectorAll('.spotlight-slide');
-
-  if (direction !== 0 && prevActive !== null && prevActive !== spotlightState.active) {
-    const incoming = slides[spotlightState.active];
-    const outgoing = slides[prevActive];
-
-    // Colocar la entrante en su lado de origen sin transición (instantáneo),
-    // forzar reflow, y solo entonces activarla: la transición CSS anima el
-    // recorrido real desde ese lado hasta el centro.
-    incoming.style.transition = 'none';
-    incoming.classList.remove('active', 'enter-left', 'enter-right', 'exit-left', 'exit-right');
-    incoming.classList.add(direction > 0 ? 'enter-right' : 'enter-left');
-    void incoming.offsetWidth;
-    incoming.style.transition = '';
-
-    outgoing.classList.remove('active');
-    outgoing.classList.add(direction > 0 ? 'exit-left' : 'exit-right');
-    incoming.classList.remove('enter-left', 'enter-right');
-    incoming.classList.add('active');
-
-    setTimeout(() => outgoing.classList.remove('exit-left', 'exit-right'), 600);
-  } else {
-    slides.forEach((slide, idx) => slide.classList.toggle('active', idx === spotlightState.active));
-  }
-
-  document.querySelectorAll('.spotlight-bar-fill').forEach((fill, idx) => {
-    fill.classList.remove('filling', 'done');
-    // Forzar reflow para poder relanzar la animación CSS desde cero
-    void fill.offsetWidth;
-    if (idx < spotlightState.active) fill.classList.add('done');
-    else if (idx === spotlightState.active) fill.classList.add('filling');
+let vtParallaxFrame = 0;
+function vtSetParallax(x, y) {
+  const clamp = (v) => Math.max(-1, Math.min(1, v));
+  cancelAnimationFrame(vtParallaxFrame);
+  vtParallaxFrame = requestAnimationFrame(() => {
+    const stage = document.getElementById('vt-stage');
+    stage.style.setProperty('--px', clamp(x).toFixed(3));
+    stage.style.setProperty('--py', clamp(y).toFixed(3));
   });
 }
 
-function spotlightRestartTimer() {
-  if (spotlightState.timerId) clearInterval(spotlightState.timerId);
-  spotlightState.timerId = setInterval(() => {
-    if (spotlightState.isPaused) return;
-    spotlightGoTo(spotlightState.active + 1, 1);
-  }, SPOTLIGHT_INTERVAL_MS);
-}
+/** Coloca cada camiseta según su distancia a la activa y pinta los textos. */
+function vtRender(animateText = true) {
+  const n = VESTUARIO_DATA.length;
+  document.querySelectorAll('.vt-card').forEach(card => {
+    let off = +card.dataset.index - vt.active;
+    if (off > n / 2)  off -= n;
+    if (off < -n / 2) off += n;
+    const abs = Math.abs(off);
+    card.style.setProperty('--off', off);
+    card.style.setProperty('--abs', abs);
+    card.style.zIndex = 6 - abs;
+    card.classList.toggle('active', off === 0);
+    card.classList.toggle('vt-hidden', abs > 2);
+    card.tabIndex = abs > 1 ? -1 : 0;
+  });
 
-function spotlightGoTo(idx, direction) {
-  const prevActive = spotlightState.active;
-  const newActive  = ((idx % SPOTLIGHT_DATA.length) + SPOTLIGHT_DATA.length) % SPOTLIGHT_DATA.length;
-  const dir = direction !== undefined ? direction : (newActive === prevActive ? 0 : (newActive > prevActive ? 1 : -1));
-  spotlightState.active = newActive;
-  spotlightRender(dir, prevActive);
-  spotlightRestartTimer(); // el auto-avance nunca se desactiva tras una navegación manual
-}
+  const item = VESTUARIO_DATA[vt.active];
+  const root = document.getElementById('vestuario');
+  root.style.setProperty('--vt-c', item.color);
+  root.classList.toggle('has-back', !!item.back);
+  root.classList.toggle('flipped', vt.flipped);
+  root.classList.toggle('vt-paused', vt.flipped || vt.hover);
 
-function spotlightNext() { spotlightGoTo(spotlightState.active + 1, 1); }
-function spotlightPrev() { spotlightGoTo(spotlightState.active - 1, -1); }
+  document.getElementById('vt-season').textContent  = vtText(item.season);
+  document.getElementById('vt-team').textContent    = item.team;
+  document.getElementById('vt-version').textContent = vtText(item.version);
+  document.getElementById('vt-buy-btn').textContent  = vt.flipped ? t().vt_buy_named : t().vt_buy;
+  document.getElementById('vt-flip-btn').textContent = vt.flipped ? t().vt_front : t().vt_flip;
+  document.getElementById('vt-name').placeholder   = t().vt_name_ph;
+  document.getElementById('vt-number').placeholder = 'Nº';
+  vtRenderPrice();
+  vtRenderPrint();
 
-function spotlightOpenProduct(idx) {
-  const item = SPOTLIGHT_DATA[idx];
-  if (!item) return;
-  const product = allProducts.find(p => p.id === item.productId);
-  if (product) {
-    openModal(product);
-  } else {
-    document.getElementById('search').value = item.team;
-    searchQuery = item.team;
-    setCategory('all');
+  const info = document.getElementById('vt-info');
+  if (animateText) {
+    info.classList.remove('vt-swap');
+    void info.offsetWidth; // relanzar la animación de entrada del texto
+    info.classList.add('vt-swap');
   }
+
+  document.querySelectorAll('.vt-bar').forEach((bar, idx) => {
+    bar.classList.remove('filling', 'done');
+    void bar.offsetWidth;
+    if (idx < vt.active) bar.classList.add('done');
+    else if (idx === vt.active) bar.classList.add('filling');
+  });
+}
+
+function vtRenderPrice() {
+  const el = document.getElementById('vt-price');
+  if (!el) return;
+  const item = VESTUARIO_DATA[vt.active];
+  const p = allProducts.find(x => x.id === item.productId);
+  if (!p) { el.innerHTML = ''; return; } // el catálogo aún no ha cargado
+  const { main } = t().price_fmt(getDisplayPrice(p));
+  const sizes = p.sizes || [];
+  const note = vt.flipped ? `+${t().price_fmt(socioMode ? 3 / EUR_RATE : 3).main} ${t().vt_name_extra}`
+    : sizes.length > 1 ? `${t().sizes} ${sizes[0]}–${sizes[sizes.length - 1]}` : '';
+  el.innerHTML = `${escHtml(main)}${note ? `<small>${escHtml(note)}</small>` : ''}`;
+}
+
+function vtRenderPrint() {
+  const name = (document.getElementById('vt-name').value.trim() || t().vt_name_default).toUpperCase();
+  const num  = document.getElementById('vt-number').value.trim() || '10';
+  document.querySelectorAll('.vt-print-name').forEach(el => {
+    el.textContent = name;
+    el.style.setProperty('--len', Math.max(name.length, 4));
+  });
+  document.querySelectorAll('.vt-print-num').forEach(el => { el.textContent = num; });
+}
+
+function vtToggleFlip() {
+  if (!VESTUARIO_DATA[vt.active].back) return;
+  vt.flipped = !vt.flipped;
+  vtRender(false);
+  if (vt.flipped && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.getElementById('vt-name').focus({ preventScroll: true });
+  }
+  if (!vt.flipped) vtRestartTimer();
+}
+
+function vtRestartTimer() {
+  if (vt.timerId) clearInterval(vt.timerId);
+  vt.timerId = setInterval(() => {
+    const root = document.getElementById('vestuario');
+    // Sin avanzar si el usuario está mirando/escribiendo o el hero no se ve
+    if (vt.hover || vt.flipped || document.hidden || !root || root.offsetParent === null) return;
+    vtGoTo(vt.active + 1);
+  }, VT_INTERVAL_MS);
+}
+
+function vtGoTo(idx) {
+  const n = VESTUARIO_DATA.length;
+  const next = ((idx % n) + n) % n;
+  if (next === vt.active) return;
+  vt.active  = next;
+  vt.flipped = false;
+  vtRender();
+  vtRestartTimer(); // el auto-avance nunca se desactiva tras una navegación manual
+}
+function vtNext() { vtGoTo(vt.active + 1); }
+function vtPrev() { vtGoTo(vt.active - 1); }
+
+/** Abre la ficha; si la camiseta está girada con nombre/dorsal, los pasa al modal. */
+function vtOpenProduct() {
+  const item = VESTUARIO_DATA[vt.active];
+  const product = allProducts.find(p => p.id === item.productId);
+  if (!product) {
+    document.getElementById('search').value = item.team;
+    searchQuery = item.team.toLowerCase();
+    setCategory('all');
+    return;
+  }
+  openModal(product);
+  if (!vt.flipped) return;
+  const name = document.getElementById('vt-name').value.trim().toUpperCase();
+  const num  = document.getElementById('vt-number').value.trim();
+  if (!name && !num) return;
+  document.getElementById('opt-dorsal').checked = true;
+  document.getElementById('input-name').value   = name;
+  document.getElementById('input-number').value = num;
+  document.getElementById('dorsal-inputs').classList.add('visible');
+  updateModalPrice();
+}
+
+/** Mensaje de envío gratis según lo que ya hay en el carrito. */
+function updateVestuarioShip() {
+  const el = document.getElementById('vt-ship');
+  if (!el) return;
+  const qty = cart.reduce((s, i) => s + (i.qty || 1), 0);
+  const missing = SHIPPING_FREE_AT - qty;
+  el.innerHTML = qty === 0 ? t().vt_ship_info(SHIPPING_FREE_AT)
+    : missing > 0 ? t().vt_ship_missing(missing)
+    : t().vt_ship_done;
+}
+
+/** Cinta del marcador: novedades reales (addedAt) + ventajas de la tienda. */
+function renderVestuarioTicker() {
+  const track = document.getElementById('vt-ticker-track');
+  if (!track) return;
+  const items = t().vt_ticker(SHIPPING_FREE_AT);
+  if (allProducts.length) {
+    const since = Date.now() - 16 * 864e5;
+    const fresh = allProducts.filter(p => (p.addedAt || 0) >= since).length;
+    const season = allProducts.filter(p => /2026\/27|26\/27/.test(p.nameEn)).length;
+    if (season) items.unshift(t().vt_tick_season(season));
+    if (fresh >= 20) items.unshift(t().vt_tick_fresh(fresh));
+  }
+  // Dos copias idénticas: la animación desplaza -50% y el bucle no se nota
+  const set = items.map(s => `<span class="vt-tick">${escHtml(s)}</span>`).join('');
+  track.innerHTML = `<div class="vt-tick-set">${set}</div><div class="vt-tick-set" aria-hidden="true">${set}</div>`;
+}
+
+/** Tras cargar el catálogo o cambiar idioma/modo: precios y cinta reales. */
+function refreshVestuario() {
+  if (!document.getElementById('vestuario')) return;
+  vtRender(false);
+  updateVestuarioShip();
+  renderVestuarioTicker();
+}
+
+/** Destaca y pone primero el chip del equipo favorito en "Ve directo a tu equipo". */
+function markFavTeamChip(team) {
+  const row = document.getElementById('hero-teams-row');
+  if (!row || !team) return;
+  row.querySelectorAll('.hero-team-chip').forEach(chip => {
+    const isFav = (chip.getAttribute('onclick') || '').includes(`'${team}')`);
+    chip.classList.toggle('is-fav', isFav);
+    if (isFav) row.prepend(chip);
+  });
 }
 
 /**
@@ -6371,6 +6688,8 @@ function applyTeamTheme() {
 }
 
 function filterToTeam(cat, teamName) {
+  try { localStorage.setItem(FAV_TEAM_KEY, teamName); } catch (e) {}
+  markFavTeamChip(teamName);
   activeCat    = cat;
   searchQuery  = '';
   clearActiveFilters();
@@ -6638,6 +6957,7 @@ function renderAll() {
   if (mainGrid) mainGrid.style.display = '';
 
   hero.style.display = (activeCat === 'all' && !searchQuery) ? 'block' : 'none';
+  vtRenderPrice(); // socio/admin cambian el precio mostrado
 
   renderGallery();
   renderFeaturedSecondStar();
@@ -8177,6 +8497,7 @@ function updateCartBadge() {
   const totalQty = cart.reduce((s, i) => s + (i.qty || 1), 0);
   badge.style.display = totalQty ? 'flex' : 'none';
   badge.textContent   = totalQty;
+  updateVestuarioShip();
 }
 
 function cartTotalUsd() {
@@ -9017,8 +9338,7 @@ function updateLangUI() {
   document.querySelectorAll('[data-i18n="hero_teams_label"]').forEach(el => el.innerHTML = t().hero_teams_label);
   const heroSeasonTitle = document.getElementById('hero-season-title');
   if (heroSeasonTitle) heroSeasonTitle.innerHTML = t().hero_season_title;
-  const spotlightKicker = document.getElementById('spotlight-kicker');
-  if (spotlightKicker) spotlightKicker.textContent = t().spotlight_kicker;
+  refreshVestuario();
   const featuredTitle = document.getElementById('featured-title');
   if (featuredTitle) featuredTitle.textContent = t().featured_title;
   const featuredSeeAll = document.getElementById('featured-see-all');

@@ -35,6 +35,8 @@ jobs:
           cp index.html robots.txt sitemap.xml manifest.webmanifest apple-touch-icon.png icon-192.png icon-512.png _site/
           mkdir -p _site/data
           cp data/products.json _site/data/
+          mkdir -p _site/img
+          cp -r img/hero _site/img/
           node scripts/build-share-pages.js _site
           cp CNAME _site/
           touch _site/.nojekyll
