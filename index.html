@@ -790,7 +790,7 @@
       text-shadow: 0 1px 0 rgba(0,0,0,.12);
     }
     .vt-print-name { font-size: min(10cqw, calc(105cqw / var(--len, 6))); letter-spacing: .08em; }
-    .vt-print-num  { font-size: 31cqw; letter-spacing: .02em; }
+    .vt-print-num  { font-size: 31cqw; letter-spacing: 0; transform: translate(calc(-50% + var(--ink-dx, 0em)), -50%); }
 
     .vt-arrow {
       position: absolute; top: 50%; transform: translateY(-50%);
@@ -4694,16 +4694,18 @@ function scrollToGrid() {
 // de espalda ({id}_back.webp) permiten "Ponle tu nombre": la camiseta gira y
 // se ve el nombre y el dorsal que escribe el usuario. `ar` = ancho/alto de
 // cada imagen; `back` = posición (en % de la imagen de espalda) del nombre y
-// del número, y color de la serigrafía. Textos: [es, en].
+// del número (`numX` si el dorsal necesita otro eje que el nombre: en los
+// maniquís girados el cuerpo queda más a la izquierda a la altura del dorsal),
+// y color de la serigrafía. Textos: [es, en].
 const VESTUARIO_DATA = [
   { productId: '249544864', team: 'España', teamKey: 'España', color: '#c8102e', ar: .683,
     season: ['Mundial 2026', 'World Cup 2026'], version: ['Local · 2 estrellas', 'Home · 2 stars'] },
   { productId: '231561209', team: 'Real Madrid', teamKey: 'Real Madrid', color: '#d9b95b', ar: .68,
     season: ['Temporada 26/27', 'Season 26/27'], version: ['Primera equipación', 'Home kit'],
-    back: { ar: .684, x: 45.8, nameY: 30, numY: 50, ink: '#1d2a4d' } },
+    back: { ar: .684, x: 45.8, numX: 44.8, nameY: 30, numY: 50, ink: '#1d2a4d' } },
   { productId: '249539957', team: 'Barcelona', teamKey: 'Barcelona', color: '#a50044', ar: .677,
     season: ['Temporada 26/27', 'Season 26/27'], version: ['Primera equipación', 'Home kit'],
-    back: { ar: .698, x: 45.4, nameY: 30, numY: 48, ink: '#f6c544' } },
+    back: { ar: .698, x: 45.4, numX: 44.4, nameY: 30, numY: 48, ink: '#f6c544' } },
   { productId: '251838618', team: 'Atlético de Madrid', teamKey: 'Atlético Madrid', color: '#cb3524', ar: .672,
     season: ['Temporada 26/27', 'Season 26/27'], version: ['Primera equipación', 'Home kit'] },
   { productId: '249543407', team: 'Bayern', teamKey: 'Bayern Munich', color: '#dc052d', ar: .756,
@@ -4716,7 +4718,7 @@ const VESTUARIO_DATA = [
     season: ['Temporada 26/27', 'Season 26/27'], version: ['Primera equipación', 'Home kit'] },
   { productId: '257707363', team: 'Juventus', teamKey: 'Juventus', color: '#f08bb4', ar: .687,
     season: ['Temporada 26/27', 'Season 26/27'], version: ['Segunda equipación', 'Away kit'],
-    back: { ar: .711, x: 45.9, nameY: 31, numY: 49, ink: '#151515' } },
+    back: { ar: .711, x: 45.9, numX: 44.9, nameY: 31, numY: 49, ink: '#151515' } },
 ];
 
 const VT_INTERVAL_MS = 5000;
@@ -4747,7 +4749,7 @@ function buildVestuarioCard(item, idx) {
           <div class="vt-shirt" style="--ar:${item.back.ar};--ink:${item.back.ink}">
             <img src="img/hero/${item.productId}_back.webp" alt="" decoding="async" draggable="false">
             <span class="vt-print-name" style="left:${item.back.x}%;top:${item.back.nameY}%"></span>
-            <span class="vt-print-num" style="left:${item.back.x}%;top:${item.back.numY}%"></span>
+            <span class="vt-print-num" style="left:${item.back.numX ?? item.back.x}%;top:${item.back.numY}%"></span>
           </div>
         </div>` : '';
   card.innerHTML = `
@@ -4841,6 +4843,8 @@ function initVestuario() {
   });
 
   vtRender(false);
+  // La compensación del dorsal mide la fuente: repetir cuando haya cargado
+  if (document.fonts) document.fonts.load('100px "Bebas Neue"').then(vtRenderPrint, () => {});
   vtRestartTimer();
   updateVestuarioShip();
   renderVestuarioTicker();
@@ -4925,7 +4929,24 @@ function vtRenderPrint() {
     el.textContent = name;
     el.style.setProperty('--len', Math.max(name.length, 4));
   });
-  document.querySelectorAll('.vt-print-num').forEach(el => { el.textContent = num; });
+  const dx = vtInkShiftEm(num);
+  document.querySelectorAll('.vt-print-num').forEach(el => {
+    el.textContent = num;
+    el.style.setProperty('--ink-dx', dx);
+  });
+}
+
+// Centra el dorsal por su tinta y no por su caja: en Bebas Neue todas las
+// cifras miden lo mismo y el "1" deja hueco a la izquierda, así que "10" o
+// "17" parecían corridos a la derecha.
+const vtMeasureCtx = document.createElement('canvas').getContext('2d');
+function vtInkShiftEm(text) {
+  // Sin la fuente cargada se mediría la de reserva: mejor no compensar
+  if (!document.fonts || !document.fonts.check('100px "Bebas Neue"')) return '0em';
+  vtMeasureCtx.font = '100px "Bebas Neue"';
+  const m = vtMeasureCtx.measureText(text);
+  const inkCenter = (m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2;
+  return ((m.width / 2 - inkCenter) / 100).toFixed(3) + 'em';
 }
 
 function vtToggleFlip() {
