@@ -98,7 +98,7 @@ function solicitarCodigo(emailRaw) {
     '<div style="background-color:#eeeeee;padding:20px;text-align:center;font-size:12px;color:#888888;"><p style="margin:0;">¡Muchas gracias por tu confianza!</p></div>' +
     '</div></div>';
   // Menos pinta de spam: nombre de remitente, versión en texto plano y sin el código en el asunto
-  MailApp.sendEmail({
+  _enviar({  // definida en codigo-principal.gs
     to: email,
     subject: 'Tu código de acceso a PedimosCamis',
     name: 'PedimosCamis?',

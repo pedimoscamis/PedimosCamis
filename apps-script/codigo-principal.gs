@@ -11,7 +11,32 @@
 //  - logo alojado en Cloudinary (el r2.dev público es solo de desarrollo)
 // -----------------------------------------------------------------------
 var LOGO_URL = "https://res.cloudinary.com/dbeystyls/image/upload/v1779456332/ChatGPT_Image_22_may_2026_15_11_57_asrrdf.png";
-var CORREO_TIENDA = "pedimoscamis@gmail.com";
+var CORREO_TIENDA = "pedimoscamis@gmail.com";         // buzón real: aquí llegan los avisos de pedido
+var CORREO_CONTACTO = "contacto@pedimoscamis.com";    // dirección pública (Cloudflare Email Routing → Gmail)
+
+// Si Gmail tiene CORREO_CONTACTO configurado como "Enviar como", los correos salen
+// desde el dominio; si no, se envían con MailApp como hasta ahora.
+function _aliasDominioDisponible() {
+  try {
+    return GmailApp.getAliases().indexOf(CORREO_CONTACTO) !== -1;
+  } catch (err) {
+    return false;
+  }
+}
+
+function _enviar(opciones) {
+  if (_aliasDominioDisponible()) {
+    GmailApp.sendEmail(opciones.to, opciones.subject, opciones.body, {
+      from: CORREO_CONTACTO,
+      name: opciones.name,
+      replyTo: CORREO_CONTACTO,
+      htmlBody: opciones.htmlBody
+    });
+  } else {
+    opciones.replyTo = CORREO_CONTACTO;
+    MailApp.sendEmail(opciones);
+  }
+}
 
 function htmlATexto(html) {
   return String(html || "")
@@ -27,11 +52,10 @@ function htmlATexto(html) {
 }
 
 function enviarCorreo(destino, asunto, html, nombreRemitente) {
-  MailApp.sendEmail({
+  _enviar({
     to: destino,
     subject: asunto,
     name: nombreRemitente || "PedimosCamis?",
-    replyTo: CORREO_TIENDA,
     body: htmlATexto(html),
     htmlBody: html
   });
