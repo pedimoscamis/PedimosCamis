@@ -332107,5 +332107,30 @@
     "gallery": [
       "https://img.pedimoscamis.com/mascamis/254868263_photo2_resultado.webp"
     ]
+  },
+  {
+    "id": "mn27526ef009",
+    "nameEs": "2026/27 Liverpool Home Jersey Long Sleeve S-4XL",
+    "nameEn": "2026/27 Liverpool Home Jersey Long Sleeve S-4XL",
+    "cats": [
+      "premier",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "premier",
+    "yupooUrl": "",
+    "img": "https://img.pedimoscamis.com/mascamis/mn27526ef009_photo1_resultado.webp",
+    "photos": 1,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "addedAt": 1793363037622
   }
 ]
