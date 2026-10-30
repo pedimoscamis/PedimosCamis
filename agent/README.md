@@ -21,6 +21,9 @@ npm run agent        # ejecución real (necesita R2_ACCESS_KEY_ID / R2_SECRET_AC
 ```
 Opciones: `--max-pages N` · `--max-new N` (freno: aborta si hay más) · `--limit N` · `--since-id ID`.
 
+## Altas manuales
+Productos que se pasan a mano (todo lo que no es la importación automática de ggjersey): `node agent/add-manual.js <spec.json> [--dry-run] [--force]`. Usa el mismo clasificador, la misma comprobación de duplicados y las mismas fotos en R2. Formato del JSON y pasos en el skill `.claude/skills/anadir-producto-manual`.
+
 ## Mantenimiento
 - **Equipo nuevo / ascendido**: una línea en `teams.js`. Los desconocidos aparecen en el resumen de cada ejecución.
 - **Tras tocar `teams.js` o `parse.js`**: `npm run agent:test` debe acabar con todos los casos fijos correctos.

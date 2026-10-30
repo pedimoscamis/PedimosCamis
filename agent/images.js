@@ -58,7 +58,12 @@ async function processPhoto(albumId, n, photo) {
     } catch (e) { lastErr = e; buf = null; }
   }
   if (!buf) throw new Error(`no se pudo descargar la foto ${n}: ${lastErr?.message}`);
+  return uploadBuffer(albumId, n, buf);
+}
 
+/** Convierte una foto ya descargada (o local) a WebP y la sube como photo{n}. */
+async function uploadBuffer(albumId, n, buf) {
+  const key = keyFor(albumId, n);
   const img = sharp(buf, { failOn: 'none' });
   const meta = await img.metadata();
   if (!meta.width || !meta.height || Math.min(meta.width, meta.height) < MIN_SIDE) {
@@ -92,4 +97,4 @@ async function uploadAlbum(albumId, photos) {
   return { img: urls[0], gallery: urls.slice(1) };
 }
 
-module.exports = { uploadAlbum, keyFor, urlFor };
+module.exports = { uploadAlbum, uploadBuffer, exists, keyFor, urlFor };

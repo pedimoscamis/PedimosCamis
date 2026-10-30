@@ -44,4 +44,4 @@ No hay tests ni linter. La comprobación mínima tras editar `index.html` es sin
 
 ## Skills del proyecto
 
-En `.claude/skills/`: `verificar-sitio`, `desplegar-sitio`, `anadir-productos`, `subir-imagenes-r2`, `precios-y-pedidos`. Úsalas para esos flujos en lugar de redescubrirlos.
+En `.claude/skills/`: `verificar-sitio`, `desplegar-sitio`, `anadir-productos`, `anadir-producto-manual` (altas a mano con `agent/add-manual.js`), `subir-imagenes-r2`, `precios-y-pedidos`. Úsalas para esos flujos en lugar de redescubrirlos.
