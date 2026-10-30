@@ -619,6 +619,7 @@
 
     /* ─── Título de temporada — limpio, sin adornos ──────────────────── */
     #hero-season-title {
+      display: none; /* oculto de momento */
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(27px, 4.5vw, 45px);
       line-height: 1.2; letter-spacing: 1.5px;
@@ -7240,7 +7241,7 @@ function computeBasePrice(p) {
   if (isKidKit(p)) {
     if (socioMode) return 8.5 / EUR_RATE;  // → 8.50€ para todos los Kid Kits
     const isRetro = (p.cats || []).includes('retro') || /\bretro\b/i.test(p.nameEn || '');
-    return isRetro ? 28 : 25;  // Retro → 28€, Normal → 25€
+    return isRetro ? 28 : 23;  // Retro → 28€, Normal → 23€ (+2€ de getBasePrice = 25€)
   }
 
   // Recargo manga larga: +3€ sobre el precio base de cualquier camiseta
