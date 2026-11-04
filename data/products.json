@@ -267427,33 +267427,6 @@
     "addedAt": 1789298178339
   },
   {
-    "id": "249541617",
-    "nameEs": "2026 Real Madrid Special Edition Red Jersey Player Version S-XXL",
-    "nameEn": "2026 Real Madrid Special Edition Red Jersey Player Version S-XXL",
-    "cats": [
-      "laliga"
-    ],
-    "type": "normal",
-    "priceUsd": 8,
-    "yupooCategory": "laliga",
-    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/249541617?uid=1&isSubCate=false&referrercate=5179820",
-    "img": "https://img.pedimoscamis.com/mascamis/249541617_photo1_resultado.webp",
-    "photos": 19,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
-    "gallery": [
-      "https://img.pedimoscamis.com/mascamis/249541617_photo2_resultado.webp",
-      "https://img.pedimoscamis.com/mascamis/249541617_photo3_resultado.webp",
-      "https://img.pedimoscamis.com/mascamis/249541617_photo4_resultado.webp"
-    ],
-    "addedAt": 1789298179339
-  },
-  {
     "id": "249541608",
     "nameEs": "2026 Real Madrid Special Edition Black Jersey Player Version S-XXL",
     "nameEn": "2026 Real Madrid Special Edition Black Jersey Player Version S-XXL",
@@ -332132,5 +332105,33 @@
       "4XL"
     ],
     "addedAt": 1793363037622
+  },
+  {
+    "id": "254868414",
+    "nameEs": "2026/27 Real Madrid Second Away Jersey Player Version S-4XL",
+    "nameEn": "2026/27 Real Madrid Second Away Jersey Player Version S-4XL",
+    "cats": [
+      "laliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "https://ggjersey.x.yupoo.com/albums/254868414?uid=1",
+    "img": "https://img.pedimoscamis.com/mascamis/254868414_photo1_resultado.webp",
+    "photos": 2,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "4XL"
+    ],
+    "addedAt": 1793813617497,
+    "gallery": [
+      "https://img.pedimoscamis.com/mascamis/254868414_photo2_resultado.webp"
+    ]
   }
 ]
