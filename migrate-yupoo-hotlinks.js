@@ -4,6 +4,7 @@
  * (hotlink protegido: sin Referer devuelve 567 y el navegador no las carga).
  * Descarga con Referer, convierte a webp y sube a mascamis/{id}_cover.webp.
  */
+require('dotenv').config({ quiet: true });
 const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
@@ -12,7 +13,7 @@ const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const FILE = path.join(__dirname, 'data', 'products.json');
 const WORKER = 'https://img.pedimoscamis.com';
 const client = new S3Client({ region: 'auto', endpoint: 'https://6600c8fee14f863b13c7b9bba8869364.r2.cloudflarestorage.com',
-  credentials: { accessKeyId: '566df4f751d6f3d8ac1d94839f034bcd', secretAccessKey: '26e30e0384e4fff6678c8b32c1f266ac8868c89c231aa2d3165335156a4794da' } });
+  credentials: { accessKeyId: process.env.R2_ACCESS_KEY_ID, secretAccessKey: process.env.R2_SECRET_ACCESS_KEY } });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function get(url) {
   for (let i = 0; i < 3; i++) {
@@ -38,7 +39,7 @@ async function get(url) {
       try {
         const webp = await sharp(buf).resize({ width: 1600, withoutEnlargement: true }).webp({ quality: 90 }).toBuffer();
         const key = `mascamis/${p.id}_cover.webp`;
-        await client.send(new PutObjectCommand({ Bucket: 'pedimoscamis', Key: key, Body: webp, ContentType: 'image/webp', CacheControl: 'public, max-age=31536000, immutable' }));
+        await client.send(new PutObjectCommand({ Bucket: process.env.R2_BUCKET || 'pedimoscamis', Key: key, Body: webp, ContentType: 'image/webp', CacheControl: 'public, max-age=31536000, immutable' }));
         p.img = `${WORKER}/${key}`; ok++;
       } catch (e) { fail++; console.log('✗', p.id, e.message); }
       if ((ok + fail) % 50 === 0) { fs.writeFileSync(FILE, JSON.stringify(products, null, 2)); console.log('checkpoint', ok, fail); }

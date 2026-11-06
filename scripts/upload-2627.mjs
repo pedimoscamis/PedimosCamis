@@ -7,6 +7,7 @@
  * Uso: node scripts/upload-2627.mjs
  */
 
+import 'dotenv/config';
 import fs   from 'fs';
 import path from 'path';
 import crypto from 'crypto';
@@ -15,7 +16,7 @@ import { S3Client, PutObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s
 // ─── Config ──────────────────────────────────────────────────────────────────
 const SRC_DIR     = 'H:\\26-27 v2';
 const R2_ENDPOINT = 'https://6600c8fee14f863b13c7b9bba8869364.r2.cloudflarestorage.com';
-const R2_BUCKET   = 'pedimoscamis';
+const R2_BUCKET   = process.env.R2_BUCKET || 'pedimoscamis';
 const KEY_PREFIX  = '26-27/';
 const PUBLIC_BASE = 'https://pub-30dab6e51e0742a4bf695b05b150982a.r2.dev';
 const OUT_JSON    = path.join('scripts', 'new-products-2627.json');
@@ -24,8 +25,8 @@ const s3 = new S3Client({
   region: 'auto',
   endpoint: R2_ENDPOINT,
   credentials: {
-    accessKeyId:     '566df4f751d6f3d8ac1d94839f034bcd',
-    secretAccessKey: '26e30e0384e4fff6678c8b32c1f266ac8868c89c231aa2d3165335156a4794da',
+    accessKeyId:     process.env.R2_ACCESS_KEY_ID,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
   },
 });
 
