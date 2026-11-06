@@ -38569,8 +38569,8 @@
   },
   {
     "id": "231557675",
-    "nameEs": "Retro 1998/99 Zaragoza Second Away Jersey S-XXL",
-    "nameEn": "Retro 1998/99 Zaragoza Second Away Jersey S-XXL",
+    "nameEs": "Retro 1983/84 Zaragoza Second Away Jersey S-XXL",
+    "nameEn": "Retro 1983/84 Zaragoza Second Away Jersey S-XXL",
     "cats": [
       "retro",
       "laliga"
@@ -332133,5 +332133,28 @@
     "gallery": [
       "https://img.pedimoscamis.com/mascamis/254868414_photo2_resultado.webp"
     ]
+  },
+  {
+    "id": "mn5a0d6e00a2",
+    "nameEs": "Real Zaragoza 26/27 Away Fan Version",
+    "nameEn": "Real Zaragoza 26/27 Away Fan Version",
+    "cats": [
+      "laliga",
+      "nuevatemporada"
+    ],
+    "type": "normal",
+    "priceUsd": 8,
+    "yupooCategory": "laliga",
+    "yupooUrl": "",
+    "img": "https://img.pedimoscamis.com/mascamis/mn5a0d6e00a2_photo1_resultado.webp",
+    "photos": 1,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "addedAt": 1793968235352
   }
 ]
