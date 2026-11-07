@@ -332156,5 +332156,28 @@
       "2XL"
     ],
     "addedAt": 1793968235352
+  },
+  {
+    "id": "mn4f13f26ad7",
+    "nameEs": "AS Roma 2001/02 Retro Home",
+    "nameEn": "AS Roma 2001/02 Retro Home",
+    "cats": [
+      "retro",
+      "seriea"
+    ],
+    "type": "retro",
+    "priceUsd": 13,
+    "yupooCategory": "seriea",
+    "yupooUrl": "",
+    "img": "https://img.pedimoscamis.com/mascamis/mn4f13f26ad7_photo1_resultado.webp",
+    "photos": 1,
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "addedAt": 1794081737248
   }
 ]
