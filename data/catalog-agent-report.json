@@ -1,19 +1,445 @@
 {
-  "runAt": "2026-11-01T12:23:12.784Z",
+  "runAt": "2026-11-15T13:13:05.152Z",
   "dryRun": false,
-  "pagesRead": 2,
-  "candidates": 0,
+  "pagesRead": 3,
+  "candidates": 66,
   "tally": {
-    "include": 0,
-    "skip": 0,
-    "review": 0,
-    "duplicate": 0
+    "include": 38,
+    "skip": 18,
+    "review": 6,
+    "duplicate": 4
   },
-  "skipReasons": {},
-  "added": 0,
+  "skipReasons": {
+    "fuera-de-alcance": 16,
+    "no-camiseta": 2
+  },
+  "added": 38,
   "failed": [],
   "retryPending": 0,
-  "addedItems": [],
-  "review": [],
-  "unknownTeams": []
+  "addedItems": [
+    {
+      "id": "261459745",
+      "title": "2026 Arsenal Highbury Special Jersey S-XXL",
+      "cats": [
+        "premier"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459739",
+      "title": "2026/27 AC Milan Home Jersey Player Version Long Sleeve S-3XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "261459735",
+      "title": "2026/27 Como 1907 Home Jersey Player Version S-4XL",
+      "cats": [
+        "seriea",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459724",
+      "title": "2026/27 Cultural Leonesa Third Jersey S-4XL",
+      "cats": [
+        "europa",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459716",
+      "title": "Retro 2000 Portugal Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459714",
+      "title": "Retro 2012/13 Lyon Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "ligue1"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459712",
+      "title": "Retro 2011/12 Lyon Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "ligue1"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459707",
+      "title": "Retro 2000/01 Lyon Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "ligue1"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459700",
+      "title": "Retro 1970 Italy Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459668",
+      "title": "2026 Spain x Spiderman Special Edition Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459664",
+      "title": "2026 Slovakia Away Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459660",
+      "title": "2026 Portugal Concept Black Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459655",
+      "title": "2026 Mexico 100th Anniversary Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459654",
+      "title": "2026 Mexico x Willy Chavarria Green Jersey S-XXL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459650",
+      "title": "2026 Mali Third Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459647",
+      "title": "2026 Malaysia Away Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459645",
+      "title": "2026 Italy EQT White Jersey S-3XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "261459641",
+      "title": "2026 Norway X Cactus Jack Travis Scott Total 90 Retro Haaland Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459635",
+      "title": "2026 Morocco X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459631",
+      "title": "2026 Germany X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459630",
+      "title": "2026 Colombia X Cactus Jack Travis Scott Total 90 Retro Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459626",
+      "title": "2026 Brazil Amazon Special Jersey S-4XL",
+      "cats": [
+        "selecciones"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459621",
+      "title": "Retro Brazil 1994 Style Yellow Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459615",
+      "title": "2026/27 Bosnia & Herzegovina Home Jersey Player Version S-3XL",
+      "cats": [
+        "selecciones",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL",
+      "images": 2
+    },
+    {
+      "id": "261459613",
+      "title": "2026/27 Bosnia & Herzegovina Home Jersey S-4XL",
+      "cats": [
+        "selecciones",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459609",
+      "title": "2026/27 Barcelona x Golf Wang El Clasico Home Jersey Player Version S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459606",
+      "title": "2026/27 Barcelona x Golf Wang El Clasico Green Jersey S-4XL",
+      "cats": [
+        "laliga",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459599",
+      "title": "2026 Argentina Messi Farewell Green Kids Kits 16-28",
+      "cats": [
+        "selecciones",
+        "kids"
+      ],
+      "priceUsd": 8,
+      "sizes": "16,18,20,22,24,26,28",
+      "images": 2
+    },
+    {
+      "id": "261459594",
+      "title": "Women's 2026 Argentina Messi Farewell Royal Blue Jersey S-XXL",
+      "cats": [
+        "selecciones",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459593",
+      "title": "Women's 2026 Argentina Messi Farewell Pre-Match White Jersey S-XXL",
+      "cats": [
+        "selecciones",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459591",
+      "title": "2026 Argentina Messi Farewell Royal Blue Women's Crop Jersey S-XXL",
+      "cats": [
+        "selecciones",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459589",
+      "title": "2026 Argentina Messi Farewell Women's Crop Jersey S-XXL",
+      "cats": [
+        "selecciones",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459586",
+      "title": "2026 Argentina Messi Farewell Pink Women's Crop Jersey S-XXL",
+      "cats": [
+        "selecciones",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459581",
+      "title": "2026 Argentina Messi Farewell Pre-Match White Women's Crop Jersey S-XXL",
+      "cats": [
+        "selecciones",
+        "women"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459575",
+      "title": "Retro 2011/12 Manchester City Away Jersey S-XXL",
+      "cats": [
+        "retro",
+        "premier"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459570",
+      "title": "Retro 2012/13 Marseille Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "ligue1"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 2
+    },
+    {
+      "id": "261459558",
+      "title": "2026/27 Stade de Reims Third Jersey S-4XL",
+      "cats": [
+        "ligue1",
+        "nuevatemporada"
+      ],
+      "priceUsd": 8,
+      "sizes": "S,M,L,XL,2XL,3XL,4XL",
+      "images": 2
+    },
+    {
+      "id": "261459553",
+      "title": "Retro 1998 Colombia Home Jersey S-XXL",
+      "cats": [
+        "retro",
+        "selecciones"
+      ],
+      "priceUsd": 13,
+      "sizes": "S,M,L,XL,2XL",
+      "images": 4
+    }
+  ],
+  "review": [
+    {
+      "id": "261459672",
+      "title": "Retro Mexico Guadalupe Virgin Special Edition Green Jersey S-XXL",
+      "reason": "sin-temporada",
+      "residual": []
+    },
+    {
+      "id": "261459671",
+      "title": "Retro Mexico Guadalupe Virgin Special Edition Gray Jersey S-XXL",
+      "reason": "sin-temporada",
+      "residual": []
+    }
+  ],
+  "unknownTeams": [
+    {
+      "team": "lfc",
+      "count": 4
+    }
+  ]
 }
