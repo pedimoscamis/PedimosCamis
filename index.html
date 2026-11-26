@@ -410,6 +410,131 @@
       text-decoration: line-through; margin-right: 6px;
     }
 
+    /* ═══ BLACK FRIDAY (evento temporal) ═══════════════════════════════════
+       Todo cuelga de body.bf-on (lo pone syncBlackFriday() en el JS) o de
+       elementos #bf-* que van con `hidden`: con BLACK_FRIDAY.active = false
+       nada de esto se ve. Para borrarlo, elimina este bloque entero. */
+    :root { --bf-gold: #ffcc33; --bf-gold-2: #ff9f1c; }
+    .badge-bf {
+      background: #000; color: var(--bf-gold);
+      border: 1px solid var(--bf-gold); box-shadow: 0 0 10px rgba(255,204,51,.35);
+    }
+    .bf-price { color: var(--bf-gold); }
+    .featured-card-price .bf-price, .price-main .bf-price { text-shadow: 0 0 12px rgba(255,204,51,.25); }
+
+    /* Barra superior con cuenta atrás */
+    #bf-bar {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; border: 0; cursor: pointer;
+      padding: 7px 16px; font-family: 'Barlow', sans-serif;
+      font-size: 13px; font-weight: 700; color: #fff; letter-spacing: .02em;
+      background: linear-gradient(90deg, #000 0%, #1a1405 50%, #000 100%);
+      border-bottom: 1px solid rgba(255,204,51,.45);
+      position: relative; overflow: hidden;
+    }
+    #bf-bar[hidden] { display: none; }
+    #bf-bar::after { /* brillo que recorre la barra */
+      content: ''; position: absolute; inset: 0; width: 40%;
+      background: linear-gradient(100deg, transparent, rgba(255,204,51,.18), transparent);
+      transform: translateX(-120%); animation: bf-shine 4.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes bf-shine { 60%, 100% { transform: translateX(320%); } }
+    .bf-bar-tag {
+      font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1.5px;
+      background: var(--bf-gold); color: #000; padding: 1px 8px 0; border-radius: 3px;
+    }
+    .bf-bar-count {
+      font-variant-numeric: tabular-nums; color: var(--bf-gold);
+      font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 1px; min-width: 92px; text-align: left;
+    }
+
+    /* Hero: fondo más oscuro con resplandor dorado */
+    body.bf-on #hero::after {
+      background:
+        radial-gradient(ellipse 60% 45% at 50% 0%, rgba(255,204,51,.16) 0%, transparent 70%),
+        radial-gradient(ellipse at center, rgba(0,0,0,.78) 0%, rgba(0,0,0,.92) 100%);
+    }
+    #bf-hero { text-align: center; margin: 0 auto 6px; max-width: 900px; }
+    #bf-hero[hidden] { display: none; }
+    .bf-hero-kicker {
+      display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--bf-gold);
+      border: 1px solid rgba(255,204,51,.5); border-radius: 99px; padding: 4px 14px;
+      animation: bf-pulse 2.2s ease-in-out infinite;
+    }
+    @keyframes bf-pulse { 50% { box-shadow: 0 0 0 6px rgba(255,204,51,0); background: rgba(255,204,51,.08); } }
+    .bf-hero-title {
+      font-family: 'Bebas Neue', sans-serif; line-height: .9; letter-spacing: 3px;
+      font-size: clamp(56px, 10vw, 128px); color: #fff; margin-top: 10px;
+      text-shadow: 0 8px 40px rgba(0,0,0,.8);
+    }
+    .bf-hero-title span { color: transparent; -webkit-text-stroke: 2px var(--bf-gold); }
+    .bf-hero-deal {
+      display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .bf-hero-pct {
+      font-family: 'Bebas Neue', sans-serif; line-height: 1;
+      font-size: clamp(64px, 11vw, 140px);
+      background: linear-gradient(180deg, #fff3b0 0%, var(--bf-gold) 45%, var(--bf-gold-2) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 6px 28px rgba(255,170,30,.35));
+    }
+    .bf-hero-deal-txt {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(26px, 3.6vw, 44px);
+      letter-spacing: 2px; color: #fff; text-align: left; line-height: 1;
+    }
+    .bf-hero-count { display: flex; justify-content: center; gap: 8px; margin: 10px 0 14px; }
+    .bf-cd {
+      min-width: 64px; padding: 8px 6px 6px; border-radius: 8px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,204,51,.3);
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .bf-cd b {
+      font-family: 'Bebas Neue', sans-serif; font-weight: 400; font-size: 32px; line-height: 1;
+      color: #fff; font-variant-numeric: tabular-nums;
+    }
+    .bf-cd small { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+    .bf-hero-cta {
+      font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1.5px;
+      background: var(--bf-gold); color: #000; border: 0; border-radius: 99px;
+      padding: 12px 28px 10px; cursor: pointer;
+      box-shadow: 0 8px 30px rgba(255,204,51,.3); transition: transform .2s, box-shadow .2s;
+    }
+    .bf-hero-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(255,204,51,.45); }
+    .bf-hero-fine { font-size: 12px; color: rgba(255,255,255,.55); margin: 12px auto 0; max-width: 560px; }
+    body.bf-on #vt-price .price-original { font-size: 22px; font-family: 'Bebas Neue', sans-serif; color: rgba(255,255,255,.5); }
+    body.bf-on #vt-price .badge-bf { font-family: 'Barlow', sans-serif; font-size: 13px; padding: 3px 8px; }
+
+    /* Etiqueta "-20%" sobre la foto de cada tarjeta del catálogo */
+    body.bf-on .card-img-wrap::after {
+      content: var(--bf-label, '-20%'); position: absolute; left: 8px; bottom: 8px; z-index: 2;
+      font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1px; line-height: 1;
+      background: #000; color: var(--bf-gold); border: 1px solid var(--bf-gold);
+      padding: 4px 7px 2px; border-radius: 4px; pointer-events: none;
+    }
+
+    @media (max-width: 700px) {
+      #bf-bar { font-size: 11px; gap: 7px; padding: 6px 10px; }
+      .bf-bar-tag { font-size: 14px; }
+      .bf-bar-count { font-size: 15px; min-width: 78px; }
+      .bf-hero-title { letter-spacing: 2px; }
+      .bf-hero-deal { gap: 8px; }
+      .bf-hero-deal-txt { text-align: center; width: 100%; }
+      .bf-cd { min-width: 56px; }
+      .bf-cd b { font-size: 26px; }
+    }
+    .bf-short { display: none; }
+    @media (max-width: 480px) {
+      .bf-long { display: none; }
+      .bf-short { display: inline; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #bf-bar::after, .bf-hero-kicker { animation: none; }
+    }
+    /* ═══ /BLACK FRIDAY ═══ */
+
     /* ─── Category Bar ─────────────────────────────────────── */
     #cat-bar {
       background: rgba(8,8,8,0.95);
@@ -3040,6 +3165,14 @@
 <!-- ─── Sticky Wrapper ──────────────────────────────────────────────────── -->
 <div id="sticky-wrapper">
 
+<!-- ═══ BLACK FRIDAY: barra superior (se muestra sola mientras BLACK_FRIDAY esté activo) ═══ -->
+<button id="bf-bar" type="button" hidden onclick="goHome()">
+  <span class="bf-bar-tag">BLACK FRIDAY</span>
+  <span class="bf-bar-msg" id="bf-bar-msg"></span>
+  <span class="bf-bar-count" id="bf-bar-count"></span>
+</button>
+<!-- ═══ /BLACK FRIDAY ═══ -->
+
 <!-- ─── Header ─────────────────────────────────────────────────────────── -->
 <header id="header">
   <!-- Botón hamburguesa — solo visible en móvil (CSS lo oculta en desktop) -->
@@ -3131,6 +3264,21 @@
 <!-- ─── Hero ──────────────────────────────────────────────────────────── -->
 <section id="hero">
   <h1 id="hero-season-title">LA TEMPORADA <span>26/27</span><br class="hero-title-break"> YA ESTÁ AQUÍ</h1>
+  <!-- ═══ BLACK FRIDAY: cabecera del hero (textos en BF_TEXT, JS) ═══ -->
+  <div id="bf-hero" hidden>
+    <div class="bf-hero-kicker" id="bf-hero-kicker"></div>
+    <div class="bf-hero-title">BLACK <span>FRIDAY</span></div>
+    <div class="bf-hero-deal">
+      <span class="bf-hero-pct" id="bf-hero-pct">-20%</span>
+      <span class="bf-hero-deal-txt" id="bf-hero-deal-txt"></span>
+    </div>
+    <div class="bf-hero-count" id="bf-hero-count" aria-live="off"></div>
+    <div class="bf-hero-actions">
+      <button type="button" class="bf-hero-cta" id="bf-hero-cta" onclick="setCategory('nuevatemporada')"></button>
+    </div>
+    <p class="bf-hero-fine" id="bf-hero-fine"></p>
+  </div>
+  <!-- ═══ /BLACK FRIDAY ═══ -->
   <div id="vestuario" aria-roledescription="carrusel" aria-label="Camisetas destacadas">
     <div id="vt-info" aria-live="polite">
       <span id="vt-season"></span>
@@ -3958,6 +4106,119 @@ const SOCIO_CODES    = new Set(['GIL13','BOSS7','JORGE71','MALYZ15',
 // Códigos de descuento 33% (precios normales con -33%, vista de usuario normal)
 const DISCOUNT_CODES = new Set(['TAYRON18', 'VALKYBRAWLER']);
 
+// ═══ BLACK FRIDAY (evento temporal) ═════════════════════════════════════════
+// -20% en el precio base de cada artículo (modo normal). NO se descuentan
+// personalización (nombre/dorsal), parches ni envío. Socios y Superadmin no
+// cambian. Los cupones no se acumulan: si el cliente mete uno, sustituye al
+// Black Friday (y si no mejora el -20% se rechaza con un aviso).
+// PARA RETIRARLO: active: false (o simplemente deja pasar `endsAt`: a partir
+// de esa fecha la web vuelve sola a como estaba). Para borrarlo del todo,
+// busca "BLACK FRIDAY" en este archivo: CSS, HTML y JS están en bloques marcados.
+const BLACK_FRIDAY = {
+  active: true,
+  pct:    0.20,
+  endsAt: '2026-12-01T00:00:00+01:00', // fin del Cyber Monday (lunes 30, 23:59 hora peninsular)
+};
+
+/** true si el -20% se aplica ahora mismo a este visitante. */
+function isBlackFriday() {
+  return BLACK_FRIDAY.active
+    && Date.now() < new Date(BLACK_FRIDAY.endsAt).getTime()
+    && !socioMode && !adminMode && !discountMode && !variableCouponMode;
+}
+
+/** true si el evento está en marcha (aunque el visitante tenga un modo especial). */
+function blackFridayRunning() {
+  return BLACK_FRIDAY.active && Date.now() < new Date(BLACK_FRIDAY.endsAt).getTime();
+}
+
+/** Aplica el -20% a un precio base (al céntimo, sin redondear al alza). */
+function bfPrice(base) {
+  return Math.round(base * (1 - BLACK_FRIDAY.pct) * 100) / 100;
+}
+
+/** Etiqueta del descuento, p. ej. "-20%". */
+function bfLabel() { return `-${Math.round(BLACK_FRIDAY.pct * 100)}%`; }
+
+/** HTML de precio tachado + rebajado para tarjetas (size: 'sm' en filas del home). */
+function bfPriceHtml(base, size) {
+  const badge = size === 'sm' ? ' style="font-size:8px;padding:1px 4px;"' : '';
+  return `<span class="price-original">${fmtEur(base)}</span><span class="bf-price">${fmtEur(bfPrice(base))}</span><span class="badge-discount badge-bf"${badge}>${bfLabel()}</span>`;
+}
+
+const BF_TEXT = {
+  es: {
+    bar:    (pct) => `${pct} en toda la tienda · Termina en`,
+    barShort: (pct) => `${pct} en todo`,
+    kicker: 'Solo hasta el lunes 30 a medianoche',
+    deal:   'EN TODA LA TIENDA',
+    cta:    'VER LA TEMPORADA 26/27 →',
+    fine:   'Descuento ya aplicado en el precio de cada camiseta. Personalización, parches y envío a precio normal. No acumulable con otros códigos.',
+    units:  ['días', 'horas', 'min', 'seg'],
+    ticker: (pct) => [`Black Friday: ${pct} en toda la tienda`, `${pct} en todas las camisetas · solo hasta el lunes`],
+    title:  (pct) => `BLACK FRIDAY ${pct} · PedimosCamis`,
+  },
+  en: {
+    bar:    (pct) => `${pct} off everything · Ends in`,
+    barShort: (pct) => `${pct} off all`,
+    kicker: 'Only until Monday 30th at midnight',
+    deal:   'STORE-WIDE',
+    cta:    'SHOP THE 26/27 SEASON →',
+    fine:   'Discount already applied to each shirt price. Customisation, patches and shipping at regular price. Cannot be combined with other codes.',
+    units:  ['days', 'hrs', 'min', 'sec'],
+    ticker: (pct) => [`Black Friday: ${pct} off everything`, `${pct} off every shirt · until Monday only`],
+    title:  (pct) => `BLACK FRIDAY ${pct} · PedimosCamis`,
+  },
+};
+const BF_BASE_TITLE = document.title;
+let bfTimer = null;
+
+/** Muestra u oculta todo lo del Black Friday según el modo actual (se llama desde renderAll). */
+function syncBlackFriday() {
+  const on  = isBlackFriday();
+  const txt = BF_TEXT[lang] || BF_TEXT.es;
+  const changed = document.body.classList.contains('bf-on') !== on;
+  document.body.classList.toggle('bf-on', on);
+  if (changed && typeof renderVestuarioTicker === 'function') renderVestuarioTicker();
+  const bar  = document.getElementById('bf-bar');
+  const hero = document.getElementById('bf-hero');
+  if (bar)  bar.hidden  = !on;
+  if (hero) hero.hidden = !on;
+  document.title = on ? txt.title(bfLabel()) : BF_BASE_TITLE;
+  if (!on) { clearInterval(bfTimer); bfTimer = null; return; }
+
+  document.getElementById('bf-bar-msg').innerHTML =
+    `<span class="bf-long">${txt.bar(bfLabel())}</span><span class="bf-short">${txt.barShort(bfLabel())}</span>`;
+  document.body.style.setProperty('--bf-label', `"${bfLabel()}"`);
+  document.getElementById('bf-hero-kicker').textContent   = txt.kicker;
+  document.getElementById('bf-hero-pct').textContent      = bfLabel();
+  document.getElementById('bf-hero-deal-txt').textContent = txt.deal;
+  document.getElementById('bf-hero-cta').textContent      = txt.cta;
+  document.getElementById('bf-hero-fine').textContent     = txt.fine;
+  bfTick();
+  if (!bfTimer) bfTimer = setInterval(bfTick, 1000);
+}
+
+/** Cuenta atrás de la barra y del hero. Al llegar a cero la web vuelve a la normalidad. */
+function bfTick() {
+  const left = new Date(BLACK_FRIDAY.endsAt).getTime() - Date.now();
+  if (left <= 0) {
+    clearInterval(bfTimer); bfTimer = null;
+    renderAll(); renderCartItems(); // isBlackFriday() ya es false: precios normales
+    return;
+  }
+  const s = Math.floor(left / 1000);
+  const parts = [Math.floor(s / 86400), Math.floor(s / 3600) % 24, Math.floor(s / 60) % 60, s % 60];
+  const pad = (n) => String(n).padStart(2, '0');
+  const units = (BF_TEXT[lang] || BF_TEXT.es).units;
+  const bar = document.getElementById('bf-bar-count');
+  if (bar) bar.textContent = `${parts[0]}d ${pad(parts[1])}:${pad(parts[2])}:${pad(parts[3])}`;
+  const hero = document.getElementById('bf-hero-count');
+  if (hero) hero.innerHTML = parts.map((n, i) =>
+    `<span class="bf-cd"><b>${i ? pad(n) : n}</b><small>${units[i]}</small></span>`).join('');
+}
+// ═══ /BLACK FRIDAY ══════════════════════════════════════════════════════════
+
 // ── Cupones de descuento variable ────────────────────────────────────────────
 // Edita este objeto para añadir, cambiar o eliminar cupones promocionales.
 // Formato: "CÓDIGO": { descuento: 0.XX, caducidad: "AAAA-MM-DD", maxUsesPerUser: N }
@@ -4469,6 +4730,7 @@ async function init() {
   acctInit();
 
   updateLangUI();
+  syncBlackFriday(); // BLACK FRIDAY: visible ya, antes de que cargue el catálogo
   buildCatBar();
   renderStaticCatIcons();
   document.getElementById('results-info').textContent = t().loading;
@@ -4920,7 +5182,9 @@ function vtRenderPrice() {
   const sizes = p.sizes || [];
   const note = vt.flipped ? `+${t().price_fmt(socioMode ? 3 / EUR_RATE : 3).main} ${t().vt_name_extra}`
     : sizes.length > 1 ? `${t().sizes} ${sizes[0]}–${sizes[sizes.length - 1]}` : '';
-  el.innerHTML = `${escHtml(main)}${note ? `<small>${escHtml(note)}</small>` : ''}`;
+  // BLACK FRIDAY: precio antiguo tachado + rebajado
+  const priceTxt = isBlackFriday() ? bfPriceHtml(getDisplayPrice(p)) : escHtml(main);
+  el.innerHTML = `${priceTxt}${note ? `<small>${escHtml(note)}</small>` : ''}`;
 }
 
 function vtRenderPrint() {
@@ -5027,6 +5291,7 @@ function renderVestuarioTicker() {
     if (season) items.unshift(t().vt_tick_season(season));
     if (fresh >= 20) items.unshift(t().vt_tick_fresh(fresh));
   }
+  if (isBlackFriday()) items.unshift(...(BF_TEXT[lang] || BF_TEXT.es).ticker(bfLabel())); // BLACK FRIDAY
   // Dos copias idénticas: la animación desplaza -50% y el bucle no se nota
   const set = items.map(s => `<span class="vt-tick">${escHtml(s)}</span>`).join('');
   track.innerHTML = `<div class="vt-tick-set">${set}</div><div class="vt-tick-set" aria-hidden="true">${set}</div>`;
@@ -6171,6 +6436,8 @@ function renderFeaturedNewSeason() {
       const discounted = getVariableCouponPrice(price);
       const pctLabel   = `-${Math.round(variableCouponPct * 100)}%`;
       priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">${pctLabel}</span>`;
+    } else if (isBlackFriday()) {
+      priceHtml = bfPriceHtml(price, 'sm');
     } else {
       const { main } = t().price_fmt(price);
       priceHtml = main;
@@ -6237,6 +6504,8 @@ function renderFeaturedRecientes() {
       const discounted = getVariableCouponPrice(price);
       const pctLabel   = `-${Math.round(variableCouponPct * 100)}%`;
       priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">${pctLabel}</span>`;
+    } else if (isBlackFriday()) {
+      priceHtml = bfPriceHtml(price, 'sm');
     } else {
       const { main } = t().price_fmt(price);
       priceHtml = main;
@@ -6334,6 +6603,8 @@ function renderFeaturedSecondStar() {
       const discounted = getVariableCouponPrice(price);
       const pctLabel   = `-${Math.round(variableCouponPct * 100)}%`;
       priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">${pctLabel}</span>`;
+    } else if (isBlackFriday()) {
+      priceHtml = bfPriceHtml(price, 'sm');
     } else {
       const { main } = t().price_fmt(price);
       priceHtml = main;
@@ -6401,6 +6672,8 @@ function renderFeatured() {
       const discounted = getVariableCouponPrice(price);
       const pctLabel   = `-${Math.round(variableCouponPct * 100)}%`;
       priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">${pctLabel}</span>`;
+    } else if (isBlackFriday()) {
+      priceHtml = bfPriceHtml(price, 'sm');
     } else {
       const { main } = t().price_fmt(price);
       priceHtml = main;
@@ -6477,6 +6750,8 @@ function renderHomeRow(sectionId, scrollId, cat, limit = 12) {
     } else if (variableCouponMode) {
       const discounted = getVariableCouponPrice(price);
       priceHtml = `<span class="price-original">${fmtEur(price)}</span>${fmtEur(discounted)}<span class="badge-discount" style="font-size:8px;padding:1px 4px;">-${Math.round(variableCouponPct*100)}%</span>`;
+    } else if (isBlackFriday()) {
+      priceHtml = bfPriceHtml(price, 'sm');
     } else {
       priceHtml = t().price_fmt(price).main;
     }
@@ -6979,6 +7254,7 @@ function renderAll() {
   if (mainGrid) mainGrid.style.display = '';
 
   hero.style.display = (activeCat === 'all' && !searchQuery) ? 'block' : 'none';
+  syncBlackFriday(); // BLACK FRIDAY: barra, hero y título según el modo actual
   vtRenderPrice(); // socio/admin cambian el precio mostrado
 
   renderGallery();
@@ -7418,6 +7694,9 @@ function createCard(p, idx = 0) {
     const pctLabel   = `-${Math.round(variableCouponPct * 100)}%`;
     priceHtml    = `<span class="price-original">${fmtEur(base)}</span>${fmtEur(discounted)}<span class="badge-discount">${pctLabel}</span>`;
     priceSubHtml = '';
+  } else if (isBlackFriday()) {
+    priceHtml    = bfPriceHtml(base);
+    priceSubHtml = '';
   } else {
     const { main, sub } = t().price_fmt(base);
     priceHtml    = main;
@@ -7734,7 +8013,9 @@ function buildSizeGrid(sizes) {
 
 // Devuelve el precio base + extras para guardar en carrito.
 // En modo descuento aplica el 33% sólo al precio base (los extras son siempre a precio completo).
-function getModalPriceBase() {
+// applyBf=false devuelve el precio sin Black Friday (es lo que se guarda en el carrito: el -20%
+// se aplica al vuelo en effectiveCartPrice, así el carrito vuelve solo al precio normal al acabar).
+function getModalPriceBase(applyBf = true) {
   if (!currentProduct) return 0;
   let base;
   if (adminMode) {
@@ -7747,6 +8028,9 @@ function getModalPriceBase() {
     base = getDiscountedPrice(getBasePrice(currentProduct));
   } else if (variableCouponMode) {
     base = getVariableCouponPrice(getBasePrice(currentProduct));
+  } else if (isBlackFriday() && applyBf) {
+    // BLACK FRIDAY: -20% solo sobre la camiseta base; los extras de abajo van a precio normal
+    base = bfPrice(getBasePrice(currentProduct));
   } else {
     base = getBasePrice(currentProduct);
   }
@@ -7801,6 +8085,13 @@ function updateModalPrice() {
     const pctLabel  = `-${Math.round(variableCouponPct * 100)}%`;
     priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origBase)}</span>${fmtEur(price)}<span class="badge-discount" style="font-size:12px;padding:3px 7px;">${pctLabel}</span>`;
     priceSubEl.textContent = '';
+  } else if (isBlackFriday()) {
+    // BLACK FRIDAY: precio sin rebaja (camiseta + extras) tachado
+    const origTotal = getModalPriceBase(false);
+    priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origTotal)}</span><span class="bf-price">${fmtEur(price)}</span><span class="badge-discount badge-bf" style="font-size:12px;padding:3px 7px;">${bfLabel()}</span>`;
+    priceSubEl.textContent = lang === 'es'
+      ? 'Black Friday: -20% en la camiseta. Personalización, parches y envío a precio normal.'
+      : 'Black Friday: 20% off the shirt. Customisation, patches and shipping at regular price.';
   } else {
     const { main, sub } = t().price_fmt(price);
     priceMainEl.textContent = main;
@@ -8387,7 +8678,8 @@ function addToCart() {
     showToast(t().size_required);
     return;
   }
-  const usd = getModalPriceBase();
+  // Sin Black Friday: el carrito guarda el precio normal y el -20% se aplica en effectiveCartPrice
+  const usd = getModalPriceBase(false);
   const customizations = [];
   if (document.getElementById('opt-dorsal').checked) {
     const name   = document.getElementById('input-name').value.trim().toUpperCase();
@@ -8534,6 +8826,7 @@ function effectiveCartPrice(item) {
   const base   = item.priceUsd - extras;
   if (discountMode)       return getDiscountedPrice(base) + extras;
   if (variableCouponMode) return getVariableCouponPrice(base) + extras;
+  if (isBlackFriday())    return Math.round((bfPrice(base) + extras) * 100) / 100; // BLACK FRIDAY
   return item.priceUsd;
 }
 
@@ -8575,7 +8868,7 @@ function renderCartItems() {
     const customMeta = buildCustomMeta(item.customizations);
 
     // Mostrar tachado si hay descuento activo sobre este ítem (sin discountInfo propio)
-    const showStrike = !item.discountInfo && (discountMode || variableCouponMode);
+    const showStrike = !item.discountInfo && (discountMode || variableCouponMode || isBlackFriday());
     const origLine   = item.priceUsd * qty;
     const priceHtml  = showStrike
       ? `<span class="price-original" style="font-size:11px">${t().cart_item_price(origLine)}</span> ${t().cart_item_price(lineTotal)}`
@@ -8700,6 +8993,20 @@ function updateCheckoutTotals() {
       discountRow.style.display = 'none';
       expiryEl.style.display    = 'none';
     }
+  } else if (isBlackFriday()) {
+    // BLACK FRIDAY: ahorro total sobre los precios base
+    subtotalRow.style.display   = 'none';
+    conversionRow.style.display = 'none';
+    document.getElementById('co-coupon-expiry').style.display = 'none';
+    let totalDiscount = 0;
+    for (const item of cart) {
+      if (item.discountInfo) continue;
+      totalDiscount += (item.priceUsd - effectiveCartPrice(item)) * (item.qty || 1);
+    }
+    totalDiscount = Math.round(totalDiscount * 100) / 100;
+    discountRow.style.display = totalDiscount > 0 ? '' : 'none';
+    document.getElementById('co-discount-label').textContent = `Black Friday ${bfLabel()}`;
+    document.getElementById('co-discount-val').textContent   = '-' + fmtEur(totalDiscount);
   } else {
     subtotalRow.style.display   = 'none';
     conversionRow.style.display = 'none';
@@ -8784,6 +9091,10 @@ function openCheckout(e) {
       const discountedBase = getVariableCouponPrice(base);
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span>`;
       bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(base)}</del>${fmtEur(discountedBase)}</span>`;
+    } else if (isBlackFriday() && !item.discountInfo) {
+      // BLACK FRIDAY: -20% solo en el precio base
+      bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'} <span class="badge-discount badge-bf" style="font-size:9px;padding:1px 4px;">BLACK FRIDAY ${bfLabel()}</span></span>`;
+      bdHtml += `<span><del style="color:var(--muted);margin-right:4px">${fmtEur(base)}</del>${fmtEur(bfPrice(base))}</span>`;
     } else {
       bdHtml += `<span>${isEs ? 'Precio base' : 'Base price'}</span><span>${baseShown}${sym}</span>`;
     }
@@ -8840,7 +9151,9 @@ function openCheckout(e) {
     const qty      = item.qty || 1;
     const dorsal   = item.customizations.find(c => c.type === 'dorsal');
     const patch    = item.customizations.find(c => c.type === 'patch');
-    const eurPrice = socioMode ? Math.round(item.priceUsd * EUR_RATE * 100) / 100 : item.priceUsd;
+    const eurPrice = socioMode ? Math.round(item.priceUsd * EUR_RATE * 100) / 100
+                   : isBlackFriday() ? effectiveCartPrice(item) // BLACK FRIDAY
+                   : item.priceUsd;
     const nameNum  = dorsal ? `${dorsal.name} #${dorsal.number}` : 'N/A';
     const version  = getCartVersion(item);
     const patchStr = patch ? patch.label : 'None';
@@ -8978,6 +9291,7 @@ function buildWebhookPayload(nombre, telefono, correo, direccion, metodoPago) {
   const codigoDescuento = discountMode       ? `${activeDiscountCode} (-33%)`
                         : variableCouponMode ? `${activeCouponCode} (-${Math.round(variableCouponPct*100)}%)`
                         : flashItem          ? flashLabel
+                        : isBlackFriday()    ? `BLACK FRIDAY (${bfLabel()})`
                         : '';
 
   return {
@@ -9191,6 +9505,19 @@ function submitUserCode() {
     input.value = '';
     input.focus();
     return;
+  }
+
+  // BLACK FRIDAY: los cupones no se acumulan. Si no mejoran el -20%, no se activan
+  // (no se consume ningún uso: los usos solo se cuentan al enviar el pedido).
+  if (blackFridayRunning() && !SOCIO_CODES.has(code)) {
+    const couponPct = DISCOUNT_CODES.has(code) ? 1 / 3 : variablePct;
+    if (couponPct <= BLACK_FRIDAY.pct) {
+      error.textContent = `Durante el Black Friday ya tienes ${bfLabel()} en toda la tienda. Los códigos no son acumulables: guárdalo para después.`;
+      error.style.display = 'block';
+      input.value = '';
+      input.focus();
+      return;
+    }
   }
 
   // Código válido y vigente — activar el modo correspondiente
