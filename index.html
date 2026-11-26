@@ -4153,7 +4153,7 @@ const BF_TEXT = {
     kicker: 'Solo hasta el lunes 30 a medianoche',
     deal:   'EN TODA LA TIENDA',
     cta:    'VER LA TEMPORADA 26/27 →',
-    fine:   'Descuento ya aplicado en el precio de cada camiseta. Personalización, parches y envío a precio normal. No acumulable con otros códigos.',
+    fine:   'Descuento ya aplicado en el precio de cada camiseta. No acumulable con otros códigos.',
     units:  ['días', 'horas', 'min', 'seg'],
     ticker: (pct) => [`Black Friday: ${pct} en toda la tienda`, `${pct} en todas las camisetas · solo hasta el lunes`],
     title:  (pct) => `BLACK FRIDAY ${pct} · PedimosCamis`,
@@ -4164,7 +4164,7 @@ const BF_TEXT = {
     kicker: 'Only until Monday 30th at midnight',
     deal:   'STORE-WIDE',
     cta:    'SHOP THE 26/27 SEASON →',
-    fine:   'Discount already applied to each shirt price. Customisation, patches and shipping at regular price. Cannot be combined with other codes.',
+    fine:   'Discount already applied to each shirt price. Cannot be combined with other codes.',
     units:  ['days', 'hrs', 'min', 'sec'],
     ticker: (pct) => [`Black Friday: ${pct} off everything`, `${pct} off every shirt · until Monday only`],
     title:  (pct) => `BLACK FRIDAY ${pct} · PedimosCamis`,
@@ -8089,9 +8089,7 @@ function updateModalPrice() {
     // BLACK FRIDAY: precio sin rebaja (camiseta + extras) tachado
     const origTotal = getModalPriceBase(false);
     priceMainEl.innerHTML = `<span class="modal-price-original">${fmtEur(origTotal)}</span><span class="bf-price">${fmtEur(price)}</span><span class="badge-discount badge-bf" style="font-size:12px;padding:3px 7px;">${bfLabel()}</span>`;
-    priceSubEl.textContent = lang === 'es'
-      ? 'Black Friday: -20% en la camiseta. Personalización, parches y envío a precio normal.'
-      : 'Black Friday: 20% off the shirt. Customisation, patches and shipping at regular price.';
+    priceSubEl.textContent = '';
   } else {
     const { main, sub } = t().price_fmt(price);
     priceMainEl.textContent = main;
