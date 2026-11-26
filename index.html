@@ -618,6 +618,8 @@
       pointer-events: none;
     }
     #fab-top.visible { opacity: 1; transform: scale(1); pointer-events: auto; }
+    /* Con el modal de artículo abierto no tiene sentido (el fondo no hace scroll) */
+    body:has(#modal-overlay.open) #fab-top { opacity: 0; transform: scale(0.7); pointer-events: none; }
     /* Fila superior: pills scrollables */
     #filter-pill-rows {
       width: 100%;
@@ -953,9 +955,9 @@
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
       mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     }
-    #vt-ticker-track { display: flex; width: max-content; animation: vt-marquee 45s linear infinite; }
-    #vt-ticker:hover #vt-ticker-track { animation-play-state: paused; }
-    .vt-tick-set { display: flex; }
+    /* El desplazamiento lo hace vtTickerStart() en JS (velocidad constante, sin saltos) */
+    #vt-ticker-track { display: flex; width: max-content; will-change: transform; }
+    .vt-tick-set { display: flex; flex-shrink: 0; }
     .vt-tick {
       font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 1.5px;
       color: rgba(255,255,255,.82); padding: 9px 0; white-space: nowrap;
@@ -4140,10 +4142,12 @@ function bfPrice(base) {
 /** Etiqueta del descuento, p. ej. "-20%". */
 function bfLabel() { return `-${Math.round(BLACK_FRIDAY.pct * 100)}%`; }
 
-/** HTML de precio tachado + rebajado para tarjetas (size: 'sm' en filas del home). */
+/** HTML de precio tachado + rebajado (size: 'sm' en filas del home; 'nobadge' en
+ *  tarjetas del catálogo, que ya llevan la etiqueta "-20%" sobre la foto). */
 function bfPriceHtml(base, size) {
-  const badge = size === 'sm' ? ' style="font-size:8px;padding:1px 4px;"' : '';
-  return `<span class="price-original">${fmtEur(base)}</span><span class="bf-price">${fmtEur(bfPrice(base))}</span><span class="badge-discount badge-bf"${badge}>${bfLabel()}</span>`;
+  const style = size === 'sm' ? ' style="font-size:8px;padding:1px 4px;"' : '';
+  const badge = size === 'nobadge' ? '' : `<span class="badge-discount badge-bf"${style}>${bfLabel()}</span>`;
+  return `<span class="price-original">${fmtEur(base)}</span><span class="bf-price">${fmtEur(bfPrice(base))}</span>${badge}`;
 }
 
 const BF_TEXT = {
@@ -4153,7 +4157,7 @@ const BF_TEXT = {
     kicker: 'Solo hasta el lunes 30 a medianoche',
     deal:   'EN TODA LA TIENDA',
     cta:    'VER LA TEMPORADA 26/27 →',
-    fine:   'Descuento ya aplicado en el precio de cada camiseta. No acumulable con otros códigos.',
+    fine:   'Descuento ya aplicado en el precio de cada camiseta.',
     units:  ['días', 'horas', 'min', 'seg'],
     ticker: (pct) => [`Black Friday: ${pct} en toda la tienda`, `${pct} en todas las camisetas · solo hasta el lunes`],
     title:  (pct) => `BLACK FRIDAY ${pct} · PedimosCamis`,
@@ -4164,7 +4168,7 @@ const BF_TEXT = {
     kicker: 'Only until Monday 30th at midnight',
     deal:   'STORE-WIDE',
     cta:    'SHOP THE 26/27 SEASON →',
-    fine:   'Discount already applied to each shirt price. Cannot be combined with other codes.',
+    fine:   'Discount already applied to each shirt price.',
     units:  ['days', 'hrs', 'min', 'sec'],
     ticker: (pct) => [`Black Friday: ${pct} off everything`, `${pct} off every shirt · until Monday only`],
     title:  (pct) => `BLACK FRIDAY ${pct} · PedimosCamis`,
@@ -5292,9 +5296,66 @@ function renderVestuarioTicker() {
     if (fresh >= 20) items.unshift(t().vt_tick_fresh(fresh));
   }
   if (isBlackFriday()) items.unshift(...(BF_TEXT[lang] || BF_TEXT.es).ticker(bfLabel())); // BLACK FRIDAY
-  // Dos copias idénticas: la animación desplaza -50% y el bucle no se nota
   const set = items.map(s => `<span class="vt-tick">${escHtml(s)}</span>`).join('');
-  track.innerHTML = `<div class="vt-tick-set">${set}</div><div class="vt-tick-set" aria-hidden="true">${set}</div>`;
+  if (set === vtTicker.html) return; // mismo contenido: no tocar (evita saltos)
+  vtTicker.html = set;
+  vtTicker.copies = 0;
+  vtTickerFill();
+  vtTickerStart();
+}
+
+// Desplazamiento de la cinta por JS (antes era una animación CSS de 45 s con
+// translateX(-50%): al cambiar el contenido durante la carga cambiaba la anchura
+// a mitad de animación y el texto daba saltos; y en móvil el :hover la congelaba).
+// Ahora avanza a velocidad constante en px/s y conserva la posición al re-pintarse.
+const vtTicker = { html: '', copies: 0, setW: 0, x: 0, last: 0, raf: 0, hover: false, speed: 45 };
+
+/** Repite el bloque de mensajes las veces necesarias para cubrir el ancho visible sin huecos. */
+function vtTickerFill() {
+  const track = document.getElementById('vt-ticker-track');
+  const box   = document.getElementById('vt-ticker');
+  if (!track || !box || !vtTicker.html) return;
+  if (!vtTicker.copies) {
+    track.innerHTML = `<div class="vt-tick-set">${vtTicker.html}</div>`;
+    vtTicker.copies = 1;
+  }
+  const setW = track.firstElementChild.offsetWidth;
+  if (!setW) { vtTicker.setW = 0; return; } // hero oculto: se mide al volver a verse
+  const need = Math.ceil(box.offsetWidth / setW) + 1;
+  while (vtTicker.copies < need) {
+    track.insertAdjacentHTML('beforeend', `<div class="vt-tick-set" aria-hidden="true">${vtTicker.html}</div>`);
+    vtTicker.copies++;
+  }
+  vtTicker.setW = setW;
+  vtTicker.x %= setW;
+}
+
+function vtTickerStart() {
+  if (vtTicker.raf || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const box = document.getElementById('vt-ticker');
+  if (box && matchMedia('(hover: hover)').matches) { // pausa al pasar el ratón (solo con ratón)
+    box.addEventListener('mouseenter', () => { vtTicker.hover = true; });
+    box.addEventListener('mouseleave', () => { vtTicker.hover = false; });
+  }
+  // Re-medir si cambia el ancho de la ventana o termina de cargar la fuente (cambia el ancho del texto)
+  window.addEventListener('resize', () => { vtTicker.setW = 0; });
+  if (document.fonts) document.fonts.ready.then(() => { vtTicker.setW = 0; });
+  let lastFill = 0;
+  const step = (ts) => {
+    vtTicker.raf = requestAnimationFrame(step);
+    const dt = vtTicker.last ? Math.min(ts - vtTicker.last, 50) : 0; // tope: sin saltos al volver de otra pestaña
+    vtTicker.last = ts;
+    if (!vtTicker.setW) {
+      if (ts - lastFill < 400) return; // hero oculto: comprobar de vez en cuando, no en cada frame
+      lastFill = ts;
+      vtTickerFill();
+      if (!vtTicker.setW) return;
+    }
+    if (vtTicker.hover) return;
+    vtTicker.x = (vtTicker.x + vtTicker.speed * dt / 1000) % vtTicker.setW;
+    document.getElementById('vt-ticker-track').style.transform = `translate3d(${-vtTicker.x}px,0,0)`;
+  };
+  vtTicker.raf = requestAnimationFrame(step);
 }
 
 /** Tras cargar el catálogo o cambiar idioma/modo: precios y cinta reales. */
@@ -7695,7 +7756,7 @@ function createCard(p, idx = 0) {
     priceHtml    = `<span class="price-original">${fmtEur(base)}</span>${fmtEur(discounted)}<span class="badge-discount">${pctLabel}</span>`;
     priceSubHtml = '';
   } else if (isBlackFriday()) {
-    priceHtml    = bfPriceHtml(base);
+    priceHtml    = bfPriceHtml(base, 'nobadge'); // la etiqueta -20% ya va sobre la foto
     priceSubHtml = '';
   } else {
     const { main, sub } = t().price_fmt(base);
