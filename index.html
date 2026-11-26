@@ -503,7 +503,6 @@
       box-shadow: 0 8px 30px rgba(255,204,51,.3); transition: transform .2s, box-shadow .2s;
     }
     .bf-hero-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(255,204,51,.45); }
-    .bf-hero-fine { font-size: 12px; color: rgba(255,255,255,.55); margin: 12px auto 0; max-width: 560px; }
     body.bf-on #vt-price .price-original { font-size: 22px; font-family: 'Bebas Neue', sans-serif; color: rgba(255,255,255,.5); }
     body.bf-on #vt-price .badge-bf { font-family: 'Barlow', sans-serif; font-size: 13px; padding: 3px 8px; }
 
@@ -955,7 +954,7 @@
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
       mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     }
-    /* El desplazamiento lo hace vtTickerStart() en JS (velocidad constante, sin saltos) */
+    /* El desplazamiento lo hace vtTickerLayout() con la Web Animations API (compositor: fluido, sin saltos) */
     #vt-ticker-track { display: flex; width: max-content; will-change: transform; }
     .vt-tick-set { display: flex; flex-shrink: 0; }
     .vt-tick {
@@ -3278,7 +3277,6 @@
     <div class="bf-hero-actions">
       <button type="button" class="bf-hero-cta" id="bf-hero-cta" onclick="setCategory('nuevatemporada')"></button>
     </div>
-    <p class="bf-hero-fine" id="bf-hero-fine"></p>
   </div>
   <!-- ═══ /BLACK FRIDAY ═══ -->
   <div id="vestuario" aria-roledescription="carrusel" aria-label="Camisetas destacadas">
@@ -4157,7 +4155,6 @@ const BF_TEXT = {
     kicker: 'Solo hasta el lunes 30 a medianoche',
     deal:   'EN TODA LA TIENDA',
     cta:    'VER LA TEMPORADA 26/27 →',
-    fine:   'Descuento ya aplicado en el precio de cada camiseta.',
     units:  ['días', 'horas', 'min', 'seg'],
     ticker: (pct) => [`Black Friday: ${pct} en toda la tienda`, `${pct} en todas las camisetas · solo hasta el lunes`],
     title:  (pct) => `BLACK FRIDAY ${pct} · PedimosCamis`,
@@ -4168,7 +4165,6 @@ const BF_TEXT = {
     kicker: 'Only until Monday 30th at midnight',
     deal:   'STORE-WIDE',
     cta:    'SHOP THE 26/27 SEASON →',
-    fine:   'Discount already applied to each shirt price.',
     units:  ['days', 'hrs', 'min', 'sec'],
     ticker: (pct) => [`Black Friday: ${pct} off everything`, `${pct} off every shirt · until Monday only`],
     title:  (pct) => `BLACK FRIDAY ${pct} · PedimosCamis`,
@@ -4198,7 +4194,6 @@ function syncBlackFriday() {
   document.getElementById('bf-hero-pct').textContent      = bfLabel();
   document.getElementById('bf-hero-deal-txt').textContent = txt.deal;
   document.getElementById('bf-hero-cta').textContent      = txt.cta;
-  document.getElementById('bf-hero-fine').textContent     = txt.fine;
   bfTick();
   if (!bfTimer) bfTimer = setInterval(bfTick, 1000);
 }
@@ -5299,63 +5294,66 @@ function renderVestuarioTicker() {
   const set = items.map(s => `<span class="vt-tick">${escHtml(s)}</span>`).join('');
   if (set === vtTicker.html) return; // mismo contenido: no tocar (evita saltos)
   vtTicker.html = set;
-  vtTicker.copies = 0;
-  vtTickerFill();
-  vtTickerStart();
+  track.innerHTML = `<div class="vt-tick-set">${set}</div>`;
+  vtTicker.copies = 1;
+  vtTickerInit();
+  vtTickerLayout();
 }
 
-// Desplazamiento de la cinta por JS (antes era una animación CSS de 45 s con
-// translateX(-50%): al cambiar el contenido durante la carga cambiaba la anchura
-// a mitad de animación y el texto daba saltos; y en móvil el :hover la congelaba).
-// Ahora avanza a velocidad constante en px/s y conserva la posición al re-pintarse.
-const vtTicker = { html: '', copies: 0, setW: 0, x: 0, last: 0, raf: 0, hover: false, speed: 45 };
+// La cinta se mueve con la Web Animations API: la anima el compositor del
+// navegador (fluida aunque el JS esté ocupado, a diferencia de un bucle con
+// requestAnimationFrame, que iba a tirones). Velocidad constante en px/s según
+// el ancho real del texto; al cambiar el contenido o el ancho (carga del
+// catálogo, fuente, giro del móvil) se rehace conservando la posición, así que
+// no salta. La pausa al pasar por encima solo existe con ratón (en móvil el
+// :hover se quedaba pegado y la congelaba).
+const vtTicker = { html: '', copies: 0, setW: 0, anim: null, speed: 45, observer: null };
 
-/** Repite el bloque de mensajes las veces necesarias para cubrir el ancho visible sin huecos. */
-function vtTickerFill() {
+function vtTickerInit() {
+  if (vtTicker.observer) return;
+  const box = document.getElementById('vt-ticker');
+  if (!box) return;
+  // Re-maquetar cuando cambia el ancho visible o el del texto (fuente cargada, hero que vuelve a verse)
+  vtTicker.observer = new ResizeObserver(() => vtTickerLayout());
+  vtTicker.observer.observe(box);
+  if (matchMedia('(hover: hover)').matches) {
+    box.addEventListener('mouseenter', () => vtTicker.anim?.pause());
+    box.addEventListener('mouseleave', () => vtTicker.anim?.play());
+  }
+}
+
+/** Repite el bloque para cubrir el ancho sin huecos y (re)crea la animación si cambió la medida. */
+function vtTickerLayout() {
   const track = document.getElementById('vt-ticker-track');
   const box   = document.getElementById('vt-ticker');
-  if (!track || !box || !vtTicker.html) return;
-  if (!vtTicker.copies) {
-    track.innerHTML = `<div class="vt-tick-set">${vtTicker.html}</div>`;
-    vtTicker.copies = 1;
-  }
-  const setW = track.firstElementChild.offsetWidth;
-  if (!setW) { vtTicker.setW = 0; return; } // hero oculto: se mide al volver a verse
+  if (!track || !box || !track.firstElementChild) return;
+  const first = track.firstElementChild;
+  vtTicker.observer?.observe(first); // también vigilar el ancho del propio texto
+  const setW = first.offsetWidth;
+  if (!setW) return; // hero oculto: el ResizeObserver avisará cuando vuelva a verse
   const need = Math.ceil(box.offsetWidth / setW) + 1;
   while (vtTicker.copies < need) {
     track.insertAdjacentHTML('beforeend', `<div class="vt-tick-set" aria-hidden="true">${vtTicker.html}</div>`);
     vtTicker.copies++;
   }
-  vtTicker.setW = setW;
-  vtTicker.x %= setW;
-}
+  if (setW === vtTicker.setW && vtTicker.anim) return; // nada cambió: no tocar la animación
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-function vtTickerStart() {
-  if (vtTicker.raf || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const box = document.getElementById('vt-ticker');
-  if (box && matchMedia('(hover: hover)').matches) { // pausa al pasar el ratón (solo con ratón)
-    box.addEventListener('mouseenter', () => { vtTicker.hover = true; });
-    box.addEventListener('mouseleave', () => { vtTicker.hover = false; });
+  // Posición actual en px para continuar desde ahí
+  let x = 0;
+  const paused = vtTicker.anim?.playState === 'paused';
+  if (vtTicker.anim && vtTicker.setW) {
+    const dur = vtTicker.setW / vtTicker.speed * 1000;
+    x = ((vtTicker.anim.currentTime || 0) % dur) / dur * vtTicker.setW;
+    vtTicker.anim.cancel();
   }
-  // Re-medir si cambia el ancho de la ventana o termina de cargar la fuente (cambia el ancho del texto)
-  window.addEventListener('resize', () => { vtTicker.setW = 0; });
-  if (document.fonts) document.fonts.ready.then(() => { vtTicker.setW = 0; });
-  let lastFill = 0;
-  const step = (ts) => {
-    vtTicker.raf = requestAnimationFrame(step);
-    const dt = vtTicker.last ? Math.min(ts - vtTicker.last, 50) : 0; // tope: sin saltos al volver de otra pestaña
-    vtTicker.last = ts;
-    if (!vtTicker.setW) {
-      if (ts - lastFill < 400) return; // hero oculto: comprobar de vez en cuando, no en cada frame
-      lastFill = ts;
-      vtTickerFill();
-      if (!vtTicker.setW) return;
-    }
-    if (vtTicker.hover) return;
-    vtTicker.x = (vtTicker.x + vtTicker.speed * dt / 1000) % vtTicker.setW;
-    document.getElementById('vt-ticker-track').style.transform = `translate3d(${-vtTicker.x}px,0,0)`;
-  };
-  vtTicker.raf = requestAnimationFrame(step);
+  vtTicker.setW = setW;
+  const duration = setW / vtTicker.speed * 1000;
+  vtTicker.anim = track.animate(
+    [{ transform: 'translate3d(0,0,0)' }, { transform: `translate3d(${-setW}px,0,0)` }],
+    { duration, iterations: Infinity, easing: 'linear' });
+  vtTicker.anim.currentTime = (x % setW) / setW * duration;
+  if (paused) vtTicker.anim.pause();
 }
 
 /** Tras cargar el catálogo o cambiar idioma/modo: precios y cinta reales. */
